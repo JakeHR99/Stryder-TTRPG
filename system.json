@@ -4,11 +4,13 @@
   "description": "The official Foundry VTT System for the Stryder Tabletop Roleplaying Game",
   "authors": [
     {
-      "name": "Amarulence",
-      "discord": "amarulence"
+      "name": "Amarulence & Nevermore",
+      "discord": "amarulence" 
     }
   ],
-  "url": "https://github.com/DarkSerpent/stryder-fvtt",
+  "url": "https://github.com/JakeHR99/Stryder-TTRPG",
+  "manifest": "https://raw.githubusercontent.com/JakeHR99/Stryder-TTRPG/main/system.json",
+  "download": "https://github.com/JakeHR99/Stryder-TTRPG/releases/download/v0.1.0/system.zip",
   "license": "LICENSE.txt",
   "readme": "README.md",
   "changelog": "CHANGELOG.md",
@@ -19,14 +21,18 @@
       "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
-  "version": "2.5.0",
+  "version": "0.1.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
     "maximum": "13"
   },
-  "esmodules": ["module/stryder.mjs"],
-  "styles": ["css/stryder.css"],
+  "esmodules": [
+    "module/stryder.mjs"
+  ],
+  "styles": [
+    "css/stryder.css"
+  ],
   "languages": [
     {
       "lang": "en",
@@ -47,113 +53,173 @@
   "documentTypes": {
     "Actor": {
       "character": {
-        "htmlFields": ["biography"]
+        "htmlFields": [
+          "biography"
+        ]
       },
       "monster": {
-        "htmlFields": ["biography"]
+        "htmlFields": [
+          "biography"
+        ]
       },
       "lordling": {
-        "htmlFields": ["biography"]
+        "htmlFields": [
+          "biography"
+        ]
       }
     },
     "Item": {
       "action": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "armament": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "generic": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "hex": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "loot": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "feature": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "skill": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "racial": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "aegiscore": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "legacies": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "head": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "back": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "arms": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "legs": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "gems": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "component": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "consumable": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "gear": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "fantasm": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "statperk": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "technique": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "profession": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "bonds": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "passive": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "miscellaneous": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "class": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "folk": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       }
     }
   },
-      "relationships": {
-        "requires": [
-          {
-            "id": "lib-wrapper",
-            "type": "module",
-            "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
-            "compatibility": {
-              "minimum": "1.0.0",
-              "verified": "1.2.0",
-              "maximum": "2.0.0"
-            }
-          }
-        ]
-      },
+  "relationships": {
+    "requires": [
+      {
+        "id": "lib-wrapper",
+        "type": "module",
+        "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
+        "compatibility": {
+          "minimum": "1.0.0",
+          "verified": "1.2.0",
+          "maximum": "2.0.0"
+        }
+      }
+    ]
+  },
   "packs": [
     {
       "name": "stryder-classes",
@@ -315,13 +381,27 @@
       "name": "Bestiary",
       "sorting": "a",
       "color": "#532853",
-      "packs": ["stryder-monsters"]
+      "packs": [
+        "stryder-monsters"
+      ]
     },
     {
       "name": "Character Creation",
       "sorting": "a",
       "color": "#276625",
-      "packs": ["stryder-classes", "stryder-class-features", "stryder-folk", "stryder-folk-abilities", "stryder-actions", "stryder-hexes", "stryder-skills", "stryder-techniques", "stryder-statperks", "stryder-fantasms", "stryder-professions"]
+      "packs": [
+        "stryder-classes",
+        "stryder-class-features",
+        "stryder-folk",
+        "stryder-folk-abilities",
+        "stryder-actions",
+        "stryder-hexes",
+        "stryder-skills",
+        "stryder-techniques",
+        "stryder-statperks",
+        "stryder-fantasms",
+        "stryder-professions"
+      ]
     },
     {
       "name": "Effects",
@@ -333,7 +413,10 @@
       "name": "Equipment",
       "sorting": "a",
       "color": "#005390",
-      "packs": ["stryder-armor", "stryder-loot"]
+      "packs": [
+        "stryder-armor",
+        "stryder-loot"
+      ]
     }
   ],
   "socket": true,
