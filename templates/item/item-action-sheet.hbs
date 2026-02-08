@@ -1,0 +1,166 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        </div>
+        <div class="item-type-label">
+          <span>Action</span>
+        </div>
+        <div class="resource" style="margin-top: 5px; padding: 0 10px;">
+          <label class="resource-label secondary-input">Action Type</label>
+          <select class="secondary-input" name="system.action_type" style="width: 100%; font-size: 16px; font-weight: normal;">
+            {{#select system.action_type}}
+            <option value="focused">Focused</option>
+            <option value="swift">Swift</option>
+            <option value="passive">Passive</option>
+            {{/select}}
+          </select>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item" data-tab="description"><i class="fas fa-scroll"></i> Description</a>
+      <a class="item" data-tab="attributes"><i class="fas fa-tools"></i> Attributes</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab description-tab" data-group="primary" data-tab="description">
+        <div class="editor-container">
+          <div class="editor-header">
+            <i class="fas fa-quill"></i> Action Description
+          </div>
+          {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+      {{!-- Attributes Tab --}}
+      <div class="tab attributes" data-group="primary" data-tab="attributes">
+        {{!-- Roll Attributes Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Roll Attributes</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field formula-display">
+              <label>Roll Formula:</label>
+              <span class="formula-text">{{calculateFormula system.roll.diceNum system.roll.diceSize system.roll.diceBonus}}</span>
+            </div>
+            
+            <div class="grid grid-4col" style="margin-top: 15px;">
+              <div class="roll-attribute-field">
+                <label>No. of Dice</label>
+                <input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
+              </div>
+              <div class="roll-attribute-field">
+                <label>Die Size</label>
+                <input type="text" name="system.roll.diceSize" value="{{system.roll.diceSize}}" data-dtype="Number" />
+              </div>
+              <div class="roll-attribute-field grid-span-2">
+                <label>Roll Modifier</label>
+                <input type="text" name="system.roll.diceBonus" value="{{system.roll.diceBonus}}" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Restrictions Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Restrictions</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field">
+              <label>Stamina:</label>
+              <input type="number" name="system.stamina_cost" value="{{system.stamina_cost}}" min="0" placeholder="Stamina Cost" data-dtype="Number" />
+            </div>
+            <div class="field fantasy-field">
+              <label>Mana:</label>
+              <input type="number" name="system.mana_cost" value="{{system.mana_cost}}" min="0" placeholder="Mana Cost" data-dtype="Number" />
+            </div>
+            <div class="field fantasy-field" style="display: flex; justify-content: flex-end;">
+              <label>Tactic Points:</label>
+              <input type="number" name="system.tactics_cost" value="{{system.tactics_cost}}" min="0" placeholder="Tactic Points Cost" data-dtype="Number" style="width: 75%; margin-left: 10px;" />
+            </div>
+            <div class="field fantasy-field">
+              <label>Other:</label>
+              <input type="text" name="system.other_restrictions" value="{{system.other_restrictions}}" placeholder="Additional Restrictions">
+            </div>
+          </div>
+        </div>
+
+        {{!-- Tags Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Tags</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content tags-container">
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag1">
+                {{#select system.tag1}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                <option value="reflex">Reflex</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag2">
+                {{#select system.tag2}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                <option value="reflex">Reflex</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag3">
+                {{#select system.tag3}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                <option value="reflex">Reflex</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                {{/select}}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>
+
+{{log system}}

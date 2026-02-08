@@ -1,0 +1,56 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        </div>
+        <div class="item-type-label">
+          <span>Miscellaneous</span>
+        </div>
+        <div class="resource" style="margin-top: 10px; padding: 0 10px;">
+          <label class="resource-label secondary-input">Type</label>
+          <select class="secondary-input" name="system.itemtype" style="width: 100%; font-size: 16px; font-weight: normal;">
+            {{#select system.itemtype}}
+            <option value="Other">Other</option>
+            <option value="Scrap">Scrap</option>
+            <option value="Book">Book</option>
+            <option value="Treasure">Treasure</option>
+            <option value="Tool">Tool</option>
+            <option value="Trash">Trash</option>
+            {{/select}}
+          </select>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Simplified Content Area --}}
+    <div class="misc-content-area" style="margin-top: -15px;">
+      <div class="editor-container">
+        <div class="editor-header">
+          <i class="fas fa-question-circle"></i> Item Description
+        </div>
+        {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+      </div>
+
+    </div>
+  </div>
+</form>
+
+<style>
+  .misc-content-area {
+    padding: 15px;
+  }
+
+  .effects-section {
+    margin-top: 20px;
+  }
+
+  .editor-header .fa-question-circle {
+    color: #5c3a21;
+    margin-right: 8px;
+  }
+</style>
+
+{{log system}}

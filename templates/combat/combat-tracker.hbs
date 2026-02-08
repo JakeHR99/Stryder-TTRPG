@@ -1,0 +1,67 @@
+<ol class="combat-tracker plain">
+    {{#if currentTurn}}
+        <div class="current-turn" style="font-size: 25px; font-family: 'EB Garamond';">{{localize 'STRYDER.Combat.CurrentTurn'
+                                            turn=(localize (concat 'STRYDER.Combat.CombatFaction' (capitalize
+                                             currentTurn)))}}</div>
+    {{else if combat}}
+    {{/if}}
+    {{#each factions as |combatants faction| }}
+        <h2 class="faction">{{localize (concat 'STRYDER.Combat.CombatFaction' (capitalize faction))}} ({{combatants.length}})</h2>
+        {{#each combatants}}
+            <li class="combatant {{faction}} {{this.css}} {{#if (eq @root.combatant.id this.id)}}started-turn{{/if}}" data-combatant-id="{{this.id}}" data-action="activateCombatant">
+                <img class="token-image" src="{{this.img}}" alt="{{this.name}}" loading="lazy">
+                
+                <div class="token-name">
+                    <strong class="name">{{this.name}}</strong>
+                    <div class="combatant-controls">
+                        {{#if @root.user.isGM}}
+                            <button type="button" class="inline-control combatant-control icon fa-solid fa-eye-slash {{#if this.hidden}}active{{/if}}" data-action="toggleHidden" data-tooltip="" aria-label="Toggle Visibility"></button>
+                            <button type="button" class="inline-control combatant-control icon fa-solid fa-skull {{#if this.isDefeated}}active{{/if}}" data-action="toggleDefeated" data-tooltip="" aria-label="Mark Defeated"></button>
+                        {{/if}}
+                        {{#if this.canPing}}
+                            <button type="button" class="inline-control combatant-control icon fa-solid fa-bullseye-arrow" data-action="pingCombatant" data-tooltip="" aria-label="Ping Token"></button>
+                        {{/if}}
+                        <div class="token-effects" data-tooltip-html="">
+                            {{#each this.statusEffects}}
+                                <img class="token-effect" src="{{this.img}}" alt="{{this.name}}" data-tooltip="{{this.name}}" />
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+
+                {{#if this.hasResource}}
+                    <div class="token-resource">
+                        <span class="resource">{{this.resource}}</span>
+                    </div>
+                {{/if}}
+
+                <div class="token-initiative">
+                  {{#if this._canTakeTurn}}
+                    {{#if this._canControl}}
+                      {{#unless this._hasTurnEnded}}
+                        {{#if this._isActiveTurn}}
+                          <button type="button" class="combatant-control turn-control" data-action="endTurn"
+                             data-tooltip="{{localize 'STRYDER.Combat.TurnEnd'}}"
+                             aria-label="{{localize 'STRYDER.Combat.TurnEnd'}}">
+                            <i class="fas fa-stop"></i>
+                          </button>
+                        {{else}}
+                          <button type="button" class="combatant-control turn-control" data-action="startTurn"
+                             data-tooltip="{{localize 'STRYDER.Combat.TurnStart'}}"
+                             aria-label="{{localize 'STRYDER.Combat.TurnStart'}}">
+                            <i class="fas fa-play"></i>
+                          </button>
+                        {{/if}}
+                      {{/unless}}
+                    {{/if}}
+                  {{/if}}
+                  {{#if this._hasTurnEnded}}
+                    <img class="turn-complete-icon" src="systems/stryder/assets/check.svg" 
+                         data-tooltip="{{localize 'STRYDER.Combat.TurnComplete'}}"
+                         alt="Turn Complete" />
+                  {{/if}}
+                </div>
+            </li>
+        {{/each}}
+    {{/each}}
+</ol>

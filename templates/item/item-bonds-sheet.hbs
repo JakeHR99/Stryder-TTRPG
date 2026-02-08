@@ -1,0 +1,66 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+	  <div style="color:gray; font-family: Arial; padding-top: 5px;">
+		<b>Bond</b>
+	  </div>
+      <div class="grid grid-2col">
+        <div class="resource">
+		<label class="resource-label">Amity & Enmity</label><br />
+		<select name="system.bond.level" style="width: 100%;">
+			<option value="Hated" {{#if (eq system.bond.level "-5")}}selected{{/if}}>Hated</option>
+			<option value="Detested" {{#if (eq system.bond.level "-4")}}selected{{/if}}>Detested</option>
+			<option value="Loathed" {{#if (eq system.bond.level "-3")}}selected{{/if}}>Loathed</option>
+			<option value="Disliked" {{#if (eq system.bond.level "Disliked")}}selected{{/if}}>Disliked</option>
+			<option value="Disfavored" {{#if (eq system.bond.level "Disfavored")}}selected{{/if}}>Disfavored</option>
+			<option value="Neutral" {{#if (or (eq system.bond.level "Neutral") (not system.bond.level))}}selected{{/if}}>Neutral</option>
+			<option value="Acquaintance" {{#if (eq system.bond.level "Acquaintance")}}selected{{/if}}>Acquaintance</option>
+			<option value="Associate" {{#if (eq system.bond.level "Associate")}}selected{{/if}}>Associate</option>
+			<option value="Respected" {{#if (eq system.bond.level "Respected")}}selected{{/if}}>Respected</option>
+			<option value="Friend" {{#if (eq system.bond.level "Friend")}}selected{{/if}}>Friend</option>
+			<option value="Companion" {{#if (eq system.bond.level "Companion")}}selected{{/if}}>Companion</option>
+		</select>
+		</div>
+        <div class="resource">
+          <label class="resource-label">Date Formed</label>
+          <input type="text" name="system.bond.date" value="{{system.bond.date}}" placeholder="January 1st, 2025" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Bond Information</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the
+      rollData prop. --}}
+	<div class="grid grid-3col">
+		<div class="resource">
+		  <label class="resource-label">Folk</label>
+		  <input type="text" name="system.bond.folk" value="{{system.bond.folk}}" placeholder="Folk" />
+		</div>
+		<div class="resource">
+		  <label class="resource-label">Gender</label>
+		  <input type="text" name="system.bond.gender" value="{{system.bond.gender}}" placeholder="Gender" />
+		</div>
+		<div class="resource">
+		  <label class="resource-label">Age</label>
+		  <input type="text" name="system.bond.age" value="{{system.bond.age}}" placeholder="#" />
+		</div>
+	</div>
+      {{editor system.description target="system.description" rollData=rollData button=true owner=owner
+      editable=editable}}
+    </div>
+  </section>
+</form>
+
+{{log system}}

@@ -1,0 +1,733 @@
+{
+  "Actor": {
+    "types": ["character", "npc", "monster", "lordling", "familiar"],
+    "templates": {
+      "base": {
+        "health": {
+          "value": 8,
+          "min": 0,
+          "max": {
+            "value": 8,
+            "mod": 0
+          }
+        },
+        "mana": {
+          "value": 3,
+          "min": 0,
+          "max": {
+            "value": 3,
+            "mod": 0
+          }
+        },
+        "stamina": {
+          "value": 2,
+          "min": 0,
+          "max": {
+            "value": 2,
+            "mod": 0
+          }
+        },
+        "ward": {
+          "value": 0,
+          "min": 0
+        },
+        "resource1": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "resource2": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "initiative": {
+          "bonus": 0
+        },
+        "dodge": {
+          "bonus": 0
+        },
+        "evade": {
+          "bonus": 0
+        },
+        "elixir_sickness": {
+          "value": 0
+        },
+        "physical_reduction": 0,
+        "magykal_reduction": 0,
+        "biography": ""
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "booleans": {
+        "hasPracticedForm": false,
+        "usingUnboundLeap": false,
+        "hasFantastic": false
+      },
+      "grail": 0,
+      "guild_tokens": 0,
+      "class": {
+        "name": "No Class",
+        "base_hp": 0,
+        "hp_per_level": 0
+      },
+      "folk": {
+        "name": "Folkless"
+      },
+      "life": {
+        "cooking": {
+          "value": 0
+        },
+        "elixirbrewing": {
+          "value": 0
+        },
+        "fishing": {
+          "value": 0
+        },
+        "hunting": {
+          "value": 0
+        },
+        "performing": {
+          "value": 0
+        },
+        "scavenging": {
+          "value": 0
+        },
+        "cursebreaking": {
+          "value": 0
+        },
+        "coercing": {
+          "value": 0
+        },
+        "dueling": {
+          "value": 0
+        },
+        "taming": {
+          "value": 0
+        }
+      },
+      "attributes": {
+        "mastery": 0,
+        "creature_size": "1",
+        "weight_class": 4,
+        "horizontal_leap": {
+          "mod": 0
+        },
+        "vertical_leap": {
+          "mod": 0
+        },
+        "physical_potency": {
+          "mod": 0
+        },
+        "magykal_potency": {
+          "mod": 0
+        },
+        "level": {
+          "value": 1
+        },
+        "move": {
+          "running": {
+            "value": 7,
+            "expertise": false
+          },
+          "climbing": {
+            "value": 3,
+            "expertise": false
+          },
+          "crawling": {
+            "value": 2,
+            "expertise": false
+          },
+          "marching": {
+            "value": 4,
+            "expertise": false
+          },
+          "swimming": {
+            "value": 4,
+            "expertise": false
+          },
+          "max": 7
+        },
+        "sense": {
+          "sight": {
+            "value": 0
+          },
+          "hearing": {
+            "value": 0
+          },
+          "smell": {
+            "value": 0
+          },
+          "arcane": {
+            "value": 0
+          },
+          "touch": {
+            "value": 0
+          }
+        },
+        "talent": {
+          "endurance": {
+            "value": 0
+          },
+          "nimbleness": {
+            "value": 0
+          },
+          "finesse": {
+            "value": 0
+          },
+          "strength": {
+            "value": 0
+          },
+          "survival": {
+            "value": 0
+          },
+          "charm": {
+            "value": 0
+          },
+          "wit": {
+            "value": 0
+          },
+          "wisdom": {
+            "value": 0
+          },
+          "deceit": {
+            "value": 0
+          },
+          "diplomacy": {
+            "value": 0
+          },
+          "intimacy": {
+            "value": 0
+          },
+          "aggression": {
+            "value": 0
+          }
+        }
+      },
+      "abilities": {
+        "Soul": {
+          "value": 0
+        },
+        "Reflex": {
+          "value": 0
+        },
+        "Grit": {
+          "value": 0
+        },
+        "Arcana": {
+          "value": 0
+        },
+        "Intuition": {
+          "value": 0
+        },
+        "Will": {
+          "value": 0
+        }
+      },
+      "checks": {
+        "Physical": {
+          "mod": 0
+        },
+        "Magykal": {
+          "mod": 0
+        }
+      }
+    },
+    "monster": {
+      "templates": ["base"],
+      "attributes": {
+        "creature_size": "1",
+        "weight_class": 4,
+        "physical_potency": {
+          "value": 0
+        },
+        "magykal_potency": {
+          "value": 0
+        },
+        "physical_resistance": {
+          "base": 0
+        },
+        "magykal_resistance": {
+          "base": 0
+        },
+        "rank": {
+          "value": 0
+        },
+        "armor": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "move": {
+          "running": {
+            "value": 7,
+            "expertise": false
+          },
+          "climbing": {
+            "value": 3,
+            "expertise": false
+          },
+          "crawling": {
+            "value": 2,
+            "expertise": false
+          },
+          "marching": {
+            "value": 4,
+            "expertise": false
+          },
+          "swimming": {
+            "value": 4,
+            "expertise": false
+          },
+          "max": 7
+        },
+        "sense": {
+          "sight": {
+            "value": 0
+          },
+          "hearing": {
+            "value": 0
+          },
+          "smell": {
+            "value": 0
+          },
+          "arcane": {
+            "value": 0
+          },
+          "touch": {
+            "value": 0
+          }
+        },
+        "talent": {
+          "endurance": {
+            "value": 0
+          },
+          "nimbleness": {
+            "value": 0
+          },
+          "finesse": {
+            "value": 0
+          },
+          "strength": {
+            "value": 0
+          },
+          "survival": {
+            "value": 0
+          },
+          "charm": {
+            "value": 0
+          },
+          "wit": {
+            "value": 0
+          },
+          "wisdom": {
+            "value": 0
+          },
+          "deceit": {
+            "value": 0
+          },
+          "diplomacy": {
+            "value": 0
+          },
+          "intimacy": {
+            "value": 0
+          },
+          "aggression": {
+            "value": 0
+          }
+        }
+      },
+      "abilities": {
+        "Might": {
+          "value": 0
+        },
+        "Movement": {
+          "value": 0
+        },
+        "Defense": {
+          "value": 0
+        }
+      }
+    },
+    "lordling": {
+      "templates": ["base"],
+      "linkedCharacterId": "",
+      "tactics": {
+        "value": 6,
+        "min": 0,
+        "max": 6
+      },
+      "attributes": {
+        "mastery": "0",
+        "creature_size": "1",
+        "weight_class": 4,
+        "physical_potency": {
+          "mod": 0
+        },
+        "magykal_potency": {
+          "mod": 0
+        },
+        "move": {
+          "running": {
+            "value": 7,
+            "expertise": false
+          },
+          "climbing": {
+            "value": 3,
+            "expertise": false
+          },
+          "crawling": {
+            "value": 2,
+            "expertise": false
+          },
+          "marching": {
+            "value": 4,
+            "expertise": false
+          },
+          "swimming": {
+            "value": 4,
+            "expertise": false
+          },
+          "max": 7
+        },
+        "talent": {
+          "endurance": {
+            "value": 0
+          },
+          "nimbleness": {
+            "value": 0
+          },
+          "finesse": {
+            "value": 0
+          },
+          "strength": {
+            "value": 0
+          },
+          "survival": {
+            "value": 0
+          },
+          "aggression": {
+            "value": 0
+          }
+        }
+      },
+      "abilities": {
+        "Spirit": {
+          "value": 0
+        },
+        "Reflex": {
+          "value": 0
+        },
+        "Grit": {
+          "value": 0
+        },
+        "Will": {
+          "value": 0
+        }
+      },
+      "checks": {
+        "Physical": {
+          "mod": 0
+        },
+        "Magykal": {
+          "mod": 0
+        }
+      }
+    },
+    "npc": {
+      "templates": ["base"],
+      "level": 0
+    },
+    "familiar": {
+      "templates": ["base"],
+      "attributes": {
+        "creature_size": "1",
+        "weight_class": 4,
+        "familiar_type": "Pet",
+        "trust_level": "Stranger",
+        "trust_exp": {
+          "value": 0
+        },
+        "physical_potency": {
+          "value": 0
+        },
+        "magykal_potency": {
+          "value": 0
+        },
+        "physical_resistance": {
+          "base": 0
+        },
+        "magykal_resistance": {
+          "base": 0
+        },
+        "move": {
+          "running": {
+            "value": 7,
+            "expertise": false
+          },
+          "climbing": {
+            "value": 3,
+            "expertise": false
+          },
+          "crawling": {
+            "value": 2,
+            "expertise": false
+          },
+          "marching": {
+            "value": 4,
+            "expertise": false
+          },
+          "swimming": {
+            "value": 4,
+            "expertise": false
+          },
+          "max": 7
+        },
+        "sense": {
+          "sight": {
+            "value": 0
+          },
+          "hearing": {
+            "value": 0
+          },
+          "smell": {
+            "value": 0
+          },
+          "arcane": {
+            "value": 0
+          },
+          "touch": {
+            "value": 0
+          }
+        },
+        "talent": {
+          "endurance": {
+            "value": 0
+          },
+          "nimbleness": {
+            "value": 0
+          },
+          "finesse": {
+            "value": 0
+          },
+          "strength": {
+            "value": 0
+          },
+          "survival": {
+            "value": 0
+          },
+          "charm": {
+            "value": 0
+          },
+          "wit": {
+            "value": 0
+          },
+          "wisdom": {
+            "value": 0
+          },
+          "deceit": {
+            "value": 0
+          },
+          "diplomacy": {
+            "value": 0
+          },
+          "intimacy": {
+            "value": 0
+          },
+          "aggression": {
+            "value": 0
+          }
+        }
+      },
+      "abilities": {
+        "Appetite": {
+          "value": 0
+        }
+      },
+      "appetite": {
+        "value": 0
+      },
+      "familiar": {
+        "base_hp": 0
+      }
+    }
+  },
+  "Item": {
+    "types": ["action", "armament", "generic", "aegiscore", "legacies", "head", "back", "arms", "legs", "gems", "loot", "component", "consumable", "gear", "fantasm", "hex", "skill", "feature", "racial", "statperk", "technique", "profession", "bonds", "passive", "miscellaneous", "class", "folk"],
+    "templates": {
+      "base": {
+        "description": "",
+        "roll": {
+          "diceBonus": 0,
+          "diceNum": 2,
+          "diceSize": 6
+        }
+      }
+    },
+    "action": {
+      "templates": ["base"],
+      "roll": {
+        "diceBonus": 0,
+        "diceNum": 2,
+        "diceSize": 6
+      }
+    },
+    "armament": {
+      "templates": ["base"],
+      "damage_type": "physical",
+      "armament": {
+        "isWitchblade": false,
+        "alwaysRollsExcellent": false,
+        "addsMastery": false
+      },
+      "roll": {
+        "diceBonus": 0,
+        "diceNum": 2,
+        "diceSize": 6
+      }
+    },
+    "generic": {
+      "templates": ["base"],
+      "damage_type": "ahl",
+      "roll": {
+        "diceBonus": 0,
+        "diceNum": 2,
+        "diceSize": 6
+      }
+    },
+    "racial": {
+      "templates": ["base"],
+      "charges": {
+        "max": 0,
+        "value": 0
+      },
+      "uses_current": 0
+    },
+    "hex": {
+      "templates": ["base"],
+      "damage_type": "magykal",
+      "hex": {
+        "rollsDamage": false,
+        "alwaysRollsExcellent": false,
+        "addsMastery": false,
+        "canOverflow": false
+      },
+      "roll": {
+        "diceBonus": 0,
+        "diceNum": 2,
+        "diceSize": 6
+      }
+    },
+    "loot": {
+      "templates": ["base"],
+      "rarity": "common",
+      "inventory_size": 1,
+      "sell_price": 0
+    },
+    "component": {
+      "templates": ["base"],
+      "grade": "G4",
+      "sell_price": 0
+    },
+    "miscellaneous": {
+      "templates": ["base"],
+      "itemtype": "Other"
+    },
+    "consumable": {
+      "templates": ["base"],
+      "rarity": "common",
+      "nature": "enchanted",
+      "sell_price": 0,
+      "charges": {
+        "value": 1,
+        "max": 1
+      }
+    },
+    "gear": {
+      "templates": ["base"],
+      "quality": "prototype",
+      "nature": "enchanted",
+      "inventory_size": 1,
+      "sell_price": 0,
+      "charges": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "aegiscore": {
+      "templates": ["base"]
+    },
+    "legacies": {
+      "templates": ["base"],
+      "rarity": "common",
+      "nature": "enchanted"
+    },
+    "head": {
+      "templates": ["base"],
+      "rarity": "common",
+      "nature": "enchanted",
+      "sell_price": 0,
+      "physical_reduction_bonus": 0,
+      "magykal_reduction_bonus": 0
+    },
+    "back": {
+      "templates": ["base"],
+      "rarity": "common",
+      "nature": "enchanted",
+      "sell_price": 0,
+      "physical_reduction_bonus": 0,
+      "magykal_reduction_bonus": 0
+    },
+    "arms": {
+      "templates": ["base"],
+      "rarity": "common",
+      "nature": "enchanted",
+      "sell_price": 0,
+      "physical_reduction_bonus": 0,
+      "magykal_reduction_bonus": 0
+    },
+    "legs": {
+      "templates": ["base"],
+      "rarity": "common",
+      "nature": "enchanted",
+      "sell_price": 0,
+      "physical_reduction_bonus": 0,
+      "magykal_reduction_bonus": 0
+    },
+    "gems": {
+      "templates": ["base"],
+      "rarity": "common",
+      "nature": "enchanted",
+      "sell_price": 0,
+      "physical_reduction_bonus": 0,
+      "magykal_reduction_bonus": 0
+    },
+    "bonds": {
+      "bond": {
+        "level": "Neutral",
+        "date": "",
+        "folk": "",
+        "gender": "",
+        "age": ""
+      }
+    },
+    "item": {
+      "templates": ["base"],
+      "quantity": 1,
+      "weight": 0,
+      "formula": "2d6"
+    },
+    "feature": {
+      "templates": ["base"]
+    },
+    "skill": {
+      "templates": ["base"],
+      "uses_current": 0
+    },
+    "spell": {
+      "templates": ["base"],
+      "spellLevel": 1
+    }
+  }
+}

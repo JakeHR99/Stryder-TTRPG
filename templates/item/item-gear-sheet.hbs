@@ -1,0 +1,292 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        </div>
+        <div class="item-type-label">
+          <span>Gear Item</span>
+        </div>
+        <div class="resource grid grid-3col" style="gap: 10px; margin-top: 10px; padding: 0 10px;">
+          <div class="dropdown-field">
+            <label class="resource-label secondary-input">Quality</label>
+            <select class="secondary-input" name="system.quality" style="width: 100%; font-size: 16px; font-weight: normal;">
+              {{#select system.quality}}
+              <option value="prototype">Prototype</option>
+              <option value="improved">Improved</option>
+              <option value="perfect">Perfect</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="dropdown-field">
+            <label class="resource-label secondary-input">Nature</label>
+            <select class="secondary-input" name="system.nature" style="width: 100%; font-size: 16px; font-weight: normal;">
+              {{#select system.nature}}
+              <option value="enchanted">Enchanted</option>
+              <option value="magytech">Magytech</option>
+              <option value="other">Other</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="dropdown-field">
+            <label class="resource-label secondary-input">Sell Price (Grail)</label>
+            <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number" 
+              style="width: 100%; font-size: 16px; font-weight: normal;" />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item" data-tab="description"><i class="fas fa-scroll"></i> Description</a>
+      <a class="item" data-tab="attributes"><i class="fas fa-tools"></i> Attributes</a>
+      <a class="item" data-tab="effects"><i class="fas fa-magic"></i> Effects</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab description-tab" data-group="primary" data-tab="description">
+        <div class="editor-container">
+          <div class="editor-header">
+            <i class="fas fa-quill"></i> Gear Description
+          </div>
+          {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+      {{!-- Attributes Tab --}}
+      <div class="tab attributes" data-group="primary" data-tab="attributes">
+        {{!-- Restrictions Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Restrictions</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field">
+              <label>Action:</label>
+              <select name="system.action_type">
+                {{#select system.action_type}}
+                <option value="focused">Focused</option>
+                <option value="swift">Swift</option>
+                <option value="passive">Passive</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field cooldown-field">
+              <label>Cooldown:</label>
+              <input type="number" name="system.cooldown_value" value="{{system.cooldown_value}}" min="0" placeholder="Number">
+              <select name="system.cooldown_unit">
+                {{#select system.cooldown_unit}}
+                <option value="turn">Turn(s)</option>
+                <option value="round">Round(s)</option>
+                <option value="perRest">per Rest</option>
+                <option value="perTurn">per Turn</option>
+                <option value="perSpring">per Spring of Life</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field slot-space-field">
+              <label>Slot Space:</label>
+              <div class="inventory-counter">
+                <button type="button" class="counter-button minus" onclick="adjustInventorySize(-1, '{{item.id}}')">-</button>
+                <input class="counter-value" type="number" name="system.inventory_size" value="{{system.inventory_size}}" min="1" max="4" data-dtype="Number" readonly id="inventory-size-{{item.id}}"/>
+                <button type="button" class="counter-button plus" onclick="adjustInventorySize(1, '{{item.id}}')">+</button>
+              </div>
+            </div>
+            <div class="field fantasy-field">
+              <label>Range:</label>
+              <input type="number" name="system.range" value="{{system.range}}" min="0" placeholder="Range in meters (0 is Melee)">
+            </div>
+            <div class="field fantasy-field">
+              <label>Stamina:</label>
+              <input type="number" name="system.stamina_cost" value="{{system.stamina_cost}}" min="0" placeholder="Stamina Cost" data-dtype="Number" />
+            </div>
+            <div class="field fantasy-field">
+              <label>Mana:</label>
+              <input type="number" name="system.mana_cost" value="{{system.mana_cost}}" min="0" placeholder="Mana Cost" data-dtype="Number" />
+            </div>
+            <div class="field fantasy-field">
+              <label>Other:</label>
+              <input type="text" name="system.other_restrictions" value="{{system.other_restrictions}}" placeholder="Additional Restrictions">
+            </div>
+          </div>
+        </div>
+
+        {{!-- Tags Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Tags</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content tags-container">
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag1">
+                {{#select system.tag1}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag2">
+                {{#select system.tag2}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag3">
+                {{#select system.tag3}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                {{/select}}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Charges Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Charges</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="resource flex-group-center" style="width: 80%; margin: 0 auto;">
+              <div class="resource-content flexrow flex-center flex-between" style="gap: 10px;">
+                <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
+                <span style="margin-top: 5px;"> / </span>
+                <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Effects Tab --}}
+      <div class="tab effects" data-group="primary" data-tab="effects">
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Active Effects</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            {{> "systems/stryder/templates/item/parts/item-effects.hbs"}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>
+
+<script>
+  function adjustInventorySize(change, itemId) {
+    const inventoryInput = document.getElementById(`inventory-size-${itemId}`);
+    let currentValue = parseInt(inventoryInput.value);
+    const minVal = 1;
+    const maxVal = 4;
+
+    // Calculate new value within bounds
+    const newValue = Math.min(maxVal, Math.max(minVal, currentValue + change));
+
+    // Update input and item data
+    inventoryInput.value = newValue;
+    const item = game.items.get(itemId);
+    item.update({'system.inventory_size': newValue});
+  }
+</script>
+
+<style>
+  .slot-space-field {
+    display: flex;
+    align-items: center;
+  }
+
+  .inventory-counter {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+  }
+
+  .counter-button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #8b5a2b;
+    border-radius: 4px;
+    background: rgba(250, 240, 220, 0.8);
+    color: #5c3a21;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .counter-button:hover {
+    background: rgba(200, 160, 120, 0.3);
+  }
+
+  .counter-value {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #8b5a2b;
+    border-radius: 4px;
+    padding: 4px;
+    background: rgba(255, 248, 220, 0.7);
+    font-family: 'EB Garamond', serif;
+  }
+
+  .charge-input {
+    width: 60px;
+    text-align: center;
+    border: 1px solid #8b5a2b;
+    border-radius: 4px;
+    padding: 5px;
+    background: rgba(255, 248, 220, 0.7);
+    font-family: 'EB Garamond', serif;
+  }
+
+  .charge-separator {
+    font-size: 18px;
+    color: #5c3a21;
+    font-weight: bold;
+    margin: 0 5px;
+  }
+
+  .cooldown-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cooldown-field input {
+    width: 60px;
+  }
+</style>
+
+{{log system}}

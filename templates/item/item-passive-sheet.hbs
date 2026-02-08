@@ -1,0 +1,51 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        </div>
+        <div class="item-type-label">
+          <span>{{localize "STRYDER.ItemTypes.Passive"}}</span>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item" data-tab="description"><i class="fas fa-scroll"></i> {{localize "STRYDER.SheetLabels.Description"}}</a>
+      <a class="item" data-tab="effects"><i class="fas fa-shield-virus"></i> {{localize "STRYDER.SheetLabels.PassiveEffects"}}</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab description-tab" data-group="primary" data-tab="description">
+        <div class="editor-container">
+          <div class="editor-header">
+            <i class="fas fa-quill"></i> {{localize "STRYDER.SheetLabels.PassiveAbilityDescription"}}
+          </div>
+          {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+      {{!-- Effects Tab --}}
+      <div class="tab effects" data-group="primary" data-tab="effects">
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>{{localize "STRYDER.SheetLabels.PassiveEffects"}}</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            {{> "systems/stryder/templates/item/parts/item-effects.hbs"}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>
+
+{{log system}}

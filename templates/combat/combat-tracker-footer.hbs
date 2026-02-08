@@ -1,0 +1,27 @@
+<nav class="combat-controls" data-tooltip-direction="UP">
+    {{#if hasCombat}}
+        {{#if combat.started}}
+            <button type="button" class="combat-control" data-action="previousRound" data-tooltip="COMBAT.RoundPrev" aria-label="{{localize 'COMBAT.RoundPrev'}}">
+                <i class="fa-solid fa-step-backward"></i>
+            </button>
+            <button type="button" class="combat-control" data-action="previousTurn" data-tooltip="COMBAT.TurnPrev" aria-label="{{localize 'COMBAT.TurnPrev'}}">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <button type="button" class="combat-control combat-control-lg" data-action="endCombat">
+                <i class="fa-solid fa-stop" inert=""></i>
+                <span>{{localize 'COMBAT.End'}}</span>
+            </button>
+            <button type="button" class="combat-control" data-action="nextTurn" data-tooltip="COMBAT.TurnNext" aria-label="{{localize 'COMBAT.TurnNext'}}">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button type="button" class="combat-control" data-action="nextRound" data-tooltip="COMBAT.RoundNext" aria-label="{{localize 'COMBAT.RoundNext'}}">
+                <i class="fa-solid fa-step-forward"></i>
+            </button>
+        {{else}}
+            <button type="button" class="combat-control combat-control-lg" data-action="startCombat">
+                <i class="fa-solid fa-swords" inert=""></i>
+                <span>{{localize 'COMBAT.Begin'}}</span>
+            </button>
+        {{/if}}
+    {{/if}}
+</nav>

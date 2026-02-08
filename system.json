@@ -1,0 +1,349 @@
+{
+  "id": "stryder",
+  "title": "Stryder Roleplaying Game",
+  "description": "The official Foundry VTT System for the Stryder Tabletop Roleplaying Game",
+  "authors": [
+    {
+      "name": "Amarulence",
+      "discord": "amarulence"
+    }
+  ],
+  "url": "https://github.com/DarkSerpent/stryder-fvtt",
+  "license": "LICENSE.txt",
+  "readme": "README.md",
+  "changelog": "CHANGELOG.md",
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/stryder/assets/stryderfvtt.png",
+      "thumbnail": "systems/stryder/assets/stryderfvtt.png"
+    }
+  ],
+  "version": "2.5.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13",
+    "maximum": "13"
+  },
+  "esmodules": ["module/stryder.mjs"],
+  "styles": ["css/stryder.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "ja",
+      "name": "Japanese",
+      "path": "lang/ja.json"
+    },
+    {
+      "lang": "es",
+      "name": "Spanish",
+      "path": "lang/es.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {
+        "htmlFields": ["biography"]
+      },
+      "monster": {
+        "htmlFields": ["biography"]
+      },
+      "lordling": {
+        "htmlFields": ["biography"]
+      }
+    },
+    "Item": {
+      "action": {
+        "htmlFields": ["description"]
+      },
+      "armament": {
+        "htmlFields": ["description"]
+      },
+      "generic": {
+        "htmlFields": ["description"]
+      },
+      "hex": {
+        "htmlFields": ["description"]
+      },
+      "loot": {
+        "htmlFields": ["description"]
+      },
+      "feature": {
+        "htmlFields": ["description"]
+      },
+      "skill": {
+        "htmlFields": ["description"]
+      },
+      "racial": {
+        "htmlFields": ["description"]
+      },
+      "aegiscore": {
+        "htmlFields": ["description"]
+      },
+      "legacies": {
+        "htmlFields": ["description"]
+      },
+      "head": {
+        "htmlFields": ["description"]
+      },
+      "back": {
+        "htmlFields": ["description"]
+      },
+      "arms": {
+        "htmlFields": ["description"]
+      },
+      "legs": {
+        "htmlFields": ["description"]
+      },
+      "gems": {
+        "htmlFields": ["description"]
+      },
+      "component": {
+        "htmlFields": ["description"]
+      },
+      "consumable": {
+        "htmlFields": ["description"]
+      },
+      "gear": {
+        "htmlFields": ["description"]
+      },
+      "fantasm": {
+        "htmlFields": ["description"]
+      },
+      "statperk": {
+        "htmlFields": ["description"]
+      },
+      "technique": {
+        "htmlFields": ["description"]
+      },
+      "profession": {
+        "htmlFields": ["description"]
+      },
+      "bonds": {
+        "htmlFields": ["description"]
+      },
+      "passive": {
+        "htmlFields": ["description"]
+      },
+      "miscellaneous": {
+        "htmlFields": ["description"]
+      },
+      "class": {
+        "htmlFields": ["description"]
+      },
+      "folk": {
+        "htmlFields": ["description"]
+      }
+    }
+  },
+      "relationships": {
+        "requires": [
+          {
+            "id": "lib-wrapper",
+            "type": "module",
+            "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
+            "compatibility": {
+              "minimum": "1.0.0",
+              "verified": "1.2.0",
+              "maximum": "2.0.0"
+            }
+          }
+        ]
+      },
+  "packs": [
+    {
+      "name": "stryder-classes",
+      "label": "Classes",
+      "path": "packs/stryder-classes",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-class-features",
+      "label": "Class Features",
+      "path": "packs/stryder-class-features",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-folk",
+      "label": "Folk",
+      "path": "packs/stryder-folk",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-folk-abilities",
+      "label": "Folk Abilities",
+      "path": "packs/stryder-folk-abilities",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-actions",
+      "label": "Actions",
+      "path": "packs/stryder-actions",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-hexes",
+      "label": "Hexes",
+      "path": "packs/stryder-hexes",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-skills",
+      "label": "Skills",
+      "path": "packs/stryder-skills",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-techniques",
+      "label": "Techniques",
+      "path": "packs/stryder-techniques",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-statperks",
+      "label": "Stat Perks",
+      "path": "packs/stryder-statperks",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-fantasms",
+      "label": "Fantasms",
+      "path": "packs/stryder-fantasms",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-professions",
+      "label": "Professions",
+      "path": "packs/stryder-professions",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-armor",
+      "label": "Armor",
+      "path": "packs/stryder-armor",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-loot",
+      "label": "Loot",
+      "path": "packs/stryder-loot",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-monsters",
+      "label": "Monsters",
+      "path": "packs/stryder-monsters",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Bestiary",
+      "sorting": "a",
+      "color": "#532853",
+      "packs": ["stryder-monsters"]
+    },
+    {
+      "name": "Character Creation",
+      "sorting": "a",
+      "color": "#276625",
+      "packs": ["stryder-classes", "stryder-class-features", "stryder-folk", "stryder-folk-abilities", "stryder-actions", "stryder-hexes", "stryder-skills", "stryder-techniques", "stryder-statperks", "stryder-fantasms", "stryder-professions"]
+    },
+    {
+      "name": "Effects",
+      "sorting": "a",
+      "color": "#8b5c00",
+      "packs": []
+    },
+    {
+      "name": "Equipment",
+      "sorting": "a",
+      "color": "#005390",
+      "packs": ["stryder-armor", "stryder-loot"]
+    }
+  ],
+  "socket": true,
+  "manifest": "https://github.com/DarkSerpent/stryder-fvtt/releases/download/2.5.0/system.json",
+  "download": "https://github.com/DarkSerpent/stryder-fvtt/releases/download/2.5.0/system.zip",
+  "background": "systems/stryder/assets/stryderfvtt.png",
+  "grid": {
+    "distance": 1,
+    "units": "m"
+  },
+  "primaryTokenAttribute": "health",
+  "secondaryTokenAttribute": "mana"
+}

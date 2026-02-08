@@ -1,0 +1,126 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        </div>
+        <div class="item-type-label">
+          <span>Soul Armament</span>
+        </div>
+		<div class="resource" style="margin-top: 5px; padding: 0 10px;">
+			<label class="resource-label secondary-input">Form</label>
+			<input class="secondary-input" type="text" name="system.form" value="{{system.form}}" placeholder="Berserker, Commander, etc." 
+				style="width: 100%; font-size: 16px; font-weight: normal;" />
+			</div>
+		</div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item" data-tab="description"><i class="fas fa-scroll"></i> Description</a>
+      <a class="item" data-tab="attributes"><i class="fas fa-tools"></i> Attributes</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab description-tab" data-group="primary" data-tab="description">
+        <div class="editor-container">
+          <div class="editor-header">
+            <i class="fas fa-quill"></i> Armament Description
+          </div>
+          {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+      {{!-- Attributes Tab --}}
+      <div class="tab attributes" data-group="primary" data-tab="attributes">
+        {{!-- Target Options Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Target Options</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field">
+              <label>Damage Type:</label>
+              <select name="system.damage_type" class="damage-type-select">
+                {{#select system.damage_type}}
+                <option value="ahl">Ahl</option>
+                <option value="physical">Physical</option>
+                <option value="magykal">Magykal</option>
+                {{/select}}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Roll Attributes</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field formula-display">
+              <label>Roll Formula:</label>
+              <span class="formula-text">{{calculateFormula system.roll.diceNum system.roll.diceSize system.roll.diceBonus}}</span>
+            </div>
+            
+		<div class="grid grid-4col" style="margin-top: 15px;">
+		  <div class="roll-attribute-field">
+			<label>No. of Dice</label>
+			<input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
+		  </div>
+		  <div class="roll-attribute-field">
+			<label>Die Size</label>
+			<input type="text" name="system.roll.diceSize" value="{{system.roll.diceSize}}" data-dtype="Number" />
+		  </div>
+		  <div class="roll-attribute-field grid-span-2">
+			<label>Roll Modifier</label>
+			<input type="text" name="system.roll.diceBonus" value="{{system.roll.diceBonus}}" data-dtype="Number" />
+		  </div>
+		</div>
+
+		<div class="grid grid-2col" style="margin-top: 15px;">
+		  <div class="damage-amp-field">
+			<label>Base Damage Amp</label>
+			<input type="text" name="system.roll.baseDamageAmp" value="{{system.roll.baseDamageAmp}}" data-dtype="Number" />
+		  </div>
+		  <div class="damage-amp-field">
+			<label>Raw Damage Amp</label>
+			<input type="text" name="system.roll.rawDamageAmp" value="{{system.roll.rawDamageAmp}}" data-dtype="Number" />
+		  </div>
+		</div>
+        
+        <div class="section fantasy-section checkbox-section">
+          <div class="fantasy-checkbox">
+            <label>Is Wytchblade?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.armament.isWitchblade" value="true" {{#if system.armament.isWitchblade}}checked{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+          <div class="fantasy-checkbox">
+            <label>Always Rolls Excellent?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.armament.alwaysRollsExcellent" value="true" {{#if system.armament.alwaysRollsExcellent}}checked{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+          <div class="fantasy-checkbox">
+            <label>Adds Mastery to Damage Rolls?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.armament.addsMastery" value="true" {{#if system.armament.addsMastery}}checked{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>

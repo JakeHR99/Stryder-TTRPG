@@ -1,0 +1,57 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        </div>
+        <div class="item-type-label">
+          <span>Component Item</span>
+        </div>
+        <div class="resource grid grid-2col" style="gap: 15px; margin-top: 10px; padding: 0 10px;">
+          <div class="dropdown-field">
+            <label class="resource-label secondary-input">Grade</label>
+            <select class="secondary-input" name="system.grade" style="width: 100%; font-size: 16px; font-weight: normal;">
+              {{#select system.grade}}
+              <option value="G4">Rank 4</option>
+              <option value="G3">Rank 3</option>
+              <option value="G2">Rank 2</option>
+              <option value="G1">Rank 1</option>
+              <option value="G0">Mythic</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="dropdown-field">
+            <label class="resource-label secondary-input">Sell Price (Grail)</label>
+            <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number" 
+              style="width: 100%; font-size: 16px; font-weight: normal;" />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Simplified Content Area --}}
+    <div class="component-content-area" style="margin-top: -15px;">
+      <div class="editor-container">
+        <div class="editor-header">
+          <i class="fas fa-cog"></i> Component Description
+        </div>
+        {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+      </div>
+    </div>
+  </div>
+</form>
+
+<style>
+  .component-content-area {
+    padding: 15px;
+  }
+  
+  .editor-header .fa-cog {
+    color: #5c3a21;
+    margin-right: 8px;
+  }
+</style>
+
+{{log system}}

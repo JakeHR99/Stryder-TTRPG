@@ -1,0 +1,587 @@
+<link href="https://fonts.googleapis.com/css2?family=Tangerine&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=MedievalSharp&family=Eagle+Lake:wght@400&display=swap" rel="stylesheet">
+<script>
+	// Enhanced sheen clipping function for Lordling sheet
+	function updateLordlingSheenClipping() {
+		// Health bar
+		const hpBar = document.querySelector('.hp-bar');
+		if (hpBar) {
+			const hpFillPercent = (hpBar.value / hpBar.max) * 100;
+			const hpSheenWrapper = document.querySelector('.hp-sheen-wrapper');
+			if (hpSheenWrapper) {
+				hpSheenWrapper.style.width = `${hpFillPercent}%`;
+			}
+		}
+		
+		// Tactics bar
+		const tacticsBar = document.querySelector('.tactics-bar');
+		if (tacticsBar) {
+			const tacticsFillPercent = (tacticsBar.value / tacticsBar.max) * 100;
+			const tacticsSheenWrapper = document.querySelector('.tactics-sheen-wrapper');
+			if (tacticsSheenWrapper) {
+				tacticsSheenWrapper.style.width = `${tacticsFillPercent}%`;
+			}
+		}
+	}
+
+	// Wait for DOM to be ready with multiple fallbacks
+	function initializeLordlingSheenClipping() {
+		// Try multiple times to ensure elements are loaded
+		let attempts = 0;
+		const maxAttempts = 10;
+		
+		function tryUpdate() {
+			attempts++;
+			const hpBar = document.querySelector('.hp-bar');
+			const tacticsBar = document.querySelector('.tactics-bar');
+			
+			if (hpBar && tacticsBar) {
+				updateLordlingSheenClipping();
+			} else if (attempts < maxAttempts) {
+				setTimeout(tryUpdate, 100);
+			}
+		}
+		
+		tryUpdate();
+	}
+
+	// Multiple event listeners for better coverage
+	document.addEventListener('DOMContentLoaded', initializeLordlingSheenClipping);
+	
+	// Foundry VTT specific events
+	document.addEventListener('renderActorSheet', function() {
+		setTimeout(initializeLordlingSheenClipping, 100);
+	});
+	
+	// Update on any form changes
+	document.addEventListener('change', function(e) {
+		if (e.target.name && (
+			e.target.name.includes('health') || 
+			e.target.name.includes('tactics')
+		)) {
+			setTimeout(updateLordlingSheenClipping, 50);
+		}
+	});
+
+	// Update on input events for real-time changes
+	document.addEventListener('input', function(e) {
+		if (e.target.name && (
+			e.target.name.includes('health') || 
+			e.target.name.includes('tactics')
+		)) {
+			setTimeout(updateLordlingSheenClipping, 50);
+		}
+	});
+
+	// Fallback: Update every 2 seconds to catch any missed updates
+	setInterval(function() {
+		const hpBar = document.querySelector('.hp-bar');
+		if (hpBar) {
+			updateLordlingSheenClipping();
+		}
+	}, 2000);
+
+	// Reset Tactics Button Functionality
+	document.addEventListener('click', function(e) {
+		if (e.target.closest('.tactics-reset-button')) {
+			const tacticsMaxInput = document.querySelector('input[name="system.tactics.max"]');
+			const tacticsValueInput = document.querySelector('input[name="system.tactics.value"]');
+			
+			if (tacticsMaxInput && tacticsValueInput) {
+				const maxValue = parseInt(tacticsMaxInput.value);
+				tacticsValueInput.value = maxValue;
+				
+				// Trigger change event to update the actor
+				const changeEvent = new Event('change', { bubbles: true });
+				tacticsValueInput.dispatchEvent(changeEvent);
+				
+				// Update sheen effect
+				setTimeout(updateLordlingSheenClipping, 50);
+			}
+		}
+	});
+</script>
+
+<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+
+<div class="unique-logo-container">
+    <img class="logo" src="systems/stryder/assets/stryderfvtt_title.png" width="125" height="125">
+</div>
+  {{!-- Sheet Header --}}
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" style="margin-top: 50px;"/>
+    <div class="header-fields">
+		<div class="fantasy-input">
+				<input name="name" type="text" value="{{actor.name}}" placeholder="Name"/>
+		</div><br />
+      {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
+      use both the "grid" and "grid-Ncol" class where "N" can be any number
+      from 1 to 12 and will create that number of columns.  --}}
+        <div class="character-details-secondary textalign-center flexrow" style="margin-bottom: 20px;">
+          <div class="character-gender">
+            <label for="{{actor._id}}gender" class="resource-label-info">{{localize "Gender"}}</label>
+            <input id="{{actor._id}}gender" type="text" name="system.attributes.gender" value="{{system.attributes.gender}}" placeholder="Gender" data-dtype="String"/>
+          </div>
+          <div class="character-pronouns">
+            <label for="{{actor._id}}pronouns" class="resource-label-info">{{localize "Pronouns"}}</label>
+            <input id="{{actor._id}}pronouns" type="text" name="system.attributes.pronouns" value="{{system.attributes.pronouns}}" placeholder="He/She/They, etc." data-dtype="String"/>
+          </div>
+          <div class="character-weightclass">
+            <label for="{{actor._id}}creature_size" class="resource-label-info">{{localize "Creature Size"}}</label>
+			<div class="dropdown-field">
+				<select class="secondary-input" name="system.attributes.creature_size" style="width: 100%; font-size: 16px; font-weight: normal;">
+				  {{#select system.attributes.creature_size}}
+				  <option value="0.25">Mini</option>
+				  <option value="0.5">Small</option>
+				  <option value="1">Normal</option>
+				  <option value="2">Huge</option>
+				  <option value="3">Massive</option>
+				  <option value="4">Colossal</option>
+				  <option value="5">Titanic</option>
+				  {{/select}}
+				</select>
+			</div>
+          </div>
+		</div>
+      <div class="resources grid grid-2col" style="margin-left: 25px; width: 80%;">
+
+        {{!-- "flex-group-center" is also defined in the _grid.scss file
+        and it will add a small amount of padding, a border, and will
+        center all of its child elements content and text. --}}
+
+        <div class="resource flex-group-center">
+          <label for="system.health.value" class="resource-label"><img style="width: 15px; height: 15px; border: 0px; position: relative; top: 15px; margin-right: -5px;" src="systems/stryder/assets/health-symbol.svg">Health</label>
+		  <div class="hpbar">
+			<div class="hp-progress-bar">
+			  <progress class="hp-bar grid-span-3" value="{{system.health.value}}" max="{{system.health.max}}"></progress>
+			</div>
+		  </div>
+          <div class="resource-content flexrow flex-center flex-between">
+          <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
+          <span> / </span>
+          <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number" readonly/>
+          </div>
+        </div>
+
+        <div class="resource flex-group-center tactics-resource-container">
+          <label for="system.tactics.value" class="resource-label"><img style="width: 20px; height: 20px; border: 0px; position: relative; top: 10px; margin-bottom: -5px; left: -5px; margin-left: 15px;" src="systems/stryder/assets/focus-symbol.svg">{{localize "Tactics"}}</label>
+		  <div class="tacticsbar">
+			<div class="tactics-progress-bar">
+			  <progress class="tactics-bar grid-span-3" value="{{system.tactics.value}}" max="{{system.tactics.max}}"></progress>
+			  <div class="tactics-sheen-wrapper">
+				<div class="tactics-sheen"></div>
+			  </div>
+			</div>
+		  </div>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.tactics.value" value="{{system.tactics.value}}" data-dtype="Number"/>
+            <span> / </span>
+            <input type="text" name="system.tactics.max" value="{{system.tactics.max}}" data-dtype="Number"/>
+          </div>
+          <div class="tactics-reset-button-container">
+            <button class="tactics-reset-button" data-action="tacticsReset" title="Reset Tactics: Regain all your Tactics Points.">
+              <img src="systems/stryder/assets/turn-start.svg" class="reset-icon"/>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    {{!-- Default tab is specified in actor-sheet.mjs --}}
+    <a class="item" data-tab="features">Battle</a>
+    <a class="item" data-tab="battle">Features</a>
+    <a class="item" data-tab="description">Biography</a>
+    <a class="item" data-tab="effects">Effects</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Owned Features Tab --}}
+    <div class="tab features" data-group="primary" data-tab="features">
+      <section class="grid grid-3col">
+        <aside class="sidebar">
+
+          {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
+          use both the "grid" and "grid-Ncol" class where "N" can be any number
+          from 1 to 12 and will create that number of columns.  --}}
+          <div class="abilities flexcol fantasy-abilities">
+            <div class="abilities-header">
+              <h3 class="fantasy-section-title">
+                <span class="title-decoration left"></span>
+                <span class="title-text">Abilities</span>
+                <span class="title-decoration right"></span>
+              </h3>
+            </div>
+            {{#each system.abilities as |ability key|}}
+            <div class="ability flexrow flex-group-center stat-font fantasy-ability">
+              <label class="ability-label" title="{{#if (eq key 'Soul')}}This stat measures the strength of your Soul Armament. This affects the damage your attacks and Skills deal. It also raises your Physical Potency making your Skills harder to Resist.{{else if (eq key 'Reflex')}}Combat reflexes and evasiveness. Reflexes provides survivability on the battlefield as well as increasing your ability to Dodge.{{else if (eq key 'Grit')}}Physical Durability and Resilience unmatched. You gain additional Health, and an increased Physical Resistance making you harder to overwhelm.{{else if (eq key 'Arcana')}}A visible level of your bodies upper limits for wielding Hexes and otherwise using Mana. This Stat augments the damage and effects Hexes will produce, as well as raising your Magykal Potency, making some Hexes and effects harder to Resist.{{else if (eq key 'Intuition')}}Combat Knowledge and Experience are represented by Intuition. Intuition grants simple but useful abilities.{{else if (eq key 'Will')}}Will grants you incredible determination capable of surmounting the odds and even resisting magykal abilities. This Stat raises your Magykal Resist providing additional defense against certain effects.{{else if (eq key 'Spirit')}}The physical embodiment of the fire of a Lordling's existence. Channeled and manifested by their Shaman, Spirit dictates the amount of damage a Lordling can deal when making attacks.{{/if}}"><b>{{ability.label}}&nbsp;&nbsp;</b></label>
+              <div class="ability-input-container">
+                <input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number" class="fantasy-ability-input"/>
+                <div class="ability-input-glow"></div>
+              </div>
+              <span class="ability-mod rollable" data-roll="2d6+@abilities.{{key}}.value" data-label="{{ability.label}}">
+                <div class="dice-container">
+                  <img src="systems/stryder/assets/d6.svg" width=25px height=25px style='border:0px'>
+                  <div class="dice-glow"></div>
+                </div>
+              </span>
+            </div>
+            {{/each}}
+          </div>
+		<div class="fantasy-combat-abilities">
+			<div class="combat-abilities-header">
+				<h3 class="fantasy-section-title">
+					<span class="title-decoration left"></span>
+					<span class="title-text">Saves</span>
+					<span class="title-decoration right"></span>
+				</h3>
+			</div>
+			
+			<!-- Physical Potency & Resist Column -->
+			<div class="potency-resist-column">
+				<div class="fantasy-combat-button-container">
+					<span class="fantasy-combat-button potency-button rollable" data-roll="2*@abilities.Spirit.value+@attributes.mastery+@attributes.physical_potency.mod" data-label="Physical Potency DC">
+						<div class="combat-icon-container">
+							<img src="systems/stryder/assets/physical_potency.svg" class="combat-icon"/>
+							<div class="combat-icon-glow"></div>
+						</div>
+						<span class="combat-button-text"><strong>{{localize "Physical Potency"}}</strong></span>
+						<div class="combat-button-shine"></div>
+					</span>
+				</div>
+				
+				<div class="connect-line"></div>
+				
+				<div class="fantasy-combat-button-container">
+					<span class="fantasy-combat-button resistance-button rollable" data-roll="2d6+@abilities.Grit.value+@checks.Physical.mod" data-label="Physical Resistance Check">
+						<div class="combat-icon-container">
+							<img src="systems/stryder/assets/physical_resistance.svg" class="combat-icon"/>
+							<div class="combat-icon-glow"></div>
+						</div>
+						<span class="combat-button-text"><strong>{{localize "Resist"}}</strong></span>
+						<div class="combat-button-shine"></div>
+					</span>
+				</div>
+			</div>
+
+			<!-- Magykal Potency & Resist Column -->
+			<div class="potency-resist-column">
+				<div class="fantasy-combat-button-container">
+					<span class="fantasy-combat-button potency-button rollable" data-roll="2*@abilities.Spirit.value+@attributes.mastery+@attributes.magykal_potency.mod" data-label="Magykal Potency DC">
+						<div class="combat-icon-container">
+							<img src="systems/stryder/assets/magykal_potency.svg" class="combat-icon"/>
+							<div class="combat-icon-glow"></div>
+						</div>
+						<span class="combat-button-text"><strong>{{localize "Magykal Potency"}}</strong></span>
+						<div class="combat-button-shine"></div>
+					</span>
+				</div>
+				
+				<div class="connect-line"></div>
+				
+				<div class="fantasy-combat-button-container">
+					<span class="fantasy-combat-button resistance-button rollable" data-roll="2d6+@abilities.Will.value+@checks.Magykal.mod" data-label="Magykal Resistance Check">
+						<div class="combat-icon-container">
+							<img src="systems/stryder/assets/magykal_resistance.svg" class="combat-icon"/>
+							<div class="combat-icon-glow"></div>
+						</div>
+						<span class="combat-button-text"><strong>{{localize "Resist"}}</strong></span>
+						<div class="combat-button-shine"></div>
+					</span>
+				</div>
+			</div>
+
+			<!-- Dodge & Evade Row -->
+			<div class="combat-row dodge-evade-row">
+				<div class="fantasy-combat-button-container">
+					<span class="fantasy-combat-button ability-dodge-evade-mod rollable" data-custom-roll="1d6+@abilities.Reflex.value+@dodge.bonus" data-label="Dodge Roll">
+						<div class="combat-icon-container">
+							<img src="systems/stryder/assets/dodge.svg" class="combat-icon"/>
+							<div class="combat-icon-glow"></div>
+						</div>
+						<span class="combat-button-text"><strong>{{localize "Dodge"}}</strong></span>
+						<div class="combat-button-shine"></div>
+					</span>
+				</div>
+				
+				<div class="fantasy-combat-button-container">
+					<span class="fantasy-combat-button ability-dodge-evade-mod rollable" data-custom-roll="2d6+@abilities.Reflex.value+@evade.bonus" data-label="Evade Roll">
+						<div class="combat-icon-container">
+							<img src="systems/stryder/assets/evade.svg" class="combat-icon"/>
+							<div class="combat-icon-glow"></div>
+						</div>
+						<span class="combat-button-text"><strong>{{localize "Evade"}}</strong></span>
+						<div class="combat-button-shine"></div>
+					</span>
+				</div>
+			</div>
+		</div>
+        </aside>
+        {{!-- For the main features list, span the right two columns --}}
+        <section class="main grid-span-2">
+          {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
+          {{> "systems/stryder/templates/actor/parts/lordling-features.hbs"}}
+        </section>
+
+      </section>
+    </div>
+
+<!-- Battle Tab -->
+
+<!--Expertise Calculation -->
+   <script>
+	   Hooks.once("renderActorSheet", function(actorSheet, html, data) {
+		   const actor = actorSheet.actor;
+
+		   // Handle running expertise calculation
+		   updateRunningSpeedBasedOnExpertise(actor);
+
+		   // Handle climbing speed calculation
+		   updateClimbingSpeedBasedOnExpertise(actor);
+
+		   // Handle crawling speed calculation
+		   updateCrawlingSpeedBasedOnExpertise(actor);
+
+		   // Handle marching speed calculation
+		   updateMarchingSpeedBasedOnExpertise(actor);
+
+		   // Handle swimming speed calculation
+		   updateSwimmingSpeedBasedOnExpertise(actor);
+	   });
+
+	   function updateRunningSpeedBasedOnExpertise(actor) {
+		   const running = actor.system.attributes.move.running;
+		   if (running.expertise) {
+			   const newRunningValue = 11;
+			   actor.update({
+				   "system.attributes.move.running.value": newRunningValue
+			   });
+		   } else {
+			   actor.update({
+				   "system.attributes.move.running.value": 7
+			   });
+		   }
+	   }
+
+	   function updateClimbingSpeedBasedOnExpertise(actor) {
+		   const climbing = actor.system.attributes.move.climbing;
+		   if (climbing.expertise) {
+			   const newClimbingValue = 6 + actor.system.attributes.talent.strength.value;
+			   actor.update({
+				   "system.attributes.move.climbing.value": newClimbingValue
+			   });
+		   } else {
+			   actor.update({
+				   "system.attributes.move.climbing.value": 3
+			   });
+		   }
+	   }
+
+	   function updateCrawlingSpeedBasedOnExpertise(actor) {
+		   const crawling = actor.system.attributes.move.crawling;
+		   if (crawling.expertise) {
+			   const newCrawlingValue = 4 + actor.system.attributes.talent.nimbleness.value;
+			   actor.update({
+				   "system.attributes.move.crawling.value": newCrawlingValue
+			   });
+		   } else {
+			   actor.update({
+				   "system.attributes.move.crawling.value": 2
+			   });
+		   }
+	   }
+
+	   function updateMarchingSpeedBasedOnExpertise(actor) {
+		   const marching = actor.system.attributes.move.marching;
+		   if (marching.expertise) {
+			   const newMarchingValue = 7;
+			   actor.update({
+				   "system.attributes.move.marching.value": newMarchingValue
+			   });
+		   } else {
+			   actor.update({
+				   "system.attributes.move.marching.value": 4
+			   });
+		   }
+	   }
+
+	   function updateSwimmingSpeedBasedOnExpertise(actor) {
+		   const swimming = actor.system.attributes.move.swimming;
+		   if (swimming.expertise) {
+			   const newSwimmingValue = 6 + actor.system.attributes.talent.nimbleness.value;
+			   actor.update({
+				   "system.attributes.move.swimming.value": newSwimmingValue
+			   });
+		   } else {
+			   actor.update({
+				   "system.attributes.move.swimming.value": 4
+			   });
+		   }
+	   }
+   </script>
+
+<div class="tab battle" data-group="primary" data-tab="battle">
+    <h2 class="section-header" style="border-bottom: 0px;">
+        <span class="header-decoration left"></span>
+        <img src="systems/stryder/assets/movement-speeds.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;">
+        <strong>{{localize "Movement Speeds"}}</strong>
+        <span class="header-decoration right"></span>
+    </h2>
+    
+    <div class="movement-container">
+        <!-- Base Movement Speed -->
+        <div class="base-movement-section">
+            <div class="flexrow flex-group-center-speed">
+                <img src="systems/stryder/assets/run.svg" width="30px" height="30px" style="border:0px; margin-right: -20px; margin-left: -10px;">
+                <label><b>{{localize "Current Movement"}}</b></label>
+            </div>
+            <div class="speed-input-container">
+                <span class="speed-input-box">
+                    <input type="text" name="system.attributes.move.running.value" value="{{system.attributes.move.running.value}}" data-dtype="Number" readonly>
+                </span>
+            </div>
+            
+            <!-- Movement Rules Text -->
+            <div class="movement-rules">
+                <div class="rules-scroll">
+                    <p class="rules-text">
+                        <span class="rules-highlight">{{localize "Movement Basics"}}:</span> {{localize "Movement Basics Description"}}
+                    </p>
+                    <p class="rules-text">
+                        <span class="rules-highlight">{{localize "Engagement & Recovery"}}:</span> {{localize "Engagement Recovery Description"}}
+                    </p>
+                    <p class="rules-text">
+                        <span class="rules-highlight">{{localize "Baseline & Modifiers"}}:</span> {{localize "Baseline Modifiers Description"}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Movement Expertises -->
+        <div class="expertise-section">
+            <h3 class="expertise-title">{{localize "Movement Expertises"}}</h3>
+            <div class="expertise-grid">
+                <div class="expertise-item" data-tooltip="<b>Running Expertise:</b> Raises your Movement by 4.">
+                    <span class="expertise-label">{{localize "Running"}}</span>
+                    <div class="expertise-indicator {{#if system.attributes.move.running.expertise}}expertise-active{{else}}expertise-inactive{{/if}}">
+                        {{#if system.attributes.move.running.expertise}}✔{{else}}✘{{/if}}
+                    </div>
+                </div>
+                
+                <div class="expertise-item" data-tooltip="<b>Climbing Expertise:</b> Grants the passive ability Cling. Cling allows you to dangle off of a surface you are climbing with one free hand, allowing you to perform one handed actions while occupying Climbing Terrain spaces. You can traverse Climbing spaces at a rate of 2 Movement per space.">
+                    <span class="expertise-label">{{localize "Climbing"}}</span>
+                    <div class="expertise-indicator {{#if system.attributes.move.climbing.expertise}}expertise-active{{else}}expertise-inactive{{/if}}">
+                        {{#if system.attributes.move.climbing.expertise}}✔{{else}}✘{{/if}}
+                    </div>
+                </div>
+                
+                <div class="expertise-item" data-tooltip="<b>Marching Expertise:</b> You can traverse Marching spaces at a rate of 1 Movement per space.">
+                    <span class="expertise-label">{{localize "Marching"}}</span>
+                    <div class="expertise-indicator {{#if system.attributes.move.marching.expertise}}expertise-active{{else}}expertise-inactive{{/if}}">
+                        {{#if system.attributes.move.marching.expertise}}✔{{else}}✘{{/if}}
+                    </div>
+                </div>
+                
+                <div class="expertise-item" data-tooltip="<b>Swimming Expertise:</b> Grants the passive Combat Floating. Floating removes the -4 penalty from players when they occupy a Swimming Terrain space. You can traverse Swimming spaces at a rate of 2 Movement per space.">
+                    <span class="expertise-label">{{localize "Swimming"}}</span>
+                    <div class="expertise-indicator {{#if system.attributes.move.swimming.expertise}}expertise-active{{else}}expertise-inactive{{/if}}">
+                        {{#if system.attributes.move.swimming.expertise}}✔{{else}}✘{{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <br />
+    
+    {{> "systems/stryder/templates/actor/parts/lordling-battle.hbs"}}
+</div>
+
+    {{!-- Biography Tab --}}
+    <div class="tab biography" data-group="primary" data-tab="description">
+      <div class="biography-header">
+        <h1 class="parchment-title">{{localize "Character Chronicle"}}</h1>
+      </div>
+      
+      {{!-- Character Details Section --}}
+      <div class="character-details-container">
+        <div class="scroll-border top"></div>
+        
+        <div class="character-details-secondary textalign-center flexrow">
+          <div class="birthplace detail-field">
+            <label for="{{actor._id}}birthplace" class="resource-label fancy-label">{{localize "Birthplace"}}</label> 
+            <div class="input-frame">
+              <input id="{{actor._id}}birthplace" type="text" name="system.details.birthplace" value="{{system.details.birthplace}}" data-dtype="String"/>
+            </div>
+          </div>
+          <div class="nationality detail-field">
+            <label for="{{actor._id}}nationality" class="resource-label fancy-label">{{localize "Nationality"}}</label>
+            <div class="input-frame">
+              <input id="{{actor._id}}nationality" type="text" name="system.details.nationality" value="{{system.details.nationality}}" data-dtype="String"/>
+            </div>
+          </div>
+        </div>
+        
+        <div class="character-details-secondary textalign-center flexrow">
+          <div class="age detail-field">
+            <label for="{{actor._id}}age" class="resource-label fancy-label">{{localize "Age"}}</label> 
+            <div class="input-frame">
+              <input id="{{actor._id}}age" type="number" name="system.details.age" value="{{system.details.age}}" data-dtype="Number"/>
+            </div>
+          </div>
+          <div class="height detail-field">
+            <label for="{{actor._id}}height" class="resource-label fancy-label">{{localize "Height"}}</label> 
+            <div class="input-frame">
+              <input id="{{actor._id}}height" type="text" name="system.details.height" value="{{system.details.height}}" data-dtype="String"/>
+            </div>
+          </div>
+          <div class="weightclass detail-field">
+            <label for="{{actor._id}}weight_class" class="resource-label fancy-label">{{localize "Weight Class"}}</label> 
+            <div class="input-frame">
+              <input id="{{actor._id}}weight_class" type="text" name="system.attributes.weight_class" value="{{system.attributes.weight_class}}" placeholder="4" data-dtype="Number"/>
+            </div>
+          </div>
+        </div>
+        
+        <div class="scroll-border bottom"></div>
+      </div>
+      
+      {{!-- Appearance Section --}}
+      <div class="appearance-container">
+        <h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/visage.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Visage"}}</strong><span class="header-decoration right"></span></h2>
+      </div>
+		<div class="editor-container biography">
+			{{editor system.appearance target="system.appearance" rollData=rollData button=true owner=owner editable=editable}}
+		</div>
+      
+      {{!-- Backstory Section --}}
+      <div class="backstory-container">
+        <h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/legend.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Legend"}}</strong><span class="header-decoration right"></span></h2>
+      </div>
+		<div class="editor-container biography">
+          {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
+		</div>
+
+      {{!-- Personality Section --}}
+      <div class="personality-container">
+        <h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/personality.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Personality"}}</strong><span class="header-decoration right"></span></h2>
+      </div>
+		<div class="editor-container biography">
+          {{editor system.personality target="system.personality" rollData=rollData button=true owner=owner editable=editable}}
+		</div>
+	</div>
+
+    {{!-- Active Effects Tab --}}
+    <div class="tab effects flexcol" data-group="primary" data-tab="effects">
+      {{> "systems/stryder/templates/actor/parts/actor-effects.hbs"}}
+    </div>
+
+  </section>
+</form>
+
+{{log system}}

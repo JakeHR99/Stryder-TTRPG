@@ -1,0 +1,75 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        </div>
+        <div class="item-type-label">
+          <span>Soul Stone & Legacy Item</span>
+        </div>
+        <div class="resource grid grid-2col" style="gap: 15px; margin-top: 10px; padding: 0 10px;">
+          <div class="dropdown-field">
+            <label class="resource-label secondary-input">Rarity</label>
+            <select class="secondary-input" name="system.rarity" style="width: 100%; font-size: 16px; font-weight: normal;">
+              {{#select system.rarity}}
+              <option value="common">Common</option>
+              <option value="uncommon">Uncommon</option>
+              <option value="rare">Rare</option>
+              <option value="mythic">Legendary</option>
+              <option value="one of a kind">One of a Kind</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="dropdown-field">
+            <label class="resource-label secondary-input">Nature</label>
+            <select class="secondary-input" name="system.nature" style="width: 100%; font-size: 16px; font-weight: normal;">
+              {{#select system.nature}}
+              <option value="enchanted">Enchanted</option>
+              <option value="magytech">Magytech</option>
+              <option value="other">Other</option>
+              {{/select}}
+            </select>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item" data-tab="description"><i class="fas fa-scroll"></i> Description</a>
+      <a class="item" data-tab="effects"><i class="fas fa-star"></i> Legacy Effects</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab description-tab" data-group="primary" data-tab="description">
+        <div class="editor-container">
+          <div class="editor-header">
+            <i class="fas fa-quill"></i> Legacy Description
+          </div>
+          {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+      {{!-- Effects Tab --}}
+      <div class="tab effects" data-group="primary" data-tab="effects">
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Legacy Effects</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            {{> "systems/stryder/templates/item/parts/item-effects.hbs"}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>
+
+{{log system}}

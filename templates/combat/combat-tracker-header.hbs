@@ -1,0 +1,34 @@
+<header class="combat-tracker-header">
+    <nav class="encounters tabbed" aria-label="Combat Encounters Navigation">
+        <button type="button" class="inline-control icon fa-solid fa-plus" data-action="createCombat" data-tooltip="" aria-label="Create Encounter"></button>
+        {{#if combatCount}}
+            <button type="button" class="inline-control active" data-action="cycleCombat" data-combat-id="{{combat.id}}">
+                {{currentIndex}}
+            </button>
+        {{/if}}
+        <button type="button" class="inline-control icon fa-solid fa-gear" data-action="trackerSettings" data-tooltip="" aria-label="Encounter Tracker Settings"></button>
+    </nav>
+
+    <center>
+    <div class="encounter-controls {{#if hasCombat}}combat{{/if}}">
+        <div class="control-buttons left flexrow">
+        </div>
+
+        <strong class="encounter-title">
+            {{#if combat}}
+                {{#if combat.started}}
+                    {{localize 'COMBAT.Round'}} {{combat.round}}
+                {{else}}
+                    {{localize 'COMBAT.NotStarted'}}
+                {{/if}}
+            {{else}}
+                {{localize "COMBAT.None"}}
+            {{/if}}
+        </strong>
+        </center>
+        <div class="control-buttons right flexrow">
+            <div class="spacer"></div>
+            <button type="button" class="encounter-context-menu inline-control combat-control icon fa-solid fa-ellipsis-vertical"></button>
+        </div>
+    </div>
+</header>

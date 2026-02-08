@@ -1,0 +1,235 @@
+{{!-- Life Skills Tab --}}
+
+{{!-- Sparks Section --}}
+<h2 class="section-header" style="border-bottom: 0px; margin-top: 10px;">
+    <span class="header-decoration left"></span>
+    <img src="systems/stryder/assets/sparks.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;">
+    <strong>{{localize "Sparks"}}</strong>
+    <span class="header-decoration right"></span>
+</h2>
+<div class="sparks-container">
+    <div class="sparks-grid">
+        <div class="spark-item">
+            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark1" {{checked system.sparks.spark1}}>
+        </div>
+        <div class="spark-item">
+            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark2" {{checked system.sparks.spark2}}>
+        </div>
+        <div class="spark-item">
+            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark3" {{checked system.sparks.spark3}}>
+        </div>
+        <div class="spark-item">
+            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark4" {{checked system.sparks.spark4}}>
+        </div>
+        <div class="spark-item">
+            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark5" {{checked system.sparks.spark5}}>
+        </div>
+    </div>
+</div>
+
+<h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/life-skills.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Life Skills"}}</strong><span class="header-decoration right"></span></h2>
+<div class="tab life" data-group="primary" data-tab="life">
+  <div class="life-tab">
+    
+    <div class="life-skills-container" style="margin-top: -2px;">
+      {{!-- Cooking --}}
+      <div class="life-skill">
+        <div class="life-skill-header" data-skill="cooking">
+          <img class="life-skill-icon" src="systems/stryder/assets/life-cooking.svg">
+          <span class="life-skill-name">{{localize "Cooking"}}</span>
+          <div class="life-skill-controls">
+            <button class="life-skill-btn minus" data-skill="cooking">-</button>
+            <input class="life-skill-value" type="number" name="system.life.cooking.value" value="{{system.life.cooking.value}}" placeholder="0" min="0" max="5" readonly>
+            <button class="life-skill-btn plus" data-skill="cooking">+</button>
+          </div>
+        </div>
+        <div class="life-skill-description">
+          {{localize "Cooking Description"}}
+        </div>
+      </div>
+      
+      {{!-- Elixir Brewing --}}
+      <div class="life-skill">
+        <div class="life-skill-header" data-skill="elixirbrewing">
+          <img class="life-skill-icon" src="systems/stryder/assets/life-elixir.svg">
+          <span class="life-skill-name">{{localize "Elixir Brewing"}}</span>
+          <div class="life-skill-controls">
+            <button class="life-skill-btn minus" data-skill="elixirbrewing">-</button>
+            <input class="life-skill-value" type="number" name="system.life.elixirbrewing.value" value="{{system.life.elixirbrewing.value}}" placeholder="0" min="0" max="5" readonly>
+            <button class="life-skill-btn plus" data-skill="elixirbrewing">+</button>
+          </div>
+        </div>
+        <div class="life-skill-description">
+          {{localize "Elixir Brewing Description"}}
+        </div>
+      </div>
+      
+      {{!-- Fishing --}}
+      <div class="life-skill">
+        <div class="life-skill-header" data-skill="fishing">
+          <img class="life-skill-icon" src="systems/stryder/assets/life-fishing.svg">
+          <span class="life-skill-name">{{localize "Fishing"}}</span>
+          <div class="life-skill-controls">
+            <button class="life-skill-btn minus" data-skill="fishing">-</button>
+            <input class="life-skill-value" type="number" name="system.life.fishing.value" value="{{system.life.fishing.value}}" placeholder="0" min="0" max="5" readonly>
+            <button class="life-skill-btn plus" data-skill="fishing">+</button>
+          </div>
+        </div>
+        <div class="life-skill-description">
+          {{localize "Fishing Description"}}
+        </div>
+      </div>
+      
+      {{!-- Hunting --}}
+      <div class="life-skill">
+        <div class="life-skill-header" data-skill="hunting">
+          <img class="life-skill-icon" src="systems/stryder/assets/life-hunting.svg">
+          <span class="life-skill-name">{{localize "Hunting"}}</span>
+          <div class="life-skill-controls">
+            <button class="life-skill-btn minus" data-skill="hunting">-</button>
+            <input class="life-skill-value" type="number" name="system.life.hunting.value" value="{{system.life.hunting.value}}" placeholder="0" min="0" max="5" readonly>
+            <button class="life-skill-btn plus" data-skill="hunting">+</button>
+          </div>
+        </div>
+        <div class="life-skill-description">
+          {{localize "Hunting Description"}}
+        </div>
+      </div>
+      
+      {{!-- Performing --}}
+      <div class="life-skill">
+        <div class="life-skill-header" data-skill="performing">
+          <img class="life-skill-icon" src="systems/stryder/assets/life-performing.svg">
+          <span class="life-skill-name">{{localize "Performing"}}</span>
+          <div class="life-skill-controls">
+            <button class="life-skill-btn minus" data-skill="performing">-</button>
+            <input class="life-skill-value" type="number" name="system.life.performing.value" value="{{system.life.performing.value}}" placeholder="0" min="0" max="5" readonly>
+            <button class="life-skill-btn plus" data-skill="performing">+</button>
+          </div>
+        </div>
+        <div class="life-skill-description">
+          {{localize "Performing Description"}}
+        </div>
+      </div>
+      
+      {{!-- Scavenging --}}
+      <div class="life-skill">
+        <div class="life-skill-header" data-skill="scavenging">
+          <img class="life-skill-icon" src="systems/stryder/assets/life-scavenging.svg">
+          <span class="life-skill-name">{{localize "Scavenging"}}</span>
+          <div class="life-skill-controls">
+            <button class="life-skill-btn minus" data-skill="scavenging">-</button>
+            <input class="life-skill-value" type="number" name="system.life.scavenging.value" value="{{system.life.scavenging.value}}" placeholder="0" min="0" max="5" readonly>
+            <button class="life-skill-btn plus" data-skill="scavenging">+</button>
+          </div>
+        </div>
+        <div class="life-skill-description">
+          {{localize "Scavenging Description"}}
+        </div>
+      </div>
+
+	{{!-- Curse Breaking --}}
+	<div class="life-skill">
+		<div class="life-skill-header" data-skill="cursebreaking">
+			<img class="life-skill-icon" src="systems/stryder/assets/life-cursebreaking.svg">
+			<span class="life-skill-name">{{localize "Curse Breaking"}}</span>
+			<div class="life-skill-controls">
+				<button class="life-skill-btn minus" data-skill="cursebreaking">-</button>
+				<input class="life-skill-value" type="number" name="system.life.cursebreaking.value" value="{{system.life.cursebreaking.value}}" placeholder="0" min="0" max="5" readonly>
+				<button class="life-skill-btn plus" data-skill="cursebreaking">+</button>
+			</div>
+		</div>
+		<div class="life-skill-description">
+			{{localize "Curse Breaking Description"}}
+		</div>
+	</div>
+
+	{{!-- Coercing --}}
+	<div class="life-skill">
+		<div class="life-skill-header" data-skill="coercing">
+			<img class="life-skill-icon" src="systems/stryder/assets/life-coercing.svg">
+			<span class="life-skill-name">{{localize "Coercing"}}</span>
+			<div class="life-skill-controls">
+				<button class="life-skill-btn minus" data-skill="coercing">-</button>
+				<input class="life-skill-value" type="number" name="system.life.coercing.value" value="{{system.life.coercing.value}}" placeholder="0" min="0" max="5" readonly>
+				<button class="life-skill-btn plus" data-skill="coercing">+</button>
+			</div>
+		</div>
+		<div class="life-skill-description">
+			{{localize "Coercing Description"}}
+		</div>
+	</div>
+
+	{{!-- Dueling --}}
+	<div class="life-skill">
+		<div class="life-skill-header" data-skill="dueling">
+			<img class="life-skill-icon" src="systems/stryder/assets/life-dueling.svg">
+			<span class="life-skill-name">{{localize "Dueling"}}</span>
+			<div class="life-skill-controls">
+				<button class="life-skill-btn minus" data-skill="dueling">-</button>
+				<input class="life-skill-value" type="number" name="system.life.dueling.value" value="{{system.life.dueling.value}}" placeholder="0" min="0" max="5" readonly>
+				<button class="life-skill-btn plus" data-skill="dueling">+</button>
+			</div>
+		</div>
+		<div class="life-skill-description">
+			{{localize "Dueling Description"}}
+		</div>
+	</div>
+
+	{{!-- Taming --}}
+	<div class="life-skill">
+		<div class="life-skill-header" data-skill="taming">
+			<img class="life-skill-icon" src="systems/stryder/assets/life-taming.svg">
+			<span class="life-skill-name">{{localize "Taming"}}</span>
+			<div class="life-skill-controls">
+				<button class="life-skill-btn minus" data-skill="taming">-</button>
+				<input class="life-skill-value" type="number" name="system.life.taming.value" value="{{system.life.taming.value}}" placeholder="0" min="0" max="5" readonly>
+				<button class="life-skill-btn plus" data-skill="taming">+</button>
+			</div>
+		</div>
+		<div class="life-skill-description">
+			{{localize "Taming Description"}}
+		</div>
+	</div>
+
+    </div>
+
+  </div>
+<br />
+<div class="bonds-container">
+<h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/bonds.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Bonds"}}</strong><span class="header-decoration right"></span></h2>
+<ol class='items-list parchment-background'>
+  <li class='item flexrow items-header'>
+	<div class='item-name bonds-header'>{{localize 'Bonds'}}&nbsp<i class='toggle-icon fas fa-chevron-down'></i></div>
+	<div class='item-armament-form bonds-header'>{{localize 'Level'}}</div>
+	<div class='item-controls'>
+	  <a class='item-control item-create' title='Create item' data-type='bonds'>
+		<i class='fas fa-plus magical-icon'></i>
+		{{localize 'DOCUMENT.New' type=''}}
+	  </a>
+	</div>
+  </li>
+  {{#each bonds as |item id|}}
+	<li class='item flexrow bond-item' data-item-id='{{item._id}}'>
+	  <div class='item-name bond-name'>
+		<div class='item-image'>
+		  <a class='rollable magical-icon' data-roll-type='item'>
+			<img src='{{item.img}}' title='{{item.name}}' width='24' height='24'/>
+		  </a>
+		</div>
+		<h4>{{item.name}}</h4>
+	  </div>
+	  <div class='item-bond-levels item-prop bond-level'>{{system.bond.level}}</div>
+	  <div class='item-controls'>
+		<a class='item-control item-edit magical-icon' title='{{localize "DOCUMENT.Edit" type='bonds'}}'>
+		  <i class='fas fa-edit'></i>
+		</a>
+		<a class='item-control item-delete magical-icon' title='{{localize "DOCUMENT.Delete" type='bonds'}}'>
+		  <i class='fas fa-trash'></i>
+		</a>
+	  </div>
+	</li>
+  {{/each}}
+</ol>
+</div>
+</div>

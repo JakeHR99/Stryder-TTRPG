@@ -1,0 +1,205 @@
+/**
+ * Execute  MP cost event and return the result.
+ */
+export async function mpCost(token, cost, name, type, meta, chat, base) {
+  const targetTokenId = token.id;
+  const actor = token.actor;
+  let targetMP = actor.system.mana.value;
+  let resultValue = cost;
+  let resultMP = targetMP;
+  let chatResult = 0;
+  let metaB = false;
+  if (type == "spell") metaB = true;
+  if (type == "hex") metaB = true;
+  if (type == "skill") metaB = true;
+  if (type == "feature") metaB = true;
+  if (type == "folk") metaB = true;	
+  if (type == "technique") metaB = true;
+  let isView = false;
+  if (CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER <= actor.ownership.default)
+    isView = true;
+
+  // Calculate MP
+  if (targetMP - resultValue >= 0) {
+    resultMP = targetMP - resultValue;
+    chatResult = resultMP;
+  } else {
+    resultMP = 0;
+    chatResult = game.i18n.localize("STRYDER.Shortage");
+  }
+
+  // Apply MP cost
+  if (game.user.isGM) {
+    actor.update({
+      "system.mp.value": resultMP,
+    });
+  } else {
+    game.socket.emit("system.stryder", {
+      method: "applyMp",
+      targetToken: targetTokenId,
+      resultMP: resultMP,
+    });
+  }
+
+  // Chat message
+  if (meta == 1) {
+    const speaker = ChatMessage.getSpeaker({ actor: actor });
+    const rollMode = game.settings.get("core", "rollMode");
+    let label = name + " (" + game.i18n.localize("STRYDER.Mp") + cost + ")";
+    let baseMP = targetMP;
+
+    let chatData = {
+      speaker: speaker,
+      flavor: label,
+      rollMode: rollMode,
+    };
+
+    chatData.content = await renderTemplate(
+      "systems/stryder/templates/roll/mp-apply.hbs",
+      {
+        targetMP: targetMP,
+        resultMP: chatResult,
+        metaB: metaB,
+        isView: isView,
+      }
+    );
+
+    chatData.flags = {
+      tokenId: targetTokenId,
+      cost: cost,
+      name: name,
+      type: type,
+      meta: 1,
+      base: baseMP,
+    };
+
+    ChatMessage.create(chatData);
+  } else {
+    let label =
+      name + " (" + game.i18n.localize("STRYDER.Mp") + cost + " x" + meta + ")";
+    let metaB = false;
+    if (type == "spell") metaB = true;
+    if (type == "action") metaB = true;
+
+    let chatData = {
+      flavor: label,
+      flags: {
+        meta: meta,
+        type: type,
+      },
+    };
+    chatData.content = await renderTemplate(
+      "systems/stryder/templates/roll/mp-apply.hbs",
+      {
+        targetMP: base,
+        resultMP: chatResult,
+        metaB: metaB,
+        isView: isView,
+      }
+    );
+    await chat.update(chatData);
+  }
+}
+
+/**
+ * Execute  HP cost event and return the result.
+ */
+export async function stmCost(token, cost, max, name, type) {
+  const targetTokenId = token.id;
+  const actor = token.actor;
+  let targetHP = actor.system.stamina.value;
+
+  let resultHP = targetHP;
+  let chatResult = 0;
+  let costLabel = cost;
+  if (max) costLabel = `${cost}(${max})`;
+
+  // roll &  Calculate HP cost
+  let result = new Roll(cost);
+  await result.evaluate();
+  let totalValue = Number(result.result);
+  let resultValue = totalValue;
+  let limit = false;
+  let nofix = false;
+  if (result.terms[0].results) {
+    nofix = true;
+    if (result.terms[0].results.length >= 2) {
+      let fumble = true;
+      for (let i = 0; i < result.terms[0].results.length; i++) {
+        if (result.terms[0].results[i].result != 1) fumble = false;
+      }
+      if (fumble) {
+        resultValue = 0;
+        limit = true;
+      }
+    }
+  }
+  if (max) {
+    let maxValue = Number(max);
+    if (resultValue >= maxValue) {
+      resultValue = maxValue;
+      limit = true;
+    }
+  }
+
+  // Calculate HP
+  resultHP = targetHP - resultValue;
+  chatResult = resultHP;
+  if (chatResult <= 0) {
+    chatResult = chatResult + " (" + game.i18n.localize("STRYDER.UnderZero") + ")";
+  }
+  if (resultValue == 0) {
+    chatResult = game.i18n.localize("STRYDER.NoCost");
+  }
+
+  // Apply HP cost
+  if (game.user.isGM) {
+    actor.update({
+      "system.stamina.value": resultHP,
+    });
+  } else {
+    game.socket.emit("system.stryder", {
+      method: "applyHp",
+      targetToken: targetTokenId,
+      resultHP: resultHP,
+    });
+  }
+
+  // Chat message
+  const speaker = ChatMessage.getSpeaker({ actor: actor });
+  const rollMode = game.settings.get("core", "rollMode");
+  let label = name + " (" + game.i18n.localize("STRYDER.Stm") + ` ${costLabel})`;
+  let baseHP = targetHP;
+
+  let chatData = {
+    speaker: speaker,
+    flavor: label,
+    rollMode: rollMode,
+    type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+    rolls: [result],
+  };
+
+  chatData.content = await renderTemplate(
+    "systems/stryder/templates/roll/stm-apply.hbs",
+    {
+      nofix: nofix,
+      formula: costLabel,
+      resultValue: resultValue,
+      totalValue: totalValue,
+      limit: limit,
+      tooltip: await result.getTooltip(),
+      targetHP: targetHP,
+      resultHP: chatResult,
+    }
+  );
+
+  chatData.flags = {
+    tokenId: targetTokenId,
+    cost: resultValue,
+    name: name,
+    type: type,
+    base: baseHP,
+  };
+
+  ChatMessage.create(chatData);
+}

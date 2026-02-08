@@ -1,0 +1,283 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+        <img class="profile-img" style="margin-top: 5px; margin-bottom: 5px;" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+        <div class="item-type-label">
+          <span>Hex Feature</span>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item" data-tab="description"><i class="fas fa-scroll"></i> Description</a>
+      <a class="item" data-tab="attributes"><i class="fas fa-tools"></i> Attributes</a>
+      <a class="item" data-tab="effects"><i class="fas fa-magic"></i> Effects</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab description-tab" data-group="primary" data-tab="description">
+        <div class="editor-container">
+          <div class="editor-header">
+            <i class="fas fa-quill"></i> Hex Description
+          </div>
+          {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+      {{!-- Attributes Tab --}}
+      <div class="tab attributes" data-group="primary" data-tab="attributes">
+        {{!-- Hex Information Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Hex Information</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field">
+              <label>Aspect:</label>
+              <input type="text" name="system.aspect" value="{{system.aspect}}" placeholder="Aspect">
+            </div>
+            <div class="field fantasy-field">
+              <label>Element:</label>
+              <input type="text" name="system.element" value="{{system.element}}" placeholder="Element">
+            </div>
+          </div>
+        </div>
+
+        {{!-- Restrictions Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Restrictions</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field">
+              <label>Action:</label>
+              <select name="system.action_type">
+                {{#select system.action_type}}
+                <option value="focused">Focused</option>
+                <option value="swift">Swift</option>
+                <option value="passive">Passive</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field cooldown-field">
+              <label>Cooldown:</label>
+              <input type="number" name="system.cooldown_value" value="{{system.cooldown_value}}" min="0" placeholder="Number">
+              <select name="system.cooldown_unit">
+                {{#select system.cooldown_unit}}
+                <option value="turn">Turn(s)</option>
+                <option value="round">Round(s)</option>
+                <option value="perRest">per Rest</option>
+                <option value="perTurn">per Turn</option>
+                <option value="perSpring">per Spring of Life</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field">
+              <label>Range:</label>
+              <input type="number" name="system.range" value="{{system.range}}" min="0" placeholder="Range in meters (0 is Melee)">
+            </div>
+            <div class="field fantasy-field">
+              <label>Stamina:</label>
+              <input type="number" name="system.stamina_cost" value="{{system.stamina_cost}}" min="0" placeholder="Stamina Cost" data-dtype="Number" />
+            </div>
+            <div class="field fantasy-field">
+              <label>Mana:</label>
+              <input type="number" name="system.mana_cost" value="{{system.mana_cost}}" min="0" placeholder="Mana Cost" data-dtype="Number" />
+            </div>
+            <div class="field fantasy-field">
+              <label>Other:</label>
+              <input type="text" name="system.other_restrictions" value="{{system.other_restrictions}}" placeholder="Additional Restrictions">
+            </div>
+          </div>
+        </div>
+
+        {{!-- Target Options Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Target Options</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field">
+              <label>Damage Type:</label>
+              <select name="system.damage_type" class="damage-type-select">
+                {{#select system.damage_type}}
+                <option value="ahl">Ahl</option>
+                <option value="physical">Physical</option>
+                <option value="magykal">Magykal</option>
+                {{/select}}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Checkbox Section --}}
+        <div class="section fantasy-section checkbox-section">
+          <div class="fantasy-checkbox">
+            <label>Rolls Quality (Poor/Good/Excellent)?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.hex.rollsQuality" value="true" {{#if system.hex.rollsQuality}}checked{{/if}} {{#if system.hex.rollsDamage}}disabled{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+          {{#if system.hex.rollsQuality}}
+          <div class="fantasy-checkbox" style="margin-left: 20px;">
+            <label>↳ Also Rolls Damage?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.hex.rollsDamage" value="true" {{#if system.hex.rollsDamage}}checked{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+          {{/if}}
+          <div class="fantasy-checkbox">
+            <label>Always Rolls Excellent?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.hex.alwaysRollsExcellent" value="true" {{#if system.hex.alwaysRollsExcellent}}checked{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+          <div class="fantasy-checkbox">
+            <label>Always Rolls a 12?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.hex.alwaysRollsTwelve" value="true" {{#if system.hex.alwaysRollsTwelve}}checked{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+          <div class="fantasy-checkbox">
+            <label>Adds Mastery to Damage Rolls?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.hex.addsMastery" value="true" {{#if system.hex.addsMastery}}checked{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+          <div class="fantasy-checkbox">
+            <label>Can Overflow?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.hex.canOverflow" value="true" {{#if system.hex.canOverflow}}checked{{/if}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Tags Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Tags</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content tags-container">
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag1">
+                {{#select system.tag1}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                <option value="reflex">Reflex</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                <option value="pierce">Pierce</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag2">
+                {{#select system.tag2}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                <option value="reflex">Reflex</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                <option value="pierce">Pierce</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag3">
+                {{#select system.tag3}}
+                <option value=""></option>
+                <option value="aid">Aid</option>
+                <option value="augment">Augment</option>
+                <option value="multi-target">Multi-Target</option>
+                <option value="persistent">Persistent</option>
+                <option value="targeted">Targeted</option>
+                <option value="breach">Breach</option>
+                <option value="reflex">Reflex</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                <option value="pierce">Pierce</option>
+                {{/select}}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Effects Tab --}}
+      <div class="tab effects" data-group="primary" data-tab="effects">
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>Active Effects</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            {{> "systems/stryder/templates/item/parts/item-effects.hbs"}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>
+
+<script>
+// Handle checkbox interactions for hex quality and damage
+document.addEventListener('DOMContentLoaded', function() {
+  const qualityCheckbox = document.querySelector('input[name="system.hex.rollsQuality"]');
+  const damageCheckbox = document.querySelector('input[name="system.hex.rollsDamage"]');
+  
+  if (qualityCheckbox && damageCheckbox) {
+    // When damage checkbox changes
+    damageCheckbox.addEventListener('change', function() {
+      if (this.checked) {
+        // When damage is checked, disable quality checkbox (can't uncheck quality while damage is on)
+        qualityCheckbox.disabled = true;
+      } else {
+        // When damage is unchecked, re-enable quality checkbox
+        qualityCheckbox.disabled = false;
+      }
+    });
+    
+    // When quality checkbox changes
+    qualityCheckbox.addEventListener('change', function() {
+      if (!this.checked && damageCheckbox.checked) {
+        // If quality is unchecked but damage is still checked, uncheck damage too
+        damageCheckbox.checked = false;
+        damageCheckbox.dispatchEvent(new Event('change'));
+      }
+    });
+  }
+});
+</script>

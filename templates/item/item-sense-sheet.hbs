@@ -1,0 +1,62 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      <div class="grid grid-2col">
+        <div class="flexrow flex-group-left resource">
+          <span class="resource-label">{{localize "Base"}}</span>
+          <span class="resource-label-l">{{system.checkbase}}</span>
+        </div>
+        <div>
+          <span>
+            <select id="checkMethodSelect" name="system.checkmethod" onchange="toggleCustomRollInput()">
+              {{#select system.checkmethod}}
+              <option value="normal">{{localize "Normal Check"}}</option>
+              <option value="dice">{{localize "Custom Roll"}}</option>
+              {{/select}}
+            </select>
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sheet Tab Navigation -->
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="details">{{localize "STRYDER.SheetLabels.Details"}}</a>
+  </nav>
+
+  <!-- Sheet Body -->
+  <section class="sheet-body">
+    <!-- Detail Tab -->
+    <div class="tab" data-group="primary" data-tab="details">
+      <div id="customRollInput" style="display: none;">
+        <label>{{localize "STRYDER.SheetLabels.CustomDiceFormula"}}</label>
+        <input type="text" name="system.customFormula" placeholder="e.g., 1d20 + 5">
+      </div>
+    </div>
+
+    <!-- Effects Tab -->
+    <div class="tab effects" data-group="primary" data-tab="effects">
+      {{> "systems/stryder/templates/item/parts/item-effects.hbs"}}
+    </div>
+  </section>
+</form>
+
+<script>
+function toggleCustomRollInput() {
+  var method = document.getElementById('checkMethodSelect').value;
+  var customInput = document.getElementById('customRollInput');
+  if (method === 'dice') {
+    customInput.style.display = 'block';
+  } else {
+    customInput.style.display = 'none';
+  }
+}
+
+// Initial check to handle form reloads with 'dice' selected
+document.addEventListener("DOMContentLoaded", function() {
+  toggleCustomRollInput();
+});
+</script>

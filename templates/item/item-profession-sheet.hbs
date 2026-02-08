@@ -1,0 +1,103 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+        </div>
+        <div class="item-type-label">
+          <span>{{localize "STRYDER.ItemTypes.Profession"}}</span>
+        </div>
+        <div class="resource" style="margin-top: 5px; padding: 0 10px;">
+          <label class="resource-label secondary-input">{{localize "STRYDER.SheetLabels.ProfessionLevel"}}</label>
+          <input class="secondary-input" type="text" name="system.profession_level" value="{{system.profession_level}}" placeholder="0" data-dtype="Number" 
+            style="width: 100%; font-size: 16px; font-weight: normal;" />
+        </div>
+      </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item" data-tab="description"><i class="fas fa-scroll"></i> {{localize "STRYDER.SheetLabels.Description"}}</a>
+      <a class="item" data-tab="attributes"><i class="fas fa-award"></i> {{localize "STRYDER.SheetLabels.Benefits"}}</a>
+      <a class="item" data-tab="effects"><i class="fas fa-magic"></i> {{localize "STRYDER.SheetLabels.Effects"}}</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab description-tab" data-group="primary" data-tab="description">
+        <div class="editor-container">
+          <div class="editor-header">
+            <i class="fas fa-quill"></i> {{localize "STRYDER.SheetLabels.ProfessionDescription"}}
+          </div>
+          {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+      {{!-- Benefits Tab --}}
+      <div class="tab attributes" data-group="primary" data-tab="attributes">
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>{{localize "STRYDER.SheetLabels.ProfessionBenefits"}}</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="grid grid-2col" style="gap: 15px; margin-top: 10px;">
+              <!-- Novice -->
+              <div class="benefit-block">
+                <h3 class="benefit-header">{{localize "STRYDER.SheetLabels.Level1Novice"}}</h3>
+                <div class="editor-wrapper">
+                  {{editor system.novice target="system.novice" rollData=rollData button=true owner=owner editable=editable}}
+                </div>
+              </div>
+
+              <!-- Journeyman -->
+              <div class="benefit-block">
+                <h3 class="benefit-header">{{localize "STRYDER.SheetLabels.Level2Journeyman"}}</h3>
+                <div class="editor-wrapper">
+                  {{editor system.journeyman target="system.journeyman" rollData=rollData button=true owner=owner editable=editable}}
+                </div>
+              </div>
+
+              <!-- Master -->
+              <div class="benefit-block">
+                <h3 class="benefit-header">{{localize "STRYDER.SheetLabels.Level3Master"}}</h3>
+                <div class="editor-wrapper">
+                  {{editor system.master target="system.master" rollData=rollData button=true owner=owner editable=editable}}
+                </div>
+              </div>
+
+              <!-- Profession Kit -->
+              <div class="benefit-block">
+                <h3 class="benefit-header">{{localize "STRYDER.SheetLabels.ProfessionKit"}}</h3>
+                <div class="editor-wrapper">
+                  {{editor system.extra target="system.extra" rollData=rollData button=true owner=owner editable=editable}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Effects Tab --}}
+      <div class="tab effects" data-group="primary" data-tab="effects">
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>{{localize "STRYDER.SheetLabels.ActiveEffects"}}</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            {{> "systems/stryder/templates/item/parts/item-effects.hbs"}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>
+
+{{log system}}

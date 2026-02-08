@@ -1,0 +1,171 @@
+<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+  <div class="parchment-background">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" style="margin-top: 5px; margin-bottom: 5px;"/>
+      <div class="header-fields fantasy-input-item">
+        <div>
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+        <div class="item-type-label">
+          <span>{{localize "STRYDER.ItemTypes.FolkAbility"}}</span>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+      <a class="item" data-tab="description"><i class="fas fa-scroll"></i> {{localize "STRYDER.SheetLabels.Description"}}</a>
+      <a class="item" data-tab="attributes"><i class="fas fa-tools"></i> {{localize "STRYDER.SheetLabels.Attributes"}}</a>
+      <a class="item" data-tab="effects"><i class="fas fa-magic"></i> {{localize "STRYDER.SheetLabels.Effects"}}</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab description-tab" data-group="primary" data-tab="description">
+        <div class="editor-container">
+          <div class="editor-header">
+            <i class="fas fa-quill"></i> {{localize "STRYDER.SheetLabels.FolkFeatureDescription"}}
+          </div>
+          {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+      {{!-- Attributes Tab --}}
+      <div class="tab attributes" data-group="primary" data-tab="attributes">
+        {{!-- Restrictions Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>{{localize "STRYDER.SheetLabels.Restrictions"}}</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="field fantasy-field">
+              <label>{{localize "STRYDER.SheetLabels.Action"}}:</label>
+              <select name="system.action_type">
+                {{#select system.action_type}}
+                <option value="focused">{{localize "STRYDER.SheetLabels.Focused"}}</option>
+                <option value="swift">{{localize "STRYDER.SheetLabels.Swift"}}</option>
+                <option value="passive">{{localize "STRYDER.SheetLabels.Passive"}}</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field cooldown-field">
+              <label>{{localize "STRYDER.SheetLabels.Cooldown"}}:</label>
+              <input type="number" name="system.cooldown_value" value="{{system.cooldown_value}}" min="0" placeholder="{{localize 'STRYDER.SheetLabels.Number'}}">
+              <select name="system.cooldown_unit">
+                {{#select system.cooldown_unit}}
+                <option value="turn">{{localize "STRYDER.SheetLabels.Turns"}}</option>
+                <option value="round">{{localize "STRYDER.SheetLabels.Rounds"}}</option>
+                <option value="perRest">{{localize "STRYDER.SheetLabels.PerRest"}}</option>
+                <option value="perTurn">{{localize "STRYDER.SheetLabels.PerTurn"}}</option>
+                <option value="perSpring">{{localize "STRYDER.SheetLabels.PerSpringOfLife"}}</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field">
+              <label>{{localize "STRYDER.SheetLabels.Range"}}:</label>
+              <input type="number" name="system.range" value="{{system.range}}" min="0" placeholder="{{localize 'STRYDER.SheetLabels.RangePlaceholder'}}">
+            </div>
+            <div class="field fantasy-field">
+              <label>{{localize "STRYDER.SheetLabels.Stamina"}}:</label>
+              <input type="number" name="system.stamina_cost" value="{{system.stamina_cost}}" min="0" placeholder="{{localize 'STRYDER.SheetLabels.StaminaCost'}}" data-dtype="Number" />
+            </div>
+            <div class="field fantasy-field">
+              <label>{{localize "STRYDER.SheetLabels.Mana"}}:</label>
+              <input type="number" name="system.mana_cost" value="{{system.mana_cost}}" min="0" placeholder="{{localize 'STRYDER.SheetLabels.ManaCost'}}" data-dtype="Number" />
+            </div>
+            <div class="field fantasy-field">
+              <label>{{localize "STRYDER.SheetLabels.Other"}}:</label>
+              <input type="text" name="system.other_restrictions" value="{{system.other_restrictions}}" placeholder="{{localize 'STRYDER.SheetLabels.AdditionalRestrictions'}}">
+            </div>
+          </div>
+        </div>
+
+        {{!-- Tags Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>{{localize "STRYDER.SheetLabels.Tags"}}</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content tags-container">
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag1">
+                {{#select system.tag1}}
+                <option value=""></option>
+                <option value="aid">{{localize "STRYDER.SheetLabels.Aid"}}</option>
+                <option value="augment">{{localize "STRYDER.SheetLabels.Augment"}}</option>
+                <option value="multi-target">{{localize "STRYDER.SheetLabels.MultiTarget"}}</option>
+                <option value="persistent">{{localize "STRYDER.SheetLabels.Persistent"}}</option>
+                <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
+                <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag2">
+                {{#select system.tag2}}
+                <option value=""></option>
+                <option value="aid">{{localize "STRYDER.SheetLabels.Aid"}}</option>
+                <option value="augment">{{localize "STRYDER.SheetLabels.Augment"}}</option>
+                <option value="multi-target">{{localize "STRYDER.SheetLabels.MultiTarget"}}</option>
+                <option value="persistent">{{localize "STRYDER.SheetLabels.Persistent"}}</option>
+                <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
+                <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="field fantasy-field tag-field">
+              <select name="system.tag3">
+                {{#select system.tag3}}
+                <option value=""></option>
+                <option value="aid">{{localize "STRYDER.SheetLabels.Aid"}}</option>
+                <option value="augment">{{localize "STRYDER.SheetLabels.Augment"}}</option>
+                <option value="multi-target">{{localize "STRYDER.SheetLabels.MultiTarget"}}</option>
+                <option value="persistent">{{localize "STRYDER.SheetLabels.Persistent"}}</option>
+                <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
+                <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
+                {{/select}}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Charges Section --}}
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>{{localize "STRYDER.SheetLabels.Charges"}}</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            <div class="resource flex-group-center" style="width: 80%; margin: 0 auto;">
+              <div class="resource-content flexrow flex-center flex-between" style="gap: 10px;">
+                <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
+                <span style="margin-top: 5px;"> / </span>
+                <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Effects Tab --}}
+      <div class="tab effects" data-group="primary" data-tab="effects">
+        <div class="section fantasy-section">
+          <div class="section-header">
+            <div class="header-decoration left"></div>
+            <h2>{{localize "STRYDER.SheetLabels.ActiveEffects"}}</h2>
+            <div class="header-decoration right"></div>
+          </div>
+          <div class="section-content">
+            {{> "systems/stryder/templates/item/parts/item-effects.hbs"}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</form>
