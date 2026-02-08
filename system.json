@@ -3,10 +3,10 @@
   "title": "Stryder Roleplaying Game (PM Version)",
   "description": "The official devkit test Foundry VTT System for the Stryder Tabletop Roleplaying Game",
   "authors": [
-    {
-      "name": "Nevermore", 
-    }
-  ],
+  {
+    "name": "Nevermore"
+  }
+],
   "url": "https://github.com/JakeHR99/Stryder-TTRPG",
   "manifest": "https://raw.githubusercontent.com/JakeHR99/Stryder-TTRPG/main/system.json",
   "download": "https://github.com/JakeHR99/Stryder-TTRPG/releases/latest/download/stryder.zip",
@@ -419,8 +419,6 @@
     }
   ],
   "socket": true,
-  "manifest": "https://github.com/DarkSerpent/stryder-fvtt/releases/download/2.5.0/system.json",
-  "download": "https://github.com/DarkSerpent/stryder-fvtt/releases/download/2.5.0/system.zip",
   "background": "systems/stryder/assets/stryderfvtt.png",
   "grid": {
     "distance": 1,
