@@ -10,7 +10,7 @@
   ],
   "url": "https://github.com/JakeHR99/Stryder-TTRPG",
   "manifest": "https://raw.githubusercontent.com/JakeHR99/Stryder-TTRPG/main/system.json",
-  "download": "https://github.com/JakeHR99/Stryder-TTRPG/releases/download/v0.1.0/system.zip",
+  "download": "https://github.com/JakeHR99/Stryder-TTRPG/releases/latest/download/stryder.zip",
   "license": "LICENSE.txt",
   "readme": "README.md",
   "changelog": "CHANGELOG.md",
