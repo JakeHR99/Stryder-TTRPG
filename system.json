@@ -1,6 +1,6 @@
 {
-  "id": "stryder",
-  "title": "Stryder Roleplaying Game",
+  "id": "stryder-jaketest",
+  "title": "Stryder Roleplaying Game (Jake's Version)",
   "description": "The official Foundry VTT System for the Stryder Tabletop Roleplaying Game",
   "authors": [
     {
@@ -21,7 +21,7 @@
       "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
-  "version": "0.1.1",
+  "version": "0.1.2",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
