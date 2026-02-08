@@ -1,11 +1,10 @@
 {
-  "id": "stryder-jaketest",
-  "title": "Stryder Roleplaying Game (Jake's Version)",
-  "description": "The official Foundry VTT System for the Stryder Tabletop Roleplaying Game",
+  "id": "punkmagykdevkit",
+  "title": "Stryder Roleplaying Game (PM Version)",
+  "description": "The official devkit test Foundry VTT System for the Stryder Tabletop Roleplaying Game",
   "authors": [
     {
-      "name": "Amarulence & Nevermore",
-      "discord": "amarulence" 
+      "name": "Nevermore", 
     }
   ],
   "url": "https://github.com/JakeHR99/Stryder-TTRPG",
