@@ -1,23 +1,23 @@
 {
-  "id": "punkmagykdevkit",
+  "id": "stryder-pm",
   "title": "Stryder Roleplaying Game (PM Version)",
   "description": "The official devkit test Foundry VTT System for the Stryder Tabletop Roleplaying Game",
   "authors": [
-  {
-    "name": "Nevermore"
-  }
-],
+    {
+      "name": "Nevermore"
+    }
+  ],
   "url": "https://github.com/JakeHR99/Stryder-TTRPG",
   "manifest": "https://raw.githubusercontent.com/JakeHR99/Stryder-TTRPG/main/system.json",
-  "download": "https://github.com/JakeHR99/Stryder-TTRPG/releases/latest/download/punkmagykdevkit.zip",
+  "download": "https://github.com/JakeHR99/Stryder-TTRPG/releases/latest/download/stryder-pm.zip",
   "license": "LICENSE.txt",
   "readme": "README.md",
   "changelog": "CHANGELOG.md",
   "media": [
     {
       "type": "setup",
-      "url": "systems/punkmagykdevkit/assets/stryderfvtt.png",
-      "thumbnail": "systems/punkmagykdevkit/assets/stryderfvtt.png"
+      "url": "systems/stryder/assets/stryderfvtt.png",
+      "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
   "version": "0.1.3",
