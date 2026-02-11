@@ -695,11 +695,17 @@
     </div>
   </div>
 
+  <!-- Reflex Tag Bonus -->
+  <div class="reflex-tag-bonus-row">
+    <label class="reflex-tag-label">Reflex Tag Bonus</label>
+    <input type="number" name="system.reflex_tag.bonus" value="{{system.reflex_tag.bonus}}" data-dtype="Number" class="reflex-tag-input" />
+  </div>
+
   <!-- Dodge & Evade Row -->
   <div class="combat-row dodge-evade-row">
     <div class="fantasy-combat-button-container">
       <span class="fantasy-combat-button ability-dodge-evade-mod rollable"
-        data-custom-roll="1d6+@abilities.Reflex.value+@dodge.bonus" data-label="Dodge Roll">
+        data-custom-roll="1d6+@abilities.Reflex.value+@reflex_tag.bonus" data-label="Dodge Roll">
         <div class="combat-icon-container">
           <img src="systems/stryder/assets/dodge.svg" class="combat-icon" />
           <div class="combat-icon-glow"></div>
@@ -711,7 +717,7 @@
 
     <div class="fantasy-combat-button-container">
       <span class="fantasy-combat-button ability-dodge-evade-mod rollable"
-        data-custom-roll="2d6+@abilities.Reflex.value+@evade.bonus" data-label="Evade Roll">
+        data-custom-roll="2d6+@abilities.Reflex.value+@reflex_tag.bonus" data-label="Evade Roll">
         <div class="combat-icon-container">
           <img src="systems/stryder/assets/evade.svg" class="combat-icon" />
           <div class="combat-icon-glow"></div>

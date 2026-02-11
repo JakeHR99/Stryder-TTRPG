@@ -197,6 +197,13 @@ export class StryderItem extends Item {
 		tag3 = `${item.system.tag3}`;
 	}
 
+	// If hasReflexTag is checked and reflex isn't already in a tag slot, add it as a displayed tag
+	if (item.system.hasReflexTag && tag1.toLowerCase() !== 'reflex' && tag2.toLowerCase() !== 'reflex' && tag3.toLowerCase() !== 'reflex') {
+		if (!tag1) { tag1 = "Reflex"; }
+		else if (!tag2) { tag2 = "Reflex"; }
+		else if (!tag3) { tag3 = "Reflex"; }
+	}
+
 	let itemType = item.type === "feature"       ? "Class Feature"   :
 				   item.type === "racial"        ? "Folk Ability"    :
 				   item.type === "hex"           ? "Hex"             :
@@ -2236,7 +2243,15 @@ export class StryderItem extends Item {
 			diceBonus = 0;
 		  }
 
-		  const formula = `${diceNum}d${diceSize}` + (diceBonus ? `+${diceBonus}` : '');
+		  // Apply reflex tag bonus if the item has the reflex tag
+		  const hasReflexTagAction = item.system.hasReflexTag || item.system.tag1 === 'reflex' || item.system.tag2 === 'reflex' || item.system.tag3 === 'reflex';
+		  let reflexTagBonusAction = 0;
+		  if (hasReflexTagAction && actor) {
+			reflexTagBonusAction = actor.system.reflex_tag?.bonus || 0;
+		  }
+		  const totalActionBonus = diceBonus + reflexTagBonusAction;
+
+		  const formula = `${diceNum}d${diceSize}` + (totalActionBonus ? `+${totalActionBonus}` : '');
 		  const roll = new Roll(formula);
 		  await roll.evaluate({async: true});
 		  roll.toMessage({
@@ -2402,7 +2417,15 @@ export class StryderItem extends Item {
 				diceBonus = parseInt(diceBonus) || 0;
 			}
 
-			const formula = `${diceNum}d${diceSize}` + (diceBonus ? `+${diceBonus}` : '');
+			// Apply reflex tag bonus if the item has the reflex tag
+			const hasReflexTagGeneric = item.system.hasReflexTag || item.system.tag1 === 'reflex' || item.system.tag2 === 'reflex' || item.system.tag3 === 'reflex';
+			let reflexTagBonusGeneric = 0;
+			if (hasReflexTagGeneric && actor) {
+				reflexTagBonusGeneric = actor.system.reflex_tag?.bonus || 0;
+			}
+			const totalGenericBonus = diceBonus + reflexTagBonusGeneric;
+
+			const formula = `${diceNum}d${diceSize}` + (totalGenericBonus ? `+${totalGenericBonus}` : '');
 			const roll = new Roll(formula);
 			await roll.evaluate({async: true});
 			roll.toMessage({

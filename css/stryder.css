@@ -4274,6 +4274,34 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 
+/* Reflex Tag Bonus */
+.reflex-tag-bonus-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.reflex-tag-label {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 12px;
+  color: #5c2b0a;
+  white-space: nowrap;
+}
+
+.reflex-tag-input {
+  width: 45px;
+  height: 28px;
+  text-align: center;
+  font-family: 'Varela Round', sans-serif;
+  font-size: 14px;
+  border: 1px solid rgba(139, 90, 43, 0.5);
+  border-radius: 4px;
+  background: rgba(255, 248, 220, 0.6);
+  color: #5c2b0a;
+}
+
 /* Combat Rows */
 .combat-row {
   display: flex;
@@ -5441,4 +5469,47 @@ progress.resource2-bar::-moz-progress-bar {
   background: linear-gradient(135deg, #8b0000 0%, #600000 100%);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   z-index: -1;
+}
+
+/* Mastery Points Box Styling */
+.mastery-points-box {
+  background: linear-gradient(135deg, #e8dcc8 0%, #f5f1e8 100%);
+  border: 2px solid #8b7355;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mastery-essence-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 0;
+}
+
+.essence-label {
+  font-family: "MedievalSharp", cursive;
+  font-size: 0.95em;
+  color: #8b6914;
+  font-weight: bold;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.mastery-essence-field input {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid #8b7355;
+  border-radius: 4px;
+  background: rgba(232, 220, 200, 0.5);
+  font-family: "Roboto", sans-serif;
+  font-size: 1em;
+  color: #333;
+}
+
+.mastery-essence-field input:focus {
+  outline: none;
+  border-color: #8b6914;
+  box-shadow: 0 0 4px rgba(139, 105, 20, 0.3);
 }

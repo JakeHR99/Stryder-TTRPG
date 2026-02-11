@@ -27,6 +27,20 @@
     </div>
 </div>
 
+{{!-- Mastery Points Section --}}
+<h2 class="section-header" style="border-bottom: 0px; margin-top: 10px;">
+    <span class="header-decoration left"></span>
+    <img src="systems/stryder/assets/enlightenment.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px; filter: sepia(40%) hue-rotate(340deg) saturate(1.5);">
+    <strong>{{localize "Mastery Points"}}</strong>
+    <span class="header-decoration right"></span>
+</h2>
+<div class="mastery-points-box">
+    <div class="mastery-essence-field">
+        <label for="mastery-value" class="essence-label">{{localize "Mastery Points"}}</label>
+        <input type="number" id="mastery-value" name="system.masteryPoints.essence" value="{{system.masteryPoints.essence}}" data-dtype="Number" placeholder="0" min="0">
+    </div>
+</div>
+
 <h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/life-skills.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Life Skills"}}</strong><span class="header-decoration right"></span></h2>
 <div class="tab life" data-group="primary" data-tab="life">
   <div class="life-tab">

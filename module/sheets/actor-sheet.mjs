@@ -526,6 +526,23 @@ export class StryderActorSheet extends ActorSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
+    // Spark checkbox - when all 5 are checked, reset them and increment Mastery Points
+    html.on('change', '.spark-checkbox', async (ev) => {
+      const allSparks = html.find('.spark-checkbox');
+      const allChecked = allSparks.toArray().every(cb => cb.checked);
+      if (allChecked) {
+        const currentMastery = this.actor.system.masteryPoints?.essence || 0;
+        await this.actor.update({
+          'system.sparks.spark1': false,
+          'system.sparks.spark2': false,
+          'system.sparks.spark3': false,
+          'system.sparks.spark4': false,
+          'system.sparks.spark5': false,
+          'system.masteryPoints.essence': currentMastery + 1
+        });
+      }
+    });
+
     // Add Inventory Item
     html.on('click', '.item-create', this._onItemCreate.bind(this));
     

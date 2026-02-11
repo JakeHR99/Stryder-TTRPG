@@ -50,6 +50,9 @@
         "evade": {
           "bonus": 0
         },
+        "reflex_tag": {
+          "bonus": 0
+        },
         "elixir_sickness": {
           "value": 0
         },
