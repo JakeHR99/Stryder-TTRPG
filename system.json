@@ -20,7 +20,7 @@
       "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
-  "version": "0.1.3",
+  "version": "0.1.4",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
