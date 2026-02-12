@@ -155,6 +155,11 @@ export class StryderActorSheet extends ActorSheet {
 	  context.horizontalJumpDistance += talent.strength?.value ?? 1;
 	}
 
+	// Apply leap bonus
+	const leapBonus = actorData.system.leap_bonus?.bonus || 0;
+	context.verticalJumpDistance += leapBonus;
+	context.horizontalJumpDistance += leapBonus;
+
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = actorData.system;
     context.flags = actorData.flags;
@@ -615,58 +620,6 @@ export class StryderActorSheet extends ActorSheet {
 	  const button = event.currentTarget;
 	  const action = button.dataset.action;
 	  
-	  const updates = {};
-	  
-	  switch(action) {
-		case 'turnStart':
-		  // Check if Spring of Life is active - if so, don't restore stamina
-		  const springOfLifeActive = this.actor.getFlag(SYSTEM_ID, "springOfLifeActive");
-		  if (!springOfLifeActive) {
-		    updates['system.stamina.value'] = this.actor.system.stamina.max;
-		  }
-		  break;
-
-		case 'tacticsReset':
-		  updates['system.tactics.value'] = this.actor.system.tactics.max;
-		  break;
-		  
-		case 'resting':
-		  updates['system.stamina.value'] = this.actor.system.stamina.max;
-		  updates['system.mana.value'] = this.actor.system.mana.max;
-		  updates['system.focus.value'] = this.actor.system.focus.max;
-		  // Clear Spring of Life flag to restore normal stamina functionality
-		  updates[`flags.${SYSTEM_ID}.springOfLifeActive`] = null;
-		  // Remove exhaustion effects
-		  const { removeExhaustionEffects } = await import('../conditions/exhaustion.mjs');
-		  await removeExhaustionEffects(this.actor);
-		  // Remove haggard effects
-		  const { removeHaggardEffects } = await import('../conditions/haggard.mjs');
-		  await removeHaggardEffects(this.actor);
-		  break;
-		  
-		case 'springOfLife':
-		  // Get current burning and bloodloss health reduction
-		  const burningReduction = this.actor.getFlag(SYSTEM_ID, "burningHealthReduction") || 0;
-		  const bloodlossReduction = this.actor.getFlag(SYSTEM_ID, "bloodlossHealthReduction") || 0;
-		  const totalReduction = burningReduction + bloodlossReduction;
-		  
-		  // Calculate how much health to restore (current max + reduction)
-		  const newMax = this.actor.system.health.max + totalReduction;
-		  
-		  updates['system.health.value'] = newMax;
-		  updates['system.mana.value'] = this.actor.system.mana.max;
-		  updates['system.focus.value'] = this.actor.system.focus.max;
-		  // Preserve current stamina instead of setting to 0
-		  
-		  // Set flag to indicate Spring of Life has been used
-		  updates[`flags.${SYSTEM_ID}.springOfLifeActive`] = true;
-		  
-		  // Remove burning and bloodloss health reduction flags
-		  updates[`flags.${SYSTEM_ID}.burningHealthReduction`] = null;
-		  updates[`flags.${SYSTEM_ID}.bloodlossHealthReduction`] = null;
-		  break;
-	  }
-	  
 		try {
 		  let updates = {};
 		  let message = '';
@@ -689,10 +642,9 @@ export class StryderActorSheet extends ActorSheet {
 			  break;
 
 			case 'resting':
-			  message = `${this.actor.name} has rested, regaining all Stamina, Mana, and Focus.`;
+			  message = `${this.actor.name} has rested, regaining all Stamina and Mana.`;
 			  updates['system.stamina.value'] = this.actor.system.stamina.max;
 			  updates['system.mana.value'] = this.actor.system.mana.max;
-			  updates['system.focus.value'] = this.actor.system.focus.max;
 			  // Clear Spring of Life flag to restore normal stamina functionality
 			  updates[`flags.${SYSTEM_ID}.springOfLifeActive`] = null;
 			  // Remove exhaustion effects
@@ -723,14 +675,12 @@ export class StryderActorSheet extends ActorSheet {
 			  updates = {
 				'system.health.value': newMax,
 				'system.mana.value': this.actor.system.mana.max,
-				'system.focus.value': this.actor.system.focus.max,
-				// Preserve current stamina instead of setting to 0
 				[`flags.${SYSTEM_ID}.springOfLifeActive`]: true,
 				[`flags.${SYSTEM_ID}.burningHealthReduction`]: null,
 				[`flags.${SYSTEM_ID}.bloodlossHealthReduction`]: null
 			  };
 
-			  message = `${this.actor.name} has used Spring of Life, regaining all Health, Mana, and Focus. Stamina cannot be restored until the next Rest.`;
+			  message = `${this.actor.name} has used Spring of Life, regaining all Health and Mana. Stamina cannot be restored until the next Rest.`;
 
 			  if (totalReduction > 0) {
 				let restorationMessage = `<br><br>In addition, the Spring of Life has healed wounds that ${this.actor.name} sustained, restoring their Max Health by ${totalReduction}.`;
@@ -839,7 +789,12 @@ export class StryderActorSheet extends ActorSheet {
 			verticalDistance += actor.system.attributes.talent.strength.value;
 			horizontalDistance += actor.system.attributes.talent.strength.value;
 		}
-		
+
+		// Apply leap bonus
+		const leapBonus = actor.system.leap_bonus?.bonus || 0;
+		verticalDistance += leapBonus;
+		horizontalDistance += leapBonus;
+
 		const distance = jumpType === 'vertical' ? verticalDistance : horizontalDistance;
 		const direction = jumpType === 'vertical' ? 'vertically' : 'horizontally';
 		
@@ -1288,6 +1243,16 @@ export class StryderActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
 
+    // Handle jump actions from sidebar buttons
+    if (dataset.jumpType) {
+      return this._handleSidebarJump(dataset.jumpType);
+    }
+
+    // Handle grapple action from sidebar button
+    if (dataset.actionType === 'grapple') {
+      return this._handleGrappleAction(this.actor);
+    }
+
     // Handle item rolls.
     if (dataset.rollType) {
       if (dataset.rollType == 'item') {
@@ -1308,5 +1273,96 @@ export class StryderActorSheet extends ActorSheet {
       });
       return roll;
     }
+  }
+
+  /**
+   * Handle sidebar jump button clicks (Vertical/Horizontal leaps)
+   * @param {string} jumpType  'vertical' or 'horizontal'
+   * @private
+   */
+  async _handleSidebarJump(jumpType) {
+    const actor = this.actor;
+    const talent = actor.system.attributes?.talent;
+    const leapBonus = actor.system.leap_bonus?.bonus || 0;
+
+    let distance;
+    if (jumpType === 'vertical') {
+      distance = Math.floor((talent?.strength?.value || 0) / 2);
+    } else {
+      distance = talent?.nimbleness?.value || 0;
+    }
+
+    // Apply leap modifiers
+    const verticalMod = actor.system.attributes?.vertical_leap?.mod ?? 0;
+    const horizontalMod = actor.system.attributes?.horizontal_leap?.mod ?? 0;
+    distance += jumpType === 'vertical' ? verticalMod : horizontalMod;
+
+    // Apply Practiced Form bonuses if enabled
+    if (actor.system.booleans?.hasPracticedForm) {
+      distance += jumpType === 'vertical'
+        ? (talent?.nimbleness?.value ?? 0)
+        : (talent?.strength?.value ?? 0);
+    }
+
+    // Apply Unbound Leap multiplier if enabled
+    if (actor.system.booleans?.usingUnboundLeap) {
+      distance += talent?.strength?.value ?? 0;
+    }
+
+    // Apply leap bonus
+    distance += leapBonus;
+
+    const direction = jumpType === 'vertical' ? 'vertically' : 'horizontally';
+
+    let staminaText = actor.system.booleans?.usingUnboundLeap ?
+      "No Stamina was spent (Unbound Leap)." :
+      "1 Stamina was spent (Swift Action).";
+
+    // Spend stamina unless Unbound Leap
+    if (!actor.system.booleans?.usingUnboundLeap) {
+      const currentStamina = actor.system.stamina.value;
+      if (currentStamina < 1) {
+        return ui.notifications.warn(`${actor.name} doesn't have enough Stamina to leap!`);
+      }
+
+      // Check for Stunned condition
+      const { handleStunnedStaminaSpend, removeStunnedEffect } = await import('../conditions/stunned.mjs');
+      const stunnedResult = await handleStunnedStaminaSpend(actor, 1, 'jump');
+      if (!stunnedResult.shouldProceed) {
+        return;
+      }
+
+      await actor.update({"system.stamina.value": currentStamina - stunnedResult.cost});
+
+      if (stunnedResult.cost > 1) {
+        await removeStunnedEffect(actor, stunnedResult.cost - 1);
+      }
+    }
+
+    const message = `
+    <div class="chat-message-card-jump">
+      <div class="chat-message-header">
+        <img src="systems/stryder/assets/${jumpType}-jump-icon.svg" class="chat-message-icon-jump">
+        <h3 class="chat-message-title-jump">${actor.name} Leaps ${direction}</h3>
+      </div>
+      <div class="chat-message-details-jump">
+        <div class="chat-message-detail-row-jump">
+          <span class="chat-message-detail-label-jump">Distance:</span>
+          <span class="chat-distance-box-jump">${distance} spaces</span>
+        </div>
+      </div>
+      <div class="chat-message-footer-jump">
+        <div class="stamina-cost-jump">
+          <img src="systems/stryder/assets/stamina-icon.svg" style="border: 0px;" width="20" height="20">
+          <span>${staminaText}</span>
+        </div>
+      </div>
+    </div>
+    `;
+
+    await ChatMessage.create({
+      content: message,
+      speaker: ChatMessage.getSpeaker({actor: actor})
+    });
   }
 }

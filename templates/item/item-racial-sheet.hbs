@@ -151,6 +151,94 @@
             </div>
           </div>
         </div>
+        {{!-- Is an Attack Checkbox --}}
+        <div class="section fantasy-section checkbox-section">
+          <div class="fantasy-checkbox">
+            <label>Is an Attack?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.isAttack" {{checked system.isAttack}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Attack Settings (visible only when isAttack is checked) --}}
+        <div class="racial-attack-section" style="{{#if system.isAttack}}display: block;{{else}}display: none;{{/if}}">
+          {{!-- Damage Type --}}
+          <div class="section fantasy-section">
+            <div class="section-header">
+              <div class="header-decoration left"></div>
+              <h2>Target Options</h2>
+              <div class="header-decoration right"></div>
+            </div>
+            <div class="section-content">
+              <div class="field fantasy-field">
+                <label>Damage Type:</label>
+                <select name="system.damage_type" class="damage-type-select">
+                  {{#select system.damage_type}}
+                  <option value="ahl">Ahl</option>
+                  <option value="physical">Physical</option>
+                  <option value="magykal">Magykal</option>
+                  {{/select}}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {{!-- Roll Attributes --}}
+          <div class="section fantasy-section">
+            <div class="section-header">
+              <div class="header-decoration left"></div>
+              <h2>Roll Attributes</h2>
+              <div class="header-decoration right"></div>
+            </div>
+            <div class="section-content">
+              <div class="field fantasy-field formula-display">
+                <label>Roll Formula:</label>
+                <span class="formula-text">{{calculateFormula system.roll.diceNum system.roll.diceSize system.roll.diceBonus}}</span>
+              </div>
+              <div class="grid grid-4col" style="margin-top: 15px;">
+                <div class="roll-attribute-field">
+                  <label>No. of Dice</label>
+                  <input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
+                </div>
+                <div class="roll-attribute-field">
+                  <label>Die Size</label>
+                  <input type="text" name="system.roll.diceSize" value="{{system.roll.diceSize}}" data-dtype="Number" />
+                </div>
+                <div class="roll-attribute-field grid-span-2">
+                  <label>Roll Modifier</label>
+                  <input type="text" name="system.roll.diceBonus" value="{{system.roll.diceBonus}}" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {{!-- Custom Damage Values --}}
+          <div class="section fantasy-section">
+            <div class="section-header">
+              <div class="header-decoration left"></div>
+              <h2>Custom Damage Values</h2>
+              <div class="header-decoration right"></div>
+            </div>
+            <div class="section-content">
+              <div class="grid grid-3col" style="margin-top: 15px;">
+                <div class="roll-attribute-field">
+                  <label>Poor</label>
+                  <input type="number" name="system.customDamage.poor" value="{{system.customDamage.poor}}" data-dtype="Number" />
+                </div>
+                <div class="roll-attribute-field">
+                  <label>Good</label>
+                  <input type="number" name="system.customDamage.good" value="{{system.customDamage.good}}" data-dtype="Number" />
+                </div>
+                <div class="roll-attribute-field">
+                  <label>Excellent</label>
+                  <input type="number" name="system.customDamage.excellent" value="{{system.customDamage.excellent}}" data-dtype="Number" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {{!-- Effects Tab --}}
@@ -169,3 +257,16 @@
     </section>
   </div>
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const isAttackCheckbox = document.querySelector("input[name='system.isAttack']");
+    const attackSection = document.querySelector(".racial-attack-section");
+
+    if (isAttackCheckbox && attackSection) {
+      isAttackCheckbox.addEventListener("change", function() {
+        attackSection.style.display = this.checked ? "block" : "none";
+      });
+    }
+  });
+</script>

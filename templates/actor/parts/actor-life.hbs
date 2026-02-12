@@ -1,43 +1,36 @@
 {{!-- Life Skills Tab --}}
 
-{{!-- Sparks Section --}}
+{{!-- Mastery Points Section (merged with Sparks) --}}
 <h2 class="section-header" style="border-bottom: 0px; margin-top: 10px;">
     <span class="header-decoration left"></span>
     <img src="systems/stryder/assets/sparks.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;">
-    <strong>{{localize "Sparks"}}</strong>
-    <span class="header-decoration right"></span>
-</h2>
-<div class="sparks-container">
-    <div class="sparks-grid">
-        <div class="spark-item">
-            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark1" {{checked system.sparks.spark1}}>
-        </div>
-        <div class="spark-item">
-            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark2" {{checked system.sparks.spark2}}>
-        </div>
-        <div class="spark-item">
-            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark3" {{checked system.sparks.spark3}}>
-        </div>
-        <div class="spark-item">
-            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark4" {{checked system.sparks.spark4}}>
-        </div>
-        <div class="spark-item">
-            <input type="checkbox" class="spark-checkbox" name="system.sparks.spark5" {{checked system.sparks.spark5}}>
-        </div>
-    </div>
-</div>
-
-{{!-- Mastery Points Section --}}
-<h2 class="section-header" style="border-bottom: 0px; margin-top: 10px;">
-    <span class="header-decoration left"></span>
-    <img src="systems/stryder/assets/enlightenment.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px; filter: sepia(40%) hue-rotate(340deg) saturate(1.5);">
     <strong>{{localize "Mastery Points"}}</strong>
     <span class="header-decoration right"></span>
 </h2>
-<div class="mastery-points-box">
-    <div class="mastery-essence-field">
-        <label for="mastery-value" class="essence-label">{{localize "Mastery Points"}}</label>
-        <input type="number" id="mastery-value" name="system.masteryPoints.essence" value="{{system.masteryPoints.essence}}" data-dtype="Number" placeholder="0" min="0">
+<div class="mastery-points-box" style="display: flex; flex-direction: column; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <label class="essence-label">Sparks:</label>
+        <div class="sparks-grid">
+            <div class="spark-item">
+                <input type="checkbox" class="spark-checkbox" name="system.sparks.spark1" {{checked system.sparks.spark1}}>
+            </div>
+            <div class="spark-item">
+                <input type="checkbox" class="spark-checkbox" name="system.sparks.spark2" {{checked system.sparks.spark2}}>
+            </div>
+            <div class="spark-item">
+                <input type="checkbox" class="spark-checkbox" name="system.sparks.spark3" {{checked system.sparks.spark3}}>
+            </div>
+            <div class="spark-item">
+                <input type="checkbox" class="spark-checkbox" name="system.sparks.spark4" {{checked system.sparks.spark4}}>
+            </div>
+            <div class="spark-item">
+                <input type="checkbox" class="spark-checkbox" name="system.sparks.spark5" {{checked system.sparks.spark5}}>
+            </div>
+        </div>
+    </div>
+    <div class="mastery-essence-field" style="width: 100%;">
+        <label class="essence-label">Mastery Points:</label>
+        <input type="number" name="system.masteryPoints.essence" value="{{system.masteryPoints.essence}}" data-dtype="Number" placeholder="0" min="0">
     </div>
 </div>
 

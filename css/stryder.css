@@ -243,6 +243,57 @@
   height: 100%;
   margin: 0;
 }
+/* Header Stats Row */
+.header-stats {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 15px;
+  margin-top: 5px;
+}
+
+.header-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.header-stat-label {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 13px;
+  color: #5c2b0a;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+  cursor: help;
+}
+
+.header-stat-input {
+  width: 45px;
+  height: 28px;
+  text-align: center;
+  font-family: 'EB Garamond', serif;
+  font-size: 16px;
+  color: #5c2b0a;
+  background: rgba(255, 248, 220, 0.6);
+  border: 1px solid rgba(139, 90, 43, 0.4);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.header-stat-input:hover,
+.header-stat-input:focus {
+  background: rgba(255, 248, 220, 0.9);
+  border-color: rgba(139, 90, 43, 0.7);
+  box-shadow: 0 0 4px rgba(139, 90, 43, 0.3);
+}
+
+/* Potency & Resist row alignment */
+.potency-row {
+  align-items: center;
+}
+
 .stryder .sheet-tabs {
   flex: 0;
 }
@@ -969,12 +1020,15 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .elixir-sickness-input {
-    border: 1px solid #ccc;
-    padding: 5px;
+    width: 40px;
     text-align: center;
-    width: 200px;
-    height: 30px;
-    margin: 0 10px;
+    font-family: 'EB Garamond', serif;
+    font-size: 16px;
+    background: transparent;
+    border: 1px solid #8b5a2b;
+    border-radius: 3px;
+    padding: 3px;
+    margin: 0 5px;
 }
 
 .ability-resistance-mod {
@@ -3788,9 +3842,10 @@ progress.resource2-bar::-moz-progress-bar {
 
 .sparks-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(5, auto);
+    gap: 5px;
     align-items: center;
+    justify-content: start;
 }
 
 .spark-item {
@@ -4302,6 +4357,25 @@ progress.resource2-bar::-moz-progress-bar {
   color: #5c2b0a;
 }
 
+/* Limit Counter */
+.item-limit-counter {
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #5c2b0a;
+  background: rgba(218, 190, 119, 0.4);
+  border: 1px solid rgba(139, 90, 43, 0.5);
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.item-limit-counter.limit-reached {
+  color: #8b0000;
+  background: rgba(200, 50, 50, 0.15);
+  border-color: rgba(139, 0, 0, 0.5);
+}
+
 /* Combat Rows */
 .combat-row {
   display: flex;
@@ -4382,6 +4456,23 @@ progress.resource2-bar::-moz-progress-bar {
   min-width: 60px;
   min-height: 48px;
   padding: 5px 6px;
+}
+
+/* Potency DC value display */
+.potency-dc-value {
+  display: inline-block;
+  width: 32px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  font-family: 'EB Garamond', serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: #5c2b0a;
+  background: rgba(255, 248, 220, 0.7);
+  border: 1px solid rgba(139, 90, 43, 0.5);
+  border-radius: 4px;
+  margin-top: 2px;
 }
 
 /* Resistance buttons - smaller */
@@ -4814,10 +4905,40 @@ progress.resource2-bar::-moz-progress-bar {
    FANTASY ACTION BUTTONS STYLING
    ======================================== */
 
+/* Compact sidebar action buttons - matched to resistance-button size */
+.sidebar-action-buttons.fantasy-action-buttons {
+  padding: 6px 4px;
+  margin-bottom: 8px;
+  gap: 4px;
+}
+
+.sidebar-action-buttons.fantasy-action-buttons .fantasy-action-button {
+  min-width: 50px;
+  min-height: 38px;
+  max-width: 70px;
+  max-height: 45px;
+  padding: 3px 5px;
+  transform: none;
+  border-radius: 8px;
+}
+
+.sidebar-action-buttons .button-icon-container {
+  margin-bottom: 0px;
+}
+
+.sidebar-action-buttons .button-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.sidebar-action-buttons .button-text {
+  font-size: 9px;
+}
+
 .fantasy-action-buttons {
-  background: linear-gradient(135deg, 
-    rgba(255, 248, 220, 0.4) 0%, 
-    rgba(250, 240, 220, 0.6) 50%, 
+  background: linear-gradient(135deg,
+    rgba(255, 248, 220, 0.4) 0%,
+    rgba(250, 240, 220, 0.6) 50%,
     rgba(255, 248, 220, 0.4) 100%);
   border: 1px solid rgba(139, 90, 43, 0.3);
   border-radius: 10px;
@@ -5491,7 +5612,7 @@ progress.resource2-bar::-moz-progress-bar {
 .essence-label {
   font-family: "MedievalSharp", cursive;
   font-size: 0.95em;
-  color: #8b6914;
+  color: #000;
   font-weight: bold;
   white-space: nowrap;
   min-width: fit-content;

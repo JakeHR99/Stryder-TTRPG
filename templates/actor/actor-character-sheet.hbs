@@ -249,6 +249,7 @@
 				</div>
 
 			</div>
+
 		</div>
 	</header>
 
@@ -271,6 +272,40 @@
 			<section class="grid grid-3col">
 				<aside class="sidebar">
 
+					{{!-- Turn Start / Resting / Spring of Life Buttons --}}
+					<div class="resource-buttons flexrow flex-group-center-buttons fantasy-action-buttons sidebar-action-buttons">
+						<div class="fantasy-button-container">
+							<button class="resource-button fantasy-action-button" data-action="turnStart" title="{{localize 'Turn Start Description'}}">
+								<div class="button-icon-container">
+									<img src="systems/stryder/assets/turn-start.svg" class="button-icon"/>
+									<div class="button-icon-glow"></div>
+								</div>
+								<span class="button-text"><strong>{{localize "Turn Start"}}</strong></span>
+								<div class="button-shine"></div>
+							</button>
+						</div>
+						<div class="fantasy-button-container">
+							<button class="resource-button fantasy-action-button" data-action="resting" title="{{localize 'Resting Description'}}">
+								<div class="button-icon-container">
+									<img src="systems/stryder/assets/resting.svg" class="button-icon"/>
+									<div class="button-icon-glow"></div>
+								</div>
+								<span class="button-text"><strong>{{localize "Resting"}}</strong></span>
+								<div class="button-shine"></div>
+							</button>
+						</div>
+						<div class="fantasy-button-container">
+							<button class="resource-button fantasy-action-button" data-action="springOfLife" title="{{localize 'Spring of Life Description'}}">
+								<div class="button-icon-container">
+									<img src="systems/stryder/assets/spring-of-life.svg" class="button-icon"/>
+									<div class="button-icon-glow"></div>
+								</div>
+								<span class="button-text"><strong>{{localize "Spring of Life"}}</strong></span>
+								<div class="button-shine"></div>
+							</button>
+						</div>
+					</div>
+
 					<div class="fantasy-elixir-sickness">
 						<div class="elixir-sickness-header">
 							<h3 class="fantasy-section-title">
@@ -281,47 +316,16 @@
 						</div>
 						<div class="resource flex-group-center">
 							<div class="elixir-sickness-bar">
-								<button type="button" class="button-minus" onclick="adjustElixirSickness(-1)">-</button>
+								<button type="button" class="life-skill-btn minus" onclick="adjustElixirSickness(-1)">-</button>
 								<input type="text" name="system.elixir_sickness.value"
 									value="{{system.elixir_sickness.value}}" data-actor-id="{{actor.id}}" readonly
 									class="elixir-sickness-input" />
-								<button type="button" class="button-plus" onclick="adjustElixirSickness(1)">+</button>
+								<button type="button" class="life-skill-btn plus" onclick="adjustElixirSickness(1)">+</button>
 							</div>
 						</div>
 					</div>
 
-					{{!-- The grid classes are defined in scss/global/_grid.scss. To use,
-					use both the "grid" and "grid-Ncol" class where "N" can be any number
-					from 1 to 12 and will create that number of columns. --}}
-					<div class="abilities flexcol fantasy-abilities">
-						<div class="abilities-header">
-							<h3 class="fantasy-section-title">
-								<span class="title-decoration left"></span>
-								<span class="title-text">Stats</span>
-								<span class="title-decoration right"></span>
-							</h3>
-						</div>
-						{{#each system.abilities as |ability key|}}
-						<div class="ability flexrow flex-group-center stat-font fantasy-ability">
-							<label class="ability-label"
-								title="{{#if (eq key 'Soul')}}This stat measures the strength of your Soul Armament. This affects the damage your attacks and Skills deal. It also raises your Physical Potency making your Skills harder to Resist.{{else if (eq key 'Reflex')}}Combat reflexes and evasiveness. Reflexes provides survivability on the battlefield as well as increasing your ability to Dodge.{{else if (eq key 'Grit')}}Physical Durability and Resilience unmatched. You gain additional Health, and an increased Physical Resistance making you harder to overwhelm.{{else if (eq key 'Arcana')}}A visible level of your bodies upper limits for wielding Hexes and otherwise using Mana. This Stat augments the damage and effects Hexes will produce, as well as raising your Magykal Potency, making some Hexes and effects harder to Resist.{{else if (eq key 'Intuition')}}Combat Knowledge and Experience are represented by Intuition. Intuition grants simple but useful abilities.{{else if (eq key 'Will')}}Will grants you incredible determination capable of surmounting the odds and even resisting magykal abilities. This Stat raises your Magykal Resist providing additional defense against certain effects.{{else if (eq key 'Spirit')}}The physical embodiment of the fire of a Lordling's existence. Channeled and manifested by their Shaman, Spirit dictates the amount of damage a Lordling can deal when making attacks.{{/if}}"><b>{{ability.label}}&nbsp;&nbsp;</b></label>
-							<div class="ability-input-container">
-								<input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}"
-									data-dtype="Number" class="fantasy-ability-input" />
-								<div class="ability-input-glow"></div>
-							</div>
-							<span class="ability-mod rollable" data-roll="2d6+@abilities.{{key}}.value"
-								data-label="{{ability.label}}">
-								<div class="dice-container">
-									<img src="systems/stryder/assets/d6.svg" width=25px height=25px style='border:0px'>
-									<div class="dice-glow"></div>
-								</div>
-							</span>
-						</div>
-						{{/each}}
-					</div>
-
-					{{!-- Stat Perks Section - Moved from Features tab --}}
+					{{!-- Stat Perks Section --}}
 					<div class="flexcol-stats scroll-wrapper">
 						<h3 class="fantasy-section-title">
 							<span class="title-decoration left"></span>
@@ -365,6 +369,94 @@
 						</ol>
 					</div>
 					<br />
+
+					{{!-- Quick Actions Section --}}
+					<div class="fantasy-combat-abilities">
+						<div class="combat-abilities-header">
+							<h3 class="fantasy-section-title">
+								<span class="title-decoration left"></span>
+								<span class="title-text">Quick Actions</span>
+								<span class="title-decoration right"></span>
+							</h3>
+						</div>
+
+						<!-- Dodge & Evade Row -->
+						<div class="combat-row">
+							<div class="fantasy-combat-button-container">
+								<span class="fantasy-combat-button ability-dodge-evade-mod rollable"
+									data-custom-roll="1d6+@abilities.Reflex.value+@reflex_tag.bonus" data-label="Dodge Roll">
+									<div class="combat-icon-container">
+										<img src="systems/stryder/assets/dodge.svg" class="combat-icon" />
+										<div class="combat-icon-glow"></div>
+									</div>
+									<span class="combat-button-text"><strong>{{localize "Dodge"}}</strong></span>
+									<div class="combat-button-shine"></div>
+								</span>
+							</div>
+							<div class="fantasy-combat-button-container">
+								<span class="fantasy-combat-button ability-dodge-evade-mod rollable"
+									data-custom-roll="2d6+@abilities.Reflex.value+@reflex_tag.bonus" data-label="Evade Roll">
+									<div class="combat-icon-container">
+										<img src="systems/stryder/assets/evade.svg" class="combat-icon" />
+										<div class="combat-icon-glow"></div>
+									</div>
+									<span class="combat-button-text"><strong>{{localize "Evade"}}</strong></span>
+									<div class="combat-button-shine"></div>
+								</span>
+							</div>
+						</div>
+
+						<!-- Reflex Tag Bonus -->
+						<div class="reflex-tag-bonus-row">
+							<label class="reflex-tag-label">Reflex Tag Bonus</label>
+							<input type="number" name="system.reflex_tag.bonus" value="{{system.reflex_tag.bonus}}" data-dtype="Number" class="reflex-tag-input" />
+						</div>
+
+						<!-- Vertical & Horizontal Row -->
+						<div class="combat-row">
+							<div class="fantasy-combat-button-container">
+								<span class="fantasy-combat-button ability-dodge-evade-mod rollable" data-jump-type="vertical">
+									<div class="combat-icon-container">
+										<img src="systems/stryder/assets/vertical-jump-icon.svg" class="combat-icon" />
+										<div class="combat-icon-glow"></div>
+									</div>
+									<span class="combat-button-text"><strong>{{localize "Vertical"}}</strong></span>
+									<div class="combat-button-shine"></div>
+								</span>
+							</div>
+							<div class="fantasy-combat-button-container">
+								<span class="fantasy-combat-button ability-dodge-evade-mod rollable" data-jump-type="horizontal">
+									<div class="combat-icon-container">
+										<img src="systems/stryder/assets/horizontal-jump-icon.svg" class="combat-icon" />
+										<div class="combat-icon-glow"></div>
+									</div>
+									<span class="combat-button-text"><strong>{{localize "Horizontal"}}</strong></span>
+									<div class="combat-button-shine"></div>
+								</span>
+							</div>
+						</div>
+
+						<!-- Leap Bonus -->
+						<div class="reflex-tag-bonus-row">
+							<label class="reflex-tag-label">Leap Bonus</label>
+							<input type="number" name="system.leap_bonus.bonus" value="{{system.leap_bonus.bonus}}" data-dtype="Number" class="reflex-tag-input" />
+						</div>
+
+						<!-- Grapple Row -->
+						<div class="combat-row">
+							<div class="fantasy-combat-button-container">
+								<span class="fantasy-combat-button ability-dodge-evade-mod rollable" data-action-type="grapple">
+									<div class="combat-icon-container">
+										<img src="systems/stryder/assets/grapple-icon.svg" class="combat-icon" />
+										<div class="combat-icon-glow"></div>
+									</div>
+									<span class="combat-button-text"><strong>{{localize "Grapple"}}</strong></span>
+									<div class="combat-button-shine"></div>
+								</span>
+							</div>
+						</div>
+					</div>
+
 				</aside>
 				{{!-- For the main features list, span the right two columns --}}
 				<section class="main grid-span-2">

@@ -2065,7 +2065,7 @@ export class StryderItem extends Item {
 			  await item.update({'system.uses_current': item.system.cooldown_value});
 			  console.log(`Initialized racial ${item.name}: uses_current set to ${item.system.cooldown_value}`);
 			}
-			
+
 			const currentUses = item.system.uses_current;
 			console.log(`Racial ${item.name}: currentUses=${currentUses}, cooldown_value=${item.system.cooldown_value}`);
 			if (currentUses <= 0) {
@@ -2076,19 +2076,128 @@ export class StryderItem extends Item {
 			const newUses = Math.max(0, currentUses - 1);
 			await item.update({'system.uses_current': newUses});
 		  }
-		  
+
 		  const resourceButton = createResourceSpendButton(item);
 		  const bloodlossButton = createBloodlossSpendButton(item);
 
-		  ChatMessage.create({
-			speaker: speaker,
-			rollMode: rollMode,
-			flavor: contentHTMLracial + resourceButton + bloodlossButton,
+		  if (item.system.isAttack) {
+			// Roll as an attack, similar to Generic Attacks
+			const actor = item.actor;
+			if (!actor) {
+				console.error("No actor associated with this item:", item);
+				return;
+			}
+
+			const diceNum = item.system.roll?.diceNum || 2;
+			const diceSize = item.system.roll?.diceSize || 6;
+			let diceBonus = item.system.roll?.diceBonus || 0;
+
+			if (typeof diceBonus === 'string' && isNaN(parseInt(diceBonus))) {
+				const attributeMapping = {
+					mastery: "attributes.mastery",
+					soul: "abilities.Soul.value",
+					reflex: "abilities.Reflex.value",
+					grit: "abilities.Grit.value",
+					arcana: "abilities.Arcana.value",
+					intuition: "abilities.Intuition.value",
+					will: "abilities.Will.value"
+				};
+				const attributePath = attributeMapping[diceBonus] || `attributes.talent.${diceBonus}.value`;
+				const attributeValue = getProperty(actor.system, attributePath);
+				diceBonus = attributeValue !== undefined ? attributeValue : 0;
+			} else {
+				diceBonus = parseInt(diceBonus) || 0;
+			}
+
+			const formula = `${diceNum}d${diceSize}` + (diceBonus ? `+${diceBonus}` : '');
+			const roll = new Roll(formula);
+			await roll.evaluate({async: true});
+			roll.toMessage({
+				speaker: speaker,
+				flavor: contentHTMLracial + resourceButton + bloodlossButton,
+				rollMode: rollMode,
+				flags: {
+					'stryder.itemId': item.id,
+					'stryder.rollType': 'attack'
+				}
+			});
+
+			let result = roll.total;
+			let quality;
+			let damageMultiplier;
+
+			if (isActorHorrified(actor)) {
+				const horrifiedQuality = getHorrifiedRollQuality(result, "generic", item.system);
+				quality = horrifiedQuality.quality;
+				damageMultiplier = horrifiedQuality.damageMultiplier;
+			} else if (isActorPanicked(actor)) {
+				const panickedQuality = getPanickedRollQuality(result, "generic", item.system);
+				quality = panickedQuality.quality;
+				damageMultiplier = panickedQuality.damageMultiplier;
+			} else {
+				if (result <= 4) {
+					quality = "Poor";
+					damageMultiplier = 0.5;
+				} else if (result >= 5 && result <= 10) {
+					quality = "Good";
+					damageMultiplier = 1.0;
+				} else if (result >= 11) {
+					quality = "Excellent";
+					damageMultiplier = 1.5;
+				}
+			}
+
+			let totalDamage;
+			// Use custom damage values if provided
+			const customVal = item.system.customDamage?.[quality.toLowerCase()];
+			if (customVal !== null && customVal !== undefined && customVal !== "") {
+				totalDamage = parseInt(customVal);
+			} else {
+				// Fallback: use Soul for Physical, Arcana for Magykal
+				let powerValue = 0;
+				const racialDamageType = item.system.damage_type;
+				if (racialDamageType === 'physical') {
+					powerValue = actor.system.abilities?.Soul?.value || 0;
+				} else if (racialDamageType === 'magykal') {
+					powerValue = actor.system.abilities?.Arcana?.value || 0;
+				}
+				if (quality === "Excellent") {
+					totalDamage = Math.ceil(powerValue * damageMultiplier);
+				} else {
+					totalDamage = Math.floor(powerValue * damageMultiplier);
+				}
+			}
+
+			const horrifiedPrefix = isActorHorrified(actor) ? `<strong>${actor.name} is Horrified!</strong> ` : "";
+			const panickedPrefix = isActorPanicked(actor) ? `<strong>${actor.name} is Panicked!</strong> ` : "";
+			const statusPrefix = horrifiedPrefix || panickedPrefix;
+			const hasPierce = item.system.tag1 === 'pierce' || item.system.tag2 === 'pierce' || item.system.tag3 === 'pierce';
+			const damageButton = createDamageButton(totalDamage, item.system.damage_type || 'physical', hasPierce);
+			const qualityMessage = `
+			<div class="damage-quality ${quality.toLowerCase()}">
+			  ${statusPrefix}<strong>${quality} Attack!</strong> The attack did <strong>${totalDamage}</strong> damage.
+			</div>
+			${damageButton}
+			`;
+			ChatMessage.create({
+				speaker: speaker,
+				content: qualityMessage,
+				whisper: rollMode === "blindroll" ? ChatMessage.getWhisperRecipients("GM") : []
+			});
+
+			return roll;
+		  } else {
+			// Normal non-attack folk ability
+			ChatMessage.create({
+				speaker: speaker,
+				rollMode: rollMode,
+				flavor: contentHTMLracial + resourceButton + bloodlossButton,
 				flags: {
 					'stryder.itemId': item.id,
 					'stryder.rollType': 'utility'
 				}
-		  });
+			});
+		  }
 		}
 		else if (item.type === "statperk") {
 		  ChatMessage.create({
@@ -2179,6 +2288,16 @@ export class StryderItem extends Item {
 		  });
 		}
 		else if (item.type === "action") {
+		  // Check limit
+		  const actionLimitMax = item.system.limit?.max || 0;
+		  if (actionLimitMax > 0) {
+			const actionLimitValue = item.system.limit?.value || 0;
+			if (actionLimitValue >= actionLimitMax) {
+			  return ui.notifications.warn(`${item.name} has reached its limit of ${actionLimitMax} uses!`);
+			}
+			await item.update({'system.limit.value': actionLimitValue + 1});
+		  }
+
 		  const diceNum = item.system.roll.diceNum;
 		  const diceSize = item.system.roll.diceSize;
 		  let diceBonus = item.system.roll.diceBonus;
@@ -2374,6 +2493,16 @@ export class StryderItem extends Item {
 			return roll;
 		}
 		else if (item.type === "generic") {
+			// Check limit
+			const genericLimitMax = item.system.limit?.max || 0;
+			if (genericLimitMax > 0) {
+				const genericLimitValue = item.system.limit?.value || 0;
+				if (genericLimitValue >= genericLimitMax) {
+					return ui.notifications.warn(`${item.name} has reached its limit of ${genericLimitMax} uses!`);
+				}
+				await item.update({'system.limit.value': genericLimitValue + 1});
+			}
+
 			const diceNum = item.system.roll.diceNum;
 			const diceSize = item.system.roll.diceSize;
 			let diceBonus = item.system.roll.diceBonus;
@@ -2467,7 +2596,14 @@ export class StryderItem extends Item {
 			}
 
 			let totalDamage;
-			let powerValue = actor.system.abilities.Power?.value || actor.system.abilities.might?.value || 0;
+			// Use Soul for Physical damage, Arcana for Magykal damage
+			let powerValue = 0;
+			const genericDamageType = item.system.damage_type;
+			if (genericDamageType === 'physical') {
+				powerValue = actor.system.abilities?.Soul?.value || 0;
+			} else if (genericDamageType === 'magykal') {
+				powerValue = actor.system.abilities?.Arcana?.value || 0;
+			}
 			if (item.system.enableCustomDamage && item.system.customDamage[quality.toLowerCase()] !== null && item.system.customDamage[quality.toLowerCase()] !== undefined && item.system.customDamage[quality.toLowerCase()] !== "") {
 				totalDamage = parseInt(item.system.customDamage[quality.toLowerCase()]);
 			} else {

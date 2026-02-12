@@ -1252,10 +1252,13 @@ Hooks.once('ready', async function () {
 			event.stopPropagation();
 			event.stopImmediatePropagation();
 
+			// Skip jump and grapple buttons — they are handled by actor-sheet.mjs
+			if (this.dataset.jumpType || this.dataset.actionType) return;
+
 			const appId = this.closest(".app")?.dataset.appid;
 			const app = ui.windows[appId];
 			const actor = app?.actor || app?.object?.actor || app?.object;
-			
+
 			if (!actor) return ui.notifications.error("No character selected!");
 
 			// Check if actor is grappled

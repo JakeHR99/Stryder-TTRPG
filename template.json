@@ -53,6 +53,9 @@
         "reflex_tag": {
           "bonus": 0
         },
+        "leap_bonus": {
+          "bonus": 0
+        },
         "elixir_sickness": {
           "value": 0
         },
@@ -121,9 +124,11 @@
           "mod": 0
         },
         "physical_potency": {
+          "value": 0,
           "mod": 0
         },
         "magykal_potency": {
+          "value": 0,
           "mod": 0
         },
         "level": {
@@ -366,9 +371,11 @@
         "creature_size": "1",
         "weight_class": 4,
         "physical_potency": {
+          "value": 0,
           "mod": 0
         },
         "magykal_potency": {
+          "value": 0,
           "mod": 0
         },
         "move": {
@@ -574,6 +581,10 @@
         "diceBonus": 0,
         "diceNum": 2,
         "diceSize": 6
+      },
+      "limit": {
+        "max": 0,
+        "value": 0
       }
     },
     "armament": {
@@ -597,6 +608,10 @@
         "diceBonus": 0,
         "diceNum": 2,
         "diceSize": 6
+      },
+      "limit": {
+        "max": 0,
+        "value": 0
       }
     },
     "racial": {
@@ -605,7 +620,19 @@
         "max": 0,
         "value": 0
       },
-      "uses_current": 0
+      "uses_current": 0,
+      "isAttack": false,
+      "damage_type": "physical",
+      "customDamage": {
+        "poor": "",
+        "good": "",
+        "excellent": ""
+      },
+      "roll": {
+        "diceBonus": 0,
+        "diceNum": 2,
+        "diceSize": 6
+      }
     },
     "hex": {
       "templates": ["base"],
