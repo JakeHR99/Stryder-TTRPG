@@ -272,8 +272,8 @@
 			<section class="grid grid-3col">
 				<aside class="sidebar">
 
-					{{!-- Turn Start / Resting / Spring of Life Buttons --}}
-					<div class="resource-buttons flexrow flex-group-center-buttons fantasy-action-buttons sidebar-action-buttons">
+					{{!-- Turn Start / Limit Reset / Resting / Spring of Life Buttons --}}
+					<div class="resource-buttons fantasy-action-buttons sidebar-action-buttons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
 						<div class="fantasy-button-container">
 							<button class="resource-button fantasy-action-button" data-action="turnStart" title="{{localize 'Turn Start Description'}}">
 								<div class="button-icon-container">
@@ -281,6 +281,16 @@
 									<div class="button-icon-glow"></div>
 								</div>
 								<span class="button-text"><strong>{{localize "Turn Start"}}</strong></span>
+								<div class="button-shine"></div>
+							</button>
+						</div>
+						<div class="fantasy-button-container">
+							<button class="resource-button fantasy-action-button" data-action="limitReset" title="Reset all Limit counters to 0">
+								<div class="button-icon-container">
+									<img src="systems/stryder/assets/turn-start.svg" class="button-icon"/>
+									<div class="button-icon-glow"></div>
+								</div>
+								<span class="button-text"><strong>Limit Reset</strong></span>
 								<div class="button-shine"></div>
 							</button>
 						</div>

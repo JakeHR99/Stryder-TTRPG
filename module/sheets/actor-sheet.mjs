@@ -641,6 +641,20 @@ export class StryderActorSheet extends ActorSheet {
 			  updates['system.tactics.value'] = this.actor.system.tactics.max;
 			  break;
 
+			case 'limitReset':
+			  const limitItems = this.actor.items.filter(item =>
+				(item.type === 'generic' || item.type === 'action') &&
+				item.system.limit?.max > 0 &&
+				item.system.limit?.value > 0
+			  );
+			  for (const item of limitItems) {
+				await item.update({'system.limit.value': 0});
+			  }
+			  message = limitItems.length > 0
+				? `${this.actor.name} has reset all Limit counters. (${limitItems.length} ability${limitItems.length !== 1 ? ' limits' : ' limit'} reset)`
+				: `${this.actor.name} has no Limit counters to reset.`;
+			  break;
+
 			case 'resting':
 			  message = `${this.actor.name} has rested, regaining all Stamina and Mana.`;
 			  updates['system.stamina.value'] = this.actor.system.stamina.max;
