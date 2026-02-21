@@ -71,6 +71,18 @@ export class StryderActor extends Actor {
 		  }
 		}, data);
 	  }
+	  // Initialize default data for pets
+	  if (data.type === 'pet') {
+		data = foundry.utils.mergeObject({
+		  system: {
+			health: { value: 8, max: 8 },
+			stamina: { value: 2, max: 2 }
+		  },
+		  prototypeToken: {
+			actorLink: true
+		  }
+		}, data);
+	  }
 	  // For character type
 	  if (data.type === 'character') {
 		data = foundry.utils.mergeObject({

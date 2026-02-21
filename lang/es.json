@@ -149,7 +149,9 @@
       "character": "Personaje",
       "lordling": "Señorito",
       "npc": "PNJ",
-      "monster": "Monstruo"
+      "monster": "Monstruo",
+      "familiar": "Familiar",
+      "pet": "Mascota"
     },
     "Item": {
       "action": "Acción",
@@ -324,5 +326,30 @@
   "Class": "Clase",
   "Folk": "Pueblo",
   "The Vault": "La Bóveda",
-  "The Vault Description": "La Bóveda (expresada idiomáticamente como \"mi Bóveda\" y \"tu Bóveda\") se manifiesta como una dimensión de bolsillo personalizada que opera fuera de las restricciones espacio-temporales normales. Las observaciones indican que, aunque la capacidad de almacenamiento tiene limitaciones definidas, los objetos contenidos dentro de estos espacios experimentan la suspensión tanto de los efectos gravitacionales como de los procesos de degradación temporal. Esta característica resulta particularmente valiosa para los Stryders, ya que elimina la carga física del equipo y especímenes transportados. Aunque la evidencia actual sugiere que la manifestación de la Bóveda se limita a aquellos dentro de la designación Stryder, varios marcos teóricos proponen que esta habilidad puede existir potencialmente en una población más amplia, posiblemente en estados latentes o no desarrollados."
+  "The Vault Description": "La Bóveda (expresada idiomáticamente como \"mi Bóveda\" y \"tu Bóveda\") se manifiesta como una dimensión de bolsillo personalizada que opera fuera de las restricciones espacio-temporales normales. Las observaciones indican que, aunque la capacidad de almacenamiento tiene limitaciones definidas, los objetos contenidos dentro de estos espacios experimentan la suspensión tanto de los efectos gravitacionales como de los procesos de degradación temporal. Esta característica resulta particularmente valiosa para los Stryders, ya que elimina la carga física del equipo y especímenes transportados. Aunque la evidencia actual sugiere que la manifestación de la Bóveda se limita a aquellos dentro de la designación Stryder, varios marcos teóricos proponen que esta habilidad puede existir potencialmente en una población más amplia, posiblemente en estados latentes o no desarrollados.",
+  "Trust EXP": "Experiencia de Confianza",
+  "Familiar Type": "Tipo de Familiar",
+  "Trust Level": "Nivel de Confianza",
+  "Pet": "Mascota",
+  "Companion": "Compañero",
+  "Stranger": "Extraño",
+  "Friend": "Amigo",
+  "Comrade": "Camarada",
+  "Best Friend": "Mejor Amigo",
+  "Appetite": "Apetito",
+  "Familiar Passives": "Pasivos de Familiar",
+  "Rank": "Rango",
+  "Species": "Especie",
+  "Diet Type": "Tipo de Dieta",
+  "Diet": "Dieta",
+  "Movement": "Movimiento",
+  "Senses": "Sentidos (Arcano)",
+  "Pet Gear": "Equipo de Mascota",
+  "Pet Abilities": "Habilidades de Mascota",
+  "Available Commands": "Comandos Disponibles",
+  "Current Trust": "Confianza Actual",
+  "Trust Benefits": "Beneficios de Confianza",
+  "Details": "Detalles",
+  "Commands": "Comandos",
+  "Information": "Información"
 }

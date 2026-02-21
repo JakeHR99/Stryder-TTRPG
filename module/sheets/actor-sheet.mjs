@@ -194,6 +194,10 @@ export class StryderActorSheet extends ActorSheet {
       this._prepareCharacterData(context);
     }
 
+    if (actorData.type == 'pet') {
+      this._prepareItems(context);
+    }
+
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
 
@@ -719,6 +723,40 @@ export class StryderActorSheet extends ActorSheet {
 				await item.update({'system.uses_current': item.system.cooldown_value});
 			  }
 			  break;
+
+		  case 'trustIncrease': {
+			const currentTrustPoints = this.actor.system.trust?.points ?? 0;
+			const currentTrustLevel = this.actor.system.trust?.level ?? 'Stranger';
+			const newTrustPoints = currentTrustPoints + 1;
+			let newTrustLevel;
+			if (newTrustPoints >= 40) newTrustLevel = 'Best Friend';
+			else if (newTrustPoints >= 20) newTrustLevel = 'Comrade';
+			else if (newTrustPoints >= 10) newTrustLevel = 'Friend';
+			else newTrustLevel = 'Stranger';
+			updates['system.trust.points'] = newTrustPoints;
+			updates['system.trust.level'] = newTrustLevel;
+			if (newTrustLevel !== currentTrustLevel) {
+			  message = `${this.actor.name}'s trust has grown! They are now a ${newTrustLevel}.`;
+			}
+			break;
+		  }
+
+		  case 'trustDecrease': {
+			const currentTrustPoints = this.actor.system.trust?.points ?? 0;
+			const currentTrustLevel = this.actor.system.trust?.level ?? 'Stranger';
+			const newTrustPoints = Math.max(0, currentTrustPoints - 1);
+			let newTrustLevel;
+			if (newTrustPoints >= 40) newTrustLevel = 'Best Friend';
+			else if (newTrustPoints >= 20) newTrustLevel = 'Comrade';
+			else if (newTrustPoints >= 10) newTrustLevel = 'Friend';
+			else newTrustLevel = 'Stranger';
+			updates['system.trust.points'] = newTrustPoints;
+			updates['system.trust.level'] = newTrustLevel;
+			if (newTrustLevel !== currentTrustLevel) {
+			  message = `${this.actor.name}'s trust has decreased. They are now a ${newTrustLevel}.`;
+			}
+			break;
+		  }
 		  }
 
 		  await this.actor.update(updates);

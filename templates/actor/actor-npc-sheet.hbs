@@ -53,6 +53,7 @@
   <nav class="sheet-tabs tabs" data-group="primary">
     {{!-- Default tab is specified in actor-sheet.mjs --}}
     <a class="item" data-tab="description">Information</a>
+    <a class="item" data-tab="talents">Talents</a>
     <a class="item" data-tab="life">Life</a>
     <a class="item" data-tab="items">Items</a>
     <a class="item" data-tab="effects">Effects</a>
@@ -137,6 +138,11 @@
           {{editor system.npcdetails target="system.npcdetails" rollData=rollData button=true owner=owner editable=editable}}
         </div>
       </div>
+    </div>
+
+    {{!-- Talents Tab --}}
+    <div class="tab talents" data-group="primary" data-tab="talents">
+      {{> "systems/stryder/templates/actor/parts/actor-battle.hbs"}}
     </div>
 
     {{!-- Owned Items Tab --}}

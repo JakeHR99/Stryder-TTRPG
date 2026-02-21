@@ -65,6 +65,11 @@
         "htmlFields": [
           "biography"
         ]
+      },
+      "pet": {
+        "htmlFields": [
+          "description"
+        ]
       }
     },
     "Item": {

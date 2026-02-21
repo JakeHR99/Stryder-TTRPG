@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc", "monster", "lordling", "familiar"],
+    "types": ["character", "npc", "monster", "lordling", "familiar", "pet"],
     "templates": {
       "base": {
         "health": {
@@ -447,7 +447,33 @@
     },
     "npc": {
       "templates": ["base"],
-      "level": 0
+      "level": 0,
+      "attributes": {
+        "creature_size": "1",
+        "weight_class": 4,
+        "sense": {
+          "sight": { "value": 0 },
+          "hearing": { "value": 0 },
+          "smell": { "value": 0 },
+          "arcane": { "value": 0 },
+          "touch": { "value": 0 }
+        },
+        "talent": {
+          "endurance": { "value": 0 },
+          "nimbleness": { "value": 0 },
+          "finesse": { "value": 0 },
+          "strength": { "value": 0 },
+          "survival": { "value": 0 },
+          "charm": { "value": 0 },
+          "wit": { "value": 0 },
+          "wisdom": { "value": 0 },
+          "deceit": { "value": 0 },
+          "diplomacy": { "value": 0 },
+          "intimacy": { "value": 0 },
+          "aggression": { "value": 0 },
+          "threat": { "value": 0 }
+        }
+      }
     },
     "familiar": {
       "templates": ["base"],
@@ -561,6 +587,44 @@
       "familiar": {
         "base_hp": 0
       }
+    },
+    "pet": {
+      "templates": ["base"],
+      "attributes": {
+        "rank": "0",
+        "species": "",
+        "creature_size": "1",
+        "rarity": "common"
+      },
+      "diet": {
+        "appetite": {
+          "value": 0
+        },
+        "type": ""
+      },
+      "trust": {
+        "level": "Stranger",
+        "points": 0,
+        "benefits": ""
+      },
+      "attributes_ext": {
+        "movement": {
+          "value": 0
+        },
+        "senses": {
+          "value": 0
+        },
+        "petgear": {
+          "value": 0
+        }
+      },
+      "abilities": {
+        "description": ""
+      },
+      "commands": {
+        "list": ""
+      },
+      "description": ""
     }
   },
   "Item": {

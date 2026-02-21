@@ -2095,6 +2095,7 @@ export class StryderItem extends Item {
 			if (typeof diceBonus === 'string' && isNaN(parseInt(diceBonus))) {
 				const attributeMapping = {
 					mastery: "attributes.mastery",
+					might: "abilities.Might.value",
 					soul: "abilities.Soul.value",
 					reflex: "abilities.Reflex.value",
 					grit: "abilities.Grit.value",
@@ -2153,10 +2154,12 @@ export class StryderItem extends Item {
 			if (customVal !== null && customVal !== undefined && customVal !== "") {
 				totalDamage = parseInt(customVal);
 			} else {
-				// Fallback: use Soul for Physical, Arcana for Magykal
+				// Use Might for monsters, Soul/Arcana for characters
 				let powerValue = 0;
 				const racialDamageType = item.system.damage_type;
-				if (racialDamageType === 'physical') {
+				if (actor.system.abilities?.Might !== undefined) {
+					powerValue = actor.system.abilities.Might.value || 0;
+				} else if (racialDamageType === 'physical') {
 					powerValue = actor.system.abilities?.Soul?.value || 0;
 				} else if (racialDamageType === 'magykal') {
 					powerValue = actor.system.abilities?.Arcana?.value || 0;
@@ -2329,7 +2332,9 @@ export class StryderItem extends Item {
 			  let attributePath;
 			  if (diceBonus === "mastery") {
 				attributePath = "attributes.mastery";
-			  } else if (diceBonus === "might" || diceBonus === "magyk" || diceBonus === "speed" || diceBonus === "instinct") {
+			  } else if (diceBonus === "might") {
+				attributePath = "abilities.Might.value";
+			  } else if (diceBonus === "magyk" || diceBonus === "speed" || diceBonus === "instinct") {
 				attributePath = `abilities.${diceBonus}.value`;
 			  } else if (diceBonus === "soul") {
 				attributePath = `abilities.Soul.value`;
@@ -2522,7 +2527,7 @@ export class StryderItem extends Item {
 				let attributePath;
 				const attributeMapping = {
 					mastery: "attributes.mastery",
-					might: "abilities.might.value",
+					might: "abilities.Might.value",
 					magyk: "abilities.magyk.value",
 					speed: "abilities.speed.value",
 					instinct: "abilities.instinct.value",
@@ -2596,10 +2601,12 @@ export class StryderItem extends Item {
 			}
 
 			let totalDamage;
-			// Use Soul for Physical damage, Arcana for Magykal damage
+			// Use Might for monsters, Soul/Arcana for characters
 			let powerValue = 0;
 			const genericDamageType = item.system.damage_type;
-			if (genericDamageType === 'physical') {
+			if (actor.system.abilities?.Might !== undefined) {
+				powerValue = actor.system.abilities.Might.value || 0;
+			} else if (genericDamageType === 'physical') {
 				powerValue = actor.system.abilities?.Soul?.value || 0;
 			} else if (genericDamageType === 'magykal') {
 				powerValue = actor.system.abilities?.Arcana?.value || 0;

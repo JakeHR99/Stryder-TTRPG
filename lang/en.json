@@ -158,7 +158,8 @@
       "lordling": "Lordling",
       "npc": "NPC",
       "monster": "Monster",
-      "familiar": "Familiar"
+      "familiar": "Familiar",
+      "pet": "Pet"
     },
     "Item": {
       "action": "Action",
@@ -344,5 +345,19 @@
   "Comrade": "Comrade",
   "Best Friend": "Best Friend",
   "Appetite": "Appetite",
-  "Familiar Passives": "Familiar Passives"
+  "Familiar Passives": "Familiar Passives",
+  "Rank": "Rank",
+  "Species": "Species",
+  "Diet Type": "Diet Type",
+  "Diet": "Diet",
+  "Movement": "Movement",
+  "Senses": "Senses",
+  "Pet Gear": "Pet Gear",
+  "Pet Abilities": "Pet Abilities",
+  "Available Commands": "Available Commands",
+  "Current Trust": "Current Trust",
+  "Trust Benefits": "Trust Benefits",
+  "Details": "Details",
+  "Commands": "Commands",
+  "Information": "Information"
 }

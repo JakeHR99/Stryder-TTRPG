@@ -14,15 +14,7 @@
 			}
 		}
 		
-		// Mana bar
-		const mpBar = document.querySelector('.mp-bar');
-		if (mpBar) {
-			const mpFillPercent = (mpBar.value / mpBar.max) * 100;
-			const mpSheenWrapper = document.querySelector('.mp-sheen-wrapper');
-			if (mpSheenWrapper) {
-				mpSheenWrapper.style.width = `${mpFillPercent}%`;
-			}
-		}
+		// Mana bar removed
 		
 		// Stamina bar
 		const staminaBar = document.querySelector('.stamina-bar');
@@ -44,10 +36,9 @@
 		function tryUpdate() {
 			attempts++;
 			const hpBar = document.querySelector('.hp-bar');
-			const mpBar = document.querySelector('.mp-bar');
 			const staminaBar = document.querySelector('.stamina-bar');
 			
-			if (hpBar && mpBar && staminaBar) {
+			if (hpBar && staminaBar) {
 				updateSheenClipping();
 			} else if (attempts < maxAttempts) {
 				setTimeout(tryUpdate, 100);
@@ -69,7 +60,6 @@
 	document.addEventListener('change', function(e) {
 		if (e.target.name && (
 			e.target.name.includes('health') || 
-			e.target.name.includes('mana') || 
 			e.target.name.includes('stamina')
 		)) {
 			setTimeout(updateSheenClipping, 50);
@@ -217,23 +207,6 @@
           <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
           <span> / </span>
           <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
-          </div>
-        </div>
-
-        <div class="resource flex-group-center">
-          <label for="system.mana.value" class="resource-label"><img style="width: 20px; height: 20px; border: 0px; position: relative; top: 10px; margin-bottom: -5px; left: -5px; margin-left: 15px;" src="systems/stryder/assets/mana-symbol.svg">{{localize "Mana"}}</label>
-		  <div class="mpbar">
-			<div class="mp-progress-bar">
-			  <progress class="mp-bar grid-span-3" value="{{system.mana.value}}" max="{{system.mana.max}}"></progress>
-			  <div class="mp-sheen-wrapper">
-				<div class="mp-sheen"></div>
-			  </div>
-			</div>
-		  </div>
-          <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="system.mana.value" value="{{system.mana.value}}" data-dtype="Number"/>
-          <span> / </span>
-          <input type="text" name="system.mana.max" value="{{system.mana.max}}" data-dtype="Number"/>
           </div>
         </div>
 
