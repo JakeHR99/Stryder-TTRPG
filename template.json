@@ -594,7 +594,29 @@
         "rank": "0",
         "species": "",
         "creature_size": "1",
-        "rarity": "common"
+        "rarity": "common",
+        "sense": {
+          "sight": { "value": 0 },
+          "hearing": { "value": 0 },
+          "smell": { "value": 0 },
+          "arcane": { "value": 0 },
+          "touch": { "value": 0 }
+        },
+        "talent": {
+          "endurance": { "value": 0 },
+          "nimbleness": { "value": 0 },
+          "finesse": { "value": 0 },
+          "strength": { "value": 0 },
+          "survival": { "value": 0 },
+          "charm": { "value": 0 },
+          "wit": { "value": 0 },
+          "wisdom": { "value": 0 },
+          "deceit": { "value": 0 },
+          "diplomacy": { "value": 0 },
+          "intimacy": { "value": 0 },
+          "aggression": { "value": 0 },
+          "threat": { "value": 0 }
+        }
       },
       "diet": {
         "appetite": {

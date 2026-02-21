@@ -114,6 +114,7 @@ export class StryderActor extends Actor {
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
     this._prepareFamiliarData(actorData);
+    this._preparePetData(actorData);
   }
 
   /**
@@ -404,9 +405,33 @@ export class StryderActor extends Actor {
   _prepareNpcData(actorData) {
     if (actorData.type !== 'npc') return;
 
-    // Make modifications to data here. For example:
     const systemData = actorData.system;
     systemData.xp = systemData.cr * systemData.cr * 100;
+
+    // Ensure attributes object exists
+    if (!systemData.attributes) systemData.attributes = {};
+
+    // Initialize sense values if they don't exist
+    if (!systemData.attributes.sense) systemData.attributes.sense = {};
+    const senses = ['sight', 'hearing', 'smell', 'arcane', 'touch'];
+    senses.forEach(sense => {
+      if (!systemData.attributes.sense[sense]) {
+        systemData.attributes.sense[sense] = { value: 0 };
+      }
+    });
+
+    // Initialize talent values if they don't exist
+    if (!systemData.attributes.talent) systemData.attributes.talent = {};
+    const talents = [
+      'endurance', 'nimbleness', 'finesse', 'strength', 'survival',
+      'charm', 'wit', 'wisdom', 'deceit', 'diplomacy', 'intimacy',
+      'aggression', 'threat'
+    ];
+    talents.forEach(talent => {
+      if (!systemData.attributes.talent[talent]) {
+        systemData.attributes.talent[talent] = { value: 0 };
+      }
+    });
   }
 
   /**
@@ -455,6 +480,40 @@ export class StryderActor extends Actor {
     system.health.max = Math.max(0, maxHP); // Ensure max HP doesn't go below 0
     system.health.value = Math.min(currentHP, system.health.max);
     system.health.min = 0;
+  }
+
+  /**
+   * Prepare Pet type specific data
+   */
+  _preparePetData(actorData) {
+    if (actorData.type !== 'pet') return;
+
+    const systemData = actorData.system;
+
+    // Ensure attributes object exists
+    if (!systemData.attributes) systemData.attributes = {};
+
+    // Initialize sense values if they don't exist
+    if (!systemData.attributes.sense) systemData.attributes.sense = {};
+    const senses = ['sight', 'hearing', 'smell', 'arcane', 'touch'];
+    senses.forEach(sense => {
+      if (!systemData.attributes.sense[sense]) {
+        systemData.attributes.sense[sense] = { value: 0 };
+      }
+    });
+
+    // Initialize talent values if they don't exist
+    if (!systemData.attributes.talent) systemData.attributes.talent = {};
+    const talents = [
+      'endurance', 'nimbleness', 'finesse', 'strength', 'survival',
+      'charm', 'wit', 'wisdom', 'deceit', 'diplomacy', 'intimacy',
+      'aggression', 'threat'
+    ];
+    talents.forEach(talent => {
+      if (!systemData.attributes.talent[talent]) {
+        systemData.attributes.talent[talent] = { value: 0 };
+      }
+    });
   }
 
   /**
