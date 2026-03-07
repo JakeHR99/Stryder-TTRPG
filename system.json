@@ -158,11 +158,6 @@
           "description"
         ]
       },
-      "fantasm": {
-        "htmlFields": [
-          "description"
-        ]
-      },
       "statperk": {
         "htmlFields": [
           "description"
@@ -320,17 +315,6 @@
       "system": "stryder"
     },
     {
-      "name": "stryder-fantasms",
-      "label": "Fantasms",
-      "path": "packs/stryder-fantasms",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "system": "stryder"
-    },
-    {
       "name": "stryder-professions",
       "label": "Professions",
       "path": "packs/stryder-professions",
@@ -398,7 +382,6 @@
         "stryder-skills",
         "stryder-techniques",
         "stryder-statperks",
-        "stryder-fantasms",
         "stryder-professions"
       ]
     },

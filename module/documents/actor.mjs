@@ -161,7 +161,7 @@ export class StryderActor extends Actor {
 
 	  // Ensure all talents have a base value of 0
 	  const talents = [
-		"endurance", "nimbleness", "strength", "survival", "charm",
+		"endurance", "nimbleness", "finesse", "strength", "survival", "charm",
 		"wit", "wisdom", "deceit", "diplomacy", "intimacy", "aggression"
 	  ];
 
@@ -182,6 +182,7 @@ export class StryderActor extends Actor {
 		  systemData.attributes.talent[talent] = { value: 0 };
 		}
 	  });
+
 
 	  // Calculate ability modifiers
 	  for (let [key, ability] of Object.entries(systemData.abilities)) {

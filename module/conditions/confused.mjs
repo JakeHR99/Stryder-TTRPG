@@ -1,5 +1,4 @@
 import { SYSTEM_ID } from '../helpers/constants.mjs';
-import { getFantasmActionType } from '../documents/item.mjs';
 
 export const confusedState = {
   waitingForConfusedResponse: false,
@@ -44,12 +43,6 @@ export async function handleConfusedRollIntercept(item, actor) {
     shouldIntercept = true;
   }
 
-  // Case 3: Fantasm item type with "Focused" in content
-  else if (item.type === "fantasm") {
-	  const fantasmActionType = getFantasmActionType(item);
-	  shouldIntercept = fantasmActionType === "Focused";
-  }
-  
   if (!shouldIntercept) return null;
   
   confusedState.waitingForConfusedResponse = true;

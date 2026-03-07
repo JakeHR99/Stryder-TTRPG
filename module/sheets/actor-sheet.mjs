@@ -329,7 +329,6 @@ export class StryderActorSheet extends ActorSheet {
     const component = [];
     const consumable = [];
     const gear = [];
-    const fantasms = [];
     const hexes = [];
     const skills = [];
     const features = [];
@@ -414,10 +413,6 @@ export class StryderActorSheet extends ActorSheet {
       if (i.type === 'gear') {
         gear.push(i);
       }
-      // Append to fantasms.
-      if (i.type === 'fantasm') {
-        fantasms.push(i);
-      }
       // Append to hexes.
       else if (i.type === 'hex') {
         hexes.push(i);
@@ -489,7 +484,6 @@ export class StryderActorSheet extends ActorSheet {
     context.component = component;
     context.consumable = consumable;
     context.gear = gear;
-    context.fantasms = fantasms;
     context.hexes = hexes;
     context.skills = skills;
     context.features = features;
@@ -563,6 +557,13 @@ export class StryderActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents('.item');
       const item = this.actor.items.get(li.data('itemId'));
       this._onItemDelete(item, li);
+    });
+
+    // Use Consumable Item (heals 25% max HP and removes item)
+    html.on('click', '.item-use', async (ev) => {
+      const li = $(ev.currentTarget).parents('.item');
+      const item = this.actor.items.get(li.data('itemId'));
+      if (item) await this._onUseConsumable(item);
     });
 
     // Duplicate Inventory Item
@@ -964,6 +965,18 @@ export class StryderActorSheet extends ActorSheet {
     // Rollable abilities.
     html.on('click', '.rollable', this._onRoll.bind(this));
 
+    // Talent manual-override: when the player edits a talent input, store the
+    // value in the managed "Player Talents" UPGRADE effect so it wins over any
+    // OVERRIDE effects from folk/passive abilities.
+    if (this.actor.type === 'character' || this.actor.type === 'lordling') {
+      html.find('input[name^="system.attributes.talent."][name$=".value"]').on('change', async (ev) => {
+        const input = ev.currentTarget;
+        const m = input.name.match(/^system\.attributes\.talent\.(\w+)\.value$/);
+        if (!m) return;
+        await this._updatePlayerTalentOverrides({ [m[1]]: Number(input.value) || 0 });
+      });
+    }
+
     // Drag events for macros.
     if (this.actor.isOwner) {
       let handler = (ev) => this._onDragStart(ev);
@@ -1195,6 +1208,72 @@ export class StryderActorSheet extends ActorSheet {
   }
 
   /**
+   * Use a consumable item: applies its configured effect, optionally raises
+   * Elixir Sickness, posts a chat message, then deletes the item.
+   * @param {Item} item   The consumable item being used
+   * @private
+   */
+  async _onUseConsumable(item) {
+    const actor = this.actor;
+    const { effect_type, effect_value, is_elixir, elixir_sickness_amount } = item.system;
+    const pct = (effect_value ?? 0) / 100;
+    const updates = {};
+    let effectLine = "";
+
+    switch (effect_type) {
+      case "heal_hp": {
+        const maxHP = actor.system.health.max;
+        const healAmount = Math.floor(maxHP * pct);
+        const newHP = Math.min(actor.system.health.value + healAmount, maxHP);
+        updates["system.health.value"] = newHP;
+        effectLine = `Recovers <b>${healAmount}</b> HP`;
+        break;
+      }
+      case "heal_mana": {
+        const maxMana = actor.system.mana.max;
+        const restoreAmount = Math.floor(maxMana * pct);
+        const newMana = Math.min(actor.system.mana.value + restoreAmount, maxMana);
+        updates["system.mana.value"] = newMana;
+        effectLine = `Restores <b>${restoreAmount}</b> Mana`;
+        break;
+      }
+      case "heal_stamina": {
+        const maxStamina = actor.system.stamina.max;
+        const restoreAmount = Math.floor(maxStamina * pct);
+        const newStamina = Math.min(actor.system.stamina.value + restoreAmount, maxStamina);
+        updates["system.stamina.value"] = newStamina;
+        effectLine = `Restores <b>${restoreAmount}</b> Stamina`;
+        break;
+      }
+      default:
+        effectLine = "No effect";
+        break;
+    }
+
+    if (is_elixir) {
+      const currentSickness = actor.system.elixir_sickness?.value ?? 0;
+      const sicknessGain = elixir_sickness_amount ?? 1;
+      updates["system.elixir_sickness.value"] = Math.min(5, currentSickness + sicknessGain);
+    }
+
+    if (Object.keys(updates).length > 0) await actor.update(updates);
+
+    const newSickness = is_elixir
+      ? Math.min(5, (actor.system.elixir_sickness?.value ?? 0) + (elixir_sickness_amount ?? 1))
+      : null;
+    const sicknessNote = newSickness !== null
+      ? ` <i>(Elixir Sickness: ${newSickness}/5)</i>`
+      : "";
+
+    await ChatMessage.create({
+      content: `<b>${actor.name}</b> uses <b>${item.name}</b>. ${effectLine}.${sicknessNote}`,
+      speaker: ChatMessage.getSpeaker({ actor })
+    });
+
+    await item.delete();
+  }
+
+  /**
    * Handle deleting an item with confirmation dialog.
    * @param {Item} item   The item to delete
    * @param {jQuery} li   The list item element
@@ -1416,5 +1495,62 @@ export class StryderActorSheet extends ActorSheet {
       content: message,
       speaker: ChatMessage.getSpeaker({actor: actor})
     });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Talent manual-override system
+  // ---------------------------------------------------------------------------
+  // Talent values can be set by folk/passive Active Effects (typically OVERRIDE
+  // mode). To let players raise a talent above what an effect grants, every
+  // character carries one system-managed "Player Talents" effect that uses
+  // UPGRADE mode (only applies when its value is higher than the current one)
+  // with high priority (runs after folk effects). When the player types a new
+  // value into a talent box, we update this effect instead of the raw actor
+  // data, so the normal folk-effect OVERRIDE is correctly superseded.
+
+  static TALENT_KEYS = [
+    "endurance", "nimbleness", "finesse", "strength", "survival",
+    "charm", "wit", "wisdom", "deceit", "diplomacy", "intimacy", "aggression"
+  ];
+
+  /**
+   * Create or update the "Player Talents" effect so each talent in
+   * talentUpdates is stored as an UPGRADE change with priority 100.
+   * The UPGRADE mode means the change only applies when its value is
+   * greater than whatever the folk/passive effects already set.
+   */
+  async _updatePlayerTalentOverrides(talentUpdates) {
+    const actor = this.actor;
+    const existing = actor.effects.find(e => e.flags?.stryder?.isPlayerTalents);
+
+    if (!existing) {
+      // First edit — build the full 12-talent effect, seeding from current
+      // source values so existing manual data isn't lost.
+      const src = foundry.utils.getProperty(actor.toObject(false), 'system.attributes.talent') ?? {};
+      const changes = StryderActorSheet.TALENT_KEYS.map(talent => ({
+        key: `system.attributes.talent.${talent}.value`,
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE, // 4 — only applies if higher
+        value: String(talentUpdates[talent] ?? Number(src[talent]?.value ?? 0)),
+        priority: 100
+      }));
+      await actor.createEmbeddedDocuments("ActiveEffect", [{
+        name: "Player Talents",
+        icon: "icons/svg/upgrade.svg",
+        changes,
+        disabled: false,
+        transfer: false,
+        flags: { stryder: { isPlayerTalents: true } }
+      }]);
+    } else {
+      // Update only the changed keys; leave the rest as-is.
+      const changes = existing.changes.map(change => {
+        const m = change.key.match(/^system\.attributes\.talent\.(\w+)\.value$/);
+        if (m && talentUpdates[m[1]] !== undefined) {
+          return { ...change, value: String(talentUpdates[m[1]]) };
+        }
+        return change;
+      });
+      await existing.update({ changes });
+    }
   }
 }

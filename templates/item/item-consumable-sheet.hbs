@@ -67,6 +67,44 @@
           </div>
       </div>
 
+      <div class="resource effect-section">
+        <div class="section-header">
+          <div class="header-decoration left"></div>
+          <label class="resource-label">Use Effect</label>
+          <div class="header-decoration right"></div>
+        </div>
+        <div class="section-content">
+          <div class="resource grid grid-4col" style="gap: 10px; padding: 0 10px;">
+            <div class="dropdown-field">
+              <label class="resource-label secondary-input">Effect Type</label>
+              <select class="secondary-input" name="system.effect_type" style="width: 100%; font-size: 14px; font-weight: normal;">
+                {{#select system.effect_type}}
+                <option value="none">None</option>
+                <option value="heal_hp">Heal HP (%)</option>
+                <option value="heal_mana">Restore Mana (%)</option>
+                <option value="heal_stamina">Restore Stamina (%)</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="dropdown-field">
+              <label class="resource-label secondary-input">Effect Value (%)</label>
+              <input class="tertiary-input" type="text" name="system.effect_value" value="{{system.effect_value}}"
+                placeholder="0" data-dtype="Number" style="width: 100%; font-size: 14px; font-weight: normal;" />
+            </div>
+            <div class="dropdown-field" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+              <label class="resource-label secondary-input">Is Elixir?</label>
+              <input type="checkbox" name="system.is_elixir" {{#if system.is_elixir}}checked{{/if}}
+                style="width: 20px; height: 20px; margin-top: 6px;" />
+            </div>
+            <div class="dropdown-field">
+              <label class="resource-label secondary-input">Elixir Sickness +</label>
+              <input class="tertiary-input" type="text" name="system.elixir_sickness_amount" value="{{system.elixir_sickness_amount}}"
+                placeholder="1" data-dtype="Number" style="width: 100%; font-size: 14px; font-weight: normal;" />
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </form>

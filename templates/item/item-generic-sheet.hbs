@@ -182,6 +182,40 @@
           </div>
         </div>
 
+        {{!-- Custom Range Toggle --}}
+        <div class="section fantasy-section checkbox-section">
+          <div class="fantasy-checkbox">
+            <label>Enable Custom Range?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.enableCustomRange" {{checked system.enableCustomRange}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="custom-range-section" style="{{#if system.enableCustomRange}}display: block;{{else}}display: none;{{/if}}">
+          <div class="section fantasy-section">
+            <div class="section-header">
+              <div class="header-decoration left"></div>
+              <h2>Custom Range Values</h2>
+              <div class="header-decoration right"></div>
+            </div>
+            <div class="section-content">
+              <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Set the max roll for <strong>Poor</strong> and min roll for <strong>Excellent</strong>. Good fills the gap.</p>
+              <div class="grid grid-2col" style="margin-top: 10px;">
+                <div class="roll-attribute-field">
+                  <label>Poor (max)</label>
+                  <input type="number" name="system.customRange.poor" value="{{system.customRange.poor}}" data-dtype="Number" min="1" />
+                </div>
+                <div class="roll-attribute-field">
+                  <label>Excellent (min)</label>
+                  <input type="number" name="system.customRange.excellent" value="{{system.customRange.excellent}}" data-dtype="Number" min="1" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {{!-- Reflex Tag Checkbox --}}
         <div class="section fantasy-section checkbox-section">
           <div class="fantasy-checkbox">
@@ -263,7 +297,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     const checkbox = document.querySelector("input[name='system.enableCustomDamage']");
     const customDamageSection = document.querySelector(".custom-damage-section");
-    
+
     function toggleCustomDamageSection() {
       if (checkbox.checked) {
         customDamageSection.style.display = "block";
@@ -272,11 +306,22 @@
       }
     }
 
-    // Event listener for the checkbox
     checkbox.addEventListener("change", toggleCustomDamageSection);
-
-    // Call the function initially to set the correct display state on page load
     toggleCustomDamageSection();
+
+    const rangeCheckbox = document.querySelector("input[name='system.enableCustomRange']");
+    const customRangeSection = document.querySelector(".custom-range-section");
+
+    function toggleCustomRangeSection() {
+      if (rangeCheckbox.checked) {
+        customRangeSection.style.display = "block";
+      } else {
+        customRangeSection.style.display = "none";
+      }
+    }
+
+    rangeCheckbox.addEventListener("change", toggleCustomRangeSection);
+    toggleCustomRangeSection();
   });
 </script>
 

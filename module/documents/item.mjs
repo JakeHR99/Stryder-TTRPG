@@ -3,13 +3,6 @@ import { handleConfusedApplication, handleConfusedRollIntercept, confusedState }
 import { isActorPanicked, getPanickedRollQuality } from '../conditions/panicked.mjs';
 import { isActorHorrified, getHorrifiedRollQuality } from '../conditions/horrified.mjs';
 
-export function getFantasmActionType(item) {
-  if (item.name.includes("Hyper Sense") || item.name.includes("Unbound Leap") || item.actor?.system?.booleans?.hasFantastic) {
-    return "Swift";
-  }
-  return "Focused";
-}
-
 // Tag descriptions for tooltips
 const tagDescriptions = {
   "aid": "Abilities with this tag bestow a beneficial defensive effect, such as defense boosts or healing.",
@@ -212,7 +205,6 @@ export class StryderItem extends Item {
 				   item.type === "technique"     ? "Technique"       :
 				   item.type === "profession"    ? "Profession"      :
 				   item.type === "action"        ? "Action"          :
-				   item.type === "fantasm"       ? "Fantasm"         :
 				   item.type === "armament"      ? "Soul Armament"   :
 				   item.type === "generic"       ? "Attack"          :
 				   item.type === "loot"          ? "Loot"            :
@@ -539,19 +531,8 @@ export class StryderItem extends Item {
 	  
 	  let buttonsHTML = '';
 	  
-	  // Handle fantasm items
-	  if (item.type === "fantasm" || item.type === "ITEM.TypeFantasm") {
-		buttonsHTML += `
-		<div class="resource-spend-container" style="margin: 5px 0; text-align: center;">
-		  <button class="resource-spend-button" 
-				  data-focus-cost="1">
-			Spend <span style="font-family: 'Varela Round';">1</span> <span style="color: #d4af37; font-weight: bold;">Focus</span>
-		  </button>
-		</div>
-		`;
-	  }
 	  // Handle mana, stamina, and tactic points costs
-	  else {
+	  {
 		const hasStaminaCost = item.system.stamina_cost > 0;
 		const hasManaCost = item.system.mana_cost > 0;
 		const hasTacticsCost = item.system.tactics_cost > 0;
@@ -1228,35 +1209,6 @@ export class StryderItem extends Item {
 		<div><strong>Folk:</strong> ${bondFolk}</div>
 		<div><strong>Gender:</strong> ${bondGender}</div>
 		<div><strong>Age:</strong> ${bondAge}</div>
-	  </div>
-	</div>
-	`;
-
-	let fantasmActionType = getFantasmActionType(item);
-
-	let contentHTMLfantasm = `
-	<div class="chat-message-card">
-	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
-		<div class="chat-message-title">${item.name}</div>
-		<div class="chat-message-subtitle">${itemType}</div>
-	  </div>
-	  
-	  <div class="chat-message-details">
-		<div class="chat-message-detail-row">
-		  <span class="chat-message-detail-label">Action:</span>
-		  <span>${fantasmActionType}</span>
-		</div>
-		<div class="chat-message-detail-row">
-		  <span class="chat-message-detail-label">Cost:</span>
-		  <span>1 Focus</span>
-		</div>
-	  </div>
-	  
-	  <div class="chat-message-content">
-		${item.system.description ?? ''}
 	  </div>
 	</div>
 	`;
@@ -2136,15 +2088,17 @@ export class StryderItem extends Item {
 				quality = panickedQuality.quality;
 				damageMultiplier = panickedQuality.damageMultiplier;
 			} else {
-				if (result <= 4) {
+				const poorMax = (item.system.enableCustomRange && item.system.customRange?.poor != null) ? item.system.customRange.poor : 4;
+				const excellentMin = (item.system.enableCustomRange && item.system.customRange?.excellent != null) ? item.system.customRange.excellent : 11;
+				if (result <= poorMax) {
 					quality = "Poor";
 					damageMultiplier = 0.5;
-				} else if (result >= 5 && result <= 10) {
-					quality = "Good";
-					damageMultiplier = 1.0;
-				} else if (result >= 11) {
+				} else if (result >= excellentMin) {
 					quality = "Excellent";
 					damageMultiplier = 1.5;
+				} else {
+					quality = "Good";
+					damageMultiplier = 1.0;
 				}
 			}
 
@@ -2221,20 +2175,6 @@ export class StryderItem extends Item {
 			speaker: speaker,
 			rollMode: rollMode,
 			content: contentHTMLbonds
-		  });
-		}
-		else if (item.type === "fantasm") {
-		  const resourceButton = createResourceSpendButton(item);
-		  const bloodlossButton = createBloodlossSpendButton(item);
-		  
-		  ChatMessage.create({
-			speaker: speaker,
-			rollMode: rollMode,
-			content: contentHTMLfantasm + resourceButton + bloodlossButton,
-				flags: {
-					'stryder.itemId': item.id,
-					'stryder.rollType': 'utility'
-				}
 		  });
 		}
 		else if (item.type === "loot") {
@@ -2588,15 +2528,17 @@ export class StryderItem extends Item {
 				damageMultiplier = panickedQuality.damageMultiplier;
 			} else {
 				// Normal quality logic
-				if (result <= 4) {
+				const poorMax = (item.system.enableCustomRange && item.system.customRange?.poor != null) ? item.system.customRange.poor : 4;
+				const excellentMin = (item.system.enableCustomRange && item.system.customRange?.excellent != null) ? item.system.customRange.excellent : 11;
+				if (result <= poorMax) {
 					quality = "Poor";
 					damageMultiplier = 0.5;
-				} else if (result >= 5 && result <= 10) {
-					quality = "Good";
-					damageMultiplier = 1.0;
-				} else if (result >= 11) {
+				} else if (result >= excellentMin) {
 					quality = "Excellent";
 					damageMultiplier = 1.5;
+				} else {
+					quality = "Good";
+					damageMultiplier = 1.0;
 				}
 			}
 
