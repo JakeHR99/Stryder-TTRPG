@@ -1337,6 +1337,48 @@ Hooks.once('ready', async function () {
 			}
 		});
 
+	// Resistance roll buttons (Physical & Magykal)
+	$(document).on("click", ".resistance-roll-button", async function(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		event.stopImmediatePropagation();
+
+		const appId = this.closest(".app")?.dataset.appid;
+		const app = ui.windows[appId];
+		const actor = app?.actor || app?.object?.actor || app?.object;
+
+		if (!actor) return ui.notifications.error("No character selected!");
+
+		try {
+			const rollFormula = this.dataset.customRoll;
+			const flavor = this.dataset.label;
+			const roll = new Roll(rollFormula, actor.system);
+
+			await roll.evaluate({async: true});
+			const rollResult = await roll.render();
+
+			await ChatMessage.create({
+				user: game.user.id,
+				speaker: ChatMessage.getSpeaker({actor: actor}),
+				content: `
+				<div style="background: url('systems/stryder/assets/parchment.jpg');
+							background-size: cover;
+							padding: 15px;
+							border: 1px solid #c9a66b;
+							border-radius: 3px;">
+				  <h3 style="margin-top: 0; border-bottom: 1px solid #c9a66b;"><strong>${flavor}</strong></h3>
+				  ${rollResult}
+				</div>
+				`,
+				type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+				sound: CONFIG.sounds.dice
+			});
+		} catch (err) {
+			console.error("Resistance roll error:", err);
+			ui.notifications.error("Failed to process resistance roll!");
+		}
+	});
+
 	  try {
 		if (!(ui.combat instanceof StryderCombatTracker)) {
 		  console.log("STRYDER | Replacing default ui.combat instance with StryderCombatTracker");

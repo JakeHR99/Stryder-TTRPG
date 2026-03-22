@@ -17,8 +17,8 @@
 			data-dtype="Number" class="header-stat-input" />
 	</div>
 	<div class="fantasy-combat-button-container">
-		<span class="fantasy-combat-button resistance-button rollable"
-			data-roll="2d6+@abilities.Grit.value+@physical_reduction"
+		<span class="fantasy-combat-button resistance-button resistance-roll-button"
+			data-custom-roll="2d6+@abilities.Grit.value+@physical_reduction.bonus"
 			data-label="Physical Resistance Check">
 			<div class="combat-icon-container">
 				<img src="systems/stryder/assets/physical_resistance.svg" class="combat-icon" />
@@ -30,8 +30,8 @@
 	</div>
 	<div class="header-stat resistance-mod-stat">
 		<label class="header-stat-label">P.Res Mod</label>
-		<input type="text" name="system.physical_reduction" value="{{system.physical_reduction}}"
-			data-dtype="Number" class="header-stat-input" />
+		<input type="number" name="system.physical_reduction.bonus" value="{{system.physical_reduction.bonus}}"
+			data-dtype="Number" class="reflex-tag-input" />
 	</div>
 	<div class="header-stat">
 		<label class="header-stat-label">Magykal Potency</label>
@@ -39,8 +39,8 @@
 			data-dtype="Number" class="header-stat-input" />
 	</div>
 	<div class="fantasy-combat-button-container">
-		<span class="fantasy-combat-button resistance-button rollable"
-			data-roll="2d6+@abilities.Will.value+@magykal_reduction"
+		<span class="fantasy-combat-button resistance-button resistance-roll-button"
+			data-custom-roll="2d6+@abilities.Will.value+@magykal_reduction.bonus"
 			data-label="Magykal Resistance Check">
 			<div class="combat-icon-container">
 				<img src="systems/stryder/assets/magykal_resistance.svg" class="combat-icon" />
@@ -52,8 +52,8 @@
 	</div>
 	<div class="header-stat resistance-mod-stat">
 		<label class="header-stat-label">M.Res Mod</label>
-		<input type="text" name="system.magykal_reduction" value="{{system.magykal_reduction}}"
-			data-dtype="Number" class="header-stat-input" />
+		<input type="number" name="system.magykal_reduction.bonus" value="{{system.magykal_reduction.bonus}}"
+			data-dtype="Number" class="reflex-tag-input" />
 	</div>
 </div>
 
