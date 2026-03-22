@@ -1354,7 +1354,7 @@ Hooks.once('ready', async function () {
 			const flavor = this.dataset.label;
 			const roll = new Roll(rollFormula, actor.system);
 
-			await roll.evaluate({async: true});
+			await roll.evaluate();
 			const rollResult = await roll.render();
 
 			await ChatMessage.create({
