@@ -1338,7 +1338,7 @@ Hooks.once('ready', async function () {
 		});
 
 	// Resistance roll buttons (Physical & Magykal)
-	$(document).on("click", ".resistance-roll-button", async function(event) {
+	$(document).on("click", ".resistance-roll-button", function(event) {
 		event.preventDefault();
 		event.stopPropagation();
 		event.stopImmediatePropagation();
@@ -1349,34 +1349,14 @@ Hooks.once('ready', async function () {
 
 		if (!actor) return ui.notifications.error("No character selected!");
 
-		try {
-			const rollFormula = this.dataset.customRoll;
-			const flavor = this.dataset.label;
-			const roll = new Roll(rollFormula, actor.system);
-
-			await roll.evaluate();
-			const rollResult = await roll.render();
-
-			await ChatMessage.create({
-				user: game.user.id,
-				speaker: ChatMessage.getSpeaker({actor: actor}),
-				content: `
-				<div style="background: url('systems/stryder/assets/parchment.jpg');
-							background-size: cover;
-							padding: 15px;
-							border: 1px solid #c9a66b;
-							border-radius: 3px;">
-				  <h3 style="margin-top: 0; border-bottom: 1px solid #c9a66b;"><strong>${flavor}</strong></h3>
-				  ${rollResult}
-				</div>
-				`,
-				type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-				sound: CONFIG.sounds.dice
-			});
-		} catch (err) {
-			console.error("Resistance roll error:", err);
-			ui.notifications.error("Failed to process resistance roll!");
-		}
+		const rollFormula = this.dataset.customRoll;
+		const flavor = this.dataset.label;
+		const roll = new Roll(rollFormula, actor.system);
+		roll.toMessage({
+			speaker: ChatMessage.getSpeaker({ actor: actor }),
+			flavor: flavor,
+			rollMode: game.settings.get('core', 'rollMode'),
+		});
 	});
 
 	  try {

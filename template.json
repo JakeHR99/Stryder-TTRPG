@@ -59,12 +59,10 @@
         "elixir_sickness": {
           "value": 0
         },
-        "physical_reduction": {
-          "bonus": 0
-        },
-        "magykal_reduction": {
-          "bonus": 0
-        },
+        "physical_reduction": 0,
+        "magykal_reduction": 0,
+        "physical_resist_mod": 0,
+        "magykal_resist_mod": 0,
         "biography": ""
       }
     },
