@@ -5668,3 +5668,16 @@ progress.resource2-bar::-moz-progress-bar {
   flex-direction: column;
   align-items: center;
 }
+
+/* Stats tab ability rows - proper flex alignment + smaller dice */
+.stats-abilities-grid .fantasy-ability {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.stats-abilities-grid .dice-container img {
+  width: 21px;
+  height: 21px;
+}
