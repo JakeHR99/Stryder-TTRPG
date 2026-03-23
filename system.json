@@ -271,17 +271,6 @@
       "system": "stryder"
     },
     {
-      "name": "stryder-hexes",
-      "label": "Hexes",
-      "path": "packs/stryder-hexes",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "system": "stryder"
-    },
-    {
       "name": "stryder-skills",
       "label": "Skills",
       "path": "packs/stryder-skills",
@@ -378,7 +367,6 @@
         "stryder-folk",
         "stryder-folk-abilities",
         "stryder-actions",
-        "stryder-hexes",
         "stryder-skills",
         "stryder-techniques",
         "stryder-statperks",

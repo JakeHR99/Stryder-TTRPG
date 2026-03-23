@@ -1,15 +1,3 @@
-2026/03/23-18:07:27.036 78c8 Recovering log #204
-2026/03/23-18:07:27.041 78c8 Delete type=0 #204
-2026/03/23-18:07:27.041 78c8 Delete type=3 #202
-2026/03/23-18:07:27.047 7148 Level-0 table #210: started
-2026/03/23-18:07:27.049 7148 Level-0 table #210: 24370 bytes OK
-2026/03/23-18:07:27.050 7148 Delete type=0 #208
-2026/03/23-18:07:27.051 7148 Manual compaction at level-0 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at (end)
-2026/03/23-18:07:27.051 7148 Manual compaction at level-1 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at '!items!WldknAbil04AnmlA' @ 467 : 1
-2026/03/23-18:07:27.051 7148 Compacting 1@1 + 1@2 files
-2026/03/23-18:07:27.054 7148 Generated table #211@1: 77 keys, 24370 bytes
-2026/03/23-18:07:27.054 7148 Compacted 1@1 + 1@2 files => 24370 bytes
-2026/03/23-18:07:27.055 7148 compacted to: files[ 0 0 1 0 0 0 0 ]
-2026/03/23-18:07:27.056 7148 Delete type=2 #206
-2026/03/23-18:07:27.056 7148 Delete type=2 #210
-2026/03/23-18:07:27.056 7148 Manual compaction at level-1 from '!items!WldknAbil04AnmlA' @ 467 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at (end)
+2026/03/23-18:10:27.529 64d4 Recovering log #209
+2026/03/23-18:10:27.531 64d4 Delete type=0 #209
+2026/03/23-18:10:27.531 64d4 Delete type=3 #207
