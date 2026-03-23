@@ -1,0 +1,36 @@
+{
+  "folder": "ColssFolder00001",
+  "name": "Marbled Colossus",
+  "type": "racial",
+  "img": "icons/creatures/magical/humanoid-giant-forest-blue.webp",
+  "system": {
+    "description": "<p>You can withstand Torrid Heat with no detriments and cannot suffer the Burning condition.</p><p>+1 Diplomacy, +1 Charm.</p><p>Weight Class: 5</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "ColssAbil03Marbd",
+  "sort": 300000,
+  "_key": "!items!ColssAbil03Marbd"
+}

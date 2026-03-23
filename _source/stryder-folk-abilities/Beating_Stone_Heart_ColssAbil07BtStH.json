@@ -1,0 +1,36 @@
+{
+  "folder": "ColssFolder00001",
+  "name": "Beating Stone Heart",
+  "type": "racial",
+  "img": "icons/creatures/magical/humanoid-giant-forest-blue.webp",
+  "system": {
+    "description": "<p>Colossus endure. It is what they do. The moment a Colossus takes damage that would kill them, their Stone Heart begins thudding loud enough to be heard outside of its body and the Colossus will curl up and enter a stone cocoon form. This cocoon has Health equal to your level. If the cocoon still has any remaining Health at the end of the engagement, the cocoon hatches. The Colossus is now a Pebbling and has half of its former Health, Stamina and Mana. The Pebbling can become a Colossus again if they go through the Chiseling once more.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 1,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "ColssAbil07BtStH",
+  "sort": 700000,
+  "_key": "!items!ColssAbil07BtStH"
+}

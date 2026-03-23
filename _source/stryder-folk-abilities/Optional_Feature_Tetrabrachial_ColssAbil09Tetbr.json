@@ -1,0 +1,36 @@
+{
+  "folder": "ColssFolder00001",
+  "name": "Optional Feature: Tetrabrachial",
+  "type": "racial",
+  "img": "icons/creatures/magical/humanoid-giant-forest-blue.webp",
+  "system": {
+    "description": "<p>You have four arms and can perform two Interact actions for no cost each Round. You gain +1 bonus to Grapple Checks of any kind and gain +1 bonus to Finesse and Strength Rolls. This biological variation causes you to be unable to don Torso Equipment. You are still only able to don 2 pieces of Arm Equipment.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "ColssAbil09Tetbr",
+  "sort": 900000,
+  "_key": "!items!ColssAbil09Tetbr"
+}

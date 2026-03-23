@@ -1,3 +1,24 @@
-2026/03/23-14:01:16.206 828c Recovering log #183
-2026/03/23-14:01:16.210 828c Delete type=0 #183
-2026/03/23-14:01:16.210 828c Delete type=3 #182
+2026/03/23-14:34:11.728 7850 Recovering log #185
+2026/03/23-14:34:11.728 7850 Level-0 table #187: started
+2026/03/23-14:34:11.730 7850 Level-0 table #187: 801 bytes OK
+2026/03/23-14:34:11.734 7850 Delete type=0 #185
+2026/03/23-14:34:11.734 7850 Delete type=3 #184
+2026/03/23-14:34:11.740 4b40 Level-0 table #190: started
+2026/03/23-14:34:11.742 4b40 Level-0 table #190: 1057 bytes OK
+2026/03/23-14:34:11.744 4b40 Delete type=0 #188
+2026/03/23-14:34:11.745 4b40 Manual compaction at level-0 from '!items!ColossusF0lk0001' @ 72057594037927935 : 1 .. '!items.effects!ColossusF0lk0001.ColssEfct00001ab' @ 0 : 0; will stop at '!items.effects!ColossusF0lk0001.ColssEfct00001ab' @ 94 : 1
+2026/03/23-14:34:11.745 4b40 Compacting 2@0 + 0@1 files
+2026/03/23-14:34:11.747 4b40 Generated table #191@0: 26 keys, 1680 bytes
+2026/03/23-14:34:11.747 4b40 Compacted 2@0 + 0@1 files => 1680 bytes
+2026/03/23-14:34:11.747 4b40 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/03/23-14:34:11.748 4b40 Delete type=2 #187
+2026/03/23-14:34:11.748 4b40 Delete type=2 #190
+2026/03/23-14:34:11.748 4b40 Manual compaction at level-0 from '!items.effects!ColossusF0lk0001.ColssEfct00001ab' @ 94 : 1 .. '!items.effects!ColossusF0lk0001.ColssEfct00001ab' @ 0 : 0; will stop at (end)
+2026/03/23-14:34:11.748 4b40 Manual compaction at level-1 from '!items!ColossusF0lk0001' @ 72057594037927935 : 1 .. '!items.effects!ColossusF0lk0001.ColssEfct00001ab' @ 0 : 0; will stop at '!items.effects!xYErEPWq3n2uHBSN.RDrDVpQ7vCkkxmtc' @ 92 : 0
+2026/03/23-14:34:11.748 4b40 Compacting 1@1 + 1@2 files
+2026/03/23-14:34:11.750 4b40 Generated table #192@1: 2 keys, 1057 bytes
+2026/03/23-14:34:11.750 4b40 Compacted 1@1 + 1@2 files => 1057 bytes
+2026/03/23-14:34:11.751 4b40 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/03/23-14:34:11.751 4b40 Delete type=2 #93
+2026/03/23-14:34:11.751 4b40 Delete type=2 #191
+2026/03/23-14:34:11.752 4b40 Manual compaction at level-1 from '!items.effects!xYErEPWq3n2uHBSN.RDrDVpQ7vCkkxmtc' @ 92 : 0 .. '!items.effects!ColossusF0lk0001.ColssEfct00001ab' @ 0 : 0; will stop at (end)

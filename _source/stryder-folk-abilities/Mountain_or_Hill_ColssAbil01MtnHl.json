@@ -1,0 +1,36 @@
+{
+  "folder": "ColssFolder00001",
+  "name": "Mountain or Hill",
+  "type": "racial",
+  "img": "icons/creatures/magical/humanoid-giant-forest-blue.webp",
+  "system": {
+    "description": "<p>Choose whether you are a Crag or Marbled Colossus, and whether you are Medium or Huge size. Your Weight Class is determined by being Crag or Marbled.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "ColssAbil01MtnHl",
+  "sort": 100000,
+  "_key": "!items!ColssAbil01MtnHl"
+}

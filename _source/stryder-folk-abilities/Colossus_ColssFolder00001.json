@@ -1,0 +1,22 @@
+{
+  "name": "Colossus",
+  "type": "Item",
+  "sorting": "a",
+  "folder": null,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "ColssFolder00001",
+  "sort": 0,
+  "_key": "!folders!ColssFolder00001"
+}

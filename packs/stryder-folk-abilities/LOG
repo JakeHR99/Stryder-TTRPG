@@ -1,3 +1,24 @@
-2026/03/23-14:01:16.698 7c80 Recovering log #153
-2026/03/23-14:01:16.702 7c80 Delete type=0 #153
-2026/03/23-14:01:16.703 7c80 Delete type=3 #152
+2026/03/23-14:34:11.993 8338 Recovering log #155
+2026/03/23-14:34:11.993 8338 Level-0 table #157: started
+2026/03/23-14:34:11.995 8338 Level-0 table #157: 1615 bytes OK
+2026/03/23-14:34:11.999 8338 Delete type=0 #155
+2026/03/23-14:34:12.000 8338 Delete type=3 #154
+2026/03/23-14:34:12.005 7830 Level-0 table #160: started
+2026/03/23-14:34:12.007 7830 Level-0 table #160: 3185 bytes OK
+2026/03/23-14:34:12.008 7830 Delete type=0 #158
+2026/03/23-14:34:12.009 7830 Manual compaction at level-0 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!ColssAbil09Tetbr' @ 0 : 0; will stop at '!items.effects!SxC9aCxWfQ4KDish.OOUaEjjelWFm4sVI' @ 143 : 0
+2026/03/23-14:34:12.009 7830 Compacting 2@0 + 0@1 files
+2026/03/23-14:34:12.009 7830 Generated table #161@0: 70 keys, 4677 bytes
+2026/03/23-14:34:12.009 7830 Compacted 2@0 + 0@1 files => 4677 bytes
+2026/03/23-14:34:12.009 7830 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/03/23-14:34:12.009 7830 Delete type=2 #157
+2026/03/23-14:34:12.009 7830 Delete type=2 #160
+2026/03/23-14:34:12.009 7830 Manual compaction at level-0 from '!items.effects!SxC9aCxWfQ4KDish.OOUaEjjelWFm4sVI' @ 143 : 0 .. '!items!ColssAbil09Tetbr' @ 0 : 0; will stop at (end)
+2026/03/23-14:34:12.009 7830 Manual compaction at level-1 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!ColssAbil09Tetbr' @ 0 : 0; will stop at '!items.effects!SxC9aCxWfQ4KDish.OOUaEjjelWFm4sVI' @ 143 : 0
+2026/03/23-14:34:12.009 7830 Compacting 1@1 + 1@2 files
+2026/03/23-14:34:12.009 7830 Generated table #162@1: 10 keys, 3185 bytes
+2026/03/23-14:34:12.009 7830 Compacted 1@1 + 1@2 files => 3185 bytes
+2026/03/23-14:34:12.009 7830 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/03/23-14:34:12.009 7830 Delete type=2 #137
+2026/03/23-14:34:12.009 7830 Delete type=2 #161
+2026/03/23-14:34:12.009 7830 Manual compaction at level-1 from '!items.effects!SxC9aCxWfQ4KDish.OOUaEjjelWFm4sVI' @ 143 : 0 .. '!items!ColssAbil09Tetbr' @ 0 : 0; will stop at (end)

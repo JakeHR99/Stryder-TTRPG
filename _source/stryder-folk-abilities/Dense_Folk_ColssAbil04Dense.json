@@ -1,0 +1,36 @@
+{
+  "folder": "ColssFolder00001",
+  "name": "Dense Folk",
+  "type": "racial",
+  "img": "icons/creatures/magical/humanoid-giant-forest-blue.webp",
+  "system": {
+    "description": "<p>Colossus sink whenever in water, they have a Swimming Movement of zero but can walk around whenever they reach the bottom of the water, should the water pressure not be immobilizing. A Colossus with Swimming Expertise has a Swimming Movement of 2.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "ColssAbil04Dense",
+  "sort": 400000,
+  "_key": "!items!ColssAbil04Dense"
+}
