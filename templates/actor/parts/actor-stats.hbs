@@ -1,0 +1,28 @@
+{{!-- Core Stats Block --}}
+<div class="fantasy-abilities-section">
+	<div class="combat-abilities-header">
+		<h3 class="fantasy-section-title">
+			<span class="title-decoration left"></span>
+			<span class="title-text">Core Stats</span>
+			<span class="title-decoration right"></span>
+		</h3>
+	</div>
+	<div class="stats-abilities-grid">
+		{{#each system.abilities as |ability key|}}
+		<div class="ability flex-group-center stat-font fantasy-ability">
+			<label class="ability-label" title="{{#if (eq key 'Soul')}}This stat measures the strength of your Soul Armament. This affects the damage your attacks and Skills deal. It also raises your Physical Potency making your Skills harder to Resist.{{else if (eq key 'Reflex')}}Combat reflexes and evasiveness. Reflexes provides survivability on the battlefield as well as increasing your ability to Dodge.{{else if (eq key 'Grit')}}Physical Durability and Resilience unmatched. You gain additional Health, and an increased Physical Resistance making you harder to overwhelm.{{else if (eq key 'Arcana')}}A visible level of your bodies upper limits for wielding Hexes and otherwise using Mana. This Stat augments the damage and effects Hexes will produce, as well as raising your Magykal Potency, making some Hexes and effects harder to Resist.{{else if (eq key 'Intuition')}}Combat Knowledge and Experience are represented by Intuition. Intuition grants simple but useful abilities.{{else if (eq key 'Will')}}Will grants you incredible determination capable of surmounting the odds and even resisting magykal abilities. This Stat raises your Magykal Resist providing additional defense against certain effects.{{/if}}"><b>{{ability.label}}</b></label>
+			<div class="ability-input-container">
+				<input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}"
+					data-dtype="Number" class="fantasy-ability-input" />
+				<div class="ability-input-glow"></div>
+			</div>
+			<span class="ability-mod rollable" data-roll="2d6+@abilities.{{key}}.value" data-label="{{ability.label}} Check">
+				<div class="dice-container">
+					<img src="systems/stryder/assets/d6.svg" width="25" height="25" style="border:0px">
+					<div class="dice-glow"></div>
+				</div>
+			</span>
+		</div>
+		{{/each}}
+	</div>
+</div>

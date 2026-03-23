@@ -5642,3 +5642,15 @@ progress.resource2-bar::-moz-progress-bar {
   box-shadow: 0 0 4px rgba(139, 105, 20, 0.3);
 }
 
+
+/* ===== Stats Tab ===== */
+.stats-abilities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+.fantasy-abilities-section {
+  padding: 8px;
+}

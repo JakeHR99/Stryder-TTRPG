@@ -1,14 +1,3 @@
-{{!-- Stats Row --}}
-<div class="header-stats">
-	{{#each system.abilities as |ability key|}}
-	<div class="header-stat">
-		<label class="header-stat-label" title="{{#if (eq key 'Soul')}}This stat measures the strength of your Soul Armament. This affects the damage your attacks and Skills deal. It also raises your Physical Potency making your Skills harder to Resist.{{else if (eq key 'Reflex')}}Combat reflexes and evasiveness. Reflexes provides survivability on the battlefield as well as increasing your ability to Dodge.{{else if (eq key 'Grit')}}Physical Durability and Resilience unmatched. You gain additional Health, and an increased Physical Resistance making you harder to overwhelm.{{else if (eq key 'Arcana')}}A visible level of your bodies upper limits for wielding Hexes and otherwise using Mana. This Stat augments the damage and effects Hexes will produce, as well as raising your Magykal Potency, making some Hexes and effects harder to Resist.{{else if (eq key 'Intuition')}}Combat Knowledge and Experience are represented by Intuition. Intuition grants simple but useful abilities.{{else if (eq key 'Will')}}Will grants you incredible determination capable of surmounting the odds and even resisting magykal abilities. This Stat raises your Magykal Resist providing additional defense against certain effects.{{/if}}">{{ability.label}}</label>
-		<input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}"
-			data-dtype="Number" class="header-stat-input" />
-	</div>
-	{{/each}}
-</div>
-
 {{!-- Potency & Resist Row --}}
 <div class="header-stats potency-row">
 	<div class="header-stat">

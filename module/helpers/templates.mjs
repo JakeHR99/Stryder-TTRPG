@@ -7,6 +7,7 @@ export const preloadHandlebarsTemplates = async function () {
   return loadTemplates([
     // Actor partials.
     'systems/stryder/templates/actor/parts/actor-features.hbs',
+    'systems/stryder/templates/actor/parts/actor-stats.hbs',
     'systems/stryder/templates/actor/parts/actor-items.hbs',
     'systems/stryder/templates/actor/parts/actor-spells.hbs',
     'systems/stryder/templates/actor/parts/actor-effects.hbs',
