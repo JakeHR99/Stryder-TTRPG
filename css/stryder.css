@@ -5681,3 +5681,8 @@ progress.resource2-bar::-moz-progress-bar {
   width: 21px;
   height: 21px;
 }
+
+/* Align Battle tab main content with sidebar top margin */
+.tab.features .main.grid-span-2 {
+  padding-top: 10px;
+}
