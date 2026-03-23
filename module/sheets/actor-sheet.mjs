@@ -1220,6 +1220,7 @@ export class StryderActorSheet extends ActorSheet {
     const updates = {};
     let effectLine = "";
 
+    const flat = effect_value ?? 0;
     switch (effect_type) {
       case "heal_hp": {
         const maxHP = actor.system.health.max;
@@ -1243,6 +1244,27 @@ export class StryderActorSheet extends ActorSheet {
         const newStamina = Math.min(actor.system.stamina.value + restoreAmount, maxStamina);
         updates["system.stamina.value"] = newStamina;
         effectLine = `Restores <b>${restoreAmount}</b> Stamina`;
+        break;
+      }
+      case "heal_hp_flat": {
+        const maxHP = actor.system.health.max;
+        const newHP = Math.min(actor.system.health.value + flat, maxHP);
+        updates["system.health.value"] = newHP;
+        effectLine = `Recovers <b>${flat}</b> HP`;
+        break;
+      }
+      case "heal_mana_flat": {
+        const maxMana = actor.system.mana.max;
+        const newMana = Math.min(actor.system.mana.value + flat, maxMana);
+        updates["system.mana.value"] = newMana;
+        effectLine = `Restores <b>${flat}</b> Mana`;
+        break;
+      }
+      case "heal_stamina_flat": {
+        const maxStamina = actor.system.stamina.max;
+        const newStamina = Math.min(actor.system.stamina.value + flat, maxStamina);
+        updates["system.stamina.value"] = newStamina;
+        effectLine = `Restores <b>${flat}</b> Stamina`;
         break;
       }
       default:

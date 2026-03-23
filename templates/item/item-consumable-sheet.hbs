@@ -34,7 +34,7 @@
           </div>
           <div class="dropdown-field">
             <label class="resource-label secondary-input">Sell Price (Grail)</label>
-            <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number" 
+            <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number"
               style="width: 100%; font-size: 16px; font-weight: normal;" />
           </div>
         </div>
@@ -50,51 +50,63 @@
         {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
       </div>
 
+      {{!-- Charges --}}
       <div class="resource charges-section">
         <div class="section-header">
           <div class="header-decoration left"></div>
           <label for="system.charges" class="resource-label">Charges</label>
           <div class="header-decoration right"></div>
         </div>
-          <div class="section-content">
-            <div class="resource flex-group-center" style="width: 80%; margin: 0 auto;">
-              <div class="resource-content flexrow flex-center flex-between" style="gap: 10px;">
-                <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
-                <span style="margin-top: 5px;"> / </span>
-                <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
-              </div>
+        <div class="section-content">
+          <div class="resource flex-group-center" style="width: 80%; margin: 0 auto;">
+            <div class="resource-content flexrow flex-center flex-between" style="gap: 10px;">
+              <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
+              <span style="margin-top: 5px;"> / </span>
+              <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
             </div>
           </div>
+        </div>
       </div>
 
+      {{!-- Is Elixir? toggle --}}
+      <div class="consumable-elixir-toggle">
+        <label class="resource-label secondary-input">Is Elixir?</label>
+        <input type="checkbox" name="system.is_elixir" {{#if system.is_elixir}}checked{{/if}}
+          style="width: 20px; height: 20px;" />
+      </div>
+
+      {{!-- Elixir Effects — only shown when Is Elixir is checked --}}
+      {{#if system.is_elixir}}
       <div class="resource effect-section">
         <div class="section-header">
           <div class="header-decoration left"></div>
-          <label class="resource-label">Use Effect</label>
+          <label class="resource-label">Elixir Effect</label>
           <div class="header-decoration right"></div>
         </div>
         <div class="section-content">
-          <div class="resource grid grid-4col" style="gap: 10px; padding: 0 10px;">
+          <div class="resource grid grid-3col" style="gap: 10px; padding: 0 10px;">
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Effect Type</label>
               <select class="secondary-input" name="system.effect_type" style="width: 100%; font-size: 14px; font-weight: normal;">
                 {{#select system.effect_type}}
                 <option value="none">None</option>
-                <option value="heal_hp">Heal HP (%)</option>
-                <option value="heal_mana">Restore Mana (%)</option>
-                <option value="heal_stamina">Restore Stamina (%)</option>
+                <optgroup label="Percentage">
+                  <option value="heal_hp">Heal HP (%)</option>
+                  <option value="heal_mana">Restore Mana (%)</option>
+                  <option value="heal_stamina">Restore Stamina (%)</option>
+                </optgroup>
+                <optgroup label="Flat Value">
+                  <option value="heal_hp_flat">Heal HP (Flat)</option>
+                  <option value="heal_mana_flat">Restore Mana (Flat)</option>
+                  <option value="heal_stamina_flat">Restore Stamina (Flat)</option>
+                </optgroup>
                 {{/select}}
               </select>
             </div>
             <div class="dropdown-field">
-              <label class="resource-label secondary-input">Effect Value (%)</label>
+              <label class="resource-label secondary-input">Effect Value</label>
               <input class="tertiary-input" type="text" name="system.effect_value" value="{{system.effect_value}}"
                 placeholder="0" data-dtype="Number" style="width: 100%; font-size: 14px; font-weight: normal;" />
-            </div>
-            <div class="dropdown-field" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
-              <label class="resource-label secondary-input">Is Elixir?</label>
-              <input type="checkbox" name="system.is_elixir" {{#if system.is_elixir}}checked{{/if}}
-                style="width: 20px; height: 20px; margin-top: 6px;" />
             </div>
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Elixir Sickness +</label>
@@ -104,6 +116,7 @@
           </div>
         </div>
       </div>
+      {{/if}}
 
     </div>
   </div>
@@ -117,6 +130,15 @@
   .charges-section {
     margin-top: 20px;
     text-align: center;
+  }
+
+  .consumable-elixir-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+    margin-bottom: 4px;
   }
 
   .charges-display {
