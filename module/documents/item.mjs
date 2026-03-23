@@ -118,6 +118,8 @@ export class StryderItem extends Item {
 		actionType = "Swift";
 	} else if (item.system.action_type === "passive") {
 		actionType = "Passive";
+	} else if (item.system.action_type === "trigger") {
+		actionType = "Trigger";
 	}
 
 	let cooldown = "";
