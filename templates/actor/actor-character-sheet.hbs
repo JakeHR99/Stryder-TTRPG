@@ -256,6 +256,7 @@
 		<a class="item" data-tab="items">{{localize "Inventory"}}</a>
 		<a class="item" data-tab="description">{{localize "Biography"}}</a>
 		<a class="item" data-tab="effects">{{localize "Effects"}}</a>
+		<a class="item" data-tab="stats">{{localize "Stats"}}</a>
 	</nav>
 
 	{{!-- Sheet Body --}}
@@ -782,6 +783,9 @@
 		{{!-- Active Effects Tab --}}
 		<div class="tab effects flexcol" data-group="primary" data-tab="effects">
 			{{> "systems/stryder/templates/actor/parts/actor-effects.hbs"}}
+		</div>
+
+		<div class="tab stats flexcol" data-group="primary" data-tab="stats">
 		</div>
 
 	</section>
