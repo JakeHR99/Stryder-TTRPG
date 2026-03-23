@@ -1,0 +1,36 @@
+{
+  "folder": "SunbrnFolder0001",
+  "name": "Too Bright to Hide",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>As a Sunborn you naturally emit low levels of light. Unfortunately, this means you're less than proficient at stealth. Your Hide checks have a -2 when used against Sight but you can always see within 1 space of you.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "SunbrnAbil01Brgt",
+  "sort": 100000,
+  "_key": "!items!SunbrnAbil01Brgt"
+}

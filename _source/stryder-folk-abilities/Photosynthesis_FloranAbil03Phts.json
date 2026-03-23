@@ -1,0 +1,36 @@
+{
+  "folder": "FloranFolder0001",
+  "name": "Photosynthesis",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>As long as a Floran remains in direct sunlight for at least three hours a day and has access to flowing water, they are considered fully fed and do not require a meal at the end of the day. As long as the Floran does not have the Haggard or Exhausted conditions, it can regenerate any lost limbs over the course of 1 hour.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FloranAbil03Phts",
+  "sort": 300000,
+  "_key": "!items!FloranAbil03Phts"
+}

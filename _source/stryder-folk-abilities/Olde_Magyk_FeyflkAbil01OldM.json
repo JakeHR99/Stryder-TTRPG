@@ -1,0 +1,36 @@
+{
+  "folder": "FeyflkFolder0001",
+  "name": "Olde Magyk",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Feyfolk have 3 Golden Mana which exclusively fuels their Olde Magyks and can only be recovered at the end of an Engagement.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FeyflkAbil01OldM",
+  "sort": 100000,
+  "_key": "!items!FeyflkAbil01OldM"
+}

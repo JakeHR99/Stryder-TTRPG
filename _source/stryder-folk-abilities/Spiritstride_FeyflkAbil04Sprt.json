@@ -1,0 +1,36 @@
+{
+  "folder": "FeyflkFolder0001",
+  "name": "Spiritstride",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>This unique magyk allows Feyfolk to become immaterial until the end of the Phase this ability was activated during and can use their Movement to traverse through occupied spaces as though they were unoccupied. The only walls that Feyfolk can not cross through are those of personal dwellings. If a Feyfolk ends the current phase within an occupied space they are moved into the nearest unoccupied space and lose 3 Health for each space they are forced to move by this effect.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FeyflkAbil04Sprt",
+  "sort": 400000,
+  "_key": "!items!FeyflkAbil04Sprt"
+}

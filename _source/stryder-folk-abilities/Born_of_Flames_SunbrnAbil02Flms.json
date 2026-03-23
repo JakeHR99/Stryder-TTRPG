@@ -1,0 +1,36 @@
+{
+  "folder": "SunbrnFolder0001",
+  "name": "Born of Flames",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You are resistant to external \"fire\" and \"heat\". If an ability has fire included in its name or description the amount of damage you take from it is reduced by half. You are also immune to the Burning Condition. Lava is not fire and can still harm you. If you become Soaked, you cannot use your Flamedance until the Soaked condition is removed.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "SunbrnAbil02Flms",
+  "sort": 200000,
+  "_key": "!items!SunbrnAbil02Flms"
+}

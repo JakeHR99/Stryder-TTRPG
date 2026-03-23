@@ -1,0 +1,36 @@
+{
+  "folder": "TravlrFolder0001",
+  "name": "Boon of Puck — Death is for the Unlucky",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You have supernatural luck, you can change a d6 result to any other number three times per visit to a Spring of Life.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "TravlrAbil10PckD",
+  "sort": 1000000,
+  "_key": "!items!TravlrAbil10PckD"
+}

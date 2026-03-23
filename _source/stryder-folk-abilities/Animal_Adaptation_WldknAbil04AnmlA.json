@@ -1,0 +1,36 @@
+{
+  "folder": "WldknFolder00001",
+  "name": "Animal Adaptation",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You can choose 3 Adaptations from the Adaptation List.</p><ul><li><strong>Land:</strong> You gain +3 Maximum Movement.</li><li><strong>Sea:</strong> You can breathe underwater and gain Swimming Expertise.</li><li><strong>Sand and Snow:</strong> When you take this adaptation, choose whether to be Immune to Torrid Heat or Freezing Wind and gain Marching Expertise.</li><li><strong>Jungle:</strong> You gain Climbing Expertise and any checks made to detect you are made with a -3.</li><li><strong>Sky:</strong> You have wings. You are immune to falling damage as long as you are not restrained or grappled. The distance you fall is reduced by half and can move in any horizontal direction while falling up to the amount of spaces you'd fall. You move in this direction and fall at the same time.</li><li><strong>Powerful Build:</strong> You gain +2 to any Strength and Endurance Rolls.</li><li><strong>Lithe:</strong> You gain +2 bonus to Nimbleness and Finesse Rolls.</li><li><strong>Night Hunter:</strong> You gain Nightvision, allowing you to see as clear in the dark as you do in the day up to 10 spaces and your eyes are reflective.</li><li><strong>Jaws:</strong> Focused Action | Limit: 3 | Range: 1 — You have powerful jaws and can use them as a natural weapon. This attack has a base damage of 8, and on an attack roll of 8 or higher you inflict the Bleeding Wounds condition.</li></ul>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "WldknAbil04AnmlA",
+  "sort": 400000,
+  "_key": "!items!WldknAbil04AnmlA"
+}

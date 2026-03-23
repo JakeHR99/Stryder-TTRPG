@@ -1,0 +1,28 @@
+{
+  "folder": null,
+  "name": "Traveler",
+  "type": "folk",
+  "img": "icons/environment/people/charge.webp",
+  "system": {
+    "description": "<p>Size: Medium | Weight Class: 4</p><p>Add 4 points to any number of Talents of your choosing.</p><p>Add 1 point to any two Senses of your choosing.</p>"
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "TravelerF0lk0001",
+  "sort": 0,
+  "_key": "!items!TravelerF0lk0001"
+}

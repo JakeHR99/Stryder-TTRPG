@@ -1,0 +1,36 @@
+{
+  "folder": "WldknFolder00001",
+  "name": "Power of Nature",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You gain 4 Mastery Points to put into Aggression, Endurance, Strength, Survival, Nimbleness or Wisdom as you see fit. Your Talents still have a maximum of 5.</p><p>You gain 2 Mastery Points to put into your Sight Sense or Hearing Sense as you see fit.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "WldknAbil03PwrNt",
+  "sort": 300000,
+  "_key": "!items!WldknAbil03PwrNt"
+}

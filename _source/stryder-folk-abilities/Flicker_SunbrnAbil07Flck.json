@@ -1,0 +1,36 @@
+{
+  "folder": "SunbrnFolder0001",
+  "name": "Flicker",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: When you are targeted by an Attack Roll.</p><p>As a capricious plume of fire Sunborn can momentarily turn to flame, this effect lasts but a moment. When they are attacked with a weapon (swords, claws, arrows) they can make themselves immaterial, resulting in the attack dealing no damage.</p><p>When a DM declares an attack the player must declare their use of Flicker before seeing the result of the enemy's Attack Roll.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "SunbrnAbil07Flck",
+  "sort": 700000,
+  "_key": "!items!SunbrnAbil07Flck"
+}

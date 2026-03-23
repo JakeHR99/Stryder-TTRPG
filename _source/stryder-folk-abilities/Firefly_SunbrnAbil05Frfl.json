@@ -1,0 +1,36 @@
+{
+  "folder": "SunbrnFolder0001",
+  "name": "Firefly",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Sunborn can expel flame from their bodies to grant them superior mobility and versatility. When you activate Firefly choose one of the following effects:</p><ul><li><strong>Ignite</strong> | Trigger: You Dodge or Evade. You increase a Dodge or Evasion Roll by 2 after seeing its result.</li><li><strong>Spark</strong> | Swift: You increase your Movement by 5 until the end of the current Phase.</li><li><strong>Blitz</strong> | Swift: You increase your next attack roll by 2.</li></ul>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "SunbrnAbil05Frfl",
+  "sort": 500000,
+  "_key": "!items!SunbrnAbil05Frfl"
+}

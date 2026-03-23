@@ -1,24 +1,15 @@
-2026/03/23-14:34:11.993 8338 Recovering log #155
-2026/03/23-14:34:11.993 8338 Level-0 table #157: started
-2026/03/23-14:34:11.995 8338 Level-0 table #157: 1615 bytes OK
-2026/03/23-14:34:11.999 8338 Delete type=0 #155
-2026/03/23-14:34:12.000 8338 Delete type=3 #154
-2026/03/23-14:34:12.005 7830 Level-0 table #160: started
-2026/03/23-14:34:12.007 7830 Level-0 table #160: 3185 bytes OK
-2026/03/23-14:34:12.008 7830 Delete type=0 #158
-2026/03/23-14:34:12.009 7830 Manual compaction at level-0 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!ColssAbil09Tetbr' @ 0 : 0; will stop at '!items.effects!SxC9aCxWfQ4KDish.OOUaEjjelWFm4sVI' @ 143 : 0
-2026/03/23-14:34:12.009 7830 Compacting 2@0 + 0@1 files
-2026/03/23-14:34:12.009 7830 Generated table #161@0: 70 keys, 4677 bytes
-2026/03/23-14:34:12.009 7830 Compacted 2@0 + 0@1 files => 4677 bytes
-2026/03/23-14:34:12.009 7830 compacted to: files[ 0 1 1 0 0 0 0 ]
-2026/03/23-14:34:12.009 7830 Delete type=2 #157
-2026/03/23-14:34:12.009 7830 Delete type=2 #160
-2026/03/23-14:34:12.009 7830 Manual compaction at level-0 from '!items.effects!SxC9aCxWfQ4KDish.OOUaEjjelWFm4sVI' @ 143 : 0 .. '!items!ColssAbil09Tetbr' @ 0 : 0; will stop at (end)
-2026/03/23-14:34:12.009 7830 Manual compaction at level-1 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!ColssAbil09Tetbr' @ 0 : 0; will stop at '!items.effects!SxC9aCxWfQ4KDish.OOUaEjjelWFm4sVI' @ 143 : 0
-2026/03/23-14:34:12.009 7830 Compacting 1@1 + 1@2 files
-2026/03/23-14:34:12.009 7830 Generated table #162@1: 10 keys, 3185 bytes
-2026/03/23-14:34:12.009 7830 Compacted 1@1 + 1@2 files => 3185 bytes
-2026/03/23-14:34:12.009 7830 compacted to: files[ 0 0 1 0 0 0 0 ]
-2026/03/23-14:34:12.009 7830 Delete type=2 #137
-2026/03/23-14:34:12.009 7830 Delete type=2 #161
-2026/03/23-14:34:12.009 7830 Manual compaction at level-1 from '!items.effects!SxC9aCxWfQ4KDish.OOUaEjjelWFm4sVI' @ 143 : 0 .. '!items!ColssAbil09Tetbr' @ 0 : 0; will stop at (end)
+2026/03/23-18:07:27.036 78c8 Recovering log #204
+2026/03/23-18:07:27.041 78c8 Delete type=0 #204
+2026/03/23-18:07:27.041 78c8 Delete type=3 #202
+2026/03/23-18:07:27.047 7148 Level-0 table #210: started
+2026/03/23-18:07:27.049 7148 Level-0 table #210: 24370 bytes OK
+2026/03/23-18:07:27.050 7148 Delete type=0 #208
+2026/03/23-18:07:27.051 7148 Manual compaction at level-0 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at (end)
+2026/03/23-18:07:27.051 7148 Manual compaction at level-1 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at '!items!WldknAbil04AnmlA' @ 467 : 1
+2026/03/23-18:07:27.051 7148 Compacting 1@1 + 1@2 files
+2026/03/23-18:07:27.054 7148 Generated table #211@1: 77 keys, 24370 bytes
+2026/03/23-18:07:27.054 7148 Compacted 1@1 + 1@2 files => 24370 bytes
+2026/03/23-18:07:27.055 7148 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/03/23-18:07:27.056 7148 Delete type=2 #206
+2026/03/23-18:07:27.056 7148 Delete type=2 #210
+2026/03/23-18:07:27.056 7148 Manual compaction at level-1 from '!items!WldknAbil04AnmlA' @ 467 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at (end)

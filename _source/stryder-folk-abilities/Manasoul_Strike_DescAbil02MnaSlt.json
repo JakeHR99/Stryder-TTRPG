@@ -1,0 +1,36 @@
+{
+  "folder": "DescndFolder0001",
+  "name": "Manasoul Strike",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: You make a Focused or Quick Attack with an Excellent attack roll.</p><p>You can use 1 Mana to change its damage modifier from 1.5x to 2x.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 2,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "DescAbil02MnaSlt",
+  "sort": 200000,
+  "_key": "!items!DescAbil02MnaSlt"
+}

@@ -1,0 +1,91 @@
+{
+  "folder": null,
+  "name": "Remnant",
+  "type": "folk",
+  "img": "icons/magic/light/orbs-hand-gray.webp",
+  "system": {
+    "description": "<p>Size: Medium | Weight Class: 4</p><p>Add 2 points to your Nimbleness Talent. Add 1 point to your Deceit and Wisdom Talents.</p><p>Add 2 points to your Sight Sense.</p>"
+  },
+  "effects": [
+    {
+      "name": "Remnant",
+      "origin": null,
+      "duration": {
+        "rounds": null,
+        "startTime": null,
+        "seconds": null,
+        "combat": null,
+        "turns": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "disabled": false,
+      "img": "icons/magic/light/orbs-hand-gray.webp",
+      "_id": "RemantEfct000001",
+      "type": "base",
+      "system": {},
+      "changes": [
+        {
+          "key": "system.attributes.talent.nimbleness.value",
+          "mode": 2,
+          "value": "2",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.deceit.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.wisdom.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.sense.sight.value",
+          "mode": 2,
+          "value": "2",
+          "priority": 50
+        }
+      ],
+      "description": "",
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "stryder",
+        "systemVersion": "0.2.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!RemnantF0lk00001.RemantEfct000001"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "RemnantF0lk00001",
+  "sort": 0,
+  "_key": "!items!RemnantF0lk00001"
+}

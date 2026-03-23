@@ -1,0 +1,36 @@
+{
+  "folder": "HalfngFolder0001",
+  "name": "Pint Sized Heroes",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Halflings are a diminutive Folk and the only one to exclusively be Small size, granting them the benefits and detriments thereof. Your Weight Class is 3.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "HalfngAbil01Pint",
+  "sort": 100000,
+  "_key": "!items!HalfngAbil01Pint"
+}

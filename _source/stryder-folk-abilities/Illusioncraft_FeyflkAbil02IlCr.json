@@ -1,0 +1,36 @@
+{
+  "folder": "FeyflkFolder0001",
+  "name": "Illusioncraft",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Select a target within 5 spaces and choose one of the following Illusions to affect them. The target falls victim to these illusions on a failed Magykal Resist against your Magykal Potency or Physical Potency, whichever is higher.</p><ul><li><strong>Fear:</strong> The target sees a source of fear of their own making. As their deepest fear takes form. They become Panicked until the end of the next Challenger Phase.</li><li><strong>Darkness:</strong> An all enveloping darkness envelops the target, rendering it Blinded until the end of the next Challenger Phase.</li><li><strong>Ice:</strong> Visions of crawling ice and freezing winds convince the target it is Frozen. Target creature becomes Frozen until the end of the next Challenger Phase.</li><li><strong>Memory:</strong> As your Olde Magyk delves deep into a creatures mind it has a shocking vision. This causes the target to be Stunned.</li><li><strong>Fervor:</strong> A Magyk that affects the creatures auditory and visual senses to have it envision you doing something so horrid that it must target you, causing it to become Taunted until the end of the next Challenger Phase.</li></ul>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FeyflkAbil02IlCr",
+  "sort": 200000,
+  "_key": "!items!FeyflkAbil02IlCr"
+}

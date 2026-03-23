@@ -1,0 +1,36 @@
+{
+  "folder": "RemantFolder0001",
+  "name": "The Hunted",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>As a result of constant threat from shadoweaters back in their home world, Remnants are extremely adept at keeping watch during nighttime. Remnants relationship to the dark and their strengthened eyes allows them to see in the dark as clearly as they do in the day. You gain +2 to Sight and Hearing when performing the Keeping Watch camp task.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "RemantAbil01Hunt",
+  "sort": 100000,
+  "_key": "!items!RemantAbil01Hunt"
+}

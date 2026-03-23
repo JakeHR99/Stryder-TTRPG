@@ -1,0 +1,36 @@
+{
+  "folder": "SunbrnFolder0001",
+  "name": "Fire Eater",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: You would be damaged by an ability or source that contains fire or heat or would inflict the Burning Condition.</p><p>You swallow the source of damage, causing it to deal no damage and instead restore any expended Embers. The source of the fire cannot come from you or be mundane.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 1,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "SunbrnAbil03FrEt",
+  "sort": 300000,
+  "_key": "!items!SunbrnAbil03FrEt"
+}

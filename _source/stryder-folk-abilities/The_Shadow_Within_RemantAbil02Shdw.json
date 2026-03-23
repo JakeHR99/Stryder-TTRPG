@@ -1,0 +1,36 @@
+{
+  "folder": "RemantFolder0001",
+  "name": "The Shadow Within",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Remnants can harness their Shadow, and use it to great effect. Remnants have 10 Darkness. Darkness is refilled whenever a Remnant visits a Goddess Fountain. Remnants may also regain this Darkness by Brooding.</p><p>To perform the Brooding ability, Remnants must sit or stand alone and meditate to restore the negative energy of the Darkness. Brooding takes one hour and restores Darkness to full.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "RemantAbil02Shdw",
+  "sort": 200000,
+  "_key": "!items!RemantAbil02Shdw"
+}

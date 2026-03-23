@@ -1,0 +1,97 @@
+{
+  "folder": null,
+  "name": "Feyfolk",
+  "type": "folk",
+  "img": "icons/magic/nature/leaf-juggle-humanoid-green.webp",
+  "system": {
+    "description": "<p>Size: Medium | Weight Class: 4</p><p>Add 2 points to your Intimacy Talent. Add 1 point to your Wisdom and Nimbleness Talents.</p><p>Add 1 point to your Arcane and Hearing Senses.</p>"
+  },
+  "effects": [
+    {
+      "name": "Feyfolk",
+      "origin": null,
+      "duration": {
+        "rounds": null,
+        "startTime": null,
+        "seconds": null,
+        "combat": null,
+        "turns": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "disabled": false,
+      "img": "icons/magic/nature/leaf-juggle-humanoid-green.webp",
+      "_id": "FeyflkEfct000001",
+      "type": "base",
+      "system": {},
+      "changes": [
+        {
+          "key": "system.attributes.talent.intimacy.value",
+          "mode": 2,
+          "value": "2",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.wisdom.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.nimbleness.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.sense.arcane.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.sense.hearing.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        }
+      ],
+      "description": "",
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "stryder",
+        "systemVersion": "0.2.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!FeyfolkF0lk00001.FeyflkEfct000001"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FeyfolkF0lk00001",
+  "sort": 0,
+  "_key": "!items!FeyfolkF0lk00001"
+}

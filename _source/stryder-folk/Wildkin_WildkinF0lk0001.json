@@ -1,0 +1,28 @@
+{
+  "folder": null,
+  "name": "Wildkin",
+  "type": "folk",
+  "img": "icons/creatures/mammals/humanoid-fox-cat-archer.webp",
+  "system": {
+    "description": "<p>Size: Small or Medium (your choice) | Weight Class: 4</p><p>Gain 4 Mastery Points to put into Aggression, Endurance, Strength, Survival, Nimbleness or Wisdom as you see fit. Your Talents still have a maximum of 5.</p><p>Gain 2 Mastery Points to put into your Sight Sense or Hearing Sense as you see fit.</p>"
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "WildkinF0lk0001",
+  "sort": 0,
+  "_key": "!items!WildkinF0lk0001"
+}

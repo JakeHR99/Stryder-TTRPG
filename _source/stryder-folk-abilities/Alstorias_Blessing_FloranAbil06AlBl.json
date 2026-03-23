@@ -1,0 +1,36 @@
+{
+  "folder": "FloranFolder0001",
+  "name": "Alstoria's Blessing",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Born of the World to serve the World, you can draw mana directly from the earth to heal your wounds. You recover 3 Health instantly and end one Harmful Condition.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 1,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FloranAbil06AlBl",
+  "sort": 600000,
+  "_key": "!items!FloranAbil06AlBl"
+}

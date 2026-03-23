@@ -1,0 +1,36 @@
+{
+  "folder": "FloranFolder0001",
+  "name": "Paralyzing Pollen",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Every adjacent space to you is filled with an almost translucent pollen you release from your body and hangs in the air. Any creature besides you that enters one of the affected spaces must roll Physical Resistance. If their roll is lower than your highest potency they become Stunned. The Pollen occupies the affected spaces until the end of the next Player Phase.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 1,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FloranAbil04PrPl",
+  "sort": 400000,
+  "_key": "!items!FloranAbil04PrPl"
+}

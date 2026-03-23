@@ -1,0 +1,97 @@
+{
+  "folder": null,
+  "name": "Halfling",
+  "type": "folk",
+  "img": "icons/environment/wilderness/mine-interior-dungeon-door.webp",
+  "system": {
+    "description": "<p>Size: Small (exclusively) | Weight Class: 3</p><p>Add 2 points to your Wisdom Talent. Add 1 point to your Endurance and Finesse Talents.</p><p>Add 1 point to your Hearing and Smell Senses.</p>"
+  },
+  "effects": [
+    {
+      "name": "Halfling",
+      "origin": null,
+      "duration": {
+        "rounds": null,
+        "startTime": null,
+        "seconds": null,
+        "combat": null,
+        "turns": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "disabled": false,
+      "img": "icons/environment/wilderness/mine-interior-dungeon-door.webp",
+      "_id": "HalfngEfct000001",
+      "type": "base",
+      "system": {},
+      "changes": [
+        {
+          "key": "system.attributes.talent.wisdom.value",
+          "mode": 2,
+          "value": "2",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.endurance.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.finesse.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.sense.hearing.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.sense.smell.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        }
+      ],
+      "description": "",
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "stryder",
+        "systemVersion": "0.2.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!HalflingF0lk0001.HalfngEfct000001"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "HalflingF0lk0001",
+  "sort": 0,
+  "_key": "!items!HalflingF0lk0001"
+}

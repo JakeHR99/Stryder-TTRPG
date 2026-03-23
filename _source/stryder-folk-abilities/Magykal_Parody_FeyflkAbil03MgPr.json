@@ -1,0 +1,36 @@
+{
+  "folder": "FeyflkFolder0001",
+  "name": "Magykal Parody",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Using Golden Mana you can emulate an ability used from any Aspect that you have seen be used during the current day. The damage it would deal uses either your Soul or Arcana as base damage, whichever is higher. When you activate Magykal Parody you must also pay the cost of the mimicked ability, including Action, Mana, or Stamina.</p><p>Warriors can evoke Mystic Aspect abilities this way as they use their Golden Mana as a conduit.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FeyflkAbil03MgPr",
+  "sort": 300000,
+  "_key": "!items!FeyflkAbil03MgPr"
+}

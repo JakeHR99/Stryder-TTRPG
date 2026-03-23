@@ -1,0 +1,36 @@
+{
+  "folder": "FloranFolder0001",
+  "name": "Grasping Limbs",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Make a quick attack that attempts to grapple an enemy within 6 spaces. Your arms are flooded with mana as they expand and reach through and beneath the terrain and out at your targets location. If your attack lands your target is automatically Grappled by you. When this Grapple is released, your arms return to their normal length. While Grappling a creature this way you can not expend Movement.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 2,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "FloranAbil05GrLm",
+  "sort": 500000,
+  "_key": "!items!FloranAbil05GrLm"
+}

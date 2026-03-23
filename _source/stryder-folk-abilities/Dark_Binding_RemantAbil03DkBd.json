@@ -1,0 +1,36 @@
+{
+  "folder": "RemantFolder0001",
+  "name": "Dark Binding",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You command your Shadow forwards onto a target creature within 6 spaces. The target can attempt to resist by rolling Magykal resistance vs your highest Potency. If you are victorious the target's Movement is reduced to 0, but so long as Dark Binding is in effect you can not move further away from the ensnared target. This effect lasts three phases if the contested check is won, and ends early if the target goes unconscious. You can end this effect early by recalling your Shadow as a Swift action.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "RemantAbil03DkBd",
+  "sort": 300000,
+  "_key": "!items!RemantAbil03DkBd"
+}

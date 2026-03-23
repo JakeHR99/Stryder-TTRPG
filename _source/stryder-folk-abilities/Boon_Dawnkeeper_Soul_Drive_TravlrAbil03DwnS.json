@@ -1,0 +1,36 @@
+{
+  "folder": "TravlrFolder0001",
+  "name": "Boon of Dawnkeeper — Soul Drive",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>When your Attack Roll is Excellent you gain a +2 to attack rolls and +2 Movement until the end of the next Player Phase.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "TravlrAbil03DwnS",
+  "sort": 300000,
+  "_key": "!items!TravlrAbil03DwnS"
+}

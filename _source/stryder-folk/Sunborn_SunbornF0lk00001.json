@@ -1,0 +1,103 @@
+{
+  "folder": null,
+  "name": "Sunborn",
+  "type": "folk",
+  "img": "icons/environment/light/hand-sparks-glow-yellow.webp",
+  "system": {
+    "description": "<p>Size: Medium | Weight Class: 4</p><p>Add 1 point to your Charm, Intimacy, Nimbleness and Strength Talents.</p><p>Add 1 point to your Sight and Touch Senses.</p>"
+  },
+  "effects": [
+    {
+      "name": "Sunborn",
+      "origin": null,
+      "duration": {
+        "rounds": null,
+        "startTime": null,
+        "seconds": null,
+        "combat": null,
+        "turns": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "disabled": false,
+      "img": "icons/environment/light/hand-sparks-glow-yellow.webp",
+      "_id": "SunbrnEfct000001",
+      "type": "base",
+      "system": {},
+      "changes": [
+        {
+          "key": "system.attributes.talent.charm.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.intimacy.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.nimbleness.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.talent.strength.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.sense.sight.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.sense.touch.value",
+          "mode": 2,
+          "value": "1",
+          "priority": 50
+        }
+      ],
+      "description": "",
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "13.351",
+        "systemId": "stryder",
+        "systemVersion": "0.2.0",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!SunbornF0lk00001.SunbrnEfct000001"
+    }
+  ],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "SunbornF0lk00001",
+  "sort": 0,
+  "_key": "!items!SunbornF0lk00001"
+}

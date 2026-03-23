@@ -1,0 +1,36 @@
+{
+  "folder": "TravlrFolder0001",
+  "name": "Boon of Puck — Lucky",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Your luck is supernatural. When you encounter a random roll for acquiring something such as looting or gathering, once per Spring of Life you can choose exactly which item from the table you get when looting.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "TravlrAbil09PckL",
+  "sort": 900000,
+  "_key": "!items!TravlrAbil09PckL"
+}

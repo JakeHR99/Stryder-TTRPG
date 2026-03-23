@@ -1,0 +1,36 @@
+{
+  "folder": "OumenFolder00001",
+  "name": "Cursed Leg (Active)",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You can do an empowered version of the Leap Action, when you do you travel twice as far, you do not suffer fall damage as a result of this ability.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 2,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "OumenAbil10CsLgA",
+  "sort": 1000000,
+  "_key": "!items!OumenAbil10CsLgA"
+}

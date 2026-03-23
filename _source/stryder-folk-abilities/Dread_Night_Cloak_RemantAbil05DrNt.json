@@ -1,0 +1,36 @@
+{
+  "folder": "RemantFolder0001",
+  "name": "Dread-Night Cloak",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You command your Shadow forth to shroud you, exposing you but granting you strength. Doing so causes it to become a fearsome armor and weapon, augmenting you defensively and offensively. Your dodge and attack rolls gain a bonus of 3. Dread-Night Cloak lasts 5 rounds.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "RemantAbil05DrNt",
+  "sort": 500000,
+  "_key": "!items!RemantAbil05DrNt"
+}

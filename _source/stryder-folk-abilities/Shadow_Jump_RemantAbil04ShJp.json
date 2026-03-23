@@ -1,0 +1,36 @@
+{
+  "folder": "RemantFolder0001",
+  "name": "Shadow Jump",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Choose an ally's shadow, if the chosen shadow is within 6 spaces you can immediately step backwards through your own Shadow, reappearing within 1 space of your chosen ally. If there is no unoccupied space around your ally your Shadow Jump will fail. You can only activate Shadow Jump when your Shadow is not being used for any other abilities.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 0,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "RemantAbil04ShJp",
+  "sort": 400000,
+  "_key": "!items!RemantAbil04ShJp"
+}

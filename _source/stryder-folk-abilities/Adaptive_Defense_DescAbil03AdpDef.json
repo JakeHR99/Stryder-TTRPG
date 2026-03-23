@@ -1,0 +1,36 @@
+{
+  "folder": "DescndFolder0001",
+  "name": "Adaptive Defense",
+  "type": "racial",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: You are forced to roll Dodge, Evasion, or Resistance by an ability that has been used before during the current engagement.</p><p>You raise your Dodge, Evasion, or Resistance by 3.</p>",
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "cooldown_type": "perRest",
+    "cooldown_value": 2,
+    "uses_current": 0
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "DescAbil03AdpDef",
+  "sort": 300000,
+  "_key": "!items!DescAbil03AdpDef"
+}
