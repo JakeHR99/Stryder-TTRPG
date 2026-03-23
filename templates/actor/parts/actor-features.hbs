@@ -1,48 +1,14 @@
-{{!-- Potency & Resist Row --}}
+{{!-- Potency Row --}}
 <div class="header-stats potency-row">
 	<div class="header-stat">
 		<label class="header-stat-label">Physical Potency</label>
 		<input type="text" name="system.attributes.physical_potency.value" value="{{system.attributes.physical_potency.value}}"
 			data-dtype="Number" class="header-stat-input" />
 	</div>
-	<div class="fantasy-combat-button-container">
-		<span class="fantasy-combat-button resistance-button resistance-roll-button"
-			data-custom-roll="2d6+@abilities.Grit.value+@physical_resist_mod"
-			data-label="Physical Resistance Check">
-			<div class="combat-icon-container">
-				<img src="systems/stryder/assets/physical_resistance.svg" class="combat-icon" />
-				<div class="combat-icon-glow"></div>
-			</div>
-			<span class="combat-button-text"><strong>Physical Resist</strong></span>
-			<div class="combat-button-shine"></div>
-		</span>
-	</div>
-	<div class="header-stat resistance-mod-stat">
-		<label class="header-stat-label">P.Res Mod</label>
-		<input type="number" name="system.physical_resist_mod" value="{{system.physical_resist_mod}}"
-			data-dtype="Number" class="reflex-tag-input" />
-	</div>
 	<div class="header-stat">
 		<label class="header-stat-label">Magykal Potency</label>
 		<input type="text" name="system.attributes.magykal_potency.value" value="{{system.attributes.magykal_potency.value}}"
 			data-dtype="Number" class="header-stat-input" />
-	</div>
-	<div class="fantasy-combat-button-container">
-		<span class="fantasy-combat-button resistance-button resistance-roll-button"
-			data-custom-roll="2d6+@abilities.Will.value+@magykal_resist_mod"
-			data-label="Magykal Resistance Check">
-			<div class="combat-icon-container">
-				<img src="systems/stryder/assets/magykal_resistance.svg" class="combat-icon" />
-				<div class="combat-icon-glow"></div>
-			</div>
-			<span class="combat-button-text"><strong>Magykal Resist</strong></span>
-			<div class="combat-button-shine"></div>
-		</span>
-	</div>
-	<div class="header-stat resistance-mod-stat">
-		<label class="header-stat-label">M.Res Mod</label>
-		<input type="number" name="system.magykal_resist_mod" value="{{system.magykal_resist_mod}}"
-			data-dtype="Number" class="reflex-tag-input" />
 	</div>
 </div>
 
