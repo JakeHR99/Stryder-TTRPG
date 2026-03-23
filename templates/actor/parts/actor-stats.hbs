@@ -1,9 +1,9 @@
-{{!-- Core Stats Block --}}
+{{!-- Section 1: Stats & Potencies --}}
 <div class="fantasy-abilities-section">
 	<div class="combat-abilities-header">
 		<h3 class="fantasy-section-title">
 			<span class="title-decoration left"></span>
-			<span class="title-text">Core Stats</span>
+			<span class="title-text">Stats & Potencies</span>
 			<span class="title-decoration right"></span>
 		</h3>
 	</div>
@@ -24,5 +24,96 @@
 			</span>
 		</div>
 		{{/each}}
+	</div>
+	<div class="stats-potency-row">
+		<div class="header-stat">
+			<label class="header-stat-label">Physical Potency</label>
+			<input type="text" name="system.attributes.physical_potency.value" value="{{system.attributes.physical_potency.value}}"
+				data-dtype="Number" class="header-stat-input" />
+		</div>
+		<div class="header-stat">
+			<label class="header-stat-label">Magykal Potency</label>
+			<input type="text" name="system.attributes.magykal_potency.value" value="{{system.attributes.magykal_potency.value}}"
+				data-dtype="Number" class="header-stat-input" />
+		</div>
+	</div>
+</div>
+
+{{!-- Section 2: Class & Folk --}}
+<div class="fantasy-abilities-section">
+	<div class="combat-abilities-header">
+		<h3 class="fantasy-section-title">
+			<span class="title-decoration left"></span>
+			<span class="title-text">Class & Folk</span>
+			<span class="title-decoration right"></span>
+		</h3>
+	</div>
+	<div class="flexrow-stats scrolling-container" style="gap: 8px;">
+		<!-- Class -->
+		<div class="flexcol-stats scroll-wrapper" style="flex: 1;">
+			<ol class='items-list'>
+				<li class='item flexrow items-header'>
+					<div class='item-name'>
+						<img src="systems/stryder/assets/class-icon.svg" alt="Class">
+						{{localize 'Class'}}
+					</div>
+					<div class='item-controls'>
+						<a class='item-control' title='Browse Classes' data-action='compendium' data-pack='stryder-classes'>
+							<i class='fas fa-search'></i>
+						</a>
+					</div>
+				</li>
+				{{#each classchoice as |item id|}}
+				<li class='item flexrow' data-item-id='{{item._id}}'>
+					<div class='item-name rollable' data-roll-type='item'>
+						<div class='item-image'>
+							<a class='rollable' data-roll-type='item'>
+								<img src='{{item.img}}' title='{{item.name}}' width='24' height='24' />
+							</a>
+						</div>
+						<h4>{{item.name}}</h4>
+					</div>
+					<div class='item-controls'>
+						<a class='item-control item-duplicate' title='{{localize "STRYDER.DOCUMENT.Duplicate"}}'><i class='fas fa-copy'></i></a>
+						<a class='item-control item-edit' title='{{localize "DOCUMENT.Edit" type="feature"}}' data-action='edit'><i class='fas fa-edit'></i></a>
+						<a class='item-control item-delete' title='{{localize "DOCUMENT.Delete" type="feature"}}' data-action='delete'><i class='fas fa-trash'></i></a>
+					</div>
+				</li>
+				{{/each}}
+			</ol>
+		</div>
+		<!-- Folk -->
+		<div class="flexcol-stats scroll-wrapper" style="flex: 1;">
+			<ol class='items-list'>
+				<li class='item flexrow items-header'>
+					<div class='item-name'>
+						<img src="systems/stryder/assets/folk-icon.svg" alt="Folk">
+						{{localize 'Folk'}}
+					</div>
+					<div class='item-controls'>
+						<a class='item-control' title='Browse Folk' data-action='compendium' data-pack='stryder-folk'>
+							<i class='fas fa-search'></i>
+						</a>
+					</div>
+				</li>
+				{{#each folk as |item id|}}
+				<li class='item flexrow' data-item-id='{{item._id}}'>
+					<div class='item-name rollable' data-roll-type='item'>
+						<div class='item-image'>
+							<a class='rollable' data-roll-type='item'>
+								<img src='{{item.img}}' title='{{item.name}}' width='24' height='24' />
+							</a>
+						</div>
+						<h4>{{item.name}}</h4>
+					</div>
+					<div class='item-controls'>
+						<a class='item-control item-duplicate' title='{{localize "STRYDER.DOCUMENT.Duplicate"}}'><i class='fas fa-copy'></i></a>
+						<a class='item-control item-edit' title='{{localize "DOCUMENT.Edit" type="feature"}}' data-action='edit'><i class='fas fa-edit'></i></a>
+						<a class='item-control item-delete' title='{{localize "DOCUMENT.Delete" type="feature"}}' data-action='delete'><i class='fas fa-trash'></i></a>
+					</div>
+				</li>
+				{{/each}}
+			</ol>
+		</div>
 	</div>
 </div>

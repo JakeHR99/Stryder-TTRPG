@@ -5654,3 +5654,17 @@ progress.resource2-bar::-moz-progress-bar {
 .fantasy-abilities-section {
   padding: 8px;
 }
+
+.stats-potency-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 8px;
+  margin-top: 4px;
+}
+
+.stats-potency-row .header-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
