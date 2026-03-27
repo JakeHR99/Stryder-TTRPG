@@ -1,0 +1,29 @@
+{
+  "folder": "HersmAspFolder01",
+  "name": "Sweep",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>All creatures within a range of 1 must make an Evasion or take damage equal to 2x Power and be knocked back, then become [Dropped].</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "multi-target", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "HersmAbil08Sweep",
+  "sort": 800000,
+  "_key": "!items!HersmAbil08Sweep"
+}

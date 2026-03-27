@@ -1,0 +1,29 @@
+{
+  "folder": "VglncAspFolder01",
+  "name": "Line of Fire",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>By condensing mana into your Soul Armament you create a powerful and incredibly fast shot that singes the air as it flies towards its target.</p><p>Select a target within your Armaments range. Make a Quick Attack at your target and gain +2 to its attack roll.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "VglncAbil07LnFir",
+  "sort": 700000,
+  "_key": "!items!VglncAbil07LnFir"
+}

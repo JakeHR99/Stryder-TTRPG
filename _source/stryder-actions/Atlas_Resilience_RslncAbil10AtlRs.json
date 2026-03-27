@@ -1,0 +1,29 @@
+{
+  "folder": "RslncAspFolder01",
+  "name": "Atlas Resilience",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You gain the following buffs until the end of the current Engagement while using the Aspect of Resilience.</p><ul><li><strong>Unwavering Resistance:</strong> Your Physical and Magykal Resistance rolls gain +2.</li><li><strong>Skybearing Resilience:</strong> Your Armored Soul burgeons with strength. Armored Souls damage reduction increases by 2 and applies to both Physical and Magykal damage simultaneously.</li></ul>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 1, "value": 0 },
+    "stamina_cost": 5,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RslncAbil10AtlRs",
+  "sort": 1000000,
+  "_key": "!items!RslncAbil10AtlRs"
+}

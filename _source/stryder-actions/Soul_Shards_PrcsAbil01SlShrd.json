@@ -1,0 +1,29 @@
+{
+  "folder": "PrcsAspFolder001",
+  "name": "Soul Shards",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>When you deal damage with a Focused Attack from your Soul Armament a small soul Shard will embed itself within the target. Up to 5 shards can exist at once within a creature. For every shard a creature has, you gain a +1 to Attack Rolls against them.</p><p>You can choose to fire a Shard into an unoccupied space within a number of Spaces equal to your Soul as a 1 Stamina Swift Action, creating a Buried Shard which can be used with other Precision Skills.</p><p>Creatures can forcibly rip a shard loose as a Swift Action for the cost of 1 Stamina and 1 Health per Shard.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "persistent", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PrcsAbil01SlShrd",
+  "sort": 100000,
+  "_key": "!items!PrcsAbil01SlShrd"
+}

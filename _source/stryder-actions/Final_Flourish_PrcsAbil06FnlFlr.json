@@ -1,0 +1,29 @@
+{
+  "folder": "PrcsAspFolder001",
+  "name": "Final Flourish",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You fire up to a number of Shards equal to [Soul]. These can target creatures or unoccupied spaces to become Buried Shards. If the target is a creature it automatically has a Shard embedded, but this does not deal any damage.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 1, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PrcsAbil06FnlFlr",
+  "sort": 600000,
+  "_key": "!items!PrcsAbil06FnlFlr"
+}

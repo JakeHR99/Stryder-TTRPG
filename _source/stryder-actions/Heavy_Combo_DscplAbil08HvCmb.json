@@ -1,0 +1,29 @@
+{
+  "folder": "DscplAspFolder01",
+  "name": "Heavy Combo",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Make a Quick Attack with +1 to its attack roll and -1 to its base damage. This Skill gains a different additional effect based on its Trigger.</p><ul><li><strong>Light Trigger:</strong> If both this Skill and the Trigger landed, your Flow is raised by 1.</li><li><strong>Heavy Trigger:</strong> Deal +3 additional damage.</li><li><strong>Grab Trigger:</strong> If the preceding Trigger was successful, this attack gains [Sunder], but the grapple is released.</li></ul>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Flow: 0 | Flow Gain: +1",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DscplAbil08HvCmb",
+  "sort": 800000,
+  "_key": "!items!DscplAbil08HvCmb"
+}

@@ -1,0 +1,29 @@
+{
+  "folder": "RsonAspFolder001",
+  "name": "Malagena of Battle",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>All allies are riled into a battle fervor. Allies within range gain a bonus of 2 to all [Reflex] abilities and attack rolls, until the end of the Round.</p><p>Skill Passive: Your next Focused Attack action grants the target +2 to their next attack roll but reduces all their [Reflex] ability rolls by 1.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Range: +3",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RsonAbil07MlgBtl",
+  "sort": 700000,
+  "_key": "!items!RsonAbil07MlgBtl"
+}

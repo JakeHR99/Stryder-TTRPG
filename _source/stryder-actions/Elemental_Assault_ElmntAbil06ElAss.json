@@ -1,0 +1,29 @@
+{
+  "folder": "ElmntAspFolder01",
+  "name": "Elemental Assault",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Target a creature within range of your Armament who is currently inflicted with one of the following conditions. You warp the elemental source of the condition, amplifying it and strengthening its effects. The target takes damage equal to [Arcana].</p><ul><li><strong>Burning:</strong> The target begins Suffocating for as long as they are Burning.</li><li><strong>Soaked:</strong> The target immediately becomes Frozen.</li><li><strong>Poisoned:</strong> The target's Poisoned condition immediately progresses to the next Stage.</li><li><strong>Shocked:</strong> The target is additionally Stunned for as long as they are Shocked.</li></ul>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ElmntAbil06ElAss",
+  "sort": 600000,
+  "_key": "!items!ElmntAbil06ElAss"
+}

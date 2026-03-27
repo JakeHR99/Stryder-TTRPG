@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc", "monster", "lordling", "familiar", "pet"],
+    "types": ["character", "npc", "monster", "lordling", "familiar", "pet", "spirit-beast"],
     "templates": {
       "base": {
         "health": {
@@ -649,6 +649,28 @@
         "list": ""
       },
       "description": ""
+    },
+    "spirit-beast": {
+      "templates": ["base"],
+      "linkedCharacterId": "",
+      "gate": "crimson",
+      "attributes": {
+        "creature_size": "0.5",
+        "move": {
+          "running": {
+            "value": 7,
+            "expertise": false
+          },
+          "flying": {
+            "value": 0,
+            "expertise": false
+          }
+        }
+      },
+      "abilities": {
+        "primary": "",
+        "defense": ""
+      }
     }
   },
   "Item": {

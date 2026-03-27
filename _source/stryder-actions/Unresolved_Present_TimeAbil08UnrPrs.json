@@ -1,0 +1,29 @@
+{
+  "folder": "TimeAspFolder001",
+  "name": "Unresolved Present",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: A creature within range makes a roll that includes a d6.</p><p>Select a target. They can then reroll 1 d6 that was made as part of the Trigger and gain +1 to its result.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "1 Sand",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TimeAbil08UnrPrs",
+  "sort": 800000,
+  "_key": "!items!TimeAbil08UnrPrs"
+}

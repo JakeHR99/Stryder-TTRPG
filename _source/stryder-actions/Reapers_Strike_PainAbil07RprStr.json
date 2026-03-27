@@ -1,0 +1,29 @@
+{
+  "folder": "PainAspFolder001",
+  "name": "Reaper's Strike",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Make a Quick Attack. On an attack roll of Good or higher they are rendered Senseless until the end of the Player Phase.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PainAbil07RprStr",
+  "sort": 700000,
+  "_key": "!items!PainAbil07RprStr"
+}

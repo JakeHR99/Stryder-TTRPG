@@ -1,0 +1,29 @@
+{
+  "folder": "VglncAspFolder01",
+  "name": "Eagle-Eye",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: When you or a Party Member within your Armaments range are targeted by an Attack, you make a Quick Attack against the incoming Attack Roll.</p><p>If your Attack Roll is equal to or higher, reduce the damage of the incoming Attack by your Soul Armament's damage.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "breach", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "VglncAbil04EglEy",
+  "sort": 400000,
+  "_key": "!items!VglncAbil04EglEy"
+}

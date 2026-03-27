@@ -20,6 +20,8 @@ export const preloadHandlebarsTemplates = async function () {
     'systems/stryder/templates/actor/parts/familiar-features.hbs',
     'systems/stryder/templates/actor/parts/familiar-battle.hbs',
     'systems/stryder/templates/actor/parts/npc-features.hbs',
+    'systems/stryder/templates/actor/parts/spirit-beast-features.hbs',
+    'systems/stryder/templates/actor/parts/spirit-beast-battle.hbs',
     // Item partials
     'systems/stryder/templates/item/parts/item-effects.hbs',
 	// Combat templates

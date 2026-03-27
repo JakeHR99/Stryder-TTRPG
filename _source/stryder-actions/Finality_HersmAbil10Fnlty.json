@@ -1,0 +1,29 @@
+{
+  "folder": "HersmAspFolder01",
+  "name": "Finality",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Make a Focused Attack with a base damage of 2x [Soul.] On a hit, your next Attack Roll cannot be lower than a 12, then you make another Focused Attack with a base damage of 4x [Soul].</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 1, "value": 0 },
+    "stamina_cost": 6,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "HersmAbil10Fnlty",
+  "sort": 1000000,
+  "_key": "!items!HersmAbil10Fnlty"
+}

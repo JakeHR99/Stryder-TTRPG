@@ -1,0 +1,29 @@
+{
+  "folder": "TimeAspFolder001",
+  "name": "Manifest Divergence",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You manifest a version of yourself called a Divergent from a different timeline into combat. Your Divergent can perform any action you can perform, has the same amount of Health you had when you activated this ability, and they can perform their own Focused and Swift Actions. They do not have a copy of any Gear you may have. Each action they perform has its cost paid by you. At the end of the current Phase your Divergent will vanish unless you pay 4 Stamina to maintain their existence until the end of the next Player Phase.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TimeAbil09MnfDvg",
+  "sort": 900000,
+  "_key": "!items!TimeAbil09MnfDvg"
+}

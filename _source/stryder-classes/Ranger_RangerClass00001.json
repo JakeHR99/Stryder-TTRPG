@@ -1,0 +1,21 @@
+{
+  "name": "Ranger",
+  "type": "class",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Rangers are unique in their fighting styles, they focus less on raw might and more on how to more efficiently defeat their opponent. Rangers are those who devote themselves to honing their skill. Able to locate and target the weak points of their enemies and use special skills that give them an edge over enemies, Rangers are lethal combatants who overwhelm their enemies and outmaneuver them.</p><h3>Level 1 — Ranger Training I</h3><p>Your Health starts at 8, and you gain 2 Health every time you gain a level. You gain a Ranger Technique now and gain another at Levels 4, 8, 12 and 15.</p><h4>Create Weakness | Swift Action</h4><p>Declare which effect is being applied when you make an Attack as part of a Focused Action. The effects strength is based on the attacks quality and lasts until the end of the next Challenger Phase.</p><p><strong>Cripple</strong> — Poor: 0 | Good: -2 Max Movement | Excellent: -5 Max Movement</p><p><strong>Weaken</strong> — Poor: 0 | Good: -1 Attack Roll | Excellent: -2 Attack Roll</p><p><strong>Drain</strong> — Poor: 0 | Good: -1 Stamina | Excellent: -1 Stamina</p><p><strong>Dispatch</strong> — Poor: 0 | Good: +3 additional damage | Excellent: +5 additional damage</p><h3>Level 4 — Ranger Training II</h3><p>Select a Ranger Technique to learn.</p><h4>Slayers Strike I</h4><p>After you make an attack as part of a Focused action, you can immediately make a Quick Attack.</p><h3>Level 8 — Ranger Training III</h3><p>Select a Ranger Technique to learn.</p><h4>Exploit Weakness</h4><p>When you use a Focused Attack action on a target you have previously dealt damage to with Create Weakness, you can expend 4 Stamina to choose one of the following effects. Your target rolls Resistance. On failure they suffer the chosen effect. (Physical Resistance if your attack was made while channeling a Mortal Aspect, Magykal Resistance if you were channeling an Immortal Aspect)</p><p><strong>Cripple</strong> — The creature does not regain any Movement at the start of its next turn.</p><p><strong>Weaken</strong> — The creature is unable to use its Focused Action on its next turn.</p><p><strong>Drain</strong> — The creature recovers half its maximum Stamina at the start of its next turn.</p><p><strong>Dispatch</strong> — Deal additional 12 damage.</p><h3>Level 12 — Slayer Strike II</h3><p>You are an effective fighter and hunter, you have a higher understanding of your own martial prowess. Overwatch now allows you to make a Focused Attack rather than a Quick Attack.</p><h4>Ranger Training IV</h4><p>Select a Ranger Technique to learn.</p><h3>Level 15 — Ranger Training V</h3><p>Select a Ranger Technique to learn.</p><h4>Peerless Hunter</h4><p>You gain the Tyrant Hunter Technique.</p><p><strong>Tyrant Hunter (Passive) [Aid]:</strong> You have finally achieved mastery over your Ranger Techniques. The first three Ranger Techniques you use each round have their Stamina cost reduced to 0 as well as all Ranger Techniques gaining Limit +1.</p>",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 }
+  },
+  "effects": [],
+  "folder": null,
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RangerClass00001",
+  "sort": 200000,
+  "_key": "!items!RangerClass00001"
+}

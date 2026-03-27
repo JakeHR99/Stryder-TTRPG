@@ -1,0 +1,29 @@
+{
+  "folder": "CntrlAspFolder01",
+  "name": "Starwalker",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: You are targeted by an Attack.</p><p>You target yourself and can move yourself to a location within your domain. You can choose to use this as a Trigger Action if you are targeted by an attack, make a Dodge Roll but use your Arcana instead of your Reflex. On a success you dodge and move to your new chosen space. On a failure, you do not move and you are Stunned.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "CntrlAbil10StrWk",
+  "sort": 1000000,
+  "_key": "!items!CntrlAbil10StrWk"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Immortal Aspects",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
+  },
+  "_id": "ImmrtAspFolder01",
+  "_key": "!folders!ImmrtAspFolder01"
+}

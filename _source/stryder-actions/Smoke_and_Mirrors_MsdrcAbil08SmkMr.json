@@ -1,0 +1,29 @@
+{
+  "folder": "MsdrcAspFolder01",
+  "name": "Smoke and Mirrors",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><strong>Smoke:</strong> You create a puff of black smoke in front of you for just a moment, breaking LoS with your target for just a moment before you make your attack, if you had LoS on them before this smoke appeared, you can now attack without needing LoS. You have a -3 to Attack Rolls but your opponent is Staggered against this Attack. If you use Smoke right after using Mirrors, your Attack Roll has a -1 instead.</p><p><strong>Mirrors:</strong> You cause your image to ripple and warp and then put on a burst of speed. Choose a point within 2 spaces and move there in an instant without expending movement. Roll an Attack Roll with a +2, on a hit you deal half damage. If you use Mirrors right after using Smoke, your attack roll becomes a +4 instead.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "MsdrcAbil08SmkMr",
+  "sort": 800000,
+  "_key": "!items!MsdrcAbil08SmkMr"
+}

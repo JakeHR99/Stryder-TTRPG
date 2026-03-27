@@ -1,0 +1,29 @@
+{
+  "folder": "SpritAspFolder01",
+  "name": "Ruin Mana",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: A creature uses an ability that costs Stamina or Mana within range of your item.</p><p>You attempt to cancel out the triggering ability. You roll your Arcana Stat versus their damage Stat. If your roll is higher the ability is canceled. If your roll is lower, you lose 3 Health and the ability is not canceled.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SpritAbil08RunMn",
+  "sort": 800000,
+  "_key": "!items!SpritAbil08RunMn"
+}

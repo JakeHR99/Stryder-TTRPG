@@ -1,0 +1,29 @@
+{
+  "folder": "DstrcAspFolder01",
+  "name": "Kickback",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Enemies within range of your Soul Armament must make a Physical Resistance. On a failed resist, they take damage equal to your Soul and are knocked back 1 Space and Dropped.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DstrcAbil04KckBk",
+  "sort": 400000,
+  "_key": "!items!DstrcAbil04KckBk"
+}

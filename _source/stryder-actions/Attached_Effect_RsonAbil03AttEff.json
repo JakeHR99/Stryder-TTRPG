@@ -1,0 +1,29 @@
+{
+  "folder": "RsonAspFolder001",
+  "name": "Attached Effect",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>At the beginning of the first Player Phase in an engagement you may activate an Aspect of Resonance Ability. You do not pay any costs of the activated ability and it is activated as a Swift Action.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RsonAbil03AttEff",
+  "sort": 300000,
+  "_key": "!items!RsonAbil03AttEff"
+}

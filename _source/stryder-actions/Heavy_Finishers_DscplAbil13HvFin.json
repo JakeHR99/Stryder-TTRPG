@@ -1,0 +1,29 @@
+{
+  "folder": "DscplAspFolder01",
+  "name": "Heavy Finishers",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: You make an FBA attack or use a Combo Skill.</p><p><strong>Crashing Knee</strong> | Trigger — Light FBA/Combo: You deal damage equal to [3 x Soul] and on an Excellent, you cause the creature to become Senseless until the start of their turn.</p><p><strong>Cutting Kick</strong> | Trigger — Heavy FBA/Combo: Your attack gains [Sunder] and deals damage equal to [2 x Soul]. This damage ignores Armor and magykal effects like Wards.</p><p><strong>Organ Crusher</strong> | Trigger — Grab FBA/Combo: Deal damage equal to [2 x Soul]. Your Target rolls Physical Resistance. On failure they become Stunned and suffers internal injuries, gaining 5 Bleeding Wounds that can not be cleansed with Bandages or the Dark Cleanse monster ability.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Flow: 4",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DscplAbil13HvFin",
+  "sort": 1300000,
+  "_key": "!items!DscplAbil13HvFin"
+}

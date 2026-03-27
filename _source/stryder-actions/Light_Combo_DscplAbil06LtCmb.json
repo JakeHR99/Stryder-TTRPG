@@ -1,0 +1,29 @@
+{
+  "folder": "DscplAspFolder01",
+  "name": "Light Combo",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Make a Quick Attack with -1 to its attack roll and +1 to its base damage. This Skill gains a different additional effect based on its Trigger.</p><ul><li><strong>Light Trigger:</strong> If this Skills Trigger landed your attack gains [Sunder].</li><li><strong>Heavy Trigger:</strong> If this Skills Trigger and attack landed, the target has its Movement reduced by 5 until the end of the current or next Challenger Phase, whichever ends sooner.</li><li><strong>Grab Trigger:</strong> If Skills attack roll was higher than 8 the target becomes [Staggered] and remains grappled after the attack resolves.</li></ul>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Flow: 0 | Flow Gain: +1",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DscplAbil06LtCmb",
+  "sort": 600000,
+  "_key": "!items!DscplAbil06LtCmb"
+}

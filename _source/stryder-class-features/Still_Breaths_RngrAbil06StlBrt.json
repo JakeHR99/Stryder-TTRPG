@@ -1,0 +1,29 @@
+{
+  "folder": "RngrTechFolder01",
+  "name": "Still Breaths",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You take a moment to still your breathing, sharpening your perception and your focus so that you can strike true. Before making an Attack on your turn, you can take a moment to steel your focus. Your next Attack gains a +2 to its Attack Roll.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Cooldown: 1 Turn | Duration: 1 Turn",
+    "hasReflexTag": false,
+    "tag1": "augment", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RngrAbil06StlBrt",
+  "sort": 600000,
+  "_key": "!items!RngrAbil06StlBrt"
+}

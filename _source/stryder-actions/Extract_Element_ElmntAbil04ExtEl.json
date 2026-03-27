@@ -1,0 +1,29 @@
+{
+  "folder": "ElmntAspFolder01",
+  "name": "Extract Element",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Target an ally within range of your Armament who is currently inflicted with one of the following conditions. You can end that condition on them and immediately gain an Elemental Spark whose element depends on the condition ended.</p><ul><li>Burning: Fire</li><li>Soaked: Water</li><li>Poisoned: Earth</li><li>Shocked: Air</li></ul>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 5, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ElmntAbil04ExtEl",
+  "sort": 400000,
+  "_key": "!items!ElmntAbil04ExtEl"
+}

@@ -1,0 +1,29 @@
+{
+  "folder": "DscplAspFolder01",
+  "name": "Light Counter: Intercepting Strike",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: An attack is made at you by a creature in an adjacent space.</p><p>Make a Quick Attack and choose how much additional Flow to expend. The targets attack roll is reduced by {2 + Flow expended}.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Flow: X",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "breach", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DscplAbil09LtCnt",
+  "sort": 900000,
+  "_key": "!items!DscplAbil09LtCnt"
+}

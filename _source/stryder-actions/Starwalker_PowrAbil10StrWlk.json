@@ -1,0 +1,29 @@
+{
+  "folder": "PowrAspFolder001",
+  "name": "Starwalker",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Until the end of the current Phase, any damage you deal as a result of this Aspect is doubled.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 4,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PowrAbil10StrWlk",
+  "sort": 1000000,
+  "_key": "!items!PowrAbil10StrWlk"
+}

@@ -1,0 +1,29 @@
+{
+  "folder": "PainAspFolder001",
+  "name": "Harvest",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>When you target a creature who cannot see you with a Focused Attack or Reaper Skill while you are Hidden or Invisible, select a Magnitude 1 Area that includes the space your target is on. Your Attack or Skill targets and affects all chosen spaces.</p><p>When you proc Harvest on a creature that possesses your Mark of Death it gains a Bleeding Wound. If your target already has 5 Bleeding Wounds, deal additional damage equal to [Soul] instead of inflicting a Bleeding Wound.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PainAbil03Harvst",
+  "sort": 300000,
+  "_key": "!items!PainAbil03Harvst"
+}

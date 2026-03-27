@@ -1,0 +1,29 @@
+{
+  "folder": "RngrTechFolder01",
+  "name": "Trailing Shot",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You target a creature and declare a reactive strike against them, should they make a move to provoke you. Target a creature. If the targeted creature uses Movement, you immediately make a Quick Attack. If the attack roll is 7 or higher, the targets Movement is reduced to 0 until the start of their next turn.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Range: 8 | Duration: 1 Round",
+    "hasReflexTag": false,
+    "tag1": "targeted", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RngrAbil07TrlSht",
+  "sort": 700000,
+  "_key": "!items!RngrAbil07TrlSht"
+}

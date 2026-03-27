@@ -1,0 +1,29 @@
+{
+  "name": "Azure Gate — Primary Ability",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "folder": "SprBstAbilFolder",
+  "sort": 500000,
+  "system": {
+    "description": "<p><strong>Primary I:</strong> If the Spirit is within 10 spaces of an ally that must make an Evasion roll, it swoops in and tries to fly them out of the affected area. The ally must still make an Evasion Roll but does not need to use movement.</p><p><strong>Primary II:</strong> You can evoke Hexes from this Spirit's location.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Range: 10 | First use per combat: free",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SprBstAzurPrim01",
+  "_key": "!items!SprBstAzurPrim01"
+}

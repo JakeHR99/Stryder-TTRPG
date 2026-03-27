@@ -1,0 +1,29 @@
+{
+  "folder": "MindAspFolder001",
+  "name": "Sickness, Festering",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Whenever a creature is afflicted with the Poisoned condition, you can convince them that its rapidly deteriorating them. This skill can also be used as a Trigger Action.</p><p>Trigger: You used Whispering Schemes to apply the Poisoned condition on a target. These effects last as long as the target is afflicted by Poison.</p><p>You advance the effects of the Poisoned condition up one Stage. The creature suffers the effects of Draining Poison, and also loses an amount of Health at the end of each Challenger Phase equal to [Arcana].</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "MindAbil06SckFst",
+  "sort": 600000,
+  "_key": "!items!MindAbil06SckFst"
+}

@@ -1,0 +1,29 @@
+{
+  "folder": "PrcsAspFolder001",
+  "name": "Shatter",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: A creature embedded with at least 1 Soul Shard within your Soul Armaments range makes an attack against you or another creature.</p><p>You force all shards within them to burst. The shards shatter with force and throws the creature off balance enough to reduce their Attack roll by the number of shards they had before Shatter was activated. Using this Skill removes all Shards within the target.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "breach", "tag2": "persistent", "tag3": "targeted"
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PrcsAbil02Shattr",
+  "sort": 200000,
+  "_key": "!items!PrcsAbil02Shattr"
+}

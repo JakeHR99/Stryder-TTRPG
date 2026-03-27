@@ -1,0 +1,21 @@
+{
+  "name": "Wytch",
+  "type": "class",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<h3>Level 1 — Magykal Focus</h3><p>Your Health starts at 6, and you gain 2 Health every time you gain a level.</p><h4>Hex Wielding | Swift Action | 2 Stamina</h4><p>Once per Player Phase you select a target, they roll Magykal Resistance. On failure they suffer the effect of the chosen Hex until the start of the next Player Phase.</p><ul><li><strong>Sicken</strong> - Lesions appear, target becomes Staggered.</li><li><strong>Bind</strong> - Target becomes Stunned.</li><li><strong>Deny</strong> - Target cant regain Health for X rounds.</li></ul><h3>Level 4 — Hex Development</h3><p>You learn 4 more Hexes:</p><ul><li><strong>Mutilate</strong> - Target Immediately attacks themselves, dealing no damage but applies 2 Bleeding Wounds to itself.</li><li><strong>Enrage</strong> - Target looses tactical thinking, must expend all stamina during next Challenger Phase, focusing all attacks and abilities on the nearest Party member to it.</li><li><strong>Panic</strong> - Target becomes Panicked.</li></ul><h4>Focus &amp; Remains | Swift Action</h4><p>You expend a single component and reduce it to dust. Each component grants you different effects. These effects last until the end of the Player Phase.</p><ul><li><strong>Eyes:</strong> You can see through solid obstructions and your vision ignores invisibility effects.</li><li><strong>Bones:</strong> Raise your Magykal Potency by 1.</li><li><strong>Mana-veins:</strong> You gain 2 Stamina.</li><li><strong>Hearts:</strong> Choose any 2 other component effects.</li></ul><h3>Level 8 — Hex Accomplishment</h3><p>You learn three more Hexes:</p><ul><li><strong>Surge</strong> - Force a target to make a Focused Attack against a target within reach of their Focused Attack. The Target loses 4 Health.</li><li><strong>Rise</strong> - Force a Party Member to ignore the restrictions of Last Breaths, but reduce their maximum Health by 5. Maximum Health lost this way can't be regained until the target drinks from a Spring of Life.</li><li><strong>Give</strong> - You drain 8 Health and 4 Stamina. If there is excess Stamina you would receive you can convert it into Mana. You gain 1 Mana for every 2 excess Stamina.</li></ul><h4>The Wytches Eye | Focused Action | Limit: 1</h4><p>You pull energy from your Soul Armament to manifest it into an orb with the visage of your eye. You cast it 6 spaces into the air above you. It follows your space and lasts until the end of combat. It has 20 Durability. While your Eye is in effect, you do not need LoS to target a creature with your Hexes as long as the target is within reach of your Armament.</p><h3>Level 12 — Hex Discipline</h3><p>You learn three more Hexes:</p><ul><li><strong>Addle</strong> - Target becomes Confused.</li><li><strong>Suffer</strong> - Pain wracks the target, target is unable to focus, reduce their attack rolls by 3.</li><li><strong>Delude</strong> - Target becomes Trapped.</li></ul><h3>Level 15 — Hex Mastery</h3><p>Your first Hex per Player Phase has its cost reduced to 0. Hexes are no longer limited to 1 per Player Phase.</p><h4>True Focus Over Remains</h4><p>Whenever you use Focus and Remains roll a d6. On a result of 5 or 6 your component is not expended.</p>",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 }
+  },
+  "effects": [],
+  "folder": null,
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "WytchClass000001",
+  "sort": 600000,
+  "_key": "!items!WytchClass000001"
+}

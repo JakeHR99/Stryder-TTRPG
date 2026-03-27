@@ -1,0 +1,29 @@
+{
+  "folder": "DscplAspFolder01",
+  "name": "Flow",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Certain Skills will grant Flow and others will require you to sacrifice it to activate them. Your Flow begins at 0. Making an FBA attack raises your Flow by 1.</p><p>Abilities can cost Flow, reducing your existing Flow by a stated amount. Flow: X</p><p>Abilities that raise your Flow will have a separate line that reads Flow Gain: +X.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DscplAbil02Flow0",
+  "sort": 200000,
+  "_key": "!items!DscplAbil02Flow0"
+}

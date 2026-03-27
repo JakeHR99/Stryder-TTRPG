@@ -1,0 +1,29 @@
+{
+  "folder": "MindAspFolder001",
+  "name": "Whispering Schemes",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You sow seeds of foreign influence in a creature's mind. Make a Focused Attack at a creature within range that you can see. You deal half damage on a hit and the creature must make a Magykal Resistance. On a failure, you may choose one of the three conditions to inflict them with.</p><ul><li>The creature becomes Panicked.</li><li>The creature becomes Confused.</li><li>The creature gains Stage 1 of the Poisoned Condition.</li></ul><p>If the target fails the initial Magykal Resistance they can attempt to end the effect early as a Focused action on the following Challenger Phase. At the start of each of the following Challenger Phases the target can roll to Resist the effect at no cost.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Duration: 2 Rounds",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "MindAbil01WsprSc",
+  "sort": 100000,
+  "_key": "!items!MindAbil01WsprSc"
+}

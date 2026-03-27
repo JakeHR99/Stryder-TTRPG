@@ -1,0 +1,29 @@
+{
+  "folder": "LrdlySprFolder01",
+  "name": "Blink and Miss",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Your Lordling releases a burst of thick smoke that blocks Line of Sight in a Magnitude 1 area centered on itself. This smoke does not follow the Lordling and lasts 2 Rounds.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 1,
+    "other_restrictions": "Focused: 1 TP | Swift: 2 TP",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "LrdSprAbil03BlMs",
+  "sort": 300000,
+  "_key": "!items!LrdSprAbil03BlMs"
+}

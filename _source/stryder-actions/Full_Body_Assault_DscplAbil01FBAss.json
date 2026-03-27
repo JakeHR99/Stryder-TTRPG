@@ -1,0 +1,29 @@
+{
+  "folder": "DscplAspFolder01",
+  "name": "Full-Body Assault",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>When you make a Focused Attack you choose which type of attack you will make and gain the corresponding effect. These are referred to as FBA attacks.</p><ul><li><strong>Light:</strong> Gain +1 to your attack roll and lose -1 base damage on this attack.</li><li><strong>Heavy:</strong> Deal +1 base damage and lose -1 to this attacks attack roll.</li><li><strong>Grab:</strong> On hit, you automatically grapple the target. This grapple uses the same limitations as the Grapple action.</li></ul><p>All grapples made from Striker Skills can be maintained with a single hand.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DscplAbil01FBAss",
+  "sort": 100000,
+  "_key": "!items!DscplAbil01FBAss"
+}

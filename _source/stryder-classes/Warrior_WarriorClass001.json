@@ -1,0 +1,21 @@
+{
+  "name": "Warrior",
+  "type": "class",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Warriors have an entirely different physiology from other creatures that acts as both a blessing and a curse. They are incapable of manifesting a Grimoire and therefore, unable to evoke Magyk in the form of Hexes. This is due to their blue veins, which are incredibly potent and often \"burst\", seeping mana into their very bodies. This grants them a heightened, nearly superhuman body and abilities that make them devastating combatants on the battlefield.</p><h3>Level 1 — Augmented Combatant</h3><p>Your Health starts at 8, and you gain 2 Health every time you gain a level. You gain 2 Experience Points.</p><h3>Level 4 — Warrior Augmentations I</h3><p>Choose one of the following augments. You gain another at levels 8, 12 and 15.</p><ol><li>Your excellent range becomes 10-12.</li><li>You gain 2 Extra Stat Points. You can surpass 5 but not exceed 7 with these points.</li><li>You gain 2 Extra Experience Points.</li></ol><h3>Level 8 — Warrior Augmentations II</h3><p>Choose one of the following augments. You gain another at levels 12 and 15.</p><ol><li>You gain a +1 to Attack Rolls.</li><li>Increase Maximum Health by 5.</li><li>Increase Maximum Movement by 2.</li></ol><h3>Level 12 — Warrior Augmentations III</h3><p>Choose one of the following augments. You gain another at level 15.</p><ol><li>You reduce Poor range to 1 and once per day can reroll a 2d6 roll while within combat.</li><li>You gain 3 Extra Stat Points. You can surpass 5 but not exceed 7 with these points.</li><li>You gain 3 Extra Experience Points.</li></ol><h3>Level 15 — Warrior Augmentations IV</h3><p>Choose one of the following augments.</p><ol><li>When you make an Excellent Attack, double the damage dealt.</li><li>You have 5 damage reduction from all sources.</li><li>Your maximum Stamina increases by 2.</li></ol>",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 }
+  },
+  "effects": [],
+  "folder": null,
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "WarriorClass0001",
+  "sort": 100000,
+  "_key": "!items!WarriorClass0001"
+}

@@ -1,0 +1,29 @@
+{
+  "folder": "PainAspFolder001",
+  "name": "The Grim Scythe",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Your next Focused Attack's base damage increases by a number equal to [2x Soul]. If this attack reduces your targets Health to 0, you regain 7 Health.</p><p>Form Passive: The powerful energies from your weapon are also able to detect when a creature has 30 Health or less, your eyes seeing an aura of red surround them.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PainAbil10GrmScy",
+  "sort": 1000000,
+  "_key": "!items!PainAbil10GrmScy"
+}

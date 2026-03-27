@@ -20,7 +20,7 @@
       "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
-  "version": "0.2.0",
+  "version": "0.2.1",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
@@ -261,7 +261,7 @@
     },
     {
       "name": "stryder-actions",
-      "label": "Actions",
+      "label": "Aspects",
       "path": "packs/stryder-actions",
       "type": "Item",
       "ownership": {
@@ -340,6 +340,17 @@
       "name": "stryder-monsters",
       "label": "Monsters",
       "path": "packs/stryder-monsters",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-spirit-beasts",
+      "label": "Spirit Beasts",
+      "path": "packs/stryder-spirit-beasts",
       "type": "Actor",
       "ownership": {
         "PLAYER": "OBSERVER",

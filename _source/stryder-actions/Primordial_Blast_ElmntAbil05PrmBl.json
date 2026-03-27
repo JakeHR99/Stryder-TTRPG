@@ -1,0 +1,29 @@
+{
+  "folder": "ElmntAspFolder01",
+  "name": "Primordial Blast",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Weaving together a grand amount of mana, you send it soaring at a target. Make an Attack Roll at a creature within Range. On a hit, the targeted creature takes damage equal to Arcana + 3.</p><p><strong>Elemental Spark Effects:</strong></p><ul><li><strong>Fire:</strong> Your blast takes the form of a roaring flame. You deal additional damage equal to [2 x Arcana] and the target begins Burning on a failed Magykal Resist.</li><li><strong>Water:</strong> Your blast takes the form of a deluge of water. The target is pushed back 3 Spaces and is Soaked on a failed Magykal Resist.</li><li><strong>Earth:</strong> Your blast takes the form of a heaving stone. You deal additional damage equal to Arcana and enemies are Trapped under a pile of rubble on a failed Physical Resist. A creature can escape being Trapped in this way on a successful Strength check against your Magykal Potency.</li><li><strong>Air:</strong> Your blast takes the form of a howling gale. You don't need Line of Sight to target a creature within range with this attack and the target is Dropped on a failed Physical Resist.</li></ul>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ElmntAbil05PrmBl",
+  "sort": 500000,
+  "_key": "!items!ElmntAbil05PrmBl"
+}

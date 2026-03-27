@@ -1,0 +1,29 @@
+{
+  "folder": "RngrTechFolder01",
+  "name": "Light and Surefooted",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>When you Dodge an Attack, you may also move 1 space in any direction for no cost, as long as the space is unoccupied. Alongside this, you no longer have to expend Movement in order to Evade an effect that includes you as a target, regardless of its magnitude.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RngrAbil04LgtSrf",
+  "sort": 400000,
+  "_key": "!items!RngrAbil04LgtSrf"
+}

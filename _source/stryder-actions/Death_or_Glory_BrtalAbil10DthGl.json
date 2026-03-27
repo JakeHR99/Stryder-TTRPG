@@ -1,0 +1,29 @@
+{
+  "folder": "BrtalAspFolder01",
+  "name": "Death or Glory",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: You would fall into Last Breaths in an Engagement.</p><p>You gain 4 Ichor that can exceed your maximum Ichor of 8. Choose how much Ichor to expend and regain 2 Health per 1 Ichor expended.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 1,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "BrtalAbil10DthGl",
+  "sort": 1000000,
+  "_key": "!items!BrtalAbil10DthGl"
+}

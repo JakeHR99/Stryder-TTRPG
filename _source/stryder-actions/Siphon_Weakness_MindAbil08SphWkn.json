@@ -1,0 +1,29 @@
+{
+  "folder": "MindAspFolder001",
+  "name": "Siphon Weakness",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You siphon mental strength from a target, cleansing them. Target a creature within range under the effects of the Confused, Panicked, or Stunned conditions and immediately remove that condition from your target.</p><p>For the next Round, you gain +2 to your Magykal Potency.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "MindAbil08SphWkn",
+  "sort": 800000,
+  "_key": "!items!MindAbil08SphWkn"
+}

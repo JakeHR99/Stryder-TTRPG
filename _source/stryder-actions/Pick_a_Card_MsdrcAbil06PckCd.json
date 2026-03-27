@@ -1,0 +1,29 @@
+{
+  "folder": "MsdrcAspFolder01",
+  "name": "Pick a Card",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Choose the [Passive] effect of this ability or roll a d6. Your next Focused Attack gains the benefits of Flick of the Wrist. If you roll instead of choosing, you gain the [Passive] and [Bonus] effect.</p><ul><li>1-2: [Passive] Your range increases by 2. [Bonus] - You deal +2 additional damage.</li><li>3-4: [Passive] You deal additional damage equal to Soul. [Bonus] - You gain a +1 to Attack Roll.</li><li>5-6: [Passive] You cannot ignore LoS with your attack but it gains a +1 to Attack Roll and a +2 to Base Damage. [Bonus] - You gain a +3 to Base Damage.</li></ul>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "MsdrcAbil06PckCd",
+  "sort": 600000,
+  "_key": "!items!MsdrcAbil06PckCd"
+}

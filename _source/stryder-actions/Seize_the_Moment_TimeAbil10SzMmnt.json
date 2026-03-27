@@ -1,0 +1,29 @@
+{
+  "folder": "TimeAspFolder001",
+  "name": "Seize The Moment",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Grant all your party members a bonus to their next Magykal Resistance roll equal to how many Sands you spent to activate this ability. Once the current Player Phase ends begin another Player Phase in which only you may act. All your Party members roll Magykal Resistance. Party members who succeed can join you in the Player Phase caused by this ability.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 1, "value": 0 },
+    "stamina_cost": 20,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "[X] Sands",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TimeAbil10SzMmnt",
+  "sort": 1000000,
+  "_key": "!items!TimeAbil10SzMmnt"
+}

@@ -1,0 +1,29 @@
+{
+  "folder": "PrcsAspFolder001",
+  "name": "Deadly Harvest",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Choose a target within range. Every Shard embedded in the enemy convulses within them, reducing the hosts Health by an amount equal to 3 x the number of Shards they carried.</p><p>Using this Skill removes all Shards from its target.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PrcsAbil05DdlHrv",
+  "sort": 500000,
+  "_key": "!items!PrcsAbil05DdlHrv"
+}

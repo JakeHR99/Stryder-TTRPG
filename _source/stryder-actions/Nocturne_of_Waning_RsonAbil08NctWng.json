@@ -1,0 +1,29 @@
+{
+  "folder": "RsonAspFolder001",
+  "name": "Nocturne of Waning",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: A Phase begins.</p><p>All creatures within range suffer a -2 to all attack rolls for the remainder of the Phase.</p><p>Skill Passive: Your next Focused Attack action reduces the targets Stamina by 1 on hit.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 5,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Range: +3",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RsonAbil08NctWng",
+  "sort": 800000,
+  "_key": "!items!RsonAbil08NctWng"
+}

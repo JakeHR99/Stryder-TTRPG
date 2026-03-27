@@ -198,6 +198,10 @@ export class StryderActorSheet extends ActorSheet {
       this._prepareItems(context);
     }
 
+    if (actorData.type == 'spirit-beast') {
+      this._prepareItems(context);
+    }
+
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
 
@@ -525,6 +529,27 @@ export class StryderActorSheet extends ActorSheet {
       item.sheet.render(true);
     });
 
+    // Spirit Beast ability use — post to chat
+    html.on('click', '.spirit-beast-ability-use', async (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const ability = ev.currentTarget.dataset.ability;
+      if (!ability) return;
+      const actor = this.actor;
+      const content = ability === 'primary' ? actor.system.abilities.primary : actor.system.abilities.defense;
+      const title = ability === 'primary' ? 'Primary Ability' : 'Defense Ability';
+      if (!content) return;
+      const gateColors = { crimson: '#8B0000', violet: '#6A0DAD', azure: '#00539C', sage: '#2E7D32' };
+      const borderColor = gateColors[actor.system.gate] ?? '#c9a66b';
+      await ChatMessage.create({
+        content: `<div style="background: url('systems/stryder/assets/parchment.jpg'); background-size: cover; padding: 15px; border: 2px solid ${borderColor}; border-radius: 4px;">
+          <h3 style="margin-top: 0; border-bottom: 1px solid ${borderColor}; color: ${borderColor};">${actor.name} — ${title}</h3>
+          ${content}
+        </div>`,
+        speaker: ChatMessage.getSpeaker({ actor: actor })
+      });
+    });
+
     // -------------------------------------------------------------
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
@@ -547,6 +572,15 @@ export class StryderActorSheet extends ActorSheet {
     });
 
     // Add Inventory Item
+    // Spirit Beast ability edit toggle
+    html.on('click', '.spirit-beast-ability-edit', (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const ability = ev.currentTarget.dataset.ability;
+      html.find(`.ability-editor[data-ability="${ability}"]`).toggle();
+      html.find(`.ability-description-display[data-ability="${ability}"]`).toggle();
+    });
+
     html.on('click', '.item-create', this._onItemCreate.bind(this));
     
     // Open Compendium

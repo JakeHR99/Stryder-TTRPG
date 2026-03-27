@@ -1,0 +1,29 @@
+{
+  "folder": "PainAspFolder001",
+  "name": "Soul Charge",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Make a Quick Attack at a target within range. On a hit, no damage is dealt but the creature is pulled up to 2 Spaces closer to you and is inflicted with 1 Bleeding Wound.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PainAbil05SlChrg",
+  "sort": 500000,
+  "_key": "!items!PainAbil05SlChrg"
+}

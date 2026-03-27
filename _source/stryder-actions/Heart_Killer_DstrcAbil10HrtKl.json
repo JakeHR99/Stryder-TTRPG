@@ -1,0 +1,29 @@
+{
+  "folder": "DstrcAspFolder01",
+  "name": "Heart Killer",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>On a failed Evasion roll against your Physical Potency, the target takes damage equal to [6 x Soul].</p><p>You gain a +1 Physical Potency for this ability, gaining a further +1 for every size category larger than Medium your target is.</p><p>If Annihilate is active when Heart Killer is used, this ability fails and Annihilates base damage increases by [6 x Soul].</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 8,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DstrcAbil10HrtKl",
+  "sort": 1000000,
+  "_key": "!items!DstrcAbil10HrtKl"
+}

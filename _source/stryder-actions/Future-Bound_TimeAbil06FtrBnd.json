@@ -1,0 +1,29 @@
+{
+  "folder": "TimeAspFolder001",
+  "name": "Future-Bound",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>From the moment this ability is activated until the start of the next Player Phase you become unable to use actions, activate effects or expend Movement. In exchange you are removed from combat and can not be detected by any means, selected as a target, or affected by area abilities.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "3 Sands",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TimeAbil06FtrBnd",
+  "sort": 600000,
+  "_key": "!items!TimeAbil06FtrBnd"
+}

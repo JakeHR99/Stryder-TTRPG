@@ -1,0 +1,29 @@
+{
+  "folder": "PowrAspFolder001",
+  "name": "Falling Star",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>As part of this skill you may take the leap action at no cost, gaining a +3 to your Horizontal and Vertical Leap Distance. You take no fall damage from leaping this way. You may then choose a space within 1 of the spot and come crashing down. All creatures within a magnitude 1 of the area must make an Evasion or take 2x Arcana, becoming Dropped and Stunned.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PowrAbil07FlgStr",
+  "sort": 700000,
+  "_key": "!items!PowrAbil07FlgStr"
+}

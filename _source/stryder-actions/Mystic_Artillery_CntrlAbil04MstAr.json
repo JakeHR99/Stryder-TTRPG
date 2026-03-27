@@ -1,0 +1,29 @@
+{
+  "folder": "CntrlAspFolder01",
+  "name": "Mystic Artillery",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You solidify a chunk of raw mana and hurl it at a creature within your domain as Focused Attack. You gain a +2 to the Attack Roll if the creature is within Line of Sight. It deals 2x Arcana as damage.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "CntrlAbil04MstAr",
+  "sort": 400000,
+  "_key": "!items!CntrlAbil04MstAr"
+}

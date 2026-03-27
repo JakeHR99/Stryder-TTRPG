@@ -1,0 +1,29 @@
+{
+  "folder": "PrcsAspFolder001",
+  "name": "Hunting Shard",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: Your Attack was dodged by a creature embedded with at least 1 Shard.</p><p>Reroll your attack and gain a +1 to the attack roll. Whether you hit or miss, 1 Shard is removed from the target.</p><p>Using this as a Swift Action causes your next attack at a creature to not require Line of Sight as long as they already have at least 1 Shard embedded. You do not suffer penalties from being [Blinded] against a creature who has a shard.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "augment", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PrcsAbil07HntShd",
+  "sort": 700000,
+  "_key": "!items!PrcsAbil07HntShd"
+}

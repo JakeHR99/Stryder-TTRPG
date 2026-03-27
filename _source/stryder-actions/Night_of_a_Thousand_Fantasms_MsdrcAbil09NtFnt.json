@@ -1,0 +1,29 @@
+{
+  "folder": "MsdrcAspFolder01",
+  "name": "Night of a Thousand Fantasms",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Make a Focused Attack at a target within Range. You roll with a +3 and can reroll the attack up to three times.</p><p>On a hit, your damage ignores armor and deals base damage equal to [5x Soul] + 5 Additional Damage. Your target becomes [Senseless] until the end of the Player Phase.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 8,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "breach", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "MsdrcAbil09NtFnt",
+  "sort": 900000,
+  "_key": "!items!MsdrcAbil09NtFnt"
+}

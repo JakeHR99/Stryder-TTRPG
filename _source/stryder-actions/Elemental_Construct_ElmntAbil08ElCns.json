@@ -1,0 +1,29 @@
+{
+  "folder": "ElmntAspFolder01",
+  "name": "Elemental Construct",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You pour mana into form and shape it into an extension of your own body, whether it be a golem, a clone of one of your body parts or your Soul Armament. Once it takes form, you can act with it immediately before it dissipates.</p><p>You make two attacks, each dealing damage equal to [Arcana + 3]. If all attacks hit the same target, they are Dropped.</p><p><strong>Elemental Spark Effects:</strong></p><ul><li><strong>Fire:</strong> Increase the damage dealt to [2 x Arcana] and make a third attack.</li><li><strong>Water:</strong> If your first attack hits, the target is Soaked. If both attacks hit, the target becomes Frozen instead.</li><li><strong>Earth:</strong> If both attacks hit the target, they are also Stunned.</li><li><strong>Air:</strong> If your first attack hits, the target is Shocked. If both attacks hit, the target is pushed back 3 Spaces.</li></ul>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 1, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ElmntAbil08ElCns",
+  "sort": 800000,
+  "_key": "!items!ElmntAbil08ElCns"
+}

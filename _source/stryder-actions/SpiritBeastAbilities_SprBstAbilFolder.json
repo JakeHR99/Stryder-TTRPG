@@ -1,0 +1,16 @@
+{
+  "_id": "SprBstAbilFolder",
+  "name": "Spirit Beast Abilities",
+  "type": "Item",
+  "sorting": "a",
+  "folder": null,
+  "sort": 900000,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_key": "!folders!SprBstAbilFolder"
+}

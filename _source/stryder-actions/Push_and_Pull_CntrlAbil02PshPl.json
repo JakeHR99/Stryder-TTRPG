@@ -1,0 +1,29 @@
+{
+  "folder": "CntrlAspFolder01",
+  "name": "Push and Pull",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You can choose to try to push or pull a creature within your domain, they make a physical resist against your potency and on a failure are pushed or pulled by an invisible force a number of spaces of your choosing up to your Arcana + 3.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Passive",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "CntrlAbil02PshPl",
+  "sort": 200000,
+  "_key": "!items!CntrlAbil02PshPl"
+}

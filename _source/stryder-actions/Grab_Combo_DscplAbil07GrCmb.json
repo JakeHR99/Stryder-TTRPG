@@ -1,0 +1,29 @@
+{
+  "folder": "DscplAspFolder01",
+  "name": "Grab Combo",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Move forward to grab at your opponent. The target makes a Physical Resistance roll. On failure they suffer this Skills effects. This Skill gains a different effect based on its Trigger.</p><ul><li><strong>Light Trigger:</strong> The target takes 5 damage, and becomes Grappled.</li><li><strong>Heavy Trigger:</strong> The target takes damage equal to [Soul + 3] and becomes [Staggered]. If you were grappling the target the grapple is released.</li><li><strong>Grab Trigger:</strong> Can only be used if the Trigger was successful. The target is dealt [2 x Soul] damage and you maintain your grapple on them.</li></ul>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Flow: 0 | Flow Gain: +1",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DscplAbil07GrCmb",
+  "sort": 700000,
+  "_key": "!items!DscplAbil07GrCmb"
+}

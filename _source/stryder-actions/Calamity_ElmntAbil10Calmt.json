@@ -1,0 +1,29 @@
+{
+  "folder": "ElmntAspFolder01",
+  "name": "Calamity",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Sparks of raw mana erupt and roar to life over a large area. Select a Magnitude 3 Area within range. On a failed Magykal Resistance, any creature within the selected area remains unaware of the impending danger and cannot use Breach abilities against this skill.</p><p>At the start of the next Phase, the selected area ignites in a small maelstrom of raw magyk. All enemy creatures within the selected area take damage equal to [2 x Arcana] and becomes Staggered on a failed Evasion.</p><p><strong>Elemental Spark Effects:</strong></p><ul><li><strong>Fire:</strong> Increase the damage dealt to [4 x Arcana] and all creatures who take damage begin Burning.</li><li><strong>Water:</strong> All creatures who take damage are Soaked and also Dropped.</li><li><strong>Earth:</strong> Increase the damage dealt to [3 x Arcana] and all spaces affected by this skill become Marching Terrain.</li><li><strong>Air:</strong> All creatures within the selected area are thrown Airborne and pushed 5 Spaces away from the center of the selected area.</li></ul>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 6,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ElmntAbil10Calmt",
+  "sort": 1000000,
+  "_key": "!items!ElmntAbil10Calmt"
+}

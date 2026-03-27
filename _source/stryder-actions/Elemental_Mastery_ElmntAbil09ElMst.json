@@ -1,0 +1,29 @@
+{
+  "folder": "ElmntAspFolder01",
+  "name": "Elemental Mastery",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Your mastery over your elemental spark allows you to flare it more strongly, converting your elements into stronger, more advanced forms. Your next Focused Attack gains a new form and an additional effect based on which element you channel.</p><p><strong>Focused Attack Effects:</strong></p><ul><li><strong>Fire → Lightning:</strong> You deal additional damage equal to [2 x Arcana] and on an attack roll of Good or higher, they are Shocked.</li><li><strong>Water → Ice:</strong> On an attack roll of Good or higher, if the target and creatures within 1 Space of the target were Soaked they become Frozen instead.</li><li><strong>Earth → Metal:</strong> Your attack's base damage is increased by 4, the damage dealt becomes Physical and on an attack roll of Good or higher, the target gains 1 Bleeding Wound.</li><li><strong>Air → Pressure:</strong> You don't need Line of Sight to target a creature within range and on an attack roll of Good or higher, they are Staggered.</li></ul>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ElmntAbil09ElMst",
+  "sort": 900000,
+  "_key": "!items!ElmntAbil09ElMst"
+}

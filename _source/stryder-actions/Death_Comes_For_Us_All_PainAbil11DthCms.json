@@ -1,0 +1,29 @@
+{
+  "folder": "PainAspFolder001",
+  "name": "Death Comes For Us All",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Make three Quick attacks. Each has a different effect on a hit. These attacks can target the same or separate creatures.</p><ul><li><strong>First Attack, Weaken:</strong> Your attack deals base damage equal to [2 x Soul].</li><li><strong>Second Attack, Overwhelm:</strong> Your attack Staggers the enemy.</li><li><strong>Final Attack, Annihilate:</strong> Your attack inflicts 5 stacks of Bleeding Wounds and benefits from Backstab.</li></ul><p>You may not activate any other Skills until this Ultimate is resolved.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 5,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PainAbil11DthCms",
+  "sort": 1100000,
+  "_key": "!items!PainAbil11DthCms"
+}

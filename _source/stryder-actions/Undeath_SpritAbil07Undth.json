@@ -1,0 +1,29 @@
+{
+  "folder": "SpritAspFolder01",
+  "name": "Undeath",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: A creature within range would take lethal damage or be reduced to 0 Health.</p><p>Once this ability is active on a creature their Health can go into negatives, the limit being 3x Arcana. Should the target reach this negative Health limit, they will die without entering Last Breaths. If the target exits an engagement before this happens, the targets Health will be set to 1 Health. However the targets Maximum Health will be reduced by half of the amount of negative Health they had at the end of the engagement.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 4, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SpritAbil07Undth",
+  "sort": 700000,
+  "_key": "!items!SpritAbil07Undth"
+}

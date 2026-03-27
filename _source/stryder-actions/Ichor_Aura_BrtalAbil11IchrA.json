@@ -1,0 +1,29 @@
+{
+  "folder": "BrtalAspFolder01",
+  "name": "Ichor Aura",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: You start a Player Phase with 8 Ichor.</p><p>You gain the following benefits until the end of the Round.</p><ul><li>Your Armament gains +1 Range</li><li>Bleeding Ichor generates 2 Ichor instead of 1 when you deal damage</li><li>Ichor can be expended for a burst of movement. Gain +3 Movement per 1 Ichor consumed this way.</li><li>If you are dealt damage while Impending Doom is active, you can immediately unleash your Focused Attack against the enemy who attacked you.</li></ul>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 1, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 1,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "BrtalAbil11IchrA",
+  "sort": 1100000,
+  "_key": "!items!BrtalAbil11IchrA"
+}

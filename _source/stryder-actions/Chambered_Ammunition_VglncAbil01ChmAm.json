@@ -1,0 +1,29 @@
+{
+  "folder": "VglncAspFolder01",
+  "name": "Chambered Ammunition",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>At the start of combat, select one of the four Ammunitions to Chamber. Each Ammunition is attributed a number between 1 and 4. All attacks you make will benefit from your Chambered Ammunition. After you make a Focused Attack your Chambered Ammunition number increases by 1, automatically changing your Chambered Ammunition to the corresponding number and resetting back to 1 after it reaches 4.</p><ol><li>Full Metal: Deal additional damage equal to 4.</li><li>Boat Tail: This attack has a +4 increased range.</li><li>Soft Point: Your Soul Armaments range is reduced by 2 (Min. 1) for this attack but it increases your Attack Roll by the same amount.</li><li>Trick Shot: After this attack you can Dash up to 2 Spaces in any direction.</li></ol>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "VglncAbil01ChmAm",
+  "sort": 100000,
+  "_key": "!items!VglncAbil01ChmAm"
+}

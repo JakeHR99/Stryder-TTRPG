@@ -1,0 +1,29 @@
+{
+  "folder": "MindAspFolder001",
+  "name": "Sinner's Repose",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You use your enemy's mind against them, causing them searing pain. Target a creature within range, aggravating their already fragile mind. On a failed Magykal Resistance, the target takes damage equal to [Arcana x 3]. For every Harmful and Debilitating Condition a target is suffering from when targeted with this ability, they take additional damage equal to [Arcana].</p><p>If a creature is Unconscious, they automatically fail the Magykal Resistance this ability forces.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 5,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "MindAbil10SnrRps",
+  "sort": 1000000,
+  "_key": "!items!MindAbil10SnrRps"
+}

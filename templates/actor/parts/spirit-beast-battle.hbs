@@ -1,0 +1,28 @@
+<div class="spirit-beast-movement" style="padding: 10px;">
+
+  <h2 class="section-header" style="border-bottom: 0px;">
+    <span class="header-decoration left"></span>
+    <img src="systems/stryder/assets/movement-speeds.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;">
+    <strong>{{localize "Movement Speeds"}}</strong>
+    <span class="header-decoration right"></span>
+  </h2>
+
+  <div class="movement-container">
+    <div class="skills-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 20px; background-image: url('systems/stryder/assets/parchment.jpg'); border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+
+      <div class="skill">
+        <img src="systems/stryder/assets/run.svg" alt="Running" style="border:0px; width:30px; height:30px;">
+        <span style="font-weight: bold; margin-right: 5px;">Running</span>
+        <input type="text" name="system.attributes.move.running.value" value="{{system.attributes.move.running.value}}" data-dtype="Number" style="border: none; background-color: #DABE77; color: #333; text-align: center; border-radius: 4px; padding: 5px; width: 50px;">
+      </div>
+
+      <div class="skill">
+        <img src="systems/stryder/assets/movement-speeds.svg" alt="Flying" style="border:0px; width:30px; height:30px;">
+        <span style="font-weight: bold; margin-right: 5px;">Flying</span>
+        <input type="text" name="system.attributes.move.flying.value" value="{{system.attributes.move.flying.value}}" data-dtype="Number" style="border: none; background-color: #DABE77; color: #333; text-align: center; border-radius: 4px; padding: 5px; width: 50px;">
+      </div>
+
+    </div>
+  </div>
+
+</div>

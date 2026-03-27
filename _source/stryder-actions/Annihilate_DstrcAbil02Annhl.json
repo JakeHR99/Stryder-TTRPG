@@ -1,0 +1,29 @@
+{
+  "folder": "DstrcAspFolder01",
+  "name": "Annihilate",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You charge energy, preparing a Focused Attack. It becomes a Trigger Action with the Trigger, \"You decide to make an Attack.\" You must use this attack before the start of the next Player Phase. While Annihilate is a Trigger Action, Destruction abilities have their Stamina cost reduced by 2.</p><p>This attacks base damage is equal to [Soul] x the amount of Abilities used during its charging. Annihilate counts as an ability used for this feature.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "aid", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "DstrcAbil02Annhl",
+  "sort": 200000,
+  "_key": "!items!DstrcAbil02Annhl"
+}

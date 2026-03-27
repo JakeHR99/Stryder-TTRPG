@@ -1,0 +1,29 @@
+{
+  "folder": "PainAspFolder001",
+  "name": "Executioners Technique",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>This effect can only be applied on creatures that bear your Mark of Death. Activating this effect consumes your Mark of Death, removing it from your target.</p><p>Cause the afflicted creatures to be Dropped and your next attack against this creature deals additional damage equal to [2x Soul] on a failed Physical Resist.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "PainAbil06ExcTch",
+  "sort": 600000,
+  "_key": "!items!PainAbil06ExcTch"
+}

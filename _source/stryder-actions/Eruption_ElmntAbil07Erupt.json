@@ -1,0 +1,29 @@
+{
+  "folder": "ElmntAspFolder01",
+  "name": "Eruption",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You cause mana underneath the thinnest layer of the ground to explode upward. Select up to 3 Spaces or a Magnitude 1 Area within range. Creatures in targeted spaces take damage equal to [Arcana] and are Stunned on a failed Evasion.</p><p><strong>Elemental Spark Effects:</strong></p><ul><li><strong>Fire:</strong> You create a towering pillar of flame. You deal additional damage equal to [Arcana] and cause the space to erupt in flames. Any creature occupying one of these spaces at the start of their corresponding Phase immediately begins Burning on a failed Evasion.</li><li><strong>Water:</strong> You cause a geyser to erupt. Creatures in targeted spaces are Soaked and are pushed 2 Space Airborne and remain there until the start of the next Phase, where they fall harmlessly to the ground and are Dropped.</li><li><strong>Earth:</strong> You spawn a sturdy earthen pillar. Pillars created this way are treated as 2 Space high obstructions, with Durability equal to [2 x Arcana]. Creatures occupying these spaces are lifted into the air atop the pillar.</li><li><strong>Air:</strong> You blow an incredible blast of wind. Creatures occupying these spaces are blown 4 Spaces Airborne and pushed back 2 Spaces.</li></ul>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 2, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ElmntAbil07Erupt",
+  "sort": 700000,
+  "_key": "!items!ElmntAbil07Erupt"
+}

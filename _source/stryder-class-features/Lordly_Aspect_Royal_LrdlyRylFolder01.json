@@ -1,0 +1,17 @@
+{
+  "name": "Lordly Aspect Features — Royal",
+  "type": "Item",
+  "folder": null,
+  "sorting": "m",
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "LrdlyRylFolder01",
+  "sort": 200000,
+  "color": null,
+  "_key": "!folders!LrdlyRylFolder01"
+}

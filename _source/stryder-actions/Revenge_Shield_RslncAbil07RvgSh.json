@@ -1,0 +1,29 @@
+{
+  "folder": "RslncAspFolder01",
+  "name": "Revenge Shield",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Trigger: Your previous action was Deep Guard.</p><p>The amount of damage reduced by the Triggering Deep Guard becomes your Revenge amount.</p><p>Your next Focused Attack will deal additional damage equal to Revenge. If you use Sacrifice on an ally you can choose to give their next Focused Attack the benefit instead.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 3, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "breach", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RslncAbil07RvgSh",
+  "sort": 700000,
+  "_key": "!items!RslncAbil07RvgSh"
+}

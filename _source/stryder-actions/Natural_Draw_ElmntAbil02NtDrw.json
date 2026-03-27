@@ -1,0 +1,29 @@
+{
+  "folder": "ElmntAspFolder01",
+  "name": "Natural Draw",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You are always connected to the power of the natural elements around you, and can draw from their power at no additional cost to yourself.</p><p>If a naturally occurring source of an element is within range when you make a Focused Attack or use a Targeted Skill, your attack or skill can originate from that source instead of yourself. The use of that skill does not consume a Skill's limit, but does consume the source it originated from if it is Magnitude 2 or smaller.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ElmntAbil02NtDrw",
+  "sort": 200000,
+  "_key": "!items!ElmntAbil02NtDrw"
+}

@@ -1,0 +1,29 @@
+{
+  "folder": "LrdlyRylFolder01",
+  "name": "Imposing Mount",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Your Lordling can scoop you up as a Focused Action once per turn, allowing you to mount them immediately. You follow normal mount rules while mounted upon your Lordling, treating it as a Huger sized Mount, and you gain the benefits of Diamond Body/Reverent Mind when used if your Lordling has access to that Aspect Feature. You can dismount your Lordling as a Swift Action.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "LrdRylAbil04ImMt",
+  "sort": 400000,
+  "_key": "!items!LrdRylAbil04ImMt"
+}

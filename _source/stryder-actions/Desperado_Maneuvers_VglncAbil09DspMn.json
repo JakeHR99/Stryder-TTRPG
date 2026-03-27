@@ -1,0 +1,29 @@
+{
+  "folder": "VglncAspFolder01",
+  "name": "Desperado Maneuvers",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You have been Gunslinging and fighting enough to learn how to fight around your Soul Armament, using your limited range to its best advantage. You gain 4 Maneuver Tokens at the start of every combat. All tokens are lost at the end of combat. Maneuver Tokens can be expended on the following abilities, each of which cost 1 Token and 1 Stamina.</p><ul><li><strong>Showdown | Swift Action:</strong> When the creature turns to face you, you immediately fire a surprise shot. Your next Focused Attack action gains +5 to its attack roll.</li><li><strong>Put 'Em Down | Swift Action:</strong> Your next Focused Attack actions base damage is increased by [3 x Soul].</li><li><strong>Fancy Footwork | Swift Action:</strong> Your Dodge and Evasion increase by 2 until the start of the next Player Phase.</li></ul>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "VglncAbil09DspMn",
+  "sort": 900000,
+  "_key": "!items!VglncAbil09DspMn"
+}

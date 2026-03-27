@@ -1,0 +1,29 @@
+{
+  "folder": "CntrlAspFolder01",
+  "name": "Establish Domain",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>When combat begins, you automatically establish your domain. You can treat any space within your domain as one that you can reach or interact with as you use telekinesis. Being in your domain allows you to perform player actions at range and if the player action would require a Stat or Talent roll, you substitute the Stat or Talent with your Arcana.</p><p>The domain size is a magnitude 4 centered on you - the domain moves with you and lasts until the end of engagement or until you enter Last Breaths. If your domain ends and you wish to reestablish it during an engagement, it costs 1 mana.</p><p>While creatures are within your domain, you can make Focused Attacks against them without needing Line of Sight. You lose all benefits of your Domain if you are made Senseless until the condition ends.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "CntrlAbil01EstDm",
+  "sort": 100000,
+  "_key": "!items!CntrlAbil01EstDm"
+}

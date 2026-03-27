@@ -1,0 +1,29 @@
+{
+  "name": "Violet Gate — Primary Ability",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "folder": "SprBstAbilFolder",
+  "sort": 300000,
+  "system": {
+    "description": "<p>If the Spirit is within 7 spaces of a creature who is the target of an Attack, it moves to the creature's side and takes the damage instead, then entering the nearest unoccupied space.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Range: 7 | First use per combat: free",
+    "hasReflexTag": false,
+    "tag1": "", "tag2": "", "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SprBstVlltPrim01",
+  "_key": "!items!SprBstVlltPrim01"
+}
