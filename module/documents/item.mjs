@@ -56,7 +56,7 @@ export class StryderItem extends Item {
     if (!this.system.damage_type) {
       if (this.type === 'armament') {
         this.system.damage_type = 'physical';
-      } else if (this.type === 'generic') {
+      } else if (this.type === 'skill') {
         this.system.damage_type = 'ahl';
       } else if (this.type === 'hex') {
         this.system.damage_type = 'magykal';
@@ -146,7 +146,13 @@ export class StryderItem extends Item {
 		range = "<strong>Range:</strong> Melee<br>";
 	} else if (item.system.range > 0) {
 		range = `<strong>Range:</strong> ${item.system.range} meters<br>`;
-	} else if (item.system.range === null || item.system.range === undefined) {
+	} else if (item.type === "skill" && item.actor?.system?.soul_armament?.range) {
+		const saRangeNums = { range1: 1, range2: 2, range5: 5, range8: 8 };
+		const saRangeVal = saRangeNums[item.actor.system.soul_armament.range];
+		if (saRangeVal !== undefined) {
+			range = `<strong>Range:</strong> ${saRangeVal}<br>`;
+		}
+	} else {
 		range = ``;
 	}
 
@@ -208,7 +214,6 @@ export class StryderItem extends Item {
 				   item.type === "profession"    ? "Profession"      :
 				   item.type === "action"        ? "Action"          :
 				   item.type === "armament"      ? "Soul Armament"   :
-				   item.type === "generic"       ? "Attack"          :
 				   item.type === "loot"          ? "Loot"            :
 				   item.type === "component"     ? "Component"       :
 				   item.type === "consumable"    ? "Consumable"      :
@@ -1635,7 +1640,7 @@ export class StryderItem extends Item {
 	});
 
     // If there's no roll data, send a chat message.
-		if (item.type === "feature" || item.type === "skill" || item.type === "technique") {
+		if (item.type === "feature" || item.type === "technique" || (item.type === "skill" && !item.system.isAttack)) {
 		  // Check uses for skills
 		  if (item.type === "skill" && item.system.cooldown_value > 0) {
 			// Initialize uses_current if it doesn't exist
@@ -2439,7 +2444,13 @@ export class StryderItem extends Item {
 			// Return the roll object for further processing if necessary
 			return roll;
 		}
-		else if (item.type === "generic") {
+		else if (item.type === "skill") {
+			const actor = item.actor || game.actors.get(speaker.actor) || null;
+			if (!actor) {
+				console.error("No actor associated with this skill:", item);
+				return;
+			}
+
 			// Check limit
 			const genericLimitMax = item.system.limit?.max || 0;
 			if (genericLimitMax > 0) {
@@ -2454,7 +2465,13 @@ export class StryderItem extends Item {
 			const diceSize = item.system.roll.diceSize;
 			let diceBonus = item.system.roll.diceBonus;
 			const baseDamageAmp = item.system.roll.baseDamageAmp || 0;
-			const rawDamageAmp = item.system.roll.rawDamageAmp || 0;
+			let rawDamageAmp = item.system.roll.rawDamageAmp || 0;
+
+			// Two-Handed form: +1 damage when active battle form is two_handed
+			const activeBattleForm = actor.getFlag('stryder', 'activeBattleForm');
+			if (activeBattleForm === 'two_handed' && actor.system.soul_armament?.form?.two_handed) {
+				rawDamageAmp += 1;
+			}
 
 			const resourceButton = createResourceSpendButton(item);
 			const bloodlossButton = createBloodlossSpendButton(item);
@@ -2501,7 +2518,20 @@ export class StryderItem extends Item {
 			}
 			const totalGenericBonus = diceBonus + reflexTagBonusGeneric;
 
-			const formula = `${diceNum}d${diceSize}` + (totalGenericBonus ? `+${totalGenericBonus}` : '');
+			// Soul Armament temper bonus
+			let soulArmamentBonus = 0;
+			const saTemper = actor.system.soul_armament?.temper;
+			const weaponWC = parseInt(actor.system.soul_armament?.weaponWeightClass) || 1;
+			if (saTemper === 'keen') {
+				soulArmamentBonus += 1;
+			} else if (saTemper === 'heavy') {
+				const strength = actor.system.attributes?.talent?.Strength?.value ?? 0;
+				const heavyPenalty = Math.max(0, weaponWC - strength);
+				soulArmamentBonus -= heavyPenalty;
+			}
+			const totalSkillBonus = totalGenericBonus + soulArmamentBonus;
+
+			const formula = `${diceNum}d${diceSize}` + (totalSkillBonus ? `+${totalSkillBonus}` : '');
 			const roll = new Roll(formula);
 			await roll.evaluate({async: true});
 			roll.toMessage({
@@ -2547,13 +2577,15 @@ export class StryderItem extends Item {
 			let totalDamage;
 			// Use Might for monsters, Soul/Arcana for characters
 			let powerValue = 0;
-			const genericDamageType = item.system.damage_type;
-			if (actor.system.abilities?.Might !== undefined) {
-				powerValue = actor.system.abilities.Might.value || 0;
-			} else if (genericDamageType === 'physical') {
-				powerValue = actor.system.abilities?.Soul?.value || 0;
-			} else if (genericDamageType === 'magykal') {
-				powerValue = actor.system.abilities?.Arcana?.value || 0;
+			if (item.system.damage_type) {
+				const genericDamageType = item.system.damage_type;
+				if (actor.system.abilities?.Might !== undefined) {
+					powerValue = actor.system.abilities.Might.value || 0;
+				} else if (genericDamageType === 'physical') {
+					powerValue = actor.system.abilities?.Soul?.value || 0;
+				} else if (genericDamageType === 'magykal') {
+					powerValue = actor.system.abilities?.Arcana?.value || 0;
+				}
 			}
 			if (item.system.enableCustomDamage && item.system.customDamage[quality.toLowerCase()] !== null && item.system.customDamage[quality.toLowerCase()] !== undefined && item.system.customDamage[quality.toLowerCase()] !== "") {
 				totalDamage = parseInt(item.system.customDamage[quality.toLowerCase()]);
@@ -2566,6 +2598,12 @@ export class StryderItem extends Item {
 				}
 			}
 			totalDamage += rawDamageAmp;
+
+			// Heavy temper: +1 bonus damage on Focused Attacks per WC above 2
+			if (saTemper === 'heavy' && item.system.action_type === 'focused') {
+				const heavyDamageBonus = Math.max(0, weaponWC - 2);
+				totalDamage += heavyDamageBonus;
+			}
 
 			const horrifiedPrefix = isActorHorrified(actor) ? `<strong>${actor.name} is Horrified!</strong> ` : "";
 			const panickedPrefix = isActorPanicked(actor) ? `<strong>${actor.name} is Panicked!</strong> ` : "";
@@ -2590,7 +2628,7 @@ export class StryderItem extends Item {
 		else {
 		  // This could be a default action or error handling
 		  console.log("Unhandled item type:", item.type);
-		  // Optionally, you can create a generic chat message or take no action
+		  // Optionally, you can create a skill-type chat message or take no action
 		  ChatMessage.create({
 			speaker: speaker,
 			rollMode: rollMode,

@@ -76,12 +76,20 @@
       "grail": 0,
       "guild_tokens": 0,
       "class": {
-        "name": "No Class",
+        "name": "",
         "base_hp": 0,
         "hp_per_level": 0
       },
       "folk": {
-        "name": "Folkless"
+        "name": "",
+        "subfolk": "",
+        "size_choice": "",
+        "colossus_stat_choice": "",
+        "traveler_boon": "",
+        "wildkin_adaptations": [],
+        "talent_free_points": {},
+        "sense_free_choices": [],
+        "bonuses_applied": false
       },
       "life": {
         "cooking": {
@@ -135,6 +143,10 @@
         },
         "level": {
           "value": 1
+        },
+        "xp": {
+          "value": 0,
+          "max": 99
         },
         "move": {
           "running": {
@@ -242,6 +254,22 @@
         "Magykal": {
           "mod": 0
         }
+      },
+      "soul_armament": {
+        "name": "",
+        "description": "",
+        "img": "icons/svg/sword.svg",
+        "form": {
+          "one_handed": true,
+          "two_handed": false,
+          "ingrained": false,
+          "attached": false,
+          "dual_wield": false
+        },
+        "range": "range1",
+        "temper": "basic",
+        "weaponWeightClass": 3,
+        "capacity": "slot1"
       }
     },
     "monster": {
@@ -674,10 +702,12 @@
     }
   },
   "Item": {
-    "types": ["action", "armament", "generic", "aegiscore", "legacies", "head", "back", "arms", "legs", "gems", "loot", "component", "consumable", "gear", "hex", "skill", "feature", "racial", "statperk", "technique", "profession", "bonds", "passive", "miscellaneous", "class", "folk"],
+    "types": ["action", "armament", "generic", "aegiscore", "legacies", "head", "back", "arms", "legs", "gems", "loot", "component", "consumable", "elixir", "gear", "hex", "skill", "feature", "racial", "statperk", "technique", "profession", "bonds", "passive", "miscellaneous", "class", "folk"],
     "templates": {
       "base": {
         "description": "",
+        "size": 1,
+        "is_consumable": false,
         "roll": {
           "diceBonus": 0,
           "diceNum": 2,
@@ -709,24 +739,6 @@
         "diceBonus": 0,
         "diceNum": 2,
         "diceSize": 6
-      }
-    },
-    "generic": {
-      "templates": ["base"],
-      "damage_type": "ahl",
-      "roll": {
-        "diceBonus": 0,
-        "diceNum": 2,
-        "diceSize": 6
-      },
-      "limit": {
-        "max": 0,
-        "value": 0
-      },
-      "enableCustomRange": false,
-      "customRange": {
-        "poor": 4,
-        "excellent": 11
       }
     },
     "racial": {
@@ -791,13 +803,34 @@
       "effect_type": "none",
       "effect_value": 0,
       "is_elixir": false,
-      "elixir_sickness_amount": 1
+      "elixir_sickness_amount": 1,
+      "elixir_type": "",
+      "ingredients": "",
+      "duration": ""
+    },
+    "elixir": {
+      "templates": ["base"],
+      "is_consumable": true,
+      "description": "",
+      "sickness": 0,
+      "elixir_type": "beneficial",
+      "ingredients": "",
+      "success_value": 0,
+      "perfection_value": 0,
+      "duration": "",
+      "effect_type": "none",
+      "effect_value": 0,
+      "effect_detail": ""
     },
     "gear": {
       "templates": ["base"],
       "quality": "prototype",
       "nature": "enchanted",
       "inventory_size": 1,
+      "size": 1,
+      "quantity": 1,
+      "equipped": false,
+      "tags": [],
       "sell_price": 0,
       "charges": {
         "value": 0,
@@ -853,6 +886,8 @@
       "magykal_reduction_bonus": 0
     },
     "bonds": {
+      "description": "",
+      "size": 1,
       "bond": {
         "level": "Neutral",
         "date": "",
@@ -872,7 +907,16 @@
     },
     "skill": {
       "templates": ["base"],
-      "uses_current": 0
+      "uses_current": 0,
+      "tactics_cost": 0,
+      "limit": { "max": 0, "value": 0 },
+      "roll": { "baseDamageAmp": 0, "rawDamageAmp": 0 },
+      "isAttack": false,
+      "enableCustomDamage": false,
+      "customDamage": { "poor": 0, "good": 0, "excellent": 0 },
+      "enableCustomRange": false,
+      "customRange": { "poor": 4, "excellent": 11 },
+      "hasReflexTag": false
     },
     "spell": {
       "templates": ["base"],

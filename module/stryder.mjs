@@ -327,8 +327,8 @@ Hooks.once('init', async function () {
 		return originalItemRoll.call(this, ...args);
 	  }
 	  
-	  // Check if this is an armament, hex, or generic item
-	  if (item.type !== "armament" && item.type !== "hex" && item.type !== "generic") {
+	  // Check if this is an armament or hex item
+	  if (item.type !== "armament" && item.type !== "hex") {
 		return originalItemRoll.call(this, ...args);
 	  }
 	  
@@ -409,7 +409,7 @@ Hooks.once('init', async function () {
 			</div>
 		  </div>
 		`;
-	  } else if (item.type === "generic") {
+	  } else if (item.type === "skill") {
 		initialMessageContent = `
 		  <div class="chat-message-card">
 			<div class="chat-message-header">
@@ -492,7 +492,7 @@ Hooks.once('init', async function () {
 			</div>
 		  </div>
 		`;
-	  } else if (item.type === "generic") {
+	  } else if (item.type === "skill") {
 		initialMessageContent = `
 		  <div class="chat-message-card">
 			<div class="chat-message-header">

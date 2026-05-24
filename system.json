@@ -197,6 +197,11 @@
         "htmlFields": [
           "description"
         ]
+      },
+      "elixir": {
+        "htmlFields": [
+          "description"
+        ]
       }
     }
   },
@@ -357,6 +362,17 @@
         "ASSISTANT": "OWNER"
       },
       "system": "stryder"
+    },
+    {
+      "name": "stryder-elixirs",
+      "label": "Elixirs",
+      "path": "packs/stryder-elixirs",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
     }
   ],
   "packFolders": [
@@ -396,7 +412,8 @@
       "color": "#005390",
       "packs": [
         "stryder-armor",
-        "stryder-loot"
+        "stryder-loot",
+        "stryder-elixirs"
       ]
     }
   ],

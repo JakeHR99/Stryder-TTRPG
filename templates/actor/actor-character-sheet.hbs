@@ -2,7 +2,7 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=MedievalSharp&family=Eagle+Lake:wght@400&display=swap"
 	rel="stylesheet">
-<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{actor.type}} jrpg-sheet" autocomplete="off">
 	<script>
 		function adjustElixirSickness(change) {
 			const elixirInput = document.querySelector('input[name="system.elixir_sickness.value"]');
@@ -115,719 +115,414 @@
 		}, 2000);
 	</script>
 
-	<div class="unique-logo-container">
-		<img class="logo" src="systems/stryder/assets/stryderfvtt_title.png" width="125" height="125">
+	<div class="jrpg-bg"></div>
+	<div class="jrpg-particles"></div>
+
+	<!-- ====== SCREEN 1: MAIN MENU ====== -->
+	<div class="jrpg-main-screen">
+		<div class="jrpg-sidebar">
+			<div class="jrpg-sheet-title">
+				<span class="jrpg-title-text">Main Menu</span>
+			</div>
+			<nav class="jrpg-nav">
+				<button type="button" class="jrpg-menu-btn" data-target="character">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/stryderfvtt_title.png" /></div>
+					<span>Character</span>
+				</button>
+<button type="button" class="jrpg-menu-btn" data-target="battle">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/turn-start.svg" /></div>
+					<span>Battle</span>
+				</button>
+				<button type="button" class="jrpg-menu-btn" data-target="exploration">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/movement-speeds.svg" /></div>
+					<span>Roleplay</span>
+				</button>
+<button type="button" class="jrpg-menu-btn" data-target="inventory">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/spring-of-life.svg" /></div>
+					<span>Inventory</span>
+				</button>
+				<button type="button" class="jrpg-menu-btn" data-target="tempering">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/legend.svg" /></div>
+					<span>Tempering</span>
+				</button>
+			</nav>
+		</div>
+		<div class="jrpg-center">
+			<button type="button" class="jrpg-effects-btn" data-target="effects" title="Effects">
+				<i class="fas fa-cog"></i>
+			</button>
+			<div class="jrpg-portrait-frame">
+				<img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+			</div>
+			<div class="jrpg-player-card">
+				<div class="jrpg-player-portrait-wrap">
+					<div class="jrpg-player-portrait-diamond">
+						<img src="{{actor.prototypeToken.texture.src}}" class="jrpg-player-portrait-img" data-edit="prototypeToken.texture.src" title="Set card portrait" />
+					</div>
+				</div>
+				<div class="jrpg-player-info">
+					<div class="jrpg-player-name">
+						{{actor.name}}<span class="jrpg-player-level-sep"> · </span><span class="jrpg-player-level">Lv. {{system.attributes.level.value}}</span>
+					</div>
+					<div class="jrpg-player-class-folk">{{system.class.name}}{{#if system.folk.name}} · {{system.folk.name}}{{/if}}</div>
+					<div class="jrpg-player-stat-row">
+						<span class="jrpg-pstat-label hp-label">HP</span>
+						<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar hp-pfill" style="width:{{hpPct}}%"></div></div>
+						<span class="jrpg-pstat-values hp-label">{{system.health.value}}<span class="jrpg-pstat-sep">/</span>{{system.health.max}}</span>
+					</div>
+					<div class="jrpg-player-stat-row">
+						<span class="jrpg-pstat-label mp-label">MP</span>
+						<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar mp-pfill" style="width:{{mpPct}}%"></div></div>
+						<span class="jrpg-pstat-values mp-label">{{system.mana.value}}<span class="jrpg-pstat-sep">/</span>{{system.mana.max}}</span>
+					</div>
+					<div class="jrpg-player-stat-row">
+						<span class="jrpg-pstat-label sp-label">STA</span>
+						<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar sp-pfill" style="width:{{staPct}}%"></div></div>
+						<span class="jrpg-pstat-values sp-label">{{system.stamina.value}}<span class="jrpg-pstat-sep">/</span>{{system.stamina.max}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	{{!-- Sheet Header --}}
-	<header class="sheet-header">
-		<div class="profile-section" style="margin-top: 35px;">
-			<img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
-			<div class="ward-container" style="margin-top: 10px; margin-left: -5px;">
-				<div class="ward-shield">
-					<input type="number" name="system.ward.value" value="{{system.ward.value}}" data-dtype="Number"
-						min="0" />
-				</div>
-				<label class="ward-label">Ward</label>
-			</div>
+
+	<!-- ====== SCREEN 2: SUB-PAGES ====== -->
+	<div class="jrpg-sub-screen" style="display:none;">
+		<div class="jrpg-sub-bg">
+			<div class="jrpg-sub-line"></div>
+			<div class="jrpg-sub-line"></div>
+			<div class="jrpg-sub-line"></div>
 		</div>
-		<div class="header-fields">
-			<div class="fantasy-input" style="width: 450px; display: flex; align-items: center; gap: 20px;">
-				<input name="name" type="text" value="{{actor.name}}" placeholder="Name" style="flex: 1;" />
-				<div class="resource flex-group-center" style="margin: 0; padding: 0;">
-					<div class="resource-content-level flex-column flex-center">
-						<label for="level-value-input" class="resource-label"
-							style="margin-top: -10px; margin-bottom: -15px; color: #000000; !important">{{localize
-							"Level"}}</label>
-						<input type="text" id="level-value-input" name="system.attributes.level.value"
-							value="{{system.attributes.level.value}}" data-dtype="Number" />
-					</div>
-				</div>
-			</div><br />
-			{{!-- The grid classes are defined in scss/global/_grid.scss. To use,
-			use both the "grid" and "grid-Ncol" class where "N" can be any number
-			from 1 to 12 and will create that number of columns. --}}
-			<div class="character-details-secondary textalign-center flexrow" style="margin-bottom: 8px;">
-				<div class="character-gender">
-					<label for="{{actor._id}}gender" class="resource-label-info">{{localize "Gender"}}</label>
-					<input id="{{actor._id}}gender" type="text" name="system.attributes.gender"
-						value="{{system.attributes.gender}}" placeholder="Gender" data-dtype="String" />
-				</div>
-				<div class="character-pronouns">
-					<label for="{{actor._id}}pronouns" class="resource-label-info">{{localize "Pronouns"}}</label>
-					<input id="{{actor._id}}pronouns" type="text" name="system.attributes.pronouns"
-						value="{{system.attributes.pronouns}}" placeholder="He/She/They, etc." data-dtype="String" />
-				</div>
-				<div class="character-weightclass">
-					<label for="{{actor._id}}creature_size" class="resource-label-info">{{localize "Creature
-						Size"}}</label>
-					<div class="dropdown-field">
-						<select class="secondary-input" name="system.attributes.creature_size"
-							style="width: 100%; font-size: 16px; font-weight: normal;">
-							{{#select system.attributes.creature_size}}
-							<option value="0.25">{{localize "Mini"}}</option>
-							<option value="0.5">{{localize "Small"}}</option>
-							<option value="1">{{localize "Normal"}}</option>
-							<option value="2">{{localize "Huge"}}</option>
-							<option value="3">{{localize "Massive"}}</option>
-							<option value="4">{{localize "Colossal"}}</option>
-							<option value="5">{{localize "Titanic"}}</option>
-							{{/select}}
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="resources grid grid-3col">
-				<div class="resource flex-group-center">
-					<label for="system.health.value" class="resource-label"><img
-							style="width: 15px; height: 15px; border: 0px; position: relative; top: 15px; left: -5px; margin-left: 15px;"
-							src="systems/stryder/assets/health-symbol.svg">{{localize "Health"}}</label>
-					<div class="hpbar">
-						<div class="hp-progress-bar">
-							<progress class="hp-bar grid-span-3" value="{{system.health.value}}"
-								max="{{system.health.max}}"></progress>
-							<div class="hp-sheen-wrapper">
-								<div class="hp-sheen"></div>
-							</div>
-						</div>
-					</div>
-					<div class="resource-content flexrow flex-center flex-between">
-						<input type="text" name="system.health.value" value="{{system.health.value}}"
-							data-dtype="Number" placeholder="Current" />
-						<span> / </span>
-						<input type="text" name="system.health.max" value="{{system.health.max}}"
-							data-dtype="Number" placeholder="Max" />
-					</div>
-				</div>
-
-				<div class="resource flex-group-center">
-					<label for="system.mana.value" class="resource-label"><img
-							style="width: 20px; height: 20px; border: 0px; position: relative; top: 10px; margin-bottom: -5px; left: -5px; margin-left: 15px;"
-							src="systems/stryder/assets/mana-symbol.svg">{{localize "Mana"}}</label>
-					<div class="mpbar">
-						<div class="mp-progress-bar">
-							<progress class="mp-bar grid-span-3" value="{{system.mana.value}}"
-								max="{{system.mana.max}}"></progress>
-							<div class="mp-sheen-wrapper">
-								<div class="mp-sheen"></div>
-							</div>
-						</div>
-					</div>
-					<div class="resource-content flexrow flex-center flex-between">
-						<input type="text" name="system.mana.value" value="{{system.mana.value}}"
-							data-dtype="Number" placeholder="Current" />
-						<span> / </span>
-						<input type="text" name="system.mana.max" value="{{system.mana.max}}"
-							data-dtype="Number" placeholder="Max" />
-					</div>
-				</div>
-
-				<div class="resource flex-group-center">
-					<label for="system.stamina.value" class="resource-label"><img
-							style="width: 20px; height: 20px; border: 0px; position: relative; top: 10px; margin-bottom: -6px; left: 0px; margin-left: 15px;"
-							src="systems/stryder/assets/stamina-symbol.svg">{{localize "Stamina"}}</label>
-					<div class="staminabar">
-						<div class="stamina-progress-bar">
-							<progress class="stamina-bar grid-span-3" value="{{system.stamina.value}}"
-								max="{{system.stamina.max}}"></progress>
-							<div class="stamina-sheen-wrapper">
-								<div class="stamina-sheen"></div>
-							</div>
-						</div>
-					</div>
-					<div class="resource-content flexrow flex-center flex-between">
-						<input type="text" name="system.stamina.value" value="{{system.stamina.value}}"
-							data-dtype="Number" placeholder="Current" />
-						<span> / </span>
-						<input type="text" name="system.stamina.max" value="{{system.stamina.max}}"
-							data-dtype="Number" placeholder="Max" />
-					</div>
-				</div>
-			</div>
-
+		<div class="jrpg-sub-header">
+			<button type="button" class="jrpg-back-btn">&#8592; Main Menu</button>
+			<span class="jrpg-sub-title"></span>
 		</div>
-	</header>
+		<div class="jrpg-sub-content">
+			<div class="jrpg-page" data-page="character">
+				<div class="jrpg-char-edit">
 
-	{{!-- Sheet Tab Navigation --}}
-	<nav class="sheet-tabs tabs" data-group="primary">
-		{{!-- Default tab is specified in actor-sheet.mjs --}}
-		<a class="item" data-tab="stats">{{localize "Stats"}}</a>
-		<a class="item" data-tab="features">{{localize "Battle"}}</a>
-		<a class="item" data-tab="battle">{{localize "Exploration"}}</a>
-		<a class="item" data-tab="life">{{localize "Life"}}</a>
-		<a class="item" data-tab="items">{{localize "Inventory"}}</a>
-		<a class="item" data-tab="description">{{localize "Biography"}}</a>
-		<a class="item" data-tab="effects">{{localize "Effects"}}</a>
-	</nav>
-
-	{{!-- Sheet Body --}}
-	<section class="sheet-body">
-
-		{{!-- Owned Features Tab --}}
-		<div class="tab features" data-group="primary" data-tab="features">
-			<section class="grid grid-3col">
-				<aside class="sidebar">
-
-					{{!-- Turn Start / Limit Reset / Resting / Spring of Life Buttons --}}
-					<div class="resource-buttons fantasy-action-buttons sidebar-action-buttons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
-						<div class="fantasy-button-container">
-							<button class="resource-button fantasy-action-button" data-action="turnStart" title="{{localize 'Turn Start Description'}}">
-								<div class="button-icon-container">
-									<img src="systems/stryder/assets/turn-start.svg" class="button-icon"/>
-									<div class="button-icon-glow"></div>
-								</div>
-								<span class="button-text"><strong>{{localize "Turn Start"}}</strong></span>
-								<div class="button-shine"></div>
-							</button>
+					<div class="jrpg-char-section">
+						<h3 class="jrpg-char-section-title">Identity</h3>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Name</label>
+							<input type="text" name="name" value="{{actor.name}}" class="jrpg-char-input jrpg-char-input-wide" />
 						</div>
-						<div class="fantasy-button-container">
-							<button class="resource-button fantasy-action-button" data-action="limitReset" title="Reset all Limit counters to 0">
-								<div class="button-icon-container">
-									<img src="systems/stryder/assets/turn-start.svg" class="button-icon"/>
-									<div class="button-icon-glow"></div>
-								</div>
-								<span class="button-text"><strong>Limit Reset</strong></span>
-								<div class="button-shine"></div>
-							</button>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Level</label>
+							<input type="number" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
 						</div>
-						<div class="fantasy-button-container">
-							<button class="resource-button fantasy-action-button" data-action="resting" title="{{localize 'Resting Description'}}">
-								<div class="button-icon-container">
-									<img src="systems/stryder/assets/resting.svg" class="button-icon"/>
-									<div class="button-icon-glow"></div>
-								</div>
-								<span class="button-text"><strong>{{localize "Resting"}}</strong></span>
-								<div class="button-shine"></div>
-							</button>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Class</label>
+							<select name="system.class.name" class="jrpg-char-select jrpg-class-select" data-dtype="String">
+								<option value="" {{#unless system.class.name}}selected{{/unless}}>— Choose Class —</option>
+								<option value="Warrior"  {{#if (eq system.class.name "Warrior")}}selected{{/if}}>Warrior</option>
+								<option value="Ranger"   {{#if (eq system.class.name "Ranger")}}selected{{/if}}>Ranger</option>
+								<option value="Warlock"  {{#if (eq system.class.name "Warlock")}}selected{{/if}}>Warlock</option>
+								<option value="Shaman"   {{#if (eq system.class.name "Shaman")}}selected{{/if}}>Shaman</option>
+								<option value="Summoner" {{#if (eq system.class.name "Summoner")}}selected{{/if}}>Summoner</option>
+								<option value="Wytch"    {{#if (eq system.class.name "Wytch")}}selected{{/if}}>Wytch</option>
+							</select>
 						</div>
-						<div class="fantasy-button-container">
-							<button class="resource-button fantasy-action-button" data-action="springOfLife" title="{{localize 'Spring of Life Description'}}">
-								<div class="button-icon-container">
-									<img src="systems/stryder/assets/spring-of-life.svg" class="button-icon"/>
-									<div class="button-icon-glow"></div>
-								</div>
-								<span class="button-text"><strong>{{localize "Spring of Life"}}</strong></span>
-								<div class="button-shine"></div>
-							</button>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Folk</label>
+							<select class="jrpg-char-select jrpg-folk-select" name="system.folk.name" data-dtype="String">
+								<option value="" {{#unless system.folk.name}}selected{{/unless}}>— Select Folk —</option>
+								<option value="Feyfolk"     {{#if (eq system.folk.name "Feyfolk")}}selected{{/if}}>Feyfolk</option>
+								<option value="Remnant"     {{#if (eq system.folk.name "Remnant")}}selected{{/if}}>Remnant</option>
+								<option value="Sunborn"     {{#if (eq system.folk.name "Sunborn")}}selected{{/if}}>Sunborn</option>
+								<option value="Oumen"       {{#if (eq system.folk.name "Oumen")}}selected{{/if}}>Oumen</option>
+								<option value="Halfling"    {{#if (eq system.folk.name "Halfling")}}selected{{/if}}>Halfling</option>
+								<option value="Smallfolk"   {{#if (eq system.folk.name "Smallfolk")}}selected{{/if}}>Smallfolk</option>
+								<option value="Floran"      {{#if (eq system.folk.name "Floran")}}selected{{/if}}>Floran</option>
+								<option value="Descendants" {{#if (eq system.folk.name "Descendants")}}selected{{/if}}>Descendants</option>
+								<option value="Traveler"    {{#if (eq system.folk.name "Traveler")}}selected{{/if}}>Traveler</option>
+								<option value="Colossus"    {{#if (eq system.folk.name "Colossus")}}selected{{/if}}>Colossus</option>
+								<option value="Wildkin"     {{#if (eq system.folk.name "Wildkin")}}selected{{/if}}>Wildkin</option>
+							</select>
 						</div>
-					</div>
-
-					<div class="fantasy-elixir-sickness">
-						<div class="elixir-sickness-header">
-							<h3 class="fantasy-section-title">
-								<span class="title-decoration left"></span>
-								<span class="title-text">{{localize "Elixir Sickness"}}</span>
-								<span class="title-decoration right"></span>
-							</h3>
-						</div>
-						<div class="resource flex-group-center">
-							<div class="elixir-sickness-bar">
-								<button type="button" class="life-skill-btn minus" onclick="adjustElixirSickness(-1)">-</button>
-								<input type="text" name="system.elixir_sickness.value"
-									value="{{system.elixir_sickness.value}}" data-actor-id="{{actor.id}}" readonly
-									class="elixir-sickness-input" />
-								<button type="button" class="life-skill-btn plus" onclick="adjustElixirSickness(1)">+</button>
-							</div>
-						</div>
-					</div>
-
-					{{!-- Stat Perks Section --}}
-					<div class="flexcol-stats scroll-wrapper">
-						<h3 class="fantasy-section-title">
-							<span class="title-decoration left"></span>
-							<span class="title-text">Stat Perks</span>
-							<span class="title-decoration right"></span>
-						</h3>
-						<ol class='items-list'>
-							<li class='item flexrow items-header'>
-								<div class='item-name'>{{localize 'Stat Perks'}}&nbsp<i class='toggle-icon fas fa-chevron-down'></i></div>
-								<div class='item-controls'>
-									<a class='item-control item-create' title='Create item' data-type='statperk'>
-										<i class='fas fa-plus'></i>
-									</a>
-								</div>
-							</li>
-							<div class="scrolling-content">
-								{{#each statperks as |item id|}}
-									<li class='item flexrow' data-item-id='{{item._id}}'>
-										<div class='item-name rollable' data-roll-type='item'>
-											<div class='item-image'>
-												<a class='rollable' data-roll-type='item'>
-													<img src='{{item.img}}' title='{{item.name}}' width='24' height='24'/>
-												</a>
-											</div>
-											<h4>{{item.name}}</h4>
-										</div>
-										<div class='item-controls'>
-											<a class='item-control item-duplicate' title='{{localize "STRYDER.DOCUMENT.Duplicate"}}' data-action='duplicate'>
-												<i class='fas fa-copy'></i>
-											</a>
-											<a class='item-control item-edit' title='{{localize "DOCUMENT.Edit" type='statperk'}}' data-action='edit'>
-												<i class='fas fa-edit'></i>
-											</a>
-											<a class='item-control item-delete' title='{{localize "DOCUMENT.Delete" type='statperk'}}' data-action='delete'>
-												<i class='fas fa-trash'></i>
-											</a>
-										</div>
-									</li>
+						{{#if folkDisplay.subfolks}}
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Subfolk</label>
+							<select class="jrpg-char-select jrpg-subfolk-select" name="system.folk.subfolk" data-dtype="String">
+								<option value="" {{#unless folkDisplay.currentSubfolk}}selected{{/unless}}>— Select Subfolk —</option>
+								{{#each folkDisplay.subfolks}}
+								<option value="{{this}}" {{#if (eq this ../folkDisplay.currentSubfolk)}}selected{{/if}}>{{this}}</option>
 								{{/each}}
-							</div>
-						</ol>
+							</select>
+						</div>
+						{{/if}}
+						{{#if folkDisplay}}
+						<div class="jrpg-folk-summary">
+							<span class="folk-size-weight">Size: {{folkDisplay.size}} · Weight: {{folkDisplay.weight}}</span>
+							{{#each folkDisplay.passives}}
+							<div class="folk-passive">⚑ {{this}}</div>
+							{{/each}}
+						</div>
+						{{/if}}
 					</div>
-					<br />
 
-					{{!-- Quick Actions Section --}}
-					<div class="fantasy-combat-abilities">
-						<div class="combat-abilities-header">
-							<h3 class="fantasy-section-title">
-								<span class="title-decoration left"></span>
-								<span class="title-text">Quick Actions</span>
-								<span class="title-decoration right"></span>
-							</h3>
-						</div>
+					<div class="jrpg-char-section">
+						<h3 class="jrpg-char-section-title">Resources</h3>
 
-						<!-- Dodge & Evade Row -->
-						<div class="combat-row">
-							<div class="fantasy-combat-button-container">
-								<span class="fantasy-combat-button ability-dodge-evade-mod rollable"
-									data-custom-roll="1d6+@abilities.Reflex.value+@reflex_tag.bonus" data-label="Dodge Roll">
-									<div class="combat-icon-container">
-										<img src="systems/stryder/assets/dodge.svg" class="combat-icon" />
-										<div class="combat-icon-glow"></div>
-									</div>
-									<span class="combat-button-text"><strong>{{localize "Dodge"}}</strong></span>
-									<div class="combat-button-shine"></div>
-								</span>
+						<div class="jrpg-char-resource-row">
+							<span class="jrpg-char-res-label hp-label">HP</span>
+							<div class="jrpg-char-inputs">
+								<input type="number" name="system.health.value" value="{{system.health.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+								<span class="jrpg-char-divider">/</span>
+								<input type="number" name="system.health.max" value="{{system.health.max}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+								<span class="jrpg-char-sublabel">Current / Max</span>
 							</div>
-							<div class="fantasy-combat-button-container">
-								<span class="fantasy-combat-button ability-dodge-evade-mod rollable"
-									data-custom-roll="2d6+@abilities.Reflex.value+@reflex_tag.bonus" data-label="Evade Roll">
-									<div class="combat-icon-container">
-										<img src="systems/stryder/assets/evade.svg" class="combat-icon" />
-										<div class="combat-icon-glow"></div>
-									</div>
-									<span class="combat-button-text"><strong>{{localize "Evade"}}</strong></span>
-									<div class="combat-button-shine"></div>
-								</span>
-							</div>
+							<div class="jrpg-char-bar-track"><div class="jrpg-char-bar hp-fill" style="width:{{system.health.value}}%"></div></div>
+						</div>
+						<div class="jrpg-char-hp-breakdown">
+						  <span class="jrpg-char-hp-src">Class + Level</span>
+						  <span class="jrpg-char-hp-plus">+</span>
+						  <span class="jrpg-char-hp-src">Grit ×{{gritMilestonesReached}} milestone{{#if (gt gritMilestonesReached 1)}}s{{/if}} (+{{gritHpBonus}})</span>
 						</div>
 
-						<!-- Reflex Tag Bonus -->
-						<div class="reflex-tag-bonus-row">
-							<label class="reflex-tag-label">Reflex Tag Bonus</label>
-							<input type="number" name="system.reflex_tag.bonus" value="{{system.reflex_tag.bonus}}" data-dtype="Number" class="reflex-tag-input" />
+						<div class="jrpg-char-resource-row">
+							<span class="jrpg-char-res-label mp-label">MP</span>
+							<div class="jrpg-char-inputs">
+								<input type="number" name="system.mana.value" value="{{system.mana.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+								<span class="jrpg-char-divider">/</span>
+								<input type="number" name="system.mana.max" value="{{system.mana.max}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+								<span class="jrpg-char-sublabel">Current / Max</span>
+							</div>
+							<div class="jrpg-char-bar-track"><div class="jrpg-char-bar mp-fill" style="width:{{system.mana.value}}%"></div></div>
 						</div>
 
-						<!-- Vertical & Horizontal Row -->
-						<div class="combat-row">
-							<div class="fantasy-combat-button-container">
-								<span class="fantasy-combat-button ability-dodge-evade-mod rollable" data-jump-type="vertical">
-									<div class="combat-icon-container">
-										<img src="systems/stryder/assets/vertical-jump-icon.svg" class="combat-icon" />
-										<div class="combat-icon-glow"></div>
-									</div>
-									<span class="combat-button-text"><strong>{{localize "Vertical"}}</strong></span>
-									<div class="combat-button-shine"></div>
-								</span>
+						<div class="jrpg-char-resource-row">
+							<span class="jrpg-char-res-label sp-label">STA</span>
+							<div class="jrpg-char-inputs">
+								<input type="number" name="system.stamina.value" value="{{system.stamina.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+								<span class="jrpg-char-divider">/</span>
+								<input type="number" name="system.stamina.max" value="{{system.stamina.max}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+								<span class="jrpg-char-sublabel">Current / Max</span>
 							</div>
-							<div class="fantasy-combat-button-container">
-								<span class="fantasy-combat-button ability-dodge-evade-mod rollable" data-jump-type="horizontal">
-									<div class="combat-icon-container">
-										<img src="systems/stryder/assets/horizontal-jump-icon.svg" class="combat-icon" />
-										<div class="combat-icon-glow"></div>
-									</div>
-									<span class="combat-button-text"><strong>{{localize "Horizontal"}}</strong></span>
-									<div class="combat-button-shine"></div>
-								</span>
-							</div>
-						</div>
-
-						<!-- Leap Bonus -->
-						<div class="reflex-tag-bonus-row">
-							<label class="reflex-tag-label">Leap Bonus</label>
-							<input type="number" name="system.leap_bonus.bonus" value="{{system.leap_bonus.bonus}}" data-dtype="Number" class="reflex-tag-input" />
-						</div>
-
-						<!-- Grapple Row -->
-						<div class="combat-row">
-							<div class="fantasy-combat-button-container">
-								<span class="fantasy-combat-button ability-dodge-evade-mod rollable" data-action-type="grapple">
-									<div class="combat-icon-container">
-										<img src="systems/stryder/assets/grapple-icon.svg" class="combat-icon" />
-										<div class="combat-icon-glow"></div>
-									</div>
-									<span class="combat-button-text"><strong>{{localize "Grapple"}}</strong></span>
-									<div class="combat-button-shine"></div>
-								</span>
-							</div>
-						</div>
-
-						<!-- Physical & Magykal Resist Row -->
-						<div class="combat-row">
-							<div class="fantasy-combat-button-container">
-								<span class="fantasy-combat-button resistance-button resistance-roll-button"
-									data-custom-roll="2d6+@abilities.Grit.value+@physical_resist_mod"
-									data-label="Physical Resistance Check">
-									<div class="combat-icon-container">
-										<img src="systems/stryder/assets/physical_resistance.svg" class="combat-icon" />
-										<div class="combat-icon-glow"></div>
-									</div>
-									<span class="combat-button-text"><strong>Physical Resist</strong></span>
-									<div class="combat-button-shine"></div>
-								</span>
-							</div>
-							<div class="fantasy-combat-button-container">
-								<span class="fantasy-combat-button resistance-button resistance-roll-button"
-									data-custom-roll="2d6+@abilities.Will.value+@magykal_resist_mod"
-									data-label="Magykal Resistance Check">
-									<div class="combat-icon-container">
-										<img src="systems/stryder/assets/magykal_resistance.svg" class="combat-icon" />
-										<div class="combat-icon-glow"></div>
-									</div>
-									<span class="combat-button-text"><strong>Magykal Resist</strong></span>
-									<div class="combat-button-shine"></div>
-								</span>
-							</div>
-						</div>
-
-						<!-- Resistance Mod Inputs -->
-						<div class="reflex-tag-bonus-row">
-							<label class="reflex-tag-label">P.Res Mod</label>
-							<input type="number" name="system.physical_resist_mod" value="{{system.physical_resist_mod}}" data-dtype="Number" class="reflex-tag-input" />
-						</div>
-						<div class="reflex-tag-bonus-row">
-							<label class="reflex-tag-label">M.Res Mod</label>
-							<input type="number" name="system.magykal_resist_mod" value="{{system.magykal_resist_mod}}" data-dtype="Number" class="reflex-tag-input" />
+							<div class="jrpg-char-bar-track"><div class="jrpg-char-bar sp-fill" style="width:{{system.stamina.value}}%"></div></div>
 						</div>
 					</div>
 
-				</aside>
-				{{!-- For the main features list, span the right two columns --}}
-				<section class="main grid-span-2">
-					{{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and
-					defined in module/helpers/templates.mjs --}}
-					{{> "systems/stryder/templates/actor/parts/actor-features.hbs"}}
-				</section>
-
-			</section>
-		</div>
-
-		<!-- Battle Tab -->
-
-		<!--Expertise Calculation -->
-		<!-- DISABLED: Manual movement speed control - these calculations were overwriting player edits
-		<script>
-			Hooks.once("renderActorSheet", function (actorSheet, html, data) {
-				const actor = actorSheet.actor;
-
-				// Handle running expertise calculation
-				updateRunningSpeedBasedOnExpertise(actor);
-
-				// Handle climbing speed calculation
-				updateClimbingSpeedBasedOnExpertise(actor);
-
-				// Handle climbing speed calculation
-				updateCrawlingSpeedBasedOnExpertise(actor);
-
-				// Handle climbing speed calculation
-				updateMarchingSpeedBasedOnExpertise(actor);
-
-				// Handle climbing speed calculation
-				updateSwimmingSpeedBasedOnExpertise(actor);
-			});
-
-			function updateRunningSpeedBasedOnExpertise(actor) {
-				const running = actor.system.attributes.move.running;
-				if (running.expertise) {
-					const newRunningValue = 11;
-					actor.update({
-						"system.attributes.move.running.value": newRunningValue
-					});
-				} else {
-					actor.update({
-						"system.attributes.move.running.value": 7
-					});
-				}
-			}
-
-			function updateClimbingSpeedBasedOnExpertise(actor) {
-				const climbing = actor.system.attributes.move.climbing;
-				if (climbing.expertise) {
-					const newClimbingValue = 6 + actor.system.attributes.talent.strength.value;
-					actor.update({
-						"system.attributes.move.climbing.value": newClimbingValue
-					});
-				} else {
-					actor.update({
-						"system.attributes.move.climbing.value": 3
-					});
-				}
-			}
-
-			function updateCrawlingSpeedBasedOnExpertise(actor) {
-				const crawling = actor.system.attributes.move.crawling;
-				if (crawling.expertise) {
-					const newCrawlingValue = 4 + actor.system.attributes.talent.nimbleness.value;
-					actor.update({
-						"system.attributes.move.crawling.value": newCrawlingValue
-					});
-				} else {
-					actor.update({
-						"system.attributes.move.crawling.value": 2
-					});
-				}
-			}
-
-			function updateMarchingSpeedBasedOnExpertise(actor) {
-				const marching = actor.system.attributes.move.marching;
-				if (marching.expertise) {
-					const newMarchingValue = 7;
-					actor.update({
-						"system.attributes.move.marching.value": newMarchingValue
-					});
-				} else {
-					actor.update({
-						"system.attributes.move.marching.value": 4
-					});
-				}
-			}
-
-			function updateSwimmingSpeedBasedOnExpertise(actor) {
-				const swimming = actor.system.attributes.move.swimming;
-				if (swimming.expertise) {
-					const newSwimmingValue = 6 + actor.system.attributes.talent.nimbleness.value;
-					actor.update({
-						"system.attributes.move.swimming.value": newSwimmingValue
-					});
-				} else {
-					actor.update({
-						"system.attributes.move.swimming.value": 4
-					});
-				}
-			}
-		</script>
-		-->
-
-		<div class="tab battle" data-group="primary" data-tab="battle">
-			<h2 class="section-header" style="border-bottom: 0px;">
-				<span class="header-decoration left"></span>
-				<img src="systems/stryder/assets/movement-speeds.svg" width="25px" height="25px"
-					style="border:0px; position: relative; top: 0px; left: -10px;">
-				<strong>{{localize "Movement Speeds"}}</strong>
-				<span class="header-decoration right"></span>
-			</h2>
-
-			<div class="movement-container">
-				<!-- Base Movement Speed -->
-				<div class="base-movement-section">
-					<div class="flexrow flex-group-center-speed">
-						<img src="systems/stryder/assets/run.svg" width="30px" height="30px"
-							style="border:0px; margin-right: -20px; margin-left: -10px;">
-						<label><b>{{localize "Current Movement"}}</b></label>
-					</div>
-					<div class="speed-input-container">
-						<span class="speed-input-box">
-							<input type="text" name="system.attributes.move.running.value"
-								value="{{system.attributes.move.running.value}}" data-dtype="Number">
-						</span>
-					</div>
-
-					<!-- Movement Rules Text -->
-					<div class="movement-rules">
-						<div class="rules-scroll">
-							<p class="rules-text">
-								<span class="rules-highlight">{{localize "Movement Basics"}}:</span> {{localize
-								"Movement Basics Description"}}
-							</p>
-							<p class="rules-text">
-								<span class="rules-highlight">{{localize "Engagement & Recovery"}}:</span> {{localize
-								"Engagement Recovery Description"}}
-							</p>
-							<p class="rules-text">
-								<span class="rules-highlight">{{localize "Baseline & Modifiers"}}:</span> {{localize
-								"Baseline Modifiers Description"}}
-							</p>
+					<div class="jrpg-char-section">
+						<h3 class="jrpg-char-section-title">Stats</h3>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Soul.value" data-label="Soul Check">Soul</label>
+							<input type="number" name="system.abilities.Soul.value" value="{{system.abilities.Soul.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+						</div>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Reflex.value" data-label="Reflex Check">Reflex</label>
+							<input type="number" name="system.abilities.Reflex.value" value="{{system.abilities.Reflex.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+						</div>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Grit.value" data-label="Grit Check">Grit</label>
+							<input type="number" name="system.abilities.Grit.value" value="{{system.abilities.Grit.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+						</div>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Will.value" data-label="Will Check">Will</label>
+							<input type="number" name="system.abilities.Will.value" value="{{system.abilities.Will.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
 						</div>
 					</div>
-				</div>
 
-				<!-- Movement Expertises -->
-				<div class="expertise-section">
-					<h3 class="expertise-title">{{localize "Movement Expertises"}}</h3>
-					<div class="expertise-grid">
-						<div class="expertise-item" data-tooltip="<b>Running Expertise:</b> Raises your Movement by 4.">
-							<span class="expertise-label">{{localize "Running"}}</span>
-							<input type="checkbox" name="system.attributes.move.running.expertise" {{checked system.attributes.move.running.expertise}} style="width: 20px; height: 20px;">
-						</div>
-
-						<div class="expertise-item"
-							data-tooltip="<b>Climbing Expertise:</b> Grants the passive ability Cling. Cling allows you to dangle off of a surface you are climbing with one free hand, allowing you to perform one handed actions while occupying Climbing Terrain spaces. You can traverse Climbing spaces at a rate of 2 Movement per space.">
-							<span class="expertise-label">{{localize "Climbing"}}</span>
-							<input type="checkbox" name="system.attributes.move.climbing.expertise" {{checked system.attributes.move.climbing.expertise}} style="width: 20px; height: 20px;">
-						</div>
-
-						<div class="expertise-item"
-							data-tooltip="<b>Marching Expertise:</b> You can traverse Marching spaces at a rate of 1 Movement per space.">
-							<span class="expertise-label">{{localize "Marching"}}</span>
-							<input type="checkbox" name="system.attributes.move.marching.expertise" {{checked system.attributes.move.marching.expertise}} style="width: 20px; height: 20px;">
-						</div>
-
-						<div class="expertise-item"
-							data-tooltip="<b>Swimming Expertise:</b> Grants the passive Combat Floating. Floating removes the -4 penalty from players when they occupy a Swimming Terrain space. You can traverse Swimming spaces at a rate of 2 Movement per space.">
-							<span class="expertise-label">{{localize "Swimming"}}</span>
-							<input type="checkbox" name="system.attributes.move.swimming.expertise" {{checked system.attributes.move.swimming.expertise}} style="width: 20px; height: 20px;">
-						</div>
-					</div>
 				</div>
 			</div>
+			<div class="jrpg-page" data-page="stats"></div>
+			<div class="jrpg-page" data-page="battle">
+				{{> "systems/stryder/templates/actor/parts/actor-features.hbs"}}
+			</div>
+			<div class="jrpg-page" data-page="exploration">
+				{{> "systems/stryder/templates/actor/parts/actor-battle.hbs"}}
+			</div>
+			<div class="jrpg-page" data-page="life"></div>
+			<div class="jrpg-page" data-page="inventory">
+				{{> "systems/stryder/templates/actor/parts/actor-items.hbs"}}
+			</div>
+			<div class="jrpg-page" data-page="tempering">
+  <div class="jrpg-tempering-screen">
 
-			<br />
+    <div class="jrpg-tempering-hero">
+      <div class="jrpg-tempering-level-block">
+        <span class="jrpg-temp-level-label">Level</span>
+        <span class="jrpg-temp-level-num">{{system.attributes.level.value}}</span>
+      </div>
 
-			{{> "systems/stryder/templates/actor/parts/actor-battle.hbs"}}
+      <div class="jrpg-temp-xp-block">
+        <span class="jrpg-temp-xp-label">Experience Points</span>
+        <div class="jrpg-temp-xp-counter">
+          <input type="number" name="system.attributes.xp.value" value="{{system.attributes.xp.value}}" data-dtype="Number" class="jrpg-temp-xp-input" />
+          <span class="jrpg-temp-xp-sublabel">available to spend</span>
+        </div>
+      </div>
+
+      <button type="button" class="jrpg-temp-levelup-btn resource-button" data-action="levelUp">
+        ✦ Level Up
+      </button>
+    </div>
+
+    <div class="jrpg-tempering-nav-grid">
+
+      <div class="jrpg-temp-card-wrap">
+        <button type="button" class="jrpg-temp-nav-btn" data-tempering-page="soul-armament">
+          <span class="jrpg-temp-nav-glyph">⚔</span>
+          <span class="jrpg-temp-nav-title">Soul Armament</span>
+          <span class="jrpg-temp-nav-sub">Customize &amp; Upgrade</span>
+        </button>
+      </div>
+
+      <div class="jrpg-temp-card-wrap">
+        <button type="button" class="jrpg-temp-nav-btn" data-tempering-page="growth">
+          <span class="jrpg-temp-nav-glyph">✦</span>
+          <span class="jrpg-temp-nav-title">Growth</span>
+          <span class="jrpg-temp-nav-sub">Techniques &amp; Class Paths</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+			</div>
+			<div class="jrpg-page" data-page="soul-armament">
+  <div class="sa-particles-wrap"></div>
+  <div class="sa-screen">
+
+        <!-- Identity row: image left, name/desc/summary right -->
+        <div class="sa-identity">
+          <div class="sa-img-wrap">
+            <img class="sa-portrait" src="{{system.soul_armament.img}}" data-edit="system.soul_armament.img" title="Click to change image" />
+            <span class="sa-img-hint">Click to change</span>
+          </div>
+          <div class="sa-identity-info">
+            <input class="sa-name-input" type="text" name="system.soul_armament.name" value="{{system.soul_armament.name}}" placeholder="Soul Armament Name…" />
+            <textarea class="sa-desc-input" name="system.soul_armament.description" placeholder="Describe your Soul Armament…">{{system.soul_armament.description}}</textarea>
+            <div class="sa-summary">
+              <div class="sa-sum-row"><span class="sa-sum-label">Form</span><span class="sa-sum-val">{{saSumForm}}</span></div>
+              <div class="sa-sum-row"><span class="sa-sum-label">Range</span><span class="sa-sum-val">{{saSumRange}}</span></div>
+              <div class="sa-sum-row"><span class="sa-sum-label">Temper</span><span class="sa-sum-val">{{saSumTemper}}</span></div>
+              <div class="sa-sum-row"><span class="sa-sum-label">Capacity</span><span class="sa-sum-val">{{saSumCapacity}}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DP tracker -->
+        <div class="sa-dp-section">
+          <span class="sa-dp-label">Design Points</span>
+          <div class="sa-dp-track">
+            <div class="sa-dp-fill {{#if saDPOver}}sa-dp-over{{/if}}" style="width: {{saDPPct}}%"></div>
+          </div>
+          <span class="sa-dp-nums {{#if saDPOver}}sa-dp-over{{/if}}">{{saDPSpent}} / {{saDPMax}}</span>
+        </div>
+
+        <!-- Options grid: 2 columns × 2 rows -->
+        <div class="sa-options-grid">
+
+          <!-- FORM (multi-select) -->
+          <div class="sa-section">
+            <h4 class="sa-section-title">Form <span class="sa-section-note">choose any</span></h4>
+            <div class="sa-option {{#if system.soul_armament.form.one_handed}}sa-selected{{/if}}" data-field="form" data-value="one_handed"
+                 data-sa-tip="No benefit. A simple, versatile grip.">
+              <span class="sa-opt-name">1 Handed</span><span class="sa-opt-cost sa-free">Free</span>
+            </div>
+            <div class="sa-option {{#if system.soul_armament.form.two_handed}}sa-selected{{/if}}" data-field="form" data-value="two_handed"
+                 data-sa-tip="Your base damage increases by 1.">
+              <span class="sa-opt-name">Two Handed</span><span class="sa-opt-cost">1 DP</span>
+            </div>
+            <div class="sa-option {{#if system.soul_armament.form.ingrained}}sa-selected{{/if}}" data-field="form" data-value="ingrained"
+                 data-sa-tip="You can't be disarmed. You learn the Core Abilities of the Aspect of Discipline and can use them while in any other form. Discipline abilities used in a different Aspect use that Aspect's damage stat.">
+              <span class="sa-opt-name">Ingrained</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option {{#if system.soul_armament.form.attached}}sa-selected{{/if}}" data-field="form" data-value="attached"
+                 data-sa-tip="You can't be disarmed. Select one Aspect — you permanently gain that Aspect's Attached Bonus. You may change the chosen Aspect when you visit a Spring of Life.">
+              <span class="sa-opt-name">Attached</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option {{#if system.soul_armament.form.dual_wield}}sa-selected{{/if}}" data-field="form" data-value="dual_wield"
+                 data-sa-tip="Gain access to the Block player action (scales off your attuned Aspect's damage stat). Also gain Twin Attack: on a Focused Attack, deal half damage and instantly make a second attack that also deals half damage at no cost.">
+              <span class="sa-opt-name">Dual Wield</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+          </div>
+
+          <!-- RANGE (single-select) -->
+          <div class="sa-section">
+            <h4 class="sa-section-title">Reach & Range <span class="sa-section-note">choose one</span></h4>
+            <div class="sa-option sa-radio {{#if saRangeIs.range1}}sa-selected{{/if}}" data-field="range" data-value="range1"
+                 data-sa-tip="Melee range only. Good for daggers, swords, and maces.">
+              <span class="sa-opt-name">Range of 1</span><span class="sa-opt-cost sa-free">Free</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saRangeIs.range2}}sa-selected{{/if}}" data-field="range" data-value="range2"
+                 data-sa-tip="Extended melee reach. Good for spears, whips, and lances.">
+              <span class="sa-opt-name">Range of 2</span><span class="sa-opt-cost">1 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saRangeIs.range5}}sa-selected{{/if}}" data-field="range" data-value="range5"
+                 data-sa-tip="Mid-range. Good for short bows and guns.">
+              <span class="sa-opt-name">Range of 5</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saRangeIs.range8}}sa-selected{{/if}}" data-field="range" data-value="range8"
+                 data-sa-tip="Long range. Good for snipers, long bows, and crossbows.">
+              <span class="sa-opt-name">Range of 8</span><span class="sa-opt-cost">3 DP</span>
+            </div>
+          </div>
+
+          <!-- TEMPER (single-select) -->
+          <div class="sa-section">
+            <h4 class="sa-section-title">Temper <span class="sa-section-note">choose one</span></h4>
+            <div class="sa-option sa-radio {{#if saTemperIs.basic}}sa-selected{{/if}}" data-field="temper" data-value="basic"
+                 data-sa-tip="No special effect.">
+              <span class="sa-opt-name">Basic</span><span class="sa-opt-cost sa-free">Free</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saTemperIs.keen}}sa-selected{{/if}}" data-field="temper" data-value="keen"
+                 data-sa-tip="+1 to all Attack Rolls.">
+              <span class="sa-opt-name">Keen</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saTemperIs.heavy}}sa-selected{{/if}}" data-field="temper" data-value="heavy"
+                 data-sa-tip="Choose a Weight Class for your weapon. Deal +1 bonus damage on Focused Attacks at Weight Class 3, +1 more for each Weight Class above that. Penalty: Attack Rolls suffer -1 for each Weight Class your weapon exceeds your Strength stat.">
+              <span class="sa-opt-name">Heavy</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            {{#if saTemperIs.heavy}}
+            <div class="sa-heavy-wc-row">
+              <label class="sa-heavy-wc-label">Weapon Weight Class</label>
+              <select name="system.soul_armament.weaponWeightClass" class="sa-heavy-wc-select">
+                {{#select system.soul_armament.weaponWeightClass}}
+                <option value="3">WC 3 (+1 dmg)</option>
+                <option value="4">WC 4 (+2 dmg)</option>
+                <option value="5">WC 5 (+3 dmg)</option>
+                <option value="6">WC 6 (+4 dmg)</option>
+                <option value="7">WC 7 (+5 dmg)</option>
+                <option value="8">WC 8 (+6 dmg)</option>
+                <option value="9">WC 9 (+7 dmg)</option>
+                <option value="10">WC 10 (+8 dmg)</option>
+                {{/select}}
+              </select>
+            </div>
+            {{/if}}
+          </div>
+
+          <!-- SOUL STONE CAPACITY (single-select) -->
+          <div class="sa-section">
+            <h4 class="sa-section-title">Soul Stone Capacity <span class="sa-section-note">choose one</span></h4>
+            <div class="sa-option sa-radio {{#if saCapIs.slot1}}sa-selected{{/if}}" data-field="capacity" data-value="slot1"
+                 data-sa-tip="Your Soul Armament can hold 1 Soul Stone. Soul Stones upgrade your weapon and grant new powerful effects.">
+              <span class="sa-opt-name">1 Slot</span><span class="sa-opt-cost sa-free">Free</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saCapIs.slot2}}sa-selected{{/if}}" data-field="capacity" data-value="slot2"
+                 data-sa-tip="Your Soul Armament can hold 2 Soul Stones.">
+              <span class="sa-opt-name">2 Slots</span><span class="sa-opt-cost">1 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saCapIs.slot3}}sa-selected{{/if}}" data-field="capacity" data-value="slot3"
+                 data-sa-tip="Your Soul Armament can hold 3 Soul Stones.">
+              <span class="sa-opt-name">3 Slots</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saCapIs.slot4}}sa-selected{{/if}}" data-field="capacity" data-value="slot4"
+                 data-sa-tip="Your Soul Armament can hold 4 Soul Stones.">
+              <span class="sa-opt-name">4 Slots</span><span class="sa-opt-cost">4 DP</span>
+            </div>
+          </div>
+
+        </div><!-- .sa-options-grid -->
+      </div><!-- .sa-screen -->
+			</div>
+			<div class="jrpg-page" data-page="growth">
+			</div>
+			<div class="jrpg-page" data-page="effects">
+				{{> "systems/stryder/templates/actor/parts/actor-effects.hbs"}}
+			</div>
 		</div>
+	</div>
 
-		{{!-- Running Expertise Toggle Script --}}
-		<script>
-			Hooks.on("renderActorSheet", function (actorSheet, html, data) {
-				// Check if we've already attached the listener to this sheet
-				if (html.data('running-expertise-listener-attached')) {
-					return; // Already attached, skip
-				}
-
-				// Mark this sheet as having the listener attached
-				html.data('running-expertise-listener-attached', true);
-
-				// Use event delegation on the html element (won't create duplicates)
-				html.on('change', 'input[name="system.attributes.move.running.expertise"]', function() {
-					const actor = actorSheet.actor;
-					const isChecked = this.checked;
-					const currentMovement = actor.system.attributes.move.running.value;
-
-					// Add 4 if checked, subtract 4 if unchecked
-					const newMovement = isChecked ? currentMovement + 4 : currentMovement - 4;
-
-					// Update the movement value
-					actor.update({
-						"system.attributes.move.running.value": newMovement
-					});
-				});
-			});
-		</script>
-
-		{{!-- Life Tab --}}
-		<div class="tab items" data-group="primary" data-tab="life">
-			{{> "systems/stryder/templates/actor/parts/actor-life.hbs"}}
-		</div>
-
-		{{!-- Biography Tab --}}
-		<div class="tab biography" data-group="primary" data-tab="description">
-			<div class="biography-header">
-				<h1 class="parchment-title">{{localize "Character Chronicle"}}</h1>
-			</div>
-
-			{{!-- Character Details Section --}}
-			<div class="character-details-container">
-				<div class="scroll-border top"></div>
-
-				<div class="character-details-secondary textalign-center flexrow">
-					<div class="birthplace detail-field">
-						<label for="{{actor._id}}birthplace" class="resource-label fancy-label">{{localize
-							"Birthplace"}}</label>
-						<div class="input-frame">
-							<input id="{{actor._id}}birthplace" type="text" name="system.details.birthplace"
-								value="{{system.details.birthplace}}" data-dtype="String" />
-						</div>
-					</div>
-					<div class="nationality detail-field">
-						<label for="{{actor._id}}nationality" class="resource-label fancy-label">{{localize
-							"Nationality"}}</label>
-						<div class="input-frame">
-							<input id="{{actor._id}}nationality" type="text" name="system.details.nationality"
-								value="{{system.details.nationality}}" data-dtype="String" />
-						</div>
-					</div>
-				</div>
-
-				<div class="character-details-secondary textalign-center flexrow">
-					<div class="age detail-field">
-						<label for="{{actor._id}}age" class="resource-label fancy-label">{{localize "Age"}}</label>
-						<div class="input-frame">
-							<input id="{{actor._id}}age" type="number" name="system.details.age"
-								value="{{system.details.age}}" data-dtype="Number" />
-						</div>
-					</div>
-					<div class="height detail-field">
-						<label for="{{actor._id}}height" class="resource-label fancy-label">{{localize
-							"Height"}}</label>
-						<div class="input-frame">
-							<input id="{{actor._id}}height" type="text" name="system.details.height"
-								value="{{system.details.height}}" data-dtype="String" />
-						</div>
-					</div>
-					<div class="weightclass detail-field">
-						<label for="{{actor._id}}weight_class" class="resource-label fancy-label">{{localize "Weight
-							Class"}}</label>
-						<div class="input-frame">
-							<input id="{{actor._id}}weight_class" type="text" name="system.attributes.weight_class"
-								value="{{system.attributes.weight_class}}" placeholder="4" data-dtype="Number" />
-						</div>
-					</div>
-				</div>
-
-				<div class="scroll-border bottom"></div>
-			</div>
-
-			{{!-- Appearance Section --}}
-			<div class="appearance-container">
-				<h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img
-						src="systems/stryder/assets/visage.svg" width="25px" height="25px"
-						style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize
-						"Visage"}}</strong><span class="header-decoration right"></span></h2>
-			</div>
-			<div class="editor-container biography">
-				{{editor system.appearance target="system.appearance" rollData=rollData button=true owner=owner
-				editable=editable}}
-			</div>
-
-			{{!-- Backstory Section --}}
-			<div class="backstory-container">
-				<h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img
-						src="systems/stryder/assets/legend.svg" width="25px" height="25px"
-						style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize
-						"Legend"}}</strong><span class="header-decoration right"></span></h2>
-			</div>
-			<div class="editor-container biography">
-				{{editor system.biography target="system.biography" rollData=rollData button=true owner=owner
-				editable=editable}}
-			</div>
-
-			{{!-- Personality Section --}}
-			<div class="personality-container">
-				<h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img
-						src="systems/stryder/assets/personality.svg" width="25px" height="25px"
-						style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize
-						"Personality"}}</strong><span class="header-decoration right"></span></h2>
-			</div>
-			<div class="editor-container biography">
-				{{editor system.personality target="system.personality" rollData=rollData button=true owner=owner
-				editable=editable}}
-			</div>
-		</div>
-
-		{{!-- Owned Items Tab --}}
-		<div class="tab items" data-group="primary" data-tab="items">
-			{{> "systems/stryder/templates/actor/parts/actor-items.hbs"}}
-		</div>
-
-		{{!-- Active Effects Tab --}}
-		<div class="tab effects flexcol" data-group="primary" data-tab="effects">
-			{{> "systems/stryder/templates/actor/parts/actor-effects.hbs"}}
-		</div>
-
-		<div class="tab stats flexcol" data-group="primary" data-tab="stats">
-			{{> "systems/stryder/templates/actor/parts/actor-stats.hbs"}}
-		</div>
-
-	</section>
 </form>
-
-{{log system}}

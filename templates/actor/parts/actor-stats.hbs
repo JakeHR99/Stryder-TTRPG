@@ -3,117 +3,78 @@
 	<div class="combat-abilities-header">
 		<h3 class="fantasy-section-title">
 			<span class="title-decoration left"></span>
-			<span class="title-text">Stats & Potencies</span>
+			<span class="title-text">Stats</span>
 			<span class="title-decoration right"></span>
 		</h3>
 	</div>
-	<div class="stats-abilities-grid">
-		{{#each system.abilities as |ability key|}}
+	<div class="stats-abilities-grid stats-grid-2x2">
+
+		{{!-- Row 1: Soul | Reflex --}}
 		<div class="ability flex-group-center stat-font fantasy-ability">
-			<label class="ability-label" title="{{#if (eq key 'Soul')}}This stat measures the strength of your Soul Armament. This affects the damage your attacks and Skills deal. It also raises your Physical Potency making your Skills harder to Resist.{{else if (eq key 'Reflex')}}Combat reflexes and evasiveness. Reflexes provides survivability on the battlefield as well as increasing your ability to Dodge.{{else if (eq key 'Grit')}}Physical Durability and Resilience unmatched. You gain additional Health, and an increased Physical Resistance making you harder to overwhelm.{{else if (eq key 'Arcana')}}A visible level of your bodies upper limits for wielding Hexes and otherwise using Mana. This Stat augments the damage and effects Hexes will produce, as well as raising your Magykal Potency, making some Hexes and effects harder to Resist.{{else if (eq key 'Intuition')}}Combat Knowledge and Experience are represented by Intuition. Intuition grants simple but useful abilities.{{else if (eq key 'Will')}}Will grants you incredible determination capable of surmounting the odds and even resisting magykal abilities. This Stat raises your Magykal Resist providing additional defense against certain effects.{{/if}}"><b>{{ability.label}}</b></label>
+			<label class="ability-label" title="This stat measures the strength of your Soul Armament. This affects the damage your attacks and Skills deal. It also raises your Potency making your Skills harder to Resist."><b>{{system.abilities.Soul.label}}</b></label>
 			<div class="ability-input-container">
-				<input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}"
-					data-dtype="Number" class="fantasy-ability-input" />
+				<input type="text" name="system.abilities.Soul.value" value="{{system.abilities.Soul.value}}" data-dtype="Number" class="fantasy-ability-input" />
 				<div class="ability-input-glow"></div>
 			</div>
-			<span class="ability-mod rollable" data-roll="2d6+@abilities.{{key}}.value" data-label="{{ability.label}} Check">
+			<span class="ability-mod rollable" data-roll="2d6+@abilities.Soul.value" data-label="Soul Check">
 				<div class="dice-container">
 					<img src="systems/stryder/assets/d6.svg" width="25" height="25" style="border:0px">
 					<div class="dice-glow"></div>
 				</div>
 			</span>
 		</div>
-		{{/each}}
+
+		<div class="ability flex-group-center stat-font fantasy-ability">
+			<label class="ability-label" title="Combat reflexes and evasiveness. Reflexes provides survivability on the battlefield as well as increasing your ability to Dodge."><b>{{system.abilities.Reflex.label}}</b></label>
+			<div class="ability-input-container">
+				<input type="text" name="system.abilities.Reflex.value" value="{{system.abilities.Reflex.value}}" data-dtype="Number" class="fantasy-ability-input" />
+				<div class="ability-input-glow"></div>
+			</div>
+			<span class="ability-mod rollable" data-roll="2d6+@abilities.Reflex.value" data-label="Reflex Check">
+				<div class="dice-container">
+					<img src="systems/stryder/assets/d6.svg" width="25" height="25" style="border:0px">
+					<div class="dice-glow"></div>
+				</div>
+			</span>
+		</div>
+
+		{{!-- Row 2: Grit | Will --}}
+		<div class="ability flex-group-center stat-font fantasy-ability">
+			<label class="ability-label" title="Physical Durability and Resilience unmatched. You gain additional Health, and an increased Resistance making you harder to overwhelm."><b>{{system.abilities.Grit.label}}</b></label>
+			<div class="ability-input-container">
+				<input type="text" name="system.abilities.Grit.value" value="{{system.abilities.Grit.value}}" data-dtype="Number" class="fantasy-ability-input" />
+				<div class="ability-input-glow"></div>
+			</div>
+			<span class="ability-mod rollable" data-roll="2d6+@abilities.Grit.value" data-label="Grit Check">
+				<div class="dice-container">
+					<img src="systems/stryder/assets/d6.svg" width="25" height="25" style="border:0px">
+					<div class="dice-glow"></div>
+				</div>
+			</span>
+		</div>
+
+		<div class="ability flex-group-center stat-font fantasy-ability">
+			<label class="ability-label" title="Will grants you incredible determination capable of surmounting the odds and even resisting abilities. This Stat raises your Resist providing additional defense against certain effects."><b>{{system.abilities.Will.label}}</b></label>
+			<div class="ability-input-container">
+				<input type="text" name="system.abilities.Will.value" value="{{system.abilities.Will.value}}" data-dtype="Number" class="fantasy-ability-input" />
+				<div class="ability-input-glow"></div>
+			</div>
+			<span class="ability-mod rollable" data-roll="2d6+@abilities.Will.value" data-label="Will Check">
+				<div class="dice-container">
+					<img src="systems/stryder/assets/d6.svg" width="25" height="25" style="border:0px">
+					<div class="dice-glow"></div>
+				</div>
+			</span>
+		</div>
+
 	</div>
+
+	{{!-- Potency — single combined stat beneath the grid --}}
 	<div class="stats-potency-row">
 		<div class="header-stat">
-			<label class="header-stat-label">Physical Potency</label>
+			<label class="header-stat-label">Potency</label>
 			<input type="text" name="system.attributes.physical_potency.value" value="{{system.attributes.physical_potency.value}}"
 				data-dtype="Number" class="header-stat-input" />
-		</div>
-		<div class="header-stat">
-			<label class="header-stat-label">Magykal Potency</label>
-			<input type="text" name="system.attributes.magykal_potency.value" value="{{system.attributes.magykal_potency.value}}"
-				data-dtype="Number" class="header-stat-input" />
-		</div>
-	</div>
-</div>
-
-{{!-- Section 2: Class & Folk --}}
-<div class="fantasy-abilities-section">
-	<div class="combat-abilities-header">
-		<h3 class="fantasy-section-title">
-			<span class="title-decoration left"></span>
-			<span class="title-text">Class & Folk</span>
-			<span class="title-decoration right"></span>
-		</h3>
-	</div>
-	<div class="flexrow-stats scrolling-container" style="gap: 8px;">
-		<!-- Class -->
-		<div class="flexcol-stats scroll-wrapper" style="flex: 1;">
-			<ol class='items-list'>
-				<li class='item flexrow items-header'>
-					<div class='item-name'>
-						<img src="systems/stryder/assets/class-icon.svg" alt="Class">
-						{{localize 'Class'}}
-					</div>
-					<div class='item-controls'>
-						<a class='item-control' title='Browse Classes' data-action='compendium' data-pack='stryder-classes'>
-							<i class='fas fa-search'></i>
-						</a>
-					</div>
-				</li>
-				{{#each classchoice as |item id|}}
-				<li class='item flexrow' data-item-id='{{item._id}}'>
-					<div class='item-name rollable' data-roll-type='item'>
-						<div class='item-image'>
-							<a class='rollable' data-roll-type='item'>
-								<img src='{{item.img}}' title='{{item.name}}' width='24' height='24' />
-							</a>
-						</div>
-						<h4>{{item.name}}</h4>
-					</div>
-					<div class='item-controls'>
-						<a class='item-control item-duplicate' title='{{localize "STRYDER.DOCUMENT.Duplicate"}}'><i class='fas fa-copy'></i></a>
-						<a class='item-control item-edit' title='{{localize "DOCUMENT.Edit" type="feature"}}' data-action='edit'><i class='fas fa-edit'></i></a>
-						<a class='item-control item-delete' title='{{localize "DOCUMENT.Delete" type="feature"}}' data-action='delete'><i class='fas fa-trash'></i></a>
-					</div>
-				</li>
-				{{/each}}
-			</ol>
-		</div>
-		<!-- Folk -->
-		<div class="flexcol-stats scroll-wrapper" style="flex: 1;">
-			<ol class='items-list'>
-				<li class='item flexrow items-header'>
-					<div class='item-name'>
-						<img src="systems/stryder/assets/folk-icon.svg" alt="Folk">
-						{{localize 'Folk'}}
-					</div>
-					<div class='item-controls'>
-						<a class='item-control' title='Browse Folk' data-action='compendium' data-pack='stryder-folk'>
-							<i class='fas fa-search'></i>
-						</a>
-					</div>
-				</li>
-				{{#each folk as |item id|}}
-				<li class='item flexrow' data-item-id='{{item._id}}'>
-					<div class='item-name rollable' data-roll-type='item'>
-						<div class='item-image'>
-							<a class='rollable' data-roll-type='item'>
-								<img src='{{item.img}}' title='{{item.name}}' width='24' height='24' />
-							</a>
-						</div>
-						<h4>{{item.name}}</h4>
-					</div>
-					<div class='item-controls'>
-						<a class='item-control item-duplicate' title='{{localize "STRYDER.DOCUMENT.Duplicate"}}'><i class='fas fa-copy'></i></a>
-						<a class='item-control item-edit' title='{{localize "DOCUMENT.Edit" type="feature"}}' data-action='edit'><i class='fas fa-edit'></i></a>
-						<a class='item-control item-delete' title='{{localize "DOCUMENT.Delete" type="feature"}}' data-action='delete'><i class='fas fa-trash'></i></a>
-					</div>
-				</li>
-				{{/each}}
-			</ol>
 		</div>
 	</div>
 </div>

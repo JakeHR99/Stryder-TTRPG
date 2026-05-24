@@ -16,7 +16,7 @@
     <nav class="sheet-tabs tabs" data-group="primary">
       <a class="item" data-tab="description"><i class="fas fa-scroll"></i> {{localize "STRYDER.SheetLabels.Description"}}</a>
       <a class="item" data-tab="attributes"><i class="fas fa-tools"></i> {{localize "STRYDER.SheetLabels.Attributes"}}</a>
-      <a class="item" data-tab="effects"><i class="fas fa-magic"></i> {{localize "STRYDER.SheetLabels.Effects"}}</a>
+      <a class="item" data-tab="attack"><i class="fas fa-swords"></i> Attack</a>
     </nav>
 
     {{!-- Sheet Body --}}
@@ -34,6 +34,7 @@
 
       {{!-- Attributes Tab --}}
       <div class="tab attributes" data-group="primary" data-tab="attributes">
+
         {{!-- Restrictions Section --}}
         <div class="section fantasy-section">
           <div class="section-header">
@@ -78,6 +79,14 @@
               <label>{{localize "STRYDER.SheetLabels.Mana"}}:</label>
               <input type="number" name="system.mana_cost" value="{{system.mana_cost}}" min="0" placeholder="{{localize 'STRYDER.SheetLabels.ManaCost'}}" data-dtype="Number" />
             </div>
+            <div class="field fantasy-field" style="display: flex; justify-content: flex-end;">
+              <label>Tactic Points:</label>
+              <input type="number" name="system.tactics_cost" value="{{system.tactics_cost}}" min="0" placeholder="Tactic Points Cost" data-dtype="Number" style="width: 75%; margin-left: 10px;" />
+            </div>
+            <div class="field fantasy-field">
+              <label>Limit:</label>
+              <input type="number" name="system.limit.max" value="{{system.limit.max}}" min="0" placeholder="0 = Unlimited" data-dtype="Number" />
+            </div>
             <div class="field fantasy-field">
               <label>{{localize "STRYDER.SheetLabels.Other"}}:</label>
               <input type="text" name="system.other_restrictions" value="{{system.other_restrictions}}" placeholder="{{localize 'STRYDER.SheetLabels.AdditionalRestrictions'}}">
@@ -104,6 +113,9 @@
                 <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
                 <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
                 <option value="reflex">{{localize "STRYDER.SheetLabels.Reflex"}}</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                <option value="pierce">Pierce</option>
                 {{/select}}
               </select>
             </div>
@@ -118,6 +130,9 @@
                 <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
                 <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
                 <option value="reflex">{{localize "STRYDER.SheetLabels.Reflex"}}</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                <option value="pierce">Pierce</option>
                 {{/select}}
               </select>
             </div>
@@ -132,26 +147,200 @@
                 <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
                 <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
                 <option value="reflex">{{localize "STRYDER.SheetLabels.Reflex"}}</option>
+                <option value="control">Control</option>
+                <option value="sunder">Sunder</option>
+                <option value="pierce">Pierce</option>
                 {{/select}}
               </select>
             </div>
           </div>
         </div>
+
       </div>
 
-      {{!-- Effects Tab --}}
-      <div class="tab effects" data-group="primary" data-tab="effects">
+      {{!-- Attack Tab --}}
+      <div class="tab attack" data-group="primary" data-tab="attack">
+
+        {{!-- Is Attack Toggle --}}
+        <div class="section fantasy-section checkbox-section">
+          <div class="fantasy-checkbox">
+            <label>Rolls as Attack?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.isAttack" {{checked system.isAttack}} data-dtype="Boolean" id="skill-isAttack-toggle" />
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-attack-fields" style="{{#if system.isAttack}}display: block;{{else}}display: none;{{/if}}">
+
+        {{!-- Roll Attributes Section --}}
         <div class="section fantasy-section">
           <div class="section-header">
             <div class="header-decoration left"></div>
-            <h2>{{localize "STRYDER.SheetLabels.ActiveEffects"}}</h2>
+            <h2>Roll Attributes</h2>
             <div class="header-decoration right"></div>
           </div>
           <div class="section-content">
-            {{> "systems/stryder/templates/item/parts/item-effects.hbs"}}
+            <div class="field fantasy-field formula-display">
+              <label>Roll Formula:</label>
+              <span class="formula-text">{{calculateFormula system.roll.diceNum system.roll.diceSize system.roll.diceBonus}}</span>
+            </div>
+
+            <div class="grid grid-4col" style="margin-top: 15px;">
+              <div class="roll-attribute-field">
+                <label>Dice #</label>
+                <input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
+              </div>
+              <div class="roll-attribute-field">
+                <label>Dice Size</label>
+                <input type="text" name="system.roll.diceSize" value="{{system.roll.diceSize}}" data-dtype="Number" />
+              </div>
+              <div class="roll-attribute-field grid-span-2">
+                <label>Bonus</label>
+                <input type="text" name="system.roll.diceBonus" value="{{system.roll.diceBonus}}" />
+              </div>
+            </div>
+
+            <div class="grid grid-2col" style="margin-top: 15px;">
+              <div class="damage-amp-field">
+                <label>Base Amp</label>
+                <input type="text" name="system.roll.baseDamageAmp" value="{{system.roll.baseDamageAmp}}" data-dtype="Number" />
+              </div>
+              <div class="damage-amp-field">
+                <label>Raw Amp</label>
+                <input type="text" name="system.roll.rawDamageAmp" value="{{system.roll.rawDamageAmp}}" data-dtype="Number" />
+              </div>
+            </div>
           </div>
         </div>
+
+        {{!-- Enable Custom Damage Toggle --}}
+        <div class="section fantasy-section checkbox-section">
+          <div class="fantasy-checkbox">
+            <label>Enable Custom Damage?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.enableCustomDamage" {{checked system.enableCustomDamage}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="custom-damage-section" style="{{#if system.enableCustomDamage}}display: block;{{else}}display: none;{{/if}}">
+          <div class="section fantasy-section">
+            <div class="section-header">
+              <div class="header-decoration left"></div>
+              <h2>Custom Damage Values</h2>
+              <div class="header-decoration right"></div>
+            </div>
+            <div class="section-content">
+              <div class="grid grid-3col" style="margin-top: 15px;">
+                <div class="roll-attribute-field">
+                  <label>Poor</label>
+                  <input type="number" name="system.customDamage.poor" value="{{system.customDamage.poor}}" data-dtype="Number" />
+                </div>
+                <div class="roll-attribute-field">
+                  <label>Good</label>
+                  <input type="number" name="system.customDamage.good" value="{{system.customDamage.good}}" data-dtype="Number" />
+                </div>
+                <div class="roll-attribute-field">
+                  <label>Excellent</label>
+                  <input type="number" name="system.customDamage.excellent" value="{{system.customDamage.excellent}}" data-dtype="Number" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Enable Custom Range Toggle --}}
+        <div class="section fantasy-section checkbox-section">
+          <div class="fantasy-checkbox">
+            <label>Enable Custom Range?</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.enableCustomRange" {{checked system.enableCustomRange}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="custom-range-section" style="{{#if system.enableCustomRange}}display: block;{{else}}display: none;{{/if}}">
+          <div class="section fantasy-section">
+            <div class="section-header">
+              <div class="header-decoration left"></div>
+              <h2>Custom Range Values</h2>
+              <div class="header-decoration right"></div>
+            </div>
+            <div class="section-content">
+              <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Set the max roll for <strong>Poor</strong> and min roll for <strong>Excellent</strong>. Good fills the gap.</p>
+              <div class="grid grid-2col" style="margin-top: 10px;">
+                <div class="roll-attribute-field">
+                  <label>Poor (max)</label>
+                  <input type="number" name="system.customRange.poor" value="{{system.customRange.poor}}" data-dtype="Number" min="1" />
+                </div>
+                <div class="roll-attribute-field">
+                  <label>Excellent (min)</label>
+                  <input type="number" name="system.customRange.excellent" value="{{system.customRange.excellent}}" data-dtype="Number" min="1" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Reflex Tag Toggle --}}
+        <div class="section fantasy-section checkbox-section">
+          <div class="fantasy-checkbox">
+            <label>Reflex Tag</label>
+            <div class="checkbox-slider">
+              <input type="checkbox" name="system.hasReflexTag" {{checked system.hasReflexTag}} data-dtype="Boolean" />
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        </div>{{!-- end .skill-attack-fields --}}
+
       </div>
+
     </section>
   </div>
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const isAttackCheckbox = document.getElementById("skill-isAttack-toggle");
+    const skillAttackFields = document.querySelector(".skill-attack-fields");
+    if (isAttackCheckbox && skillAttackFields) {
+      isAttackCheckbox.addEventListener("change", function() {
+        skillAttackFields.style.display = this.checked ? "block" : "none";
+      });
+    }
+
+    const damageCheckbox = document.querySelector("input[name='system.enableCustomDamage']");
+    const customDamageSection = document.querySelector(".custom-damage-section");
+
+    function toggleCustomDamageSection() {
+      if (damageCheckbox.checked) {
+        customDamageSection.style.display = "block";
+      } else {
+        customDamageSection.style.display = "none";
+      }
+    }
+
+    damageCheckbox.addEventListener("change", toggleCustomDamageSection);
+    toggleCustomDamageSection();
+
+    const rangeCheckbox = document.querySelector("input[name='system.enableCustomRange']");
+    const customRangeSection = document.querySelector(".custom-range-section");
+
+    function toggleCustomRangeSection() {
+      if (rangeCheckbox.checked) {
+        customRangeSection.style.display = "block";
+      } else {
+        customRangeSection.style.display = "none";
+      }
+    }
+
+    rangeCheckbox.addEventListener("change", toggleCustomRangeSection);
+    toggleCustomRangeSection();
+  });
+</script>
