@@ -2476,12 +2476,6 @@ export class StryderItem extends Item {
 			const resourceButton = createResourceSpendButton(item);
 			const bloodlossButton = createBloodlossSpendButton(item);
 
-			const actor = item.actor;
-			if (!actor) {
-				console.error("No actor associated with this item:", item);
-				return;
-			}
-
 			if (typeof diceBonus === 'string' && isNaN(parseInt(diceBonus))) {
 				let attributePath;
 				const attributeMapping = {
@@ -2610,11 +2604,29 @@ export class StryderItem extends Item {
 			const statusPrefix = horrifiedPrefix || panickedPrefix;
 			const hasPierce = item.system.tag1 === 'pierce' || item.system.tag2 === 'pierce' || item.system.tag3 === 'pierce';
 			const damageButton = createDamageButton(totalDamage, item.system.damage_type || 'ahl', hasPierce);
+
+			// Twin Attack button — shown when Dual Wield is active and the skill is a Focused action
+			const actorActiveBattleForm = actor.getFlag('stryder', 'activeBattleForm');
+			const hasTwinAttack = actor.system.soul_armament?.form?.dual_wield
+				&& actorActiveBattleForm === 'dual_wield'
+				&& item.system.action_type === 'focused';
+			const twinDamage = Math.floor(totalDamage / 2);
+			const twinAttackButton = hasTwinAttack ? `
+			<button class="twin-attack-btn"
+				data-twin-damage="${twinDamage}"
+				data-damage-type="${item.system.damage_type || 'ahl'}"
+				data-actor-id="${actor.id}"
+				data-item-name="${item.name}"
+				style="margin-top:6px; width:100%; padding:5px 10px; background:#1a0e00; border:1px solid rgba(200,150,50,0.5); border-radius:4px; color:#e8c87a; font-size:11px; cursor:pointer; font-family:inherit;">
+				⚔ Twin Attack — 2 × ${twinDamage} ${item.system.damage_type ?? ''} damage
+			</button>` : '';
+
 			const qualityMessage = `
 			<div class="damage-quality ${quality.toLowerCase()}">
 			  ${statusPrefix}<strong>${quality} Attack!</strong> The attack did <strong>${totalDamage}</strong> damage.
 			</div>
 			${damageButton}
+			${twinAttackButton}
 			`;
 			ChatMessage.create({
 				speaker: speaker,

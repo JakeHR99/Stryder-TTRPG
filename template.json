@@ -276,7 +276,13 @@
       "templates": ["base"],
       "attributes": {
         "creature_size": "1",
+        "weight": "",
+        "corruption_traits": "none",
+        "habitat": "",
         "weight_class": 4,
+        "range": {
+          "value": 0
+        },
         "physical_potency": {
           "value": 0
         },
@@ -726,6 +732,33 @@
         "max": 0,
         "value": 0
       }
+    },
+    "generic": {
+      "templates": ["base"],
+      "parent_ability": "",
+      "damage_type": "physical",
+      "action_type": "focused",
+      "range": 0,
+      "stamina_cost": 0,
+      "mana_cost": 0,
+      "tactics_cost": 0,
+      "other_restrictions": "",
+      "roll": {
+        "diceBonus": 0,
+        "diceNum": 2,
+        "diceSize": 6,
+        "baseDamageAmp": 0,
+        "rawDamageAmp": 0
+      },
+      "limit": { "max": 0, "value": 0 },
+      "enableCustomDamage": false,
+      "customDamage": { "poor": 0, "good": 0, "excellent": 0 },
+      "enableCustomRange": false,
+      "customRange": { "poor": 4, "excellent": 11 },
+      "hasReflexTag": false,
+      "tag1": "",
+      "tag2": "",
+      "tag3": ""
     },
     "armament": {
       "templates": ["base"],

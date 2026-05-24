@@ -11350,3 +11350,384 @@ progress.resource2-bar::-moz-progress-bar {
 .inv-popup-img-wrap:hover .inv-popup-img-hint {
   opacity: 1 !important;
 }
+
+/* ==========================================================================
+   MONSTER SHEET — Standalone layout
+   ========================================================================== */
+
+/* ── Window & form setup ─────────────────────────────────────────────────── */
+
+/* The actor sheet window: parchment background, no overflow on the form */
+.stryder.sheet.actor.monster-sheet {
+  background: #f0e8cc !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Main two-column wrapper fills the form */
+.monster-sheet .monster-sheet-wrapper {
+  display: flex !important;
+  flex-direction: row !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 14px 14px 10px 14px;
+  box-sizing: border-box;
+  gap: 14px;
+  height: 100%;
+}
+
+/* ── LEFT PANEL ─────────────────────────────────────────────────────────── */
+.monster-sheet .monster-left-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 0 0 42%;
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Name + Threat Level header row */
+.monster-sheet .monster-header-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.monster-sheet .monster-name-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.monster-sheet .monster-threat-block {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.monster-sheet .monster-field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2a1a00;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.monster-sheet .monster-name-input {
+  width: 100%;
+  font-size: 17px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #333;
+  border-radius: 0;
+  padding: 2px 0;
+  color: #111;
+  box-shadow: none;
+}
+
+.monster-sheet .monster-threat-input {
+  width: 54px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  background: transparent;
+  border: 2.5px solid #222;
+  padding: 4px;
+  color: #111;
+  box-shadow: none;
+}
+
+/* ── STAT BOXES ─────────────────────────────────────────────────────────── */
+.monster-sheet .monster-stat-row {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.monster-sheet .monster-stat-row.four-col .monster-stat-box { flex: 1; }
+.monster-sheet .monster-stat-row.three-col .monster-stat-box { flex: 1; }
+
+.monster-sheet .monster-stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* The big bordered box */
+.monster-sheet .monster-stat-square {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 3px solid #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+/* Health / Stamina: value / max side by side */
+.monster-sheet .monster-stat-dual {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 100%;
+}
+
+.monster-sheet .monster-stat-dual input {
+  width: 38%;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: #111;
+  padding: 0;
+  box-shadow: none;
+  height: auto;
+  line-height: 1;
+}
+
+.monster-sheet .monster-stat-sep {
+  font-size: 13px;
+  font-weight: 700;
+  color: #444;
+  line-height: 1;
+}
+
+/* Single-value input inside a stat square */
+.monster-sheet .monster-stat-square > input {
+  width: 80%;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: #111;
+  padding: 0;
+  box-shadow: none;
+  height: auto;
+}
+
+.monster-sheet .monster-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ── CORRUPTION TRAITS ──────────────────────────────────────────────────── */
+.monster-sheet .monster-corruption-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.monster-sheet .monster-corruption-select,
+.monster-sheet .monster-size-select {
+  width: 100%;
+  font-size: 13px;
+  background: rgba(255,255,255,0.3);
+  border: 1px solid #666;
+  padding: 3px 6px;
+  color: #111;
+  cursor: pointer;
+}
+
+/* ── LOWER ROW (Senses / Talents / Body) ────────────────────────────────── */
+.monster-sheet .monster-lower-row {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 10px;
+  margin-top: 4px;
+  flex: 1;
+}
+
+.monster-sheet .monster-sub-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.monster-sheet .monster-sub-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 5px;
+  display: block;
+  border-bottom: 1px solid #888;
+  padding-bottom: 2px;
+}
+
+.monster-sheet .monster-sub-field {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 3px;
+  margin-bottom: 1px;
+}
+
+.monster-sheet .monster-sub-label {
+  font-size: 11px;
+  color: #333;
+  white-space: nowrap;
+  min-width: 58px;
+}
+
+.monster-sheet .monster-sub-field input,
+.monster-sheet .monster-sub-field select {
+  flex: 1;
+  font-size: 11px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #aaa;
+  color: #111;
+  padding: 0 2px;
+  min-width: 0;
+  height: auto;
+  box-shadow: none;
+}
+
+/* ── RIGHT PANEL ────────────────────────────────────────────────────────── */
+.monster-sheet .monster-right-panel {
+  flex: 1;
+  display: flex !important;
+  flex-direction: column !important;
+  border: 2px solid #333;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Top row: Offensive + Defensive side by side */
+.monster-sheet .monster-abilities-top {
+  display: flex !important;
+  flex-direction: row !important;
+  flex: 1 1 60%;
+  min-height: 0;
+  border-bottom: 2px solid #333;
+}
+
+.monster-sheet .monster-abilities-top .monster-ability-panel:first-child {
+  border-right: 2px solid #333;
+}
+
+/* Individual ability panel */
+.monster-sheet .monster-ability-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Utility panel — bottom third */
+.monster-sheet .monster-utility-panel {
+  flex: 0 0 38%;
+  min-height: 0;
+}
+
+/* Panel header */
+.monster-sheet .monster-ability-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-bottom: 2px solid #333;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+  background: rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.monster-sheet .monster-add-btn {
+  font-size: 10px;
+  color: #444;
+  cursor: pointer;
+  padding: 1px 5px;
+  border: 1px solid #888;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.45);
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.monster-sheet .monster-add-btn:hover {
+  background: rgba(255,255,255,0.75);
+  color: #000;
+}
+
+/* Ability item lists */
+.monster-sheet .monster-ability-list {
+  list-style: none;
+  margin: 0;
+  padding: 2px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.monster-sheet .monster-ability-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.monster-sheet .monster-ability-item:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.monster-sheet .monster-ability-item:hover .monster-item-controls {
+  display: flex !important;
+}
+
+.monster-sheet .monster-ability-img img {
+  border: none;
+  display: block;
+}
+
+.monster-sheet .monster-ability-name {
+  flex: 1;
+  font-size: 12px;
+  color: #111;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monster-sheet .monster-item-controls {
+  display: none;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.monster-sheet .monster-item-controls a {
+  font-size: 10px;
+  color: #555;
+  cursor: pointer;
+  padding: 1px 3px;
+  text-decoration: none;
+}
+
+.monster-sheet .monster-item-controls a:hover {
+  color: #000;
+}

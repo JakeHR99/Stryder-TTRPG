@@ -1240,6 +1240,42 @@ Hooks.once('ready', async function () {
     const { handleDamageApply } = await import('./documents/item.mjs');
     handleDamageApply(event);
   });
+
+  // Twin Attack button — posts a second message showing split damage
+  $(document).on("click", ".twin-attack-btn", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const twinDamage = parseInt(btn.dataset.twinDamage) || 0;
+    const damageType = btn.dataset.damageType || 'ahl';
+    const actorId = btn.dataset.actorId;
+    const itemName = btn.dataset.itemName;
+    const actor = game.actors.get(actorId);
+    const speaker = actor ? ChatMessage.getSpeaker({ actor }) : {};
+    await ChatMessage.create({
+      speaker,
+      content: `
+        <div class="chat-message-card">
+          <div class="chat-message-header">
+            <div class="chat-message-title">⚔ Twin Attack</div>
+            <div class="chat-message-subtitle">${itemName}</div>
+          </div>
+          <div class="chat-message-details">
+            <div class="chat-message-detail-row">
+              <span class="chat-message-detail-label">Attack 1:</span>
+              <span><strong>${twinDamage}</strong> ${damageType} damage</span>
+            </div>
+            <div class="chat-message-detail-row">
+              <span class="chat-message-detail-label">Attack 2:</span>
+              <span><strong>${twinDamage}</strong> ${damageType} damage</span>
+            </div>
+            <div class="chat-message-detail-row">
+              <span class="chat-message-detail-label">Total:</span>
+              <span><strong>${twinDamage * 2}</strong> damage split across two hits</span>
+            </div>
+          </div>
+        </div>`
+    });
+  });
   
   // Handle damage undo buttons
   $(document).on("click", ".damage-undo", async function(event) {

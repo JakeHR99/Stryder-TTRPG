@@ -701,6 +701,7 @@ export class StryderActorSheet extends ActorSheet {
   _prepareItems(context) {
     // Initialize containers.
     const actions = [];
+    const generic = [];
     const armament = [];
     const aegiscore = [];
     const legacies = [];
@@ -744,6 +745,10 @@ export class StryderActorSheet extends ActorSheet {
       // Append to actions.
       if (i.type === 'action') {
         actions.push(i);
+      }
+      // Append to generic attacks (monster offensive abilities).
+      if (i.type === 'generic') {
+        generic.push(i);
       }
       // Append to armament.
       if (i.type === 'armament') {
@@ -851,6 +856,7 @@ export class StryderActorSheet extends ActorSheet {
 
     // Assign and return
     context.actions = actions;
+    context.generic = generic;
     context.armament = armament;
     context.aegiscore = aegiscore;
     context.legacies = legacies;
@@ -1169,6 +1175,10 @@ export class StryderActorSheet extends ActorSheet {
         .spb-def-row.spb-def-evade   { background: #080f1e; border-color: rgba(80,120,200,0.30); color: #80d4a4; }
         .spb-def-row.spb-def-mresist { background: #080f1e; border-color: rgba(80,120,200,0.30); color: #d0a8ff; }
         .spb-def-row.spb-def-presist { background: #080f1e; border-color: rgba(80,120,200,0.30); color: #a0c8d4; }
+
+        /* Block button (Dual Wield) — lives inside spb-def-grid, spans both columns */
+        .spb-def-grid.has-block { grid-template-rows: 1fr 1fr 1fr; }
+        .spb-def-row.spb-block-btn { background: #080f1e; border-color: rgba(80,120,200,0.30); color: #a8d4ff; }
 
         .spb-empty {
           text-align: center; padding: 16px 0; font-size: 10px;
@@ -3559,6 +3569,21 @@ function _openPokemonBattleWindow(actor) {
     { label: 'P. Resist', cls: 'presist', formula: '2d6 + Grit',   roll: `2d6+${actor.system.abilities?.Grit?.value ?? 0}`,   label2: 'Physical Resistance' },
   ];
 
+  // Check if Dual Wield is unlocked and currently the active battle form
+  const hasDualWield = actor.system.soul_armament?.form?.dual_wield === true;
+  const activeBattleFormDW = actor.getFlag('stryder', 'activeBattleForm');
+  const dualWieldActive = hasDualWield && activeBattleFormDW === 'dual_wield';
+
+  // Determine Block reduction value: highest ability score (Soul, Arcana, Grit, Reflex, Will, Intuition)
+  const blockReductionStat = Math.max(
+    actor.system.abilities?.Soul?.value ?? 0,
+    actor.system.abilities?.Arcana?.value ?? 0,
+    actor.system.abilities?.Grit?.value ?? 0,
+    actor.system.abilities?.Reflex?.value ?? 0,
+    actor.system.abilities?.Will?.value ?? 0,
+    actor.system.abilities?.Intuition?.value ?? 0
+  );
+
   const _renderItems = (list, showTag = false) => {
     if (!list.length) return `<div class="spb-empty">None</div>`;
     return list.map(item => {
@@ -3576,12 +3601,17 @@ function _openPokemonBattleWindow(actor) {
   };
 
   const _renderDefense = () => `
-    <div class="spb-def-grid">
+    <div class="spb-def-grid ${dualWieldActive ? 'has-block' : ''}">
       ${defRows.map(d => `
       <button class="spb-def-row spb-def-${d.cls}" data-roll="${d.roll}" data-label="${d.label2}">
         <span class="spb-def-label">${d.label}</span>
         <span class="spb-def-formula">${d.formula}</span>
       </button>`).join('')}
+      ${dualWieldActive ? `
+      <button class="spb-def-row spb-block-btn" data-block-reduction="${blockReductionStat}" style="grid-column: 1 / -1;">
+        <span class="spb-def-label">🛡 Block</span>
+        <span class="spb-def-formula">Trigger · 1 Stamina · [Breach] · Reduces ${blockReductionStat} dmg</span>
+      </button>` : ''}
     </div>`;
 
   const win = document.createElement('div');
@@ -3689,4 +3719,42 @@ function _openPokemonBattleWindow(actor) {
       });
     });
   });
+
+  // Block button click (Dual Wield)
+  const blockBtn = win.querySelector('.spb-block-btn');
+  if (blockBtn) {
+    blockBtn.addEventListener('click', async () => {
+      const reduction = parseInt(blockBtn.dataset.blockReduction) || 0;
+      const currentStamina = actor.system.resources?.stamina?.value ?? 0;
+      if (currentStamina < 1) {
+        ui.notifications.warn(`${actor.name} doesn't have enough Stamina to Block!`);
+        return;
+      }
+      await actor.update({ 'system.resources.stamina.value': currentStamina - 1 });
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: `
+          <div class="chat-message-card">
+            <div class="chat-message-header">
+              <div class="chat-message-title">🛡 Block</div>
+              <div class="chat-message-subtitle">Trigger · [Breach]</div>
+            </div>
+            <div class="chat-message-details">
+              <div class="chat-message-detail-row">
+                <span class="chat-message-detail-label">Trigger:</span>
+                <span>Targeted Attack against ${actor.name}</span>
+              </div>
+              <div class="chat-message-detail-row">
+                <span class="chat-message-detail-label">Reduces damage by:</span>
+                <span><strong>${reduction}</strong></span>
+              </div>
+              <div class="chat-message-detail-row">
+                <span class="chat-message-detail-label">Cost:</span>
+                <span>1 Stamina (spent)</span>
+              </div>
+            </div>
+          </div>`
+      });
+    });
+  }
 }
