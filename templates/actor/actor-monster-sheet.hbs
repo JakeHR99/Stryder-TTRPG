@@ -1,13 +1,12 @@
 <form class="{{cssClass}} {{actor.type}} monster-sheet" autocomplete="off"
   style="background:#f0e8cc; overflow:hidden; padding:0; display:flex; flex-direction:column; height:100%;">
 
-  {{!-- Two-column wrapper --}}
   <div style="display:flex; flex-direction:row; flex:1; min-height:0; padding:12px; box-sizing:border-box; gap:12px; overflow:hidden;">
 
-    {{!-- ══════════════════ LEFT PANEL ══════════════════ --}}
+    <!-- LEFT PANEL -->
     <div style="flex:0 0 43%; display:flex; flex-direction:column; gap:8px; overflow-y:auto; padding-right:4px;">
 
-      {{!-- Name + Threat Level --}}
+      <!-- Name + Threat Level -->
       <div style="display:flex; flex-direction:row; align-items:flex-end; gap:10px;">
         <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
           <label style="font-size:12px; font-weight:700; color:#222; text-transform:uppercase; letter-spacing:.05em;">Name</label>
@@ -21,10 +20,9 @@
         </div>
       </div>
 
-      {{!-- ── Row 1: Health / Might / Move. / Range ── --}}
+      <!-- Row 1: Health / Might / Move. / Range -->
       <div style="display:flex; flex-direction:row; gap:6px;">
 
-        {{!-- Health --}}
         <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;">
           <div style="width:100%; aspect-ratio:1/1; border:3px solid #111; display:flex; align-items:center; justify-content:center; box-sizing:border-box; padding:4px;">
             <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; gap:1px; width:100%;">
@@ -38,7 +36,6 @@
           <label style="font-size:11px; font-weight:700; color:#222; text-align:center;">Health</label>
         </div>
 
-        {{!-- Might --}}
         <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;">
           <div style="width:100%; aspect-ratio:1/1; border:3px solid #111; display:flex; align-items:center; justify-content:center; box-sizing:border-box;">
             <input type="text" name="system.abilities.Might.value" value="{{system.abilities.Might.value}}" data-dtype="Number"
@@ -47,7 +44,6 @@
           <label style="font-size:11px; font-weight:700; color:#222; text-align:center;">Might</label>
         </div>
 
-        {{!-- Move. --}}
         <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;">
           <div style="width:100%; aspect-ratio:1/1; border:3px solid #111; display:flex; align-items:center; justify-content:center; box-sizing:border-box;">
             <input type="text" name="system.attributes.move.running.value" value="{{system.attributes.move.running.value}}" data-dtype="Number"
@@ -56,7 +52,6 @@
           <label style="font-size:11px; font-weight:700; color:#222; text-align:center;">Move.</label>
         </div>
 
-        {{!-- Range --}}
         <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;">
           <div style="width:100%; aspect-ratio:1/1; border:3px solid #111; display:flex; align-items:center; justify-content:center; box-sizing:border-box;">
             <input type="text" name="system.attributes.range.value" value="{{system.attributes.range.value}}" data-dtype="Number"
@@ -65,12 +60,11 @@
           <label style="font-size:11px; font-weight:700; color:#222; text-align:center;">Range</label>
         </div>
 
-      </div>{{!-- end row 1 --}}
+      </div>
 
-      {{!-- ── Row 2: Stamina / Potency / Resistance (narrower, centered) ── --}}
-      <div style="display:flex; flex-direction:row; gap:6px; justify-content:flex-start;">
+      <!-- Row 2: Stamina / Potency / Resistance -->
+      <div style="display:flex; flex-direction:row; gap:6px;">
 
-        {{!-- Stamina --}}
         <div style="flex:0 0 calc(33% - 4px); display:flex; flex-direction:column; align-items:center; gap:3px;">
           <div style="width:100%; aspect-ratio:1/1; border:3px solid #111; display:flex; align-items:center; justify-content:center; box-sizing:border-box; padding:4px;">
             <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; gap:1px; width:100%;">
@@ -84,7 +78,6 @@
           <label style="font-size:11px; font-weight:700; color:#222; text-align:center;">Stamina</label>
         </div>
 
-        {{!-- Potency --}}
         <div style="flex:0 0 calc(33% - 4px); display:flex; flex-direction:column; align-items:center; gap:3px;">
           <div style="width:100%; aspect-ratio:1/1; border:3px solid #111; display:flex; align-items:center; justify-content:center; box-sizing:border-box;">
             <input type="text" name="system.attributes.physical_potency.value" value="{{system.attributes.physical_potency.value}}" data-dtype="Number"
@@ -93,7 +86,6 @@
           <label style="font-size:11px; font-weight:700; color:#222; text-align:center;">Potency</label>
         </div>
 
-        {{!-- Resistance --}}
         <div style="flex:0 0 calc(33% - 4px); display:flex; flex-direction:column; align-items:center; gap:3px;">
           <div style="width:100%; aspect-ratio:1/1; border:3px solid #111; display:flex; align-items:center; justify-content:center; box-sizing:border-box;">
             <input type="text" name="system.attributes.physical_resistance.base" value="{{system.attributes.physical_resistance.base}}" data-dtype="Number"
@@ -102,9 +94,9 @@
           <label style="font-size:11px; font-weight:700; color:#222; text-align:center;">Resistance</label>
         </div>
 
-      </div>{{!-- end row 2 --}}
+      </div>
 
-      {{!-- Corruption Traits --}}
+      <!-- Corruption Traits -->
       <div style="display:flex; flex-direction:column; gap:3px; margin-top:2px;">
         <label style="font-size:12px; font-weight:700; color:#222;">Corruption Trait(s)</label>
         <select name="system.attributes.corruption_traits"
@@ -124,10 +116,10 @@
         </select>
       </div>
 
-      {{!-- ── Senses / Talents / Body ── --}}
+      <!-- Senses / Talents / Body -->
       <div style="display:flex; flex-direction:row; gap:10px; margin-top:4px; flex:1;">
 
-        {{!-- Senses --}}
+        <!-- Senses -->
         <div style="flex:1; display:flex; flex-direction:column; gap:3px;">
           <label style="font-size:13px; font-weight:700; color:#111; border-bottom:1px solid #999; padding-bottom:2px; margin-bottom:3px;">Senses</label>
           <div style="display:flex; flex-direction:row; align-items:baseline; gap:3px;">
@@ -157,7 +149,7 @@
           </div>
         </div>
 
-        {{!-- Talents --}}
+        <!-- Talents -->
         <div style="flex:1; display:flex; flex-direction:column; gap:3px;">
           <label style="font-size:13px; font-weight:700; color:#111; border-bottom:1px solid #999; padding-bottom:2px; margin-bottom:3px;">Talents</label>
           <div style="display:flex; flex-direction:row; align-items:baseline; gap:3px;">
@@ -177,7 +169,7 @@
           </div>
         </div>
 
-        {{!-- Body --}}
+        <!-- Body -->
         <div style="flex:1; display:flex; flex-direction:column; gap:3px;">
           <label style="font-size:13px; font-weight:700; color:#111; border-bottom:1px solid #999; padding-bottom:2px; margin-bottom:3px;">Body</label>
           <div style="display:flex; flex-direction:row; align-items:baseline; gap:3px;">
@@ -202,17 +194,17 @@
           </div>
         </div>
 
-      </div>{{!-- end senses/talents/body --}}
+      </div>
 
-    </div>{{!-- end left panel --}}
+    </div>
 
-    {{!-- ══════════════════ RIGHT PANEL ══════════════════ --}}
+    <!-- RIGHT PANEL -->
     <div style="flex:1; display:flex; flex-direction:column; border:2px solid #333; overflow:hidden; min-width:0;">
 
-      {{!-- Top half: Offensive + Defensive --}}
+      <!-- Top: Offensive + Defensive side by side -->
       <div style="display:flex; flex-direction:row; flex:1 1 60%; min-height:0; border-bottom:2px solid #333; overflow:hidden;">
 
-        {{!-- Offensive --}}
+        <!-- Offensive -->
         <div style="flex:1; display:flex; flex-direction:column; border-right:2px solid #333; min-height:0; overflow:hidden;">
           <div style="display:flex; flex-direction:row; align-items:center; justify-content:space-between; padding:4px 8px; border-bottom:2px solid #333; background:rgba(0,0,0,0.04); flex-shrink:0;">
             <span style="font-size:12px; font-weight:700; color:#111;">Offensive abilities</span>
@@ -238,7 +230,7 @@
           </ol>
         </div>
 
-        {{!-- Defensive --}}
+        <!-- Defensive -->
         <div style="flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden;">
           <div style="display:flex; flex-direction:row; align-items:center; justify-content:space-between; padding:4px 8px; border-bottom:2px solid #333; background:rgba(0,0,0,0.04); flex-shrink:0;">
             <span style="font-size:12px; font-weight:700; color:#111;">Defensive Abilities</span>
@@ -264,9 +256,9 @@
           </ol>
         </div>
 
-      </div>{{!-- end top abilities --}}
+      </div>
 
-      {{!-- Utility abilities --}}
+      <!-- Utility -->
       <div style="flex:0 0 38%; display:flex; flex-direction:column; min-height:0; overflow:hidden;">
         <div style="display:flex; flex-direction:row; align-items:center; justify-content:space-between; padding:4px 8px; border-bottom:2px solid #333; background:rgba(0,0,0,0.04); flex-shrink:0;">
           <span style="font-size:12px; font-weight:700; color:#111;">Utility abilities</span>
@@ -290,51 +282,13 @@
           </li>
           {{/each}}
         </ol>
-      </div>{{!-- end utility --}}
-
-    </div>{{!-- end right panel --}}
-
-  </div>{{!-- end wrapper --}}
-
-  {{!-- Hover-reveal item controls --}}
-  <style>
-    .monster-ability-item:hover .item-controls { display:flex !important; }
-  </style>
-
-</form>
-
-{{log system}}
-          <span style="font-size:12px; font-weight:700; color:#111;">Utility abilities</span>
-          <a class="item-control item-create" data-type="action" title="Add"
-            style="font-size:10px; color:#444; cursor:pointer; padding:1px 5px; border:1px solid #888; border-radius:3px; background:rgba(255,255,255,0.4); text-decoration:none; line-height:1.4;">
-            <i class="fas fa-plus"></i>
-          </a>
-        </div>
-        <ol style="list-style:none; margin:0; padding:2px 0; overflow-y:auto; flex:1;">
-          {{#each actions as |item|}}
-          <li class="monster-ability-item" data-item-id="{{item._id}}"
-            style="display:flex; flex-direction:row; align-items:center; gap:5px; padding:3px 7px; border-bottom:1px solid rgba(0,0,0,0.08);">
-            <a class="rollable" data-roll-type="item" style="flex-shrink:0;">
-              <img src="{{item.img}}" title="{{item.name}}" width="18" height="18" style="border:none; display:block;"/>
-            </a>
-            <span style="flex:1; font-size:12px; color:#111; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{item.name}}</span>
-            <span class="item-controls" style="display:none; flex-direction:row; gap:3px;">
-              <a class="item-control item-edit" title="Edit" style="font-size:10px; color:#555; cursor:pointer; text-decoration:none;"><i class="fas fa-edit"></i></a>
-              <a class="item-control item-delete" title="Delete" style="font-size:10px; color:#555; cursor:pointer; text-decoration:none;"><i class="fas fa-trash"></i></a>
-            </span>
-          </li>
-          {{/each}}
-        </ol>
       </div>
 
-    </div>{{!-- end right panel --}}
+    </div>
 
-  </div>{{!-- end wrapper --}}
+  </div>
 
-  {{!-- Hover reveal for item controls --}}
-  <style>
-    .monster-ability-item:hover .item-controls { display:flex !important; }
-  </style>
+  <style>.monster-ability-item:hover .item-controls { display:flex !important; }</style>
 
 </form>
 

@@ -2238,6 +2238,23 @@ export class StryderItem extends Item {
 		  });
 		}
 		else if (item.type === "action") {
+
+		  // ── Spirit Aspect routing ───────────────────────────────
+		  const SPIRIT_NAMES = ['Hallowed-Arsenal','Revitalize','Enhance Prowess','Rapid Repair',
+			'Life for a Life','Undeath','Ruin Mana','Healing Wave','Starwalker'];
+		  if (SPIRIT_NAMES.includes(item.name)) {
+			const { handleSpiritAbility } = await import('../abilities/spirit-abilities.mjs');
+			return await handleSpiritAbility(item, speaker, rollMode);
+		  }
+
+		  // ── Resilience Aspect routing ─────────────────────────
+		  const RESILIENCE_NAMES = ['Armored Soul','Deep Guard','Attached Bonus','Ancient Armor',
+			'Irresistible Rage','Full Brace','Revenge Shield','Sacrifice','Unbreakable','Atlas Resilience'];
+		  if (RESILIENCE_NAMES.includes(item.name)) {
+			const { handleResilienceAbility } = await import('../abilities/resilience-abilities.mjs');
+			return await handleResilienceAbility(item, speaker, rollMode);
+		  }
+
 		  // Check limit
 		  const actionLimitMax = item.system.limit?.max || 0;
 		  if (actionLimitMax > 0) {
@@ -2444,7 +2461,7 @@ export class StryderItem extends Item {
 			// Return the roll object for further processing if necessary
 			return roll;
 		}
-		else if (item.type === "skill") {
+		else if (item.type === "skill" || item.type === "generic") {
 			const actor = item.actor || game.actors.get(speaker.actor) || null;
 			if (!actor) {
 				console.error("No actor associated with this skill:", item);
@@ -2568,6 +2585,19 @@ export class StryderItem extends Item {
 				}
 			}
 
+			// Unbreakable: downgrade Excellent → Good on defender
+			if (quality === 'Excellent') {
+				const targetToken2 = [...game.user.targets][0];
+				const defActor = targetToken2?.actor ?? null;
+				const { checkUnbreakable } = await import('../abilities/resilience-abilities.mjs');
+				if (checkUnbreakable(defActor)) {
+					quality = 'Good';
+					damageMultiplier = 1.0;
+					await ChatMessage.create({ speaker, content:
+						`<div class="damage-quality good">🛡 <strong>Unbreakable:</strong> ${defActor.name}'s Unbreakable downgrades this Excellent to Good.</div>` });
+				}
+			}
+
 			let totalDamage;
 			// Use Might for monsters, Soul/Arcana for characters
 			let powerValue = 0;
@@ -2597,6 +2627,29 @@ export class StryderItem extends Item {
 			if (saTemper === 'heavy' && item.system.action_type === 'focused') {
 				const heavyDamageBonus = Math.max(0, weaponWC - 2);
 				totalDamage += heavyDamageBonus;
+			}
+
+			// ── Hallowed-Arsenal / Starwalker hooks ───────────────
+			{
+				const { applyHallowedArsenalEffect, getStarwalkerBonus } = await import('../abilities/spirit-abilities.mjs');
+				const targetToken = [...game.user.targets][0];
+				const targetActor = targetToken?.actor ?? null;
+				const hallowedResult = await applyHallowedArsenalEffect(actor, targetActor, totalDamage, quality);
+				totalDamage = hallowedResult.modifiedDamage;
+				if (hallowedResult.skipDamage) return;
+				const starwalkerBonus = getStarwalkerBonus(actor);
+				if (starwalkerBonus > 0) totalDamage += starwalkerBonus;
+			}
+
+			// ── Resilience hooks ──────────────────────────────────
+			{
+				const { getResilienceDamageBonus } = await import('../abilities/resilience-abilities.mjs');
+				const resBonus = getResilienceDamageBonus(actor, item.system.action_type);
+				if (resBonus > 0) {
+					totalDamage += resBonus;
+					await ChatMessage.create({ speaker, content:
+						`<div class="damage-quality good"><strong>Resilience Bonus:</strong> +${resBonus} damage (Attached Bonus / Revenge Shield).</div>` });
+				}
 			}
 
 			const horrifiedPrefix = isActorHorrified(actor) ? `<strong>${actor.name} is Horrified!</strong> ` : "";

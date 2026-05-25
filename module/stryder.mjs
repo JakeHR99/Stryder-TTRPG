@@ -1241,6 +1241,211 @@ Hooks.once('ready', async function () {
     handleDamageApply(event);
   });
 
+  // ── Spirit Aspect chat button handlers ──────────────────────
+
+  // Remove condition (Revitalize)
+  $(document).on("click", ".spirit-remove-condition", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const condition = btn.dataset.condition;
+    const targetActor = game.actors.get(btn.dataset.actorId);
+    if (!targetActor) return ui.notifications.warn("Target actor not found.");
+    const effects = targetActor.effects.contents;
+    let toRemove = [];
+    if (condition === "poison") {
+      toRemove = effects.filter(e => (e.name ?? e.label ?? '').includes("Poisoned"));
+    } else if (condition === "burning") {
+      toRemove = effects.filter(e => (e.name ?? e.label ?? '') === "Burning");
+    } else if (condition === "bleeding") {
+      toRemove = effects.filter(e => (e.name ?? e.label ?? '') === "Bleeding Wound");
+    }
+    if (!toRemove.length) return ui.notifications.info(`${targetActor.name} doesn't have that condition.`);
+    await targetActor.deleteEmbeddedDocuments("ActiveEffect", toRemove.map(e => e.id));
+    const conditionNames = { poison: "Poison", burning: "Burning", bleeding: "all Bleeding Wounds" };
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: targetActor }),
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        ✨ <strong>Revitalize</strong> — ${conditionNames[condition]} removed from <strong>${targetActor.name}</strong>.
+      </div></div>`
+    });
+  });
+
+  // Remove Enhance Prowess active effect
+  $(document).on("click", ".spirit-remove-enhance", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const targetActor = game.actors.get(btn.dataset.actorId);
+    const talent = btn.dataset.talent;
+    if (!targetActor) return ui.notifications.warn("Target actor not found.");
+    const toRemove = targetActor.effects.filter(e =>
+      e.flags?.stryder?.isEnhanceProwess && e.flags?.stryder?.talent === talent
+    ).map(e => e.id);
+    if (!toRemove.length) return ui.notifications.info("Enhance Prowess effect not found.");
+    await targetActor.deleteEmbeddedDocuments("ActiveEffect", toRemove);
+    await ChatMessage.create({
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        ↩ <strong>Enhance Prowess (${talent})</strong> removed from <strong>${targetActor.name}</strong>.
+      </div></div>`
+    });
+  });
+
+  // Resolve Undeath at end of engagement
+  $(document).on("click", ".spirit-resolve-undeath", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const targetActor = game.actors.get(btn.dataset.actorId);
+    if (!targetActor) return ui.notifications.warn("Target actor not found.");
+    const curHP = targetActor.system.resources?.health?.value ?? 0;
+    const maxHP = targetActor.system.resources?.health?.max ?? 0;
+    await targetActor.unsetFlag('stryder', 'undeathActive');
+    await targetActor.unsetFlag('stryder', 'undeathLimit');
+    if (curHP >= 0) {
+      return ui.notifications.info(`${targetActor.name} has positive HP — Undeath resolved with no penalty.`);
+    }
+    const negAmt = Math.abs(curHP);
+    const maxHPReduction = Math.floor(negAmt / 2);
+    await targetActor.update({
+      'system.resources.health.value': 1,
+      'system.resources.health.max': Math.max(1, maxHP - maxHPReduction)
+    });
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: targetActor }),
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        ⚰ <strong>Undeath Resolved</strong> — ${targetActor.name} was at ${curHP} HP.
+        Set to <strong>1 HP</strong>. Max HP permanently reduced by <strong>${maxHPReduction}</strong>
+        (now ${Math.max(1, maxHP - maxHPReduction)}).
+      </div></div>`
+    });
+  });
+
+  // Ruin Mana — roll 2d6 counter
+  $(document).on("click", ".spirit-ruin-mana-roll", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const actor = game.actors.get(btn.dataset.actorId);
+    const roll = new Roll("2d6");
+    await roll.evaluate();
+    await roll.toMessage({
+      speaker: actor ? ChatMessage.getSpeaker({ actor }) : {},
+      flavor: `<strong>${btn.dataset.actorName}</strong> — Ruin Mana Counter Roll`
+    });
+  });
+
+  // Healing Wave — apply healing to an individual target
+  $(document).on("click", ".spirit-heal-apply", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const targetActor = game.actors.get(btn.dataset.actorId);
+    const healAmt = parseInt(btn.dataset.amount) || 0;
+    if (!targetActor) return ui.notifications.warn("Target actor not found.");
+    const curHP = targetActor.system.resources?.health?.value ?? 0;
+    const maxHP = targetActor.system.resources?.health?.max ?? curHP;
+    await targetActor.update({ 'system.resources.health.value': Math.min(maxHP, curHP + healAmt) });
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: targetActor }),
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        💚 <strong>Healing Wave</strong> — ${targetActor.name} restored <strong>${healAmt} Health</strong>.
+      </div></div>`
+    });
+  });
+
+  // ── Resilience Aspect chat button handlers ────────────────
+
+  // Ancient Armor — roll Resistance with Soul bonus
+  $(document).on("click", ".resilience-ancient-armor-roll", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const actor = game.actors.get(btn.dataset.actorId);
+    const bonus = parseInt(btn.dataset.bonus) || 0;
+    const roll = new Roll(`2d6 + ${bonus}`);
+    await roll.evaluate();
+    await roll.toMessage({
+      speaker: actor ? ChatMessage.getSpeaker({ actor }) : {},
+      flavor: `<strong>${btn.dataset.actorName}</strong> — Ancient Armor Resistance Roll (+${bonus} Soul bonus)`
+    });
+  });
+
+  // Irresistible Rage — apply Taunted condition
+  $(document).on("click", ".resilience-irresistible-rage-taunt", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const targetActor = game.actors.get(btn.dataset.actorId);
+    if (!targetActor) return ui.notifications.warn("Target actor not found.");
+    const effectData = [{
+      name: 'Taunted',
+      label: 'Taunted',
+      icon: 'icons/svg/eye.svg',
+      changes: [],
+      flags: { stryder: { isIrresistibleRage: true } }
+    }];
+    await targetActor.createEmbeddedDocuments('ActiveEffect', effectData);
+    await ChatMessage.create({
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        💢 <strong>Irresistible Rage</strong> — <strong>${btn.dataset.actorName}</strong> is now Taunted until end of next Challenger Phase.
+      </div></div>`
+    });
+  });
+
+  // Revenge Shield — store deepGuardReduction as revengeAmount
+  $(document).on("click", ".resilience-revenge-activate", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const actor = game.actors.get(btn.dataset.actorId);
+    const reduction = parseInt(btn.dataset.reduction) || 0;
+    if (!actor) return ui.notifications.warn("Actor not found.");
+    await actor.setFlag('stryder', 'revengeAmount', reduction);
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        ⚔ <strong>Revenge Shield Ready</strong> — ${actor.name}'s next Focused Attack deals <strong>+${reduction}</strong> bonus damage.
+      </div></div>`
+    });
+  });
+
+  // Full Brace — clear movement penalty
+  $(document).on("click", ".resilience-full-brace-clear", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const actor = game.actors.get(btn.dataset.actorId);
+    if (!actor) return ui.notifications.warn("Actor not found.");
+    await actor.unsetFlag('stryder', 'fullBraceMovementPenalty');
+    await ChatMessage.create({
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        ✅ <strong>Full Brace</strong> — Movement penalty cleared for ${actor?.name}.
+      </div></div>`
+    });
+  });
+
+  // Unbreakable — clear flag at end of encounter
+  $(document).on("click", ".resilience-unbreakable-clear", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const actor = game.actors.get(btn.dataset.actorId);
+    if (!actor) return ui.notifications.warn("Actor not found.");
+    await actor.unsetFlag('stryder', 'unbreakableActive');
+    await ChatMessage.create({
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        ✅ <strong>Unbreakable</strong> cleared for ${actor?.name}.
+      </div></div>`
+    });
+  });
+
+  // Atlas Resilience — clear flags at end of engagement
+  $(document).on("click", ".resilience-atlas-clear", async function(event) {
+    event.preventDefault();
+    const btn = event.currentTarget;
+    const actor = game.actors.get(btn.dataset.actorId);
+    if (!actor) return ui.notifications.warn("Actor not found.");
+    await actor.unsetFlag('stryder', 'atlasResilienceActive');
+    await actor.unsetFlag('stryder', 'armoredSoulMode');
+    await actor.unsetFlag('stryder', 'armoredSoulDR');
+    await ChatMessage.create({
+      content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
+        ✅ <strong>Atlas Resilience</strong> and Armored Soul cleared for ${actor?.name}.
+      </div></div>`
+    });
+  });
+
   // Twin Attack button — posts a second message showing split damage
   $(document).on("click", ".twin-attack-btn", async function(event) {
     event.preventDefault();
