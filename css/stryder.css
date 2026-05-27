@@ -2285,33 +2285,249 @@ progress.resource2-bar::-moz-progress-bar {
   transform: scale(1.1);
 }
 
-.chat-message-card {
-  background: url('systems/stryder/assets/parchment.jpg') repeat;
-  background-color: rgba(250, 240, 220, 0.9);
-  border: 2px solid #8b5a2b;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-family: 'EB Garamond', serif;
-  color: #3a3123;
-  position: relative;
-  overflow: hidden;
+/* ── Strip Foundry's default chat message wrapper styling ── */
+.message,
+li.message,
+ol#chat-log > li,
+.chat-log .message,
+#chat-log .message,
+#chat-log li {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2px 0 !important;
+  margin: 2px 0 !important;
 }
 
+.message .message-header,
+.message header.message-header {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.message .message-content {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ── Chat message sender / timestamp ── */
+.message .message-sender,
+.message-header .message-sender {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 16px rgba(120, 180, 255, 0.3) !important;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.message .message-timestamp,
+.message-header .message-timestamp,
+.message .message-metadata,
+.message-header time {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5) !important;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.35) !important;
+}
+
+/* ── FF7R-style Foundry Roll Messages ───────────────────── */
+
+/* Wrap the whole message content when it contains a dice roll */
+.message-content:has(.dice-roll) {
+  background: linear-gradient(135deg, #0d1628 0%, #080e1c 60%, #060a16 100%) !important;
+  border: 1px solid #1e4fa0 !important;
+  border-left: 3px solid #2a70e0 !important;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%) !important;
+  box-shadow: 0 0 14px rgba(20, 80, 200, 0.2), inset 0 1px 0 rgba(80, 140, 255, 0.08) !important;
+  padding: 10px 12px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  color: #a8c8e8 !important;
+}
+
+.message-content:has(.dice-roll)::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, #2a70e0, #60a8ff, transparent);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* Flavor text — covers message-header AND message-content locations */
+.flavor-text,
+.message .flavor-text,
+.message-header .flavor-text,
+.message-content .flavor-text,
+.dice-roll .dice-flavor {
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #e8f0ff !important;
+  text-shadow: 0 0 8px rgba(42, 112, 224, 0.35) !important;
+  border-bottom: 1px solid rgba(42, 112, 224, 0.2) !important;
+  padding-bottom: 5px !important;
+  margin-bottom: 6px !important;
+  background: transparent !important;
+}
+
+/* Ensure all text inside roll cards inherits light color */
+.message-content:has(.dice-roll),
+.message-content:has(.dice-roll) * {
+  color: #e8f0ff !important;
+}
+
+/* Outer roll card — now just handles inner layout, card shell is on message-content */
+.dice-roll {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  position: relative !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  color: #a8c8e8 !important;
+  border-radius: 0 !important;
+}
+
+/* Formula row */
+.dice-roll .dice-formula,
+.message-content .dice-formula {
+  background: rgba(8, 18, 40, 0.7) !important;
+  border: 1px solid rgba(42, 112, 224, 0.2) !important;
+  border-radius: 2px !important;
+  color: #6090c0 !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  padding: 2px 8px !important;
+  margin: 4px 0 !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Total result */
+.dice-roll .dice-total {
+  background: rgba(42, 112, 224, 0.1) !important;
+  border: 1px solid rgba(42, 112, 224, 0.35) !important;
+  border-radius: 2px !important;
+  color: #e8f0ff !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  text-shadow: 0 0 12px rgba(42, 112, 224, 0.6) !important;
+  padding: 4px !important;
+  margin: 6px 0 2px !important;
+  letter-spacing: 1px !important;
+}
+
+/* Critical / fumble overrides */
+.dice-roll .dice-total.critical {
+  color: #60e8a0 !important;
+  border-color: rgba(40, 200, 100, 0.5) !important;
+  text-shadow: 0 0 12px rgba(40, 200, 100, 0.6) !important;
+  background: rgba(30, 140, 70, 0.1) !important;
+}
+
+.dice-roll .dice-total.fumble {
+  color: #e06060 !important;
+  border-color: rgba(200, 50, 50, 0.5) !important;
+  text-shadow: 0 0 12px rgba(200, 50, 50, 0.5) !important;
+  background: rgba(140, 30, 30, 0.1) !important;
+}
+
+/* Expandable tooltip (individual die results) */
+.dice-roll .dice-tooltip {
+  background: rgba(6, 10, 22, 0.95) !important;
+  border: 1px solid rgba(42, 112, 224, 0.15) !important;
+  border-radius: 0 !important;
+  padding: 6px 8px !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  color: #6090c0 !important;
+}
+
+.dice-roll .dice-tooltip .part-header {
+  border-bottom: 1px solid rgba(42, 112, 224, 0.2) !important;
+  color: #5a86b8 !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 4px !important;
+}
+
+.dice-roll .dice-tooltip .dice-rolls .roll {
+  background: rgba(42, 112, 224, 0.08) !important;
+  border: 1px solid rgba(42, 112, 224, 0.2) !important;
+  border-radius: 2px !important;
+  color: #a8c8e8 !important;
+  font-weight: 600 !important;
+}
+
+.dice-roll .dice-tooltip .dice-rolls .roll.max {
+  background: rgba(30, 140, 70, 0.15) !important;
+  border-color: rgba(40, 200, 100, 0.4) !important;
+  color: #60e8a0 !important;
+}
+
+.dice-roll .dice-tooltip .dice-rolls .roll.min {
+  background: rgba(140, 30, 30, 0.15) !important;
+  border-color: rgba(200, 50, 50, 0.4) !important;
+  color: #e06060 !important;
+}
+
+/* ── FF7R-style Chat Cards ─────────────────────────────── */
+.chat-message-card {
+  background: linear-gradient(135deg, #0d1628 0%, #080e1c 60%, #060a16 100%);
+  border: 1px solid #1e4fa0;
+  border-left: 3px solid #2a70e0;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  padding: 12px 14px 12px 14px;
+  box-shadow: 0 0 16px rgba(20, 80, 200, 0.25), inset 0 1px 0 rgba(80, 140, 255, 0.1);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #a8c8e8;
+  position: relative;
+  overflow: hidden;
+  margin: 2px 0;
+}
+
+/* Top edge shimmer */
 .chat-message-card::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 30px;
-  background: linear-gradient(to right, #8b5a2b, #c0a070);
-  opacity: 0.2;
+  height: 1px;
+  background: linear-gradient(to right, #2a70e0, #60a8ff, transparent);
+  opacity: 0.7;
+}
+
+/* Bottom-right corner accent */
+.chat-message-card::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 12px;
+  height: 1px;
+  background: #2a70e0;
+  opacity: 0.5;
 }
 
 .chat-message-header {
-  text-align: center;
-  margin-bottom: 15px;
+  text-align: left;
+  margin-bottom: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(42, 112, 224, 0.25);
   position: relative;
 }
 
@@ -2328,191 +2544,237 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .resource-spend-button {
-  background: linear-gradient(to bottom, #8b5a2b, #5c3a21) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 20px !important;
-  padding: 8px 15px !important;
-  font-family: 'Cinzel Decorative', cursive !important;
-  font-size: 14px !important;
+  background: linear-gradient(135deg, #162e68 0%, #0d1e48 100%) !important;
+  color: #a8c8e8 !important;
+  border: 1px solid #2a70e0 !important;
+  border-radius: 2px !important;
+  padding: 6px 16px !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.6px !important;
+  text-transform: uppercase !important;
   cursor: pointer !important;
   margin: 0 auto !important;
   display: block !important;
   text-align: center !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.2s ease !important;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%) !important;
 }
 
 .resource-spend-button:hover {
-  background: linear-gradient(to bottom, #a66b3b, #6c4a31) !important;
+  background: linear-gradient(135deg, #1e3e88 0%, #122860 100%) !important;
+  color: #e8f0ff !important;
+  border-color: #60a8ff !important;
+  box-shadow: 0 0 12px rgba(42, 112, 224, 0.4) !important;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .bloodloss-spend-button {
-  background: linear-gradient(to bottom, #8b0000, #660000) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 20px !important;
-  padding: 8px 15px !important;
-  font-family: 'Cinzel Decorative', cursive !important;
-  font-size: 14px !important;
+  background: linear-gradient(135deg, #5a0a0a 0%, #380606 100%) !important;
+  color: #e8b0b0 !important;
+  border: 1px solid #a02020 !important;
+  border-radius: 2px !important;
+  padding: 6px 16px !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.6px !important;
+  text-transform: uppercase !important;
   cursor: pointer !important;
   margin: 0 auto !important;
   display: block !important;
   text-align: center !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.2s ease !important;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%) !important;
 }
 
 .bloodloss-spend-button:hover {
-  background: linear-gradient(to bottom, #a00000, #770000) !important;
+  background: linear-gradient(135deg, #7a1010 0%, #500808 100%) !important;
+  color: #ffd0d0 !important;
+  border-color: #cc3030 !important;
+  box-shadow: 0 0 12px rgba(180, 30, 30, 0.4) !important;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Dialog Button Styling - Match Spend Resource buttons */
+/* Dialog Button Styling - FF7R style */
 .dialog .dialog-buttons .dialog-button {
-  background: linear-gradient(to bottom, #8b5a2b, #5c3a21) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 20px !important;
-  padding: 8px 15px !important;
-  font-family: 'Cinzel Decorative', cursive !important;
-  font-size: 14px !important;
+  background: linear-gradient(135deg, #162e68 0%, #0d1e48 100%) !important;
+  color: #a8c8e8 !important;
+  border: 1px solid #2a70e0 !important;
+  border-radius: 2px !important;
+  padding: 6px 14px !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
   cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  margin: 0 5px !important;
+  transition: all 0.2s ease !important;
+  margin: 0 4px !important;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%) !important;
 }
 
 .dialog .dialog-buttons .dialog-button:hover {
-  background: linear-gradient(to bottom, #a66b3b, #6c4a31) !important;
+  background: linear-gradient(135deg, #1e3e88 0%, #122860 100%) !important;
+  color: #e8f0ff !important;
+  border-color: #60a8ff !important;
+  box-shadow: 0 0 10px rgba(42, 112, 224, 0.35) !important;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .dialog .dialog-buttons .dialog-button.default {
-  background: linear-gradient(to bottom, #27ae60, #1e8449) !important;
+  background: linear-gradient(135deg, #0e3a28 0%, #091f16 100%) !important;
+  border-color: #20a060 !important;
+  color: #80e0b0 !important;
 }
 
 .dialog .dialog-buttons .dialog-button.default:hover {
-  background: linear-gradient(to bottom, #2ecc71, #27ae60) !important;
+  background: linear-gradient(135deg, #155035 0%, #0d2820 100%) !important;
+  border-color: #40c080 !important;
+  color: #b0f0d0 !important;
+  box-shadow: 0 0 10px rgba(30, 160, 90, 0.35) !important;
 }
 
 .chat-message-title {
-  font-family: 'Cinzel Decorative', cursive;
-  font-size: 22px;
-  color: #5c2b0a;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-  margin: 5px 0;
-  letter-spacing: 1px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #e8f0ff;
+  text-shadow: 0 0 10px rgba(42, 112, 224, 0.45);
+  margin: 4px 0 6px 0;
+  letter-spacing: 0.5px;
 }
 
 .chat-message-subtitle {
-  font-family: 'MedievalSharp', cursive;
-  font-size: 16px;
-  color: #7a4a2a;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 12px;
+  color: #5a86b8;
   font-style: italic;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  letter-spacing: 0.2px;
 }
 
 .chat-message-tags {
   display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 15px;
+  justify-content: flex-start;
+  gap: 6px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
 .chat-message-tag {
-  background: rgba(139, 90, 43, 0.1);
-  border: 1px solid #8b5a2b;
-  border-radius: 12px;
-  padding: 2px 10px;
-  font-family: 'MedievalSharp', cursive;
-  font-size: 12px;
-  color: #5c2b0a;
+  background: rgba(42, 112, 224, 0.1);
+  border: 1px solid rgba(42, 112, 224, 0.35);
+  border-radius: 2px;
+  padding: 1px 7px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #60a8ff;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
 .chat-message-details {
-  background: rgba(255, 248, 220, 0.7);
-  border: 1px solid #c0a070;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 15px;
-  font-size: 14px;
+  background: rgba(8, 18, 40, 0.7);
+  border: 1px solid rgba(42, 112, 224, 0.18);
+  border-left: 2px solid rgba(42, 112, 224, 0.45);
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
 }
 
 .chat-message-detail-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .chat-message-detail-label {
-  font-weight: bold;
-  color: #5c2b0a;
-  font-family: 'MedievalSharp', cursive;
+  font-weight: 600;
+  color: #5a86b8;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .chat-message-content {
-  line-height: 1.5;
-  font-size: 15px;
+  line-height: 1.6;
+  font-size: 13px;
+  color: #a8c8e8;
 }
 
 .chat-message-icon {
   position: absolute;
   top: 10px;
   left: 10px;
-  width: 50px;
-  height: 50px;
-  border: 2px solid #8b5a2b;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(42, 112, 224, 0.45);
+  border-radius: 3px;
   object-fit: cover;
-  background: rgba(255, 248, 220, 0.8);
+  background: rgba(8, 18, 40, 0.85);
+  box-shadow: 0 0 8px rgba(42, 112, 224, 0.2);
 }
 
 .chat-message-resource-button {
-  background: linear-gradient(to bottom, #8b5a2b, #5c3a21);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 15px;
-  font-family: 'Cinzel Decorative', cursive;
-  font-size: 14px;
+  background: linear-gradient(135deg, #162e68 0%, #0d1e48 100%);
+  color: #a8c8e8;
+  border: 1px solid #2a70e0;
+  border-radius: 2px;
+  padding: 6px 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
   cursor: pointer;
-  margin: 10px auto;
+  margin: 8px auto;
   display: block;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
 }
 
 .chat-message-resource-button:hover {
-  background: linear-gradient(to bottom, #a07040, #7a4a2a);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #1e3e88 0%, #122860 100%);
+  color: #e8f0ff;
+  border-color: #60a8ff;
+  box-shadow: 0 0 12px rgba(42, 112, 224, 0.4);
+  transform: translateY(-1px);
 }
 
 .damage-quality {
-  font-family: 'Luxurious Roman', cursive;
-  font-size: 18px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
   text-align: center;
-  margin: 10px 0;
-  padding: 8px;
-  border-radius: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 8px 0;
+  padding: 5px 10px;
+  border-radius: 2px;
 }
 
 .damage-quality.poor {
-  background-color: rgba(200, 50, 50, 0.2);
-  color: #8b2a2a;
+  background-color: rgba(160, 30, 30, 0.15);
+  border: 1px solid rgba(200, 50, 50, 0.35);
+  color: #e06060;
 }
 
 .damage-quality.good {
-  background-color: rgba(50, 150, 50, 0.2);
-  color: #2a8b2a;
+  background-color: rgba(30, 140, 70, 0.15);
+  border: 1px solid rgba(40, 180, 90, 0.35);
+  color: #50d080;
 }
 
 .damage-quality.excellent {
-  background-color: rgba(50, 50, 200, 0.2);
-  color: #2a2a8b;
+  background-color: rgba(42, 112, 224, 0.15);
+  border: 1px solid rgba(42, 112, 224, 0.35);
+  color: #60a8ff;
+  text-shadow: 0 0 8px rgba(42, 112, 224, 0.5);
 }
 
 .hex-quality-message {
@@ -2770,14 +3032,14 @@ progress.resource2-bar::-moz-progress-bar {
 
 /* Jump Message Styling */
 .chat-message-card-jump {
-    background: url('systems/stryder/assets/parchment.jpg') repeat;
-    background-color: rgba(250, 240, 220, 0.9);
-    border: 2px solid #8b5a2b;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    font-family: 'EB Garamond', serif;
-    color: #3a3123;
+    background: linear-gradient(135deg, #0d1628 0%, #080e1c 60%, #060a16 100%);
+    border: 1px solid #1e4fa0;
+    border-left: 3px solid #2a70e0;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+    padding: 12px 14px;
+    box-shadow: 0 0 16px rgba(20, 80, 200, 0.25), inset 0 1px 0 rgba(80, 140, 255, 0.1);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #a8c8e8;
     position: relative;
     overflow: hidden;
 }
@@ -2788,99 +3050,115 @@ progress.resource2-bar::-moz-progress-bar {
     top: 0;
     left: 0;
     right: 0;
-    height: 30px;
-    background: linear-gradient(to right, #8b5a2b, #c0a070);
-    opacity: 0.2;
+    height: 1px;
+    background: linear-gradient(to right, #2a70e0, #60a8ff, transparent);
+    opacity: 0.7;
 }
 
 .chat-message-header-jump {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(42, 112, 224, 0.25);
 }
 
 .chat-message-icon-jump {
     width: 40px;
     height: 40px;
-    border: 2px solid #8b5a2b;
-    border-radius: 50%;
+    border: 1px solid rgba(42, 112, 224, 0.45);
+    border-radius: 3px;
     object-fit: cover;
-    background: rgba(255, 248, 220, 0.8);
+    background: rgba(8, 18, 40, 0.85);
+    box-shadow: 0 0 8px rgba(42, 112, 224, 0.2);
 }
 
 .chat-message-title-jump {
-    font-family: 'Cinzel Decorative', cursive;
-    font-size: 22px;
-    color: #5c2b0a;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #e8f0ff;
+    text-shadow: 0 0 10px rgba(42, 112, 224, 0.45);
     margin: 0;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .chat-message-details-jump {
-    background: rgba(255, 248, 220, 0.7);
-    border: 1px solid #c0a070;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 15px;
+    background: rgba(8, 18, 40, 0.7);
+    border: 1px solid rgba(42, 112, 224, 0.18);
+    border-left: 2px solid rgba(42, 112, 224, 0.45);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
 }
 
 .chat-distance-box-jump {
     display: inline-block;
-    padding: 5px 10px;
-    background: rgba(139, 90, 43, 0.1);
-    border: 1px solid #8b5a2b;
-    border-radius: 4px;
-    font-family: 'MedievalSharp', cursive;
-    font-size: 18px;
-    color: #5c2b0a;
+    padding: 3px 10px;
+    background: rgba(42, 112, 224, 0.1);
+    border: 1px solid rgba(42, 112, 224, 0.35);
+    border-radius: 2px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #60a8ff;
+    text-shadow: 0 0 8px rgba(42, 112, 224, 0.4);
 }
 
 .chat-message-footer-jump {
-    border-top: 1px solid #c0a070;
-    padding-top: 10px;
+    border-top: 1px solid rgba(42, 112, 224, 0.25);
+    padding-top: 8px;
 }
 
 .stamina-cost-jump {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: 'MedievalSharp', cursive;
-    font-size: 14px;
-    color: #5c2b0a;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 12px;
+    color: #5a86b8;
 }
 
 .stamina-cost-jump img {
-    filter: sepia(1) brightness(0.8);
+    filter: none;
 }
 
 .unbound-leap-button {
-  background: linear-gradient(to bottom, #8b5a2b, #5c3a21);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 15px;
-  font-family: 'Cinzel Decorative', cursive;
-  font-size: 14px;
+  background: linear-gradient(135deg, #162e68 0%, #0d1e48 100%);
+  color: #a8c8e8;
+  border: 1px solid #2a70e0;
+  border-radius: 2px;
+  padding: 6px 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
   cursor: pointer;
-  margin: 10px auto;
+  margin: 8px auto;
   display: block;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
 }
 
 .unbound-leap-button:hover {
-  background: linear-gradient(to bottom, #a07040, #7a4a2a);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #1e3e88 0%, #122860 100%);
+  color: #e8f0ff;
+  border-color: #60a8ff;
+  box-shadow: 0 0 12px rgba(42, 112, 224, 0.4);
+  transform: translateY(-1px);
 }
 
 .unbound-leap-button:disabled {
-  background: #c0a070;
+  background: rgba(42, 112, 224, 0.05);
+  border-color: rgba(42, 112, 224, 0.2);
+  color: rgba(168, 200, 232, 0.3);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  clip-path: none;
 }
 
 /* Active combatant highlight effect */
@@ -5123,15 +5401,17 @@ progress.resource2-bar::-moz-progress-bar {
 
 /* Status Conditions Chat Message Styling */
 .status-conditions-message {
-  background: url('systems/stryder/assets/parchment.jpg') repeat;
-  background-color: rgba(250, 240, 220, 0.9);
-  border: 2px solid #8b5a2b;
-  border-radius: 8px;
-  padding: 20px;
+  background: linear-gradient(135deg, #0d1628 0%, #080e1c 60%, #060a16 100%);
+  border: 1px solid #1e4fa0;
+  border-left: 3px solid #2a70e0;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  padding: 12px 14px;
   margin: 10px 0;
   position: relative;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 16px rgba(20, 80, 200, 0.25), inset 0 1px 0 rgba(80, 140, 255, 0.1);
   overflow: hidden;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #a8c8e8;
 }
 
 .status-conditions-message::before {
@@ -5140,50 +5420,54 @@ progress.resource2-bar::-moz-progress-bar {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-  opacity: 0.2;
+  height: 1px;
+  background: linear-gradient(to right, #2a70e0, #60a8ff, transparent);
+  opacity: 0.7;
 }
 
 .status-conditions-message .chat-message-header {
-  text-align: center;
-  margin-bottom: 15px;
+  text-align: left;
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(42, 112, 224, 0.25);
   position: relative;
 }
 
 .status-conditions-message .chat-message-title {
-  font-family: 'Cinzel Decorative', cursive;
-  font-size: 22px;
-  color: #8b2b2b;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #e8f0ff;
+  text-shadow: 0 0 10px rgba(42, 112, 224, 0.45);
   margin: 0;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .status-conditions-message .chat-message-title i {
-  color: #d4af37;
-  font-size: 24px;
-  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+  color: #60a8ff;
+  font-size: 16px;
+  text-shadow: 0 0 8px rgba(42, 112, 224, 0.5);
 }
 
 .status-conditions-message .chat-message-content {
-  line-height: 1.5;
-  font-size: 15px;
+  line-height: 1.6;
+  font-size: 13px;
+  color: #a8c8e8;
 }
 
 .status-conditions-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin: 10px 0;
+  gap: 6px;
+  margin: 8px 0;
   padding: 8px;
-  background: rgba(255, 248, 220, 0.7);
-  border: 1px solid #c0a070;
-  border-radius: 6px;
+  background: rgba(8, 18, 40, 0.6);
+  border: 1px solid rgba(42, 112, 224, 0.18);
+  border-left: 2px solid rgba(42, 112, 224, 0.4);
 }
 
 .status-condition-item {
@@ -5191,26 +5475,26 @@ progress.resource2-bar::-moz-progress-bar {
   flex-direction: column;
   align-items: center;
   padding: 4px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid #d4af37;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  background: rgba(42, 112, 224, 0.06);
+  border: 1px solid rgba(42, 112, 224, 0.2);
+  border-radius: 2px;
+  transition: all 0.2s ease;
   cursor: help;
 }
 
 .status-condition-item:hover {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: #b8941f;
+  background: rgba(42, 112, 224, 0.15);
+  border-color: rgba(42, 112, 224, 0.5);
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px rgba(42, 112, 224, 0.2);
 }
 
 .status-condition-icon {
   width: 24px;
   height: 24px;
   margin-bottom: 3px;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 3px rgba(42, 112, 224, 0.4));
+  transition: transform 0.2s ease;
 }
 
 .status-condition-item:hover .status-condition-icon {
@@ -5218,12 +5502,13 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .status-condition-label {
-  font-family: 'MedievalSharp', cursive;
-  font-size: 10px;
-  color: #5c2b0a;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: #6090c0;
   text-align: center;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
   line-height: 1.1;
 }
 
@@ -6688,10 +6973,21 @@ progress.resource2-bar::-moz-progress-bar {
    PLAYER CARD — bottom right of main menu art area
    ============================================================ */
 
-.jrpg-player-card {
+/* Wrapper holds card + recovery buttons, takes the absolute slot */
+.jrpg-player-card-wrap {
   position: absolute;
   bottom: 24px;
   right: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.jrpg-player-card {
+  position: relative;
+  bottom: auto;
+  right: auto;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -6835,8 +7131,8 @@ progress.resource2-bar::-moz-progress-bar {
   min-width: 340px !important;
   padding: 14px 20px 14px 14px !important;
   gap: 16px !important;
-  bottom: 28px !important;
-  right: 28px !important;
+  bottom: auto !important;
+  right: auto !important;
   border: 1px solid rgba(120, 180, 255, 0.4) !important;
   background: rgba(6, 12, 30, 0.88) !important;
 }
@@ -11355,379 +11651,4 @@ progress.resource2-bar::-moz-progress-bar {
    MONSTER SHEET — Standalone layout
    ========================================================================== */
 
-/* ── Window & form setup ─────────────────────────────────────────────────── */
-
-/* The actor sheet window: parchment background, no overflow on the form */
-.stryder.sheet.actor.monster-sheet {
-  background: #f0e8cc !important;
-  overflow: hidden !important;
-  padding: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-/* Main two-column wrapper fills the form */
-.monster-sheet .monster-sheet-wrapper {
-  display: flex !important;
-  flex-direction: row !important;
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  padding: 14px 14px 10px 14px;
-  box-sizing: border-box;
-  gap: 14px;
-  height: 100%;
-}
-
-/* ── LEFT PANEL ─────────────────────────────────────────────────────────── */
-.monster-sheet .monster-left-panel {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 0 0 42%;
-  gap: 8px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-/* Name + Threat Level header row */
-.monster-sheet .monster-header-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  gap: 12px;
-}
-
-.monster-sheet .monster-name-block {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.monster-sheet .monster-threat-block {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.monster-sheet .monster-field-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #2a1a00;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.monster-sheet .monster-name-input {
-  width: 100%;
-  font-size: 17px;
-  font-weight: 500;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid #333;
-  border-radius: 0;
-  padding: 2px 0;
-  color: #111;
-  box-shadow: none;
-}
-
-.monster-sheet .monster-threat-input {
-  width: 54px;
-  font-size: 20px;
-  font-weight: 700;
-  text-align: center;
-  background: transparent;
-  border: 2.5px solid #222;
-  padding: 4px;
-  color: #111;
-  box-shadow: none;
-}
-
-/* ── STAT BOXES ─────────────────────────────────────────────────────────── */
-.monster-sheet .monster-stat-row {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 6px;
-  align-items: flex-start;
-}
-
-.monster-sheet .monster-stat-row.four-col .monster-stat-box { flex: 1; }
-.monster-sheet .monster-stat-row.three-col .monster-stat-box { flex: 1; }
-
-.monster-sheet .monster-stat-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-/* The big bordered box */
-.monster-sheet .monster-stat-square {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border: 3px solid #111;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  padding: 4px;
-  box-sizing: border-box;
-}
-
-/* Health / Stamina: value / max side by side */
-.monster-sheet .monster-stat-dual {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-  width: 100%;
-}
-
-.monster-sheet .monster-stat-dual input {
-  width: 38%;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-  background: transparent;
-  border: none;
-  color: #111;
-  padding: 0;
-  box-shadow: none;
-  height: auto;
-  line-height: 1;
-}
-
-.monster-sheet .monster-stat-sep {
-  font-size: 13px;
-  font-weight: 700;
-  color: #444;
-  line-height: 1;
-}
-
-/* Single-value input inside a stat square */
-.monster-sheet .monster-stat-square > input {
-  width: 80%;
-  font-size: 22px;
-  font-weight: 700;
-  text-align: center;
-  background: transparent;
-  border: none;
-  color: #111;
-  padding: 0;
-  box-shadow: none;
-  height: auto;
-}
-
-.monster-sheet .monster-stat-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #222;
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* ── CORRUPTION TRAITS ──────────────────────────────────────────────────── */
-.monster-sheet .monster-corruption-row {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 2px;
-}
-
-.monster-sheet .monster-corruption-select,
-.monster-sheet .monster-size-select {
-  width: 100%;
-  font-size: 13px;
-  background: rgba(255,255,255,0.3);
-  border: 1px solid #666;
-  padding: 3px 6px;
-  color: #111;
-  cursor: pointer;
-}
-
-/* ── LOWER ROW (Senses / Talents / Body) ────────────────────────────────── */
-.monster-sheet .monster-lower-row {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 10px;
-  margin-top: 4px;
-  flex: 1;
-}
-
-.monster-sheet .monster-sub-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.monster-sheet .monster-sub-header {
-  font-size: 13px;
-  font-weight: 700;
-  color: #111;
-  margin-bottom: 5px;
-  display: block;
-  border-bottom: 1px solid #888;
-  padding-bottom: 2px;
-}
-
-.monster-sheet .monster-sub-field {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  gap: 3px;
-  margin-bottom: 1px;
-}
-
-.monster-sheet .monster-sub-label {
-  font-size: 11px;
-  color: #333;
-  white-space: nowrap;
-  min-width: 58px;
-}
-
-.monster-sheet .monster-sub-field input,
-.monster-sheet .monster-sub-field select {
-  flex: 1;
-  font-size: 11px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #aaa;
-  color: #111;
-  padding: 0 2px;
-  min-width: 0;
-  height: auto;
-  box-shadow: none;
-}
-
-/* ── RIGHT PANEL ────────────────────────────────────────────────────────── */
-.monster-sheet .monster-right-panel {
-  flex: 1;
-  display: flex !important;
-  flex-direction: column !important;
-  border: 2px solid #333;
-  overflow: hidden;
-  min-width: 0;
-}
-
-/* Top row: Offensive + Defensive side by side */
-.monster-sheet .monster-abilities-top {
-  display: flex !important;
-  flex-direction: row !important;
-  flex: 1 1 60%;
-  min-height: 0;
-  border-bottom: 2px solid #333;
-}
-
-.monster-sheet .monster-abilities-top .monster-ability-panel:first-child {
-  border-right: 2px solid #333;
-}
-
-/* Individual ability panel */
-.monster-sheet .monster-ability-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* Utility panel — bottom third */
-.monster-sheet .monster-utility-panel {
-  flex: 0 0 38%;
-  min-height: 0;
-}
-
-/* Panel header */
-.monster-sheet .monster-ability-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  border-bottom: 2px solid #333;
-  font-size: 12px;
-  font-weight: 700;
-  color: #111;
-  background: rgba(0,0,0,0.05);
-  flex-shrink: 0;
-}
-
-.monster-sheet .monster-add-btn {
-  font-size: 10px;
-  color: #444;
-  cursor: pointer;
-  padding: 1px 5px;
-  border: 1px solid #888;
-  border-radius: 3px;
-  background: rgba(255,255,255,0.45);
-  line-height: 1.4;
-  text-decoration: none;
-}
-
-.monster-sheet .monster-add-btn:hover {
-  background: rgba(255,255,255,0.75);
-  color: #000;
-}
-
-/* Ability item lists */
-.monster-sheet .monster-ability-list {
-  list-style: none;
-  margin: 0;
-  padding: 2px 0;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.monster-sheet .monster-ability-item {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 7px;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-}
-
-.monster-sheet .monster-ability-item:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-.monster-sheet .monster-ability-item:hover .monster-item-controls {
-  display: flex !important;
-}
-
-.monster-sheet .monster-ability-img img {
-  border: none;
-  display: block;
-}
-
-.monster-sheet .monster-ability-name {
-  flex: 1;
-  font-size: 12px;
-  color: #111;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.monster-sheet .monster-item-controls {
-  display: none;
-  flex-direction: row;
-  gap: 4px;
-}
-
-.monster-sheet .monster-item-controls a {
-  font-size: 10px;
-  color: #555;
-  cursor: pointer;
-  padding: 1px 3px;
-  text-decoration: none;
-}
-
-.monster-sheet .monster-item-controls a:hover {
-  color: #000;
-}
+/* ── Window & form setup ───────�

@@ -2,6 +2,8 @@
 // STRYDER — Resilience Aspect Ability Handlers (Level 3)
 // ============================================================
 
+import { resolveStaminaCost } from '../helpers/stamina-conversion.mjs';
+
 const SYSTEM_ID = 'stryder';
 
 function btnStyle(color = '#1a1a2e') {
@@ -23,12 +25,15 @@ export async function handleResilienceAbility(item, speaker, rollMode) {
   const actor = item.actor;
   if (!actor) return ui.notifications.warn("No actor found for this item.");
 
-  // Deduct stamina cost
+  // Deduct stamina cost (with optional mana conversion)
   const cost = item.system.stamina_cost ?? 0;
-  if (cost > 0) {
-    const cur = actor.system.resources?.stamina?.value ?? 0;
-    if (cur < cost) return ui.notifications.warn(`Not enough Stamina! Need ${cost}, have ${cur}.`);
-    await actor.update({ 'system.resources.stamina.value': cur - cost });
+  const payment = await resolveStaminaCost(actor, cost);
+  if (payment === null) return; // cancelled
+  if (payment.staminaToSpend > 0 || payment.manaToSpend > 0) {
+    const updates = {};
+    if (payment.staminaToSpend > 0) updates['system.stamina.value'] = (actor.system.stamina?.value ?? 0) - payment.staminaToSpend;
+    if (payment.manaToSpend > 0) updates['system.mana.value'] = (actor.system.mana?.value ?? 0) - payment.manaToSpend;
+    await actor.update(updates);
   }
 
   // Increment limit
@@ -98,6 +103,7 @@ async function handleArmoredSoul(item, actor, speaker) {
 // ── Deep Guard ────────────────────────────────────────────
 async function handleDeepGuard(item, actor, speaker) {
   const soul = actor.system.abilities?.Soul?.value ?? 0;
+  const casterTokenId = actor.token?.id ?? canvas.tokens.placeables.find(t => t.actor === actor)?.id ?? '';
 
   // Count known Resilience abilities (excluding core: Armored Soul, Deep Guard, Attached Bonus)
   const CORE_NAMES = ['Armored Soul', 'Deep Guard', 'Attached Bonus'];
@@ -134,7 +140,7 @@ async function handleDeepGuard(item, actor, speaker) {
             await ChatMessage.create({ speaker, content: card('Deep Guard', `Trigger · 1 Stamina (spent)`,
               `<p>${actor.name} reduced <strong>${incoming}</strong> damage by <strong>${totalReduction}</strong>${fullBraceNote}.</p>
               <p>Final damage taken: <strong>${finalDmg}</strong></p>
-              <button class="resilience-revenge-activate" data-actor-id="${actor.id}" data-reduction="${totalReduction}" ${btnStyle('#2e1a0a')}>⚔ Activate Revenge Shield (${totalReduction} Revenge)</button>`) });
+              <button class="resilience-revenge-activate" data-token-id="${casterTokenId}" data-reduction="${totalReduction}" ${btnStyle('#2e1a0a')}>⚔ Activate Revenge Shield (${totalReduction} Revenge)</button>`) });
             resolve();
           }
         }
@@ -157,9 +163,10 @@ async function handleAncientArmor(item, actor, speaker) {
   const soul = actor.system.abilities?.Soul?.value ?? 0;
   const atlasBonus = (actor.getFlag(SYSTEM_ID, 'atlasResilienceActive') ?? false) ? 2 : 0;
   const totalBonus = soul + atlasBonus;
+  const casterTokenId = actor.token?.id ?? canvas.tokens.placeables.find(t => t.actor === actor)?.id ?? '';
   await ChatMessage.create({ speaker, content: card('Ancient Armor', 'Trigger · 1 Stamina (spent)',
     `<p>Your Resistance Roll gains <strong>+${totalBonus}</strong>${atlasBonus > 0 ? ` (Soul ${soul} + Atlas +${atlasBonus})` : ` (Soul ${soul})`}.</p>
-    <button class="resilience-ancient-armor-roll" data-actor-id="${actor.id}" data-actor-name="${actor.name}" data-bonus="${totalBonus}" ${btnStyle()}>🎲 Roll Resistance (2d6 + ${totalBonus})</button>`) });
+    <button class="resilience-ancient-armor-roll" data-token-id="${casterTokenId}" data-actor-name="${actor.name}" data-bonus="${totalBonus}" ${btnStyle()}>🎲 Roll Resistance (2d6 + ${totalBonus})</button>`) });
 }
 
 // ── Irresistible Rage ─────────────────────────────────────
@@ -173,12 +180,13 @@ async function handleIrresistibleRage(item, actor, speaker) {
     `<p>All enemy creatures within <strong>Range 3</strong> must make a Magykal Resistance Roll.</p>
     <p>Targeted: <strong>${targetNames}</strong></p>
     <p>On failure → Taunted until end of next Challenger Phase.</p>
-    ${targets.map(t => `<button class="resilience-irresistible-rage-taunt" data-actor-id="${t.actor?.id}" data-actor-name="${t.actor?.name}" ${btnStyle('#2e1a0a')}>💢 Apply Taunted → ${t.actor?.name ?? '?'}</button>`).join('')}`) });
+    ${targets.map(t => `<button class="resilience-irresistible-rage-taunt" data-token-id="${t.id}" data-actor-name="${t.actor?.name}" ${btnStyle('#2e1a0a')}>💢 Apply Taunted → ${t.actor?.name ?? '?'}</button>`).join('')}`) });
 }
 
 // ── Full Brace ────────────────────────────────────────────
 async function handleFullBrace(item, actor, speaker) {
   const soul = actor.system.abilities?.Soul?.value ?? 0;
+  const casterTokenId = actor.token?.id ?? canvas.tokens.placeables.find(t => t.actor === actor)?.id ?? '';
   await actor.setFlag(SYSTEM_ID, 'fullBraceMitigationBonus', soul);
   await actor.setFlag(SYSTEM_ID, 'fullBraceMovementPenalty', true);
   await ChatMessage.create({ speaker, content: card('Full Brace', 'Trigger · 2 Stamina (spent)',
@@ -188,7 +196,7 @@ async function handleFullBrace(item, actor, speaker) {
       <li>Deep Guard gains <strong>+${soul}</strong> extra mitigation (Soul bonus — included automatically).</li>
       <li>${actor.name}'s Movement is reduced by <strong>3</strong> next Player Phase.</li>
     </ul>
-    <button class="resilience-full-brace-clear" data-actor-id="${actor.id}" ${btnStyle('#1a2e1a')}>✅ Clear Movement Penalty (start of next Player Phase)</button>`) });
+    <button class="resilience-full-brace-clear" data-token-id="${casterTokenId}" ${btnStyle('#1a2e1a')}>✅ Clear Movement Penalty (start of next Player Phase)</button>`) });
 }
 
 // ── Revenge Shield ────────────────────────────────────────
@@ -220,8 +228,8 @@ async function handleSacrifice(item, actor, speaker) {
           label: '❤ Sacrifice',
           callback: async (html) => {
             const dmg = parseInt(html.find('#sac-damage').val()) || 0;
-            const curHP = actor.system.resources?.health?.value ?? 0;
-            await actor.update({ 'system.resources.health.value': Math.max(0, curHP - dmg) });
+            const curHP = actor.system.health?.value ?? 0;
+            await actor.update({ 'system.health.value': Math.max(0, curHP - dmg) });
             await ChatMessage.create({ speaker, content: card('Sacrifice', 'Trigger · 0 Stamina',
               `<p>${actor.name} takes <strong>${dmg}</strong> damage to protect <strong>${allyName}</strong>.</p>`) });
             resolve();
@@ -235,15 +243,17 @@ async function handleSacrifice(item, actor, speaker) {
 
 // ── Unbreakable ───────────────────────────────────────────
 async function handleUnbreakable(item, actor, speaker) {
+  const casterTokenId = actor.token?.id ?? canvas.tokens.placeables.find(t => t.actor === actor)?.id ?? '';
   await actor.setFlag(SYSTEM_ID, 'unbreakableActive', true);
   await ChatMessage.create({ speaker, content: card('Unbreakable', 'Swift · 5 Stamina (spent)',
     `<p>${actor.name} is <strong>Unbreakable</strong> for the rest of this Encounter.</p>
     <p>Excellent Attacks against ${actor.name} deal damage as if they were Good.</p>
-    <button class="resilience-unbreakable-clear" data-actor-id="${actor.id}" ${btnStyle('#1a1a2e')}>✅ Clear Unbreakable (end of encounter)</button>`) });
+    <button class="resilience-unbreakable-clear" data-token-id="${casterTokenId}" ${btnStyle('#1a1a2e')}>✅ Clear Unbreakable (end of encounter)</button>`) });
 }
 
 // ── Atlas Resilience ──────────────────────────────────────
 async function handleAtlasResilience(item, actor, speaker) {
+  const casterTokenId = actor.token?.id ?? canvas.tokens.placeables.find(t => t.actor === actor)?.id ?? '';
   await actor.setFlag(SYSTEM_ID, 'atlasResilienceActive', true);
   await ChatMessage.create({ speaker, content: card('Atlas Resilience', 'Focused · 5 Stamina (spent)',
     `<p>${actor.name} channels Atlas Resilience!</p>
@@ -252,7 +262,7 @@ async function handleAtlasResilience(item, actor, speaker) {
       <li><strong>Skybearing Resilience:</strong> Armored Soul DR increases by 2 and now applies to <em>both</em> Physical and Magykal damage simultaneously.</li>
     </ul>
     <p style="font-size:11px;opacity:0.7;">Re-activate Armored Soul to apply the updated DR values.</p>
-    <button class="resilience-atlas-clear" data-actor-id="${actor.id}" ${btnStyle('#1a1a2e')}>✅ Clear Atlas Resilience (end of engagement)</button>`) });
+    <button class="resilience-atlas-clear" data-token-id="${casterTokenId}" ${btnStyle('#1a1a2e')}>✅ Clear Atlas Resilience (end of engagement)</button>`) });
 }
 
 // ── Exported hooks for item.mjs ───────────────────────────

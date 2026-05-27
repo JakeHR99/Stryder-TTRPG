@@ -1,3 +1,8 @@
-2026/05/24-18:08:33.200 6798 Recovering log #293
-2026/05/24-18:08:33.204 6798 Delete type=0 #293
-2026/05/24-18:08:33.204 6798 Delete type=3 #292
+2026/05/26-17:30:59.021 1988 Recovering log #307
+2026/05/26-17:30:59.022 1988 Delete type=0 #307
+2026/05/26-17:30:59.022 1988 Delete type=3 #306
+2026/05/26-21:38:10.970 1e98 Level-0 table #311: started
+2026/05/26-21:38:10.971 1e98 Level-0 table #311: 0 bytes OK
+2026/05/26-21:38:10.974 1e98 Delete type=0 #309
+2026/05/26-21:38:10.983 1e98 Manual compaction at level-0 from '!items!ColossusF0lk0001' @ 72057594037927935 : 1 .. '!items.effects!SunbornF0lk00001.SunbrnEfct000001' @ 0 : 0; will stop at (end)
+2026/05/26-21:38:10.983 1e98 Manual compaction at level-1 from '!items!ColossusF0lk0001' @ 72057594037927935 : 1 .. '!items.effects!SunbornF0lk00001.SunbrnEfct000001' @ 0 : 0; will stop at (end)

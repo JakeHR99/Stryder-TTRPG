@@ -1,3 +1,21 @@
-2026/05/24-18:08:33.209 5c48 Recovering log #266
-2026/05/24-18:08:33.213 5c48 Delete type=0 #266
-2026/05/24-18:08:33.214 5c48 Delete type=3 #265
+2026/05/26-17:30:59.031 4994 Recovering log #280
+2026/05/26-17:30:59.033 4994 Delete type=0 #280
+2026/05/26-17:30:59.033 4994 Delete type=3 #279
+2026/05/26-21:38:10.988 1e98 Level-0 table #284: started
+2026/05/26-21:38:10.988 1e98 Level-0 table #284: 0 bytes OK
+2026/05/26-21:38:10.990 1e98 Delete type=0 #282
+2026/05/26-21:38:10.997 1e98 Manual compaction at level-0 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at '!items!FeyflkAbil02IlCr' @ 541 : 1
+2026/05/26-21:38:10.997 1e98 Compacting 1@0 + 0@1 files
+2026/05/26-21:38:11.016 1e98 Generated table #285@0: 2 keys, 1871 bytes
+2026/05/26-21:38:11.016 1e98 Compacted 1@0 + 0@1 files => 1871 bytes
+2026/05/26-21:38:11.017 1e98 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/05/26-21:38:11.018 1e98 Delete type=2 #215
+2026/05/26-21:38:11.021 1e98 Manual compaction at level-0 from '!items!FeyflkAbil02IlCr' @ 541 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at (end)
+2026/05/26-21:38:11.025 1e98 Manual compaction at level-1 from '!folders!ColssFolder00001' @ 72057594037927935 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at '!items!FeyflkAbil02IlCr' @ 541 : 1
+2026/05/26-21:38:11.025 1e98 Compacting 1@1 + 1@2 files
+2026/05/26-21:38:11.031 1e98 Generated table #286@1: 77 keys, 25858 bytes
+2026/05/26-21:38:11.031 1e98 Compacted 1@1 + 1@2 files => 25858 bytes
+2026/05/26-21:38:11.032 1e98 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/05/26-21:38:11.032 1e98 Delete type=2 #211
+2026/05/26-21:38:11.032 1e98 Delete type=2 #285
+2026/05/26-21:38:11.045 1e98 Manual compaction at level-1 from '!items!FeyflkAbil02IlCr' @ 541 : 1 .. '!items!WldknAbil04AnmlA' @ 0 : 0; will stop at (end)

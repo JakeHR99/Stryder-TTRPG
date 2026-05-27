@@ -2,6 +2,8 @@
 // STRYDER — Spirit Aspect Ability Handlers (Level 3)
 // ============================================================
 
+import { resolveStaminaCost } from '../helpers/stamina-conversion.mjs';
+
 const SYSTEM_ID = 'stryder';
 
 function btnStyle(color = '#1a2e1a') {
@@ -23,12 +25,15 @@ export async function handleSpiritAbility(item, speaker, rollMode) {
   const actor = item.actor;
   if (!actor) return ui.notifications.warn("No actor found for this item.");
 
-  // Deduct stamina cost
+  // Deduct stamina cost (with optional mana conversion)
   const cost = item.system.stamina_cost ?? 0;
-  if (cost > 0) {
-    const cur = actor.system.resources?.stamina?.value ?? 0;
-    if (cur < cost) return ui.notifications.warn(`Not enough Stamina! Need ${cost}, have ${cur}.`);
-    await actor.update({ 'system.resources.stamina.value': cur - cost });
+  const payment = await resolveStaminaCost(actor, cost);
+  if (payment === null) return; // cancelled
+  if (payment.staminaToSpend > 0 || payment.manaToSpend > 0) {
+    const updates = {};
+    if (payment.staminaToSpend > 0) updates['system.stamina.value'] = (actor.system.stamina?.value ?? 0) - payment.staminaToSpend;
+    if (payment.manaToSpend > 0) updates['system.mana.value'] = (actor.system.mana?.value ?? 0) - payment.manaToSpend;
+    await actor.update(updates);
   }
 
   // Increment limit
@@ -91,16 +96,20 @@ async function handleHallowedArsenal(item, actor, speaker) {
 // ── Revitalize ────────────────────────────────────────────
 async function handleRevitalize(item, actor, speaker) {
   const targets = [...game.user.targets];
-  const targetActor = targets[0]?.actor;
-  const targetId = targetActor?.id ?? '';
+  const targetToken = targets[0] ?? null;
+  const targetActor = targetToken?.actor ?? null;
+  const tokenId = targetToken?.id ?? '';
   const targetName = targetActor?.name ?? '⚠ No target selected — target a token first';
+
+  const buttons = tokenId
+    ? `<button class="spirit-remove-condition" data-token-id="${tokenId}" data-condition="poison" ${btnStyle('#1a1a2e')}>🧪 Remove Poison</button>
+      <button class="spirit-remove-condition" data-token-id="${tokenId}" data-condition="burning" ${btnStyle('#2e1a0a')}>🔥 Remove Burning</button>
+      <button class="spirit-remove-condition" data-token-id="${tokenId}" data-condition="bleeding" ${btnStyle('#2e0a0a')}>🩸 Remove Bleeding Wounds</button>`
+    : `<p style="opacity:0.7;">⚠ No token targeted — target one first, then re-use the ability.</p>`;
 
   await ChatMessage.create({ speaker, content:
     card('Revitalize', 'Swift Action · 1 Stamina (spent)',
-      `<p>Remove a condition from <strong>${targetName}</strong>:</p>
-      <button class="spirit-remove-condition" data-actor-id="${targetId}" data-condition="poison" ${btnStyle('#1a1a2e')}>🧪 Remove Poison</button>
-      <button class="spirit-remove-condition" data-actor-id="${targetId}" data-condition="burning" ${btnStyle('#2e1a0a')}>🔥 Remove Burning</button>
-      <button class="spirit-remove-condition" data-actor-id="${targetId}" data-condition="bleeding" ${btnStyle('#2e0a0a')}>🩸 Remove Bleeding Wounds</button>`)
+      `<p>Remove a condition from <strong>${targetName}</strong>:</p>${buttons}`)
   });
 }
 
@@ -108,7 +117,9 @@ async function handleRevitalize(item, actor, speaker) {
 async function handleEnhanceProwess(item, actor, speaker) {
   const soul = actor.system.abilities?.Soul?.value ?? 0;
   const targets = [...game.user.targets];
-  const targetActor = targets[0]?.actor;
+  const targetToken = targets[0] ?? null;
+  const targetActor = targetToken?.actor ?? null;
+  const tokenId = targetToken?.id ?? '';
   if (!targetActor) return ui.notifications.warn("Target a token first!");
 
   const talents = ['Strength', 'Nimbleness', 'Finesse', 'Endurance'];
@@ -136,7 +147,7 @@ async function handleEnhanceProwess(item, actor, speaker) {
             await targetActor.createEmbeddedDocuments('ActiveEffect', effectData);
             await ChatMessage.create({ speaker, content: card('Enhance Prowess', 'Swift Action · 3 Stamina (spent)',
               `<p><strong>${targetActor.name}</strong>'s <strong>${chosen}</strong> raised by ${soul} (to ${boosted}) until end of Engagement.</p>
-              <button class="spirit-remove-enhance" data-actor-id="${targetActor.id}" data-talent="${chosen}" ${btnStyle('#1a1a2e')}>↩ Remove Enhance Prowess (${chosen})</button>`) });
+              <button class="spirit-remove-enhance" data-token-id="${tokenId}" data-talent="${chosen}" ${btnStyle('#1a1a2e')}>↩ Remove Enhance Prowess (${chosen})</button>`) });
             resolve();
           }
         }
@@ -159,9 +170,9 @@ async function handleRapidRepair(item, actor, speaker) {
           callback: async (html) => {
             const dmg = parseInt(html.find('#rr-damage').val()) || 0;
             const healAmt = Math.floor(dmg / 2);
-            const curHP = actor.system.resources?.health?.value ?? 0;
-            const maxHP = actor.system.resources?.health?.max ?? curHP;
-            await actor.update({ 'system.resources.health.value': Math.min(maxHP, curHP + healAmt) });
+            const curHP = actor.system.health?.value ?? 0;
+            const maxHP = actor.system.health?.max ?? curHP;
+            await actor.update({ 'system.health.value': Math.min(maxHP, curHP + healAmt) });
             await ChatMessage.create({ speaker, content: card('Rapid Repair', 'Trigger · 1 Stamina (spent)',
               `<p>${actor.name} took <strong>${dmg}</strong> damage and rapidly repaired for <strong>${healAmt} Health</strong>.</p>`) });
             resolve();
@@ -185,8 +196,8 @@ async function handleLifeForALife(item, actor, speaker) {
           label: '💀 Take Damage',
           callback: async (html) => {
             const dmg = parseInt(html.find('#lfl-damage').val()) || 0;
-            const curHP = actor.system.resources?.health?.value ?? 0;
-            await actor.update({ 'system.resources.health.value': Math.max(0, curHP - dmg) });
+            const curHP = actor.system.health?.value ?? 0;
+            await actor.update({ 'system.health.value': Math.max(0, curHP - dmg) });
             await actor.setFlag(SYSTEM_ID, 'lifeForALifeBonus', dmg);
             await ChatMessage.create({ speaker, content: card('Life for a Life', 'Swift Action · 2 Stamina (spent)',
               `<p>${actor.name} took <strong>${dmg}</strong> self-damage. Next Survival Mode Focused Attack deals <strong>+${dmg}</strong> bonus damage.</p>`) });
@@ -202,7 +213,9 @@ async function handleLifeForALife(item, actor, speaker) {
 // ── Undeath ───────────────────────────────────────────────
 async function handleUndeath(item, actor, speaker) {
   const targets = [...game.user.targets];
-  const targetActor = targets[0]?.actor;
+  const targetToken = targets[0] ?? null;
+  const targetActor = targetToken?.actor ?? null;
+  const tokenId = targetToken?.id ?? '';
   if (!targetActor) return ui.notifications.warn("Target a token first!");
   const soulLimit = (actor.system.abilities?.Soul?.value ?? 0) * 3;
 
@@ -212,15 +225,16 @@ async function handleUndeath(item, actor, speaker) {
   await ChatMessage.create({ speaker, content: card('Undeath', 'Trigger · 3 Stamina (spent)',
     `<p><strong>${targetActor.name}</strong> is protected by Undeath. Their Health can go into negatives up to <strong>−${soulLimit}</strong>.</p>
     <p style="font-size:11px;opacity:0.7;">If they reach −${soulLimit} HP they die without Last Breaths. On engagement exit their HP is set to 1 and Max HP is permanently reduced by half the negative amount.</p>
-    <button class="spirit-resolve-undeath" data-actor-id="${targetActor.id}" data-soul-limit="${soulLimit}" ${btnStyle('#1a1a2e')}>⚰ Resolve Undeath (end of engagement)</button>`) });
+    <button class="spirit-resolve-undeath" data-token-id="${tokenId}" data-soul-limit="${soulLimit}" ${btnStyle('#1a1a2e')}>⚰ Resolve Undeath (end of engagement)</button>`) });
 }
 
 // ── Ruin Mana ─────────────────────────────────────────────
 async function handleRuinMana(item, actor, speaker) {
+  const casterTokenId = actor.token?.id ?? canvas.tokens.placeables.find(t => t.actor === actor)?.id ?? '';
   await ChatMessage.create({ speaker, content:
     card('Ruin Mana', 'Trigger · 3 Stamina (spent)',
       `<p>You attempt to cancel a triggering ability. Both you and the target roll 2d6.</p>
-      <button class="spirit-ruin-mana-roll" data-actor-id="${actor.id}" data-actor-name="${actor.name}" ${btnStyle('#1a1a2e')}>🎲 Roll Counter (2d6)</button>`)
+      <button class="spirit-ruin-mana-roll" data-token-id="${casterTokenId}" data-actor-name="${actor.name}" ${btnStyle('#1a1a2e')}>🎲 Roll Counter (2d6)</button>`)
   });
 }
 
@@ -230,7 +244,7 @@ async function handleHealingWave(item, actor, speaker) {
   const healAmt = soul + 3;
   const targets = [...game.user.targets];
   const targetButtons = targets.length
-    ? targets.map(t => `<button class="spirit-heal-apply" data-actor-id="${t.actor?.id}" data-amount="${healAmt}" ${btnStyle()}>💚 Heal ${t.actor?.name ?? 'target'} for ${healAmt}</button>`).join('')
+    ? targets.map(t => `<button class="spirit-heal-apply" data-token-id="${t.id}" data-amount="${healAmt}" ${btnStyle()}>💚 Heal ${t.actor?.name ?? 'target'} for ${healAmt}</button>`).join('')
     : `<p style="opacity:0.7;">Target tokens before clicking — or use button below for each target.</p>`;
 
   await ChatMessage.create({ speaker, content:
@@ -268,20 +282,20 @@ async function handleStarwalker(item, actor, speaker) {
 
             // Deduct additional stamina + mana
             const extraStamina = staminaSpent - 1; // base 1 already deducted
-            const curSt = actor.system.resources?.stamina?.value ?? 0;
-            const curMn = actor.system.resources?.mana?.value ?? 0;
+            const curSt = actor.system.stamina?.value ?? 0;
+            const curMn = actor.system.mana?.value ?? 0;
             if (curSt < extraStamina) return ui.notifications.warn("Not enough Stamina!");
             if (curMn < manaSpent) return ui.notifications.warn("Not enough Mana!");
             await actor.update({
-              'system.resources.stamina.value': curSt - extraStamina,
-              'system.resources.mana.value': curMn - manaSpent
+              'system.stamina.value': curSt - extraStamina,
+              'system.mana.value': curMn - manaSpent
             });
 
             // Heal target + store attack buff + cleanse conditions
             if (targetActor) {
-              const curHP = targetActor.system.resources?.health?.value ?? 0;
-              const maxHP = targetActor.system.resources?.health?.max ?? curHP;
-              await targetActor.update({ 'system.resources.health.value': Math.min(maxHP, curHP + healAmt) });
+              const curHP = targetActor.system.health?.value ?? 0;
+              const maxHP = targetActor.system.health?.max ?? curHP;
+              await targetActor.update({ 'system.health.value': Math.min(maxHP, curHP + healAmt) });
               await targetActor.setFlag(SYSTEM_ID, 'starwalkerAtkBonus', atkBonus);
               // Cleanse harmful conditions
               const harmful = ['Poisoned','Burning','Bleeding Wound','Blinded','Confused','Frozen','Panicked','Horrified','Shocked','Stunned','Senseless','Mute','Haggard','Exhausted'];
@@ -315,9 +329,9 @@ export async function applyHallowedArsenalEffect(actor, targetActor, totalDamage
 
   if (mode === 'survival' && quality !== 'Poor') {
     const healAmt = soul + healBonus;
-    const curHP = actor.system.resources?.health?.value ?? 0;
-    const maxHP = actor.system.resources?.health?.max ?? curHP;
-    await actor.update({ 'system.resources.health.value': Math.min(maxHP, curHP + healAmt) });
+    const curHP = actor.system.health?.value ?? 0;
+    const maxHP = actor.system.health?.max ?? curHP;
+    await actor.update({ 'system.health.value': Math.min(maxHP, curHP + healAmt) });
     const lifeBonus = actor.getFlag(SYSTEM_ID, 'lifeForALifeBonus') ?? 0;
     if (lifeBonus > 0) {
       await actor.setFlag(SYSTEM_ID, 'lifeForALifeBonus', 0);
@@ -330,12 +344,12 @@ export async function applyHallowedArsenalEffect(actor, targetActor, totalDamage
   if (mode === 'restoration' && quality !== 'Poor') {
     const healAmt = soul;
     if (targetActor) {
-      const curHP = targetActor.system.resources?.health?.value ?? 0;
-      const maxHP = targetActor.system.resources?.health?.max ?? curHP;
-      await targetActor.update({ 'system.resources.health.value': Math.min(maxHP, curHP + healAmt) });
+      const curHP = targetActor.system.health?.value ?? 0;
+      const maxHP = targetActor.system.health?.max ?? curHP;
+      await targetActor.update({ 'system.health.value': Math.min(maxHP, curHP + healAmt) });
     }
-    const selfHP = actor.system.resources?.health?.value ?? 0;
-    await actor.update({ 'system.resources.health.value': Math.max(0, selfHP - healAmt) });
+    const selfHP = actor.system.health?.value ?? 0;
+    await actor.update({ 'system.health.value': Math.max(0, selfHP - healAmt) });
     await ChatMessage.create({ speaker, content:
       `<div class="damage-quality good"><strong>Hallowed-Arsenal (Restoration):</strong> ${targetActor?.name ?? 'Target'} restored <strong>${healAmt} Health</strong>. ${actor.name} took ${healAmt} self-damage.</div>` });
     return { modifiedDamage: 0, skipDamage: true };

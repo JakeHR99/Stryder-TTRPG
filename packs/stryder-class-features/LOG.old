@@ -1,3 +1,8 @@
-2026/05/24-18:08:33.190 282c Recovering log #226
-2026/05/24-18:08:33.193 282c Delete type=0 #226
-2026/05/24-18:08:33.194 282c Delete type=3 #225
+2026/05/26-17:30:59.010 53f0 Recovering log #240
+2026/05/26-17:30:59.010 53f0 Delete type=0 #240
+2026/05/26-17:30:59.010 53f0 Delete type=3 #239
+2026/05/26-21:38:10.982 1e98 Level-0 table #244: started
+2026/05/26-21:38:10.982 1e98 Level-0 table #244: 0 bytes OK
+2026/05/26-21:38:10.983 1e98 Delete type=0 #242
+2026/05/26-21:38:10.983 1e98 Manual compaction at level-0 from '!folders!LrdlyRylFolder01' @ 72057594037927935 : 1 .. '!items!RngrAbil08Vault0' @ 0 : 0; will stop at (end)
+2026/05/26-21:38:10.983 1e98 Manual compaction at level-1 from '!folders!LrdlyRylFolder01' @ 72057594037927935 : 1 .. '!items!RngrAbil08Vault0' @ 0 : 0; will stop at (end)

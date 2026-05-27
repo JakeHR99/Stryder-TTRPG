@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc", "monster", "lordling", "familiar", "pet", "spirit-beast"],
+    "types": ["character", "npc", "monster", "lordling", "familiar", "pet", "spirit-beast", "party"],
     "templates": {
       "base": {
         "health": {
@@ -705,6 +705,11 @@
         "primary": "",
         "defense": ""
       }
+    },
+    "party": {
+      "templates": [],
+      "members": [],
+      "description": ""
     }
   },
   "Item": {
@@ -731,7 +736,9 @@
       "limit": {
         "max": 0,
         "value": 0
-      }
+      },
+      "isAspectAbility": false,
+      "isCampTask": false
     },
     "generic": {
       "templates": ["base"],
@@ -948,12 +955,4 @@
       "enableCustomDamage": false,
       "customDamage": { "poor": 0, "good": 0, "excellent": 0 },
       "enableCustomRange": false,
-      "customRange": { "poor": 4, "excellent": 11 },
-      "hasReflexTag": false
-    },
-    "spell": {
-      "templates": ["base"],
-      "spellLevel": 1
-    }
-  }
-}
+      "customRange": { "poor": 4, "exce

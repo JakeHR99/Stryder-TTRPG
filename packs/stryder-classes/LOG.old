@@ -1,3 +1,8 @@
-2026/05/24-18:08:33.180 5c48 Recovering log #279
-2026/05/24-18:08:33.183 5c48 Delete type=0 #279
-2026/05/24-18:08:33.184 5c48 Delete type=3 #278
+2026/05/26-17:30:58.999 4994 Recovering log #293
+2026/05/26-17:30:58.999 4994 Delete type=0 #293
+2026/05/26-17:30:59.006 4994 Delete type=3 #292
+2026/05/26-21:38:10.974 1e98 Level-0 table #297: started
+2026/05/26-21:38:10.974 1e98 Level-0 table #297: 0 bytes OK
+2026/05/26-21:38:10.977 1e98 Delete type=0 #295
+2026/05/26-21:38:10.983 1e98 Manual compaction at level-0 from '!items!RangerClass00001' @ 72057594037927935 : 1 .. '!items!WytchClass000001' @ 0 : 0; will stop at (end)
+2026/05/26-21:38:10.983 1e98 Manual compaction at level-1 from '!items!RangerClass00001' @ 72057594037927935 : 1 .. '!items!WytchClass000001' @ 0 : 0; will stop at (end)

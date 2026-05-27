@@ -64,12 +64,7 @@ export async function handleBleedingWoundDamage(combatant) {
   const hasTakenBleedingDamage = combatant.getFlag(SYSTEM_ID, "hasTakenBleedingDamage");
   console.log("Has taken bleeding damage this turn:", hasTakenBleedingDamage);
   
-  // TEMPORARY: Clear the flag if it exists (for debugging)
-  if (hasTakenBleedingDamage) {
-    console.log("Clearing bleeding damage flag manually");
-    await combatant.unsetFlag(SYSTEM_ID, "hasTakenBleedingDamage");
-    // Don't return - continue with damage processing
-  }
+  if (hasTakenBleedingDamage) return;
 
   // Find all bleeding wound effects and process the highest stage
   const bleedingEffects = actor.effects.filter(e => {
@@ -195,34 +190,6 @@ Hooks.on('updateCombat', async (combat, updateData, options, userId) => {
   }
 });
 
-// Alternative hook using socket communication for turn changes
-Hooks.once('ready', () => {
-  if (game.socket) {
-    game.socket.on(`system.stryder`, async (data) => {
-      console.log("Socket message received for bleeding:", data);
-      if (data.type === "turnChangeNotification") {
-        console.log("Socket turn change notification received, processing bleeding effects");
-        
-        const combat = game.combat;
-        if (!combat) return;
-        
-        // Clear bleeding damage flags for all combatants at the start of each turn
-        for (const combatant of combat.combatants) {
-          console.log(`Clearing bleeding flag for ${combatant.actor?.name}`);
-          await combatant.unsetFlag(SYSTEM_ID, "hasTakenBleedingDamage");
-        }
-        
-        const combatant = combat.combatants.get(combat.current.combatantId);
-        console.log("Current combatant from socket:", combatant?.actor?.name);
-        if (combatant) {
-          await handleBleedingWoundDamage(combatant);
-        }
-      }
-    });
-  } else {
-    console.log("Game socket not available for bleeding");
-  }
-});
 
 // Handle undo button
 Hooks.on('renderChatMessage', (message, html, data) => {

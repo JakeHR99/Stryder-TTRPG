@@ -492,8 +492,9 @@ export class StryderActorSheet extends ActorSheet {
    * @returns {Array}      Flat array of 44 cell descriptor objects
    */
   _buildInventoryGrid(items) {
-    // All item types go into the grid
-    const gearItems = items;
+    // Only physical inventory types go into the grid
+    const INVENTORY_TYPES = new Set(['loot','gear','consumable','component','head','back','arms','legs','gems','aegiscore','legacies']);
+    const gearItems = items.filter(i => INVENTORY_TYPES.has(i.type));
 
     const COLS  = 11;
     const TOTAL = 44;
@@ -701,6 +702,7 @@ export class StryderActorSheet extends ActorSheet {
   _prepareItems(context) {
     // Initialize containers.
     const actions = [];
+    const aspectAbilities = [];
     const generic = [];
     const armament = [];
     const aegiscore = [];
@@ -744,7 +746,11 @@ export class StryderActorSheet extends ActorSheet {
       i.img = i.img || Item.DEFAULT_ICON;
       // Append to actions.
       if (i.type === 'action') {
-        actions.push(i);
+        if (i.system?.isAspectAbility) {
+          aspectAbilities.push(i);
+        } else {
+          actions.push(i);
+        }
       }
       // Append to generic attacks (monster offensive abilities).
       if (i.type === 'generic') {
@@ -856,6 +862,7 @@ export class StryderActorSheet extends ActorSheet {
 
     // Assign and return
     context.actions = actions;
+    context.aspectAbilities = aspectAbilities;
     context.generic = generic;
     context.armament = armament;
     context.aegiscore = aegiscore;
@@ -1635,7 +1642,7 @@ export class StryderActorSheet extends ActorSheet {
     });
 
 	// Resource buttons
-	html.on('click', '.resource-button, .fantasy-action-button', async (event) => {
+	html.on('click', '.resource-button, .fantasy-action-button, .jrpg-recovery-btn', async (event) => {
 	  event.preventDefault();
 	  const button = event.currentTarget;
 	  const action = button.dataset.action;
@@ -1692,36 +1699,37 @@ export class StryderActorSheet extends ActorSheet {
 
 			case 'battleEngage': {
 			  const actor = this.actor;
-			  const sys   = actor.system;
+			  const combat = game.combat;
 
-			  // Compute highest Sense value
+			  // If already in combat, just open the window — don't re-roll initiative
+			  if (combat) {
+			    const existingCombatant = combat.getCombatantByActor(actor.id)
+			      ?? combat.combatants.find(c => c.actorId === actor.id || c.tokenId === actor.token?.id);
+			    if (existingCombatant) {
+			      _openPokemonBattleWindow(actor);
+			      return;
+			    }
+			  }
+
+			  // Not yet in combat — roll initiative
+			  const sys = actor.system;
 			  const senses = sys.attributes?.sense ?? {};
 			  const senseValues = Object.values(senses).map(s => (typeof s === 'object' ? (s.value ?? 0) : 0));
 			  const highestSense = senseValues.length ? Math.max(...senseValues) : 0;
 
-			  // Roll 2d6 + highest Sense (Perception Roll)
 			  const initRoll = new Roll(`2d6 + ${highestSense}`);
 			  await initRoll.evaluate();
 
-			  // If in an active combat, set initiative on the combatant
-			  const combat = game.combat;
 			  if (combat) {
-			    const combatant = combat.getCombatantByActor(actor.id);
-			    if (combatant) {
-			      await combatant.update({ initiative: initRoll.total });
-			    } else {
-			      const created = await combat.createEmbeddedDocuments('Combatant', [{ actorId: actor.id, tokenId: actor.token?.id ?? null }]);
-			      if (created.length) await combat.setInitiative(created[0].id, initRoll.total);
-			    }
+			    const created = await combat.createEmbeddedDocuments('Combatant', [{ actorId: actor.id, tokenId: actor.token?.id ?? null }]);
+			    if (created.length) await combat.setInitiative(created[0].id, initRoll.total);
 			  }
 
-			  // Post roll to chat
 			  await initRoll.toMessage({
 			    speaker: ChatMessage.getSpeaker({ actor }),
 			    flavor: `<strong>${actor.name}</strong> enters combat! Initiative roll (2d6 + ${highestSense} Sense)`,
 			  });
 
-			  // Open the Pokemon-style battle window
 			  _openPokemonBattleWindow(actor);
 			  return;
 			}
@@ -1751,45 +1759,96 @@ export class StryderActorSheet extends ActorSheet {
 			  }
 			  break;
 
-			case 'springOfLife':
+			case 'springOfLife': {
+			  // 1. Calculate health restoration
 			  const burningReduction = this.actor.getFlag(SYSTEM_ID, "burningHealthReduction") || 0;
 			  const bloodlossReduction = this.actor.getFlag(SYSTEM_ID, "bloodlossHealthReduction") || 0;
 			  const totalReduction = burningReduction + bloodlossReduction;
 			  const newMax = this.actor.system.health.max + totalReduction;
 
-			  updates = {
+			  // 2. Apply HP/MP restoration and set springOfLifeActive flag
+			  await this.actor.update({
 				'system.health.value': newMax,
 				'system.mana.value': this.actor.system.mana.max,
 				[`flags.${SYSTEM_ID}.springOfLifeActive`]: true,
 				[`flags.${SYSTEM_ID}.burningHealthReduction`]: null,
-				[`flags.${SYSTEM_ID}.bloodlossHealthReduction`]: null
-			  };
+				[`flags.${SYSTEM_ID}.bloodlossHealthReduction`]: null,
+			  });
 
-			  message = `${this.actor.name} has used Spring of Life, regaining all Health and Mana. Stamina cannot be restored until the next Rest.`;
-
-			  if (totalReduction > 0) {
-				let restorationMessage = `<br><br>In addition, the Spring of Life has healed wounds that ${this.actor.name} sustained, restoring their Max Health by ${totalReduction}.`;
-				if (burningReduction > 0 && bloodlossReduction > 0) {
-				  restorationMessage = `<br><br>In addition, the Spring of Life has healed burns and bloodloss that ${this.actor.name} sustained, restoring their Max Health by ${totalReduction} (${burningReduction} from burns, ${bloodlossReduction} from bloodloss).`;
-				} else if (burningReduction > 0) {
-				  restorationMessage = `<br><br>In addition, the Spring of Life has healed burns that ${this.actor.name} sustained, restoring their Max Health by ${burningReduction}.`;
-				} else if (bloodlossReduction > 0) {
-				  restorationMessage = `<br><br>In addition, the Spring of Life has healed bloodloss that ${this.actor.name} sustained, restoring their Max Health by ${bloodlossReduction}.`;
-				}
-				message += restorationMessage;
+			  // 3. Remove all active effects (conditions), preserving permanent ones
+			  const effectIds = this.actor.effects
+			    .filter(e => !e.flags?.stryder?.isPermanent)
+			    .map(e => e.id);
+			  if (effectIds.length) {
+			    await this.actor.deleteEmbeddedDocuments('ActiveEffect', effectIds);
 			  }
-			  
-			  // Reset uses for skills and folk abilities with perSpring cooldown
-			  const springItemsToReset = this.actor.items.filter(item => 
-				(item.type === 'skill' || item.type === 'racial') && 
-				item.system.cooldown_unit === 'perSpring' && 
+
+			  // 4. Reset perSpring cooldowns
+			  const springItemsToReset = this.actor.items.filter(item =>
+				(item.type === 'skill' || item.type === 'racial') &&
+				item.system.cooldown_unit === 'perSpring' &&
 				item.system.cooldown_value > 0
 			  );
-			  
 			  for (const item of springItemsToReset) {
 				await item.update({'system.uses_current': item.system.cooldown_value});
 			  }
-			  break;
+
+			  // 5. Build and send chat message
+			  let springMessage = `${this.actor.name} has used Spring of Life, restoring all Health and Mana, and clearing all conditions. Stamina cannot be restored until the next Rest.`;
+			  if (totalReduction > 0) {
+				if (burningReduction > 0 && bloodlossReduction > 0) {
+				  springMessage += ` Max Health restored by ${totalReduction} (${burningReduction} from burns, ${bloodlossReduction} from bloodloss).`;
+				} else if (burningReduction > 0) {
+				  springMessage += ` Max Health restored by ${burningReduction} (healed burns).`;
+				} else if (bloodlossReduction > 0) {
+				  springMessage += ` Max Health restored by ${bloodlossReduction} (healed bloodloss).`;
+				}
+			  }
+			  await ChatMessage.create({
+				user: game.user.id,
+				speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+				content: `<div class="chat-message-card"><div class="chat-message-header"><h3 class="chat-message-title">🌿 Spring of Life</h3></div><div class="chat-message-content">${springMessage}</div></div>`,
+			  });
+
+			  // 6. Ask if they also want to Rest
+			  const doRest = await Dialog.confirm({
+				title: "Rest After Spring of Life?",
+				content: "<p>Would you also like to <strong>Rest</strong>? This will restore your Stamina and allow normal Stamina recovery on future turns.</p>",
+				yes: () => true,
+				no: () => false,
+				defaultYes: false,
+			  });
+			  if (doRest) {
+				await this.actor.update({
+				  'system.stamina.value': this.actor.system.stamina.max,
+				  'system.mana.value': this.actor.system.mana.max,
+				  [`flags.${SYSTEM_ID}.springOfLifeActive`]: null,
+				});
+				const { removeExhaustionEffects } = await import('../conditions/exhaustion.mjs');
+				await removeExhaustionEffects(this.actor);
+				const haggardEffects = this.actor.effects.filter(e =>
+				  e.name?.toLowerCase().includes('haggard') || e.label?.toLowerCase().includes('haggard')
+				);
+				if (haggardEffects.length) {
+				  await this.actor.deleteEmbeddedDocuments('ActiveEffect', haggardEffects.map(e => e.id));
+				}
+				// Reset perRest cooldowns
+				const restItems = this.actor.items.filter(item =>
+				  (item.type === 'skill' || item.type === 'racial') &&
+				  item.system.cooldown_unit === 'perRest' &&
+				  item.system.cooldown_value > 0
+				);
+				for (const item of restItems) {
+				  await item.update({'system.uses_current': item.system.cooldown_value});
+				}
+				await ChatMessage.create({
+				  user: game.user.id,
+				  speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+				  content: `<div class="chat-message-card"><div class="chat-message-header"><h3 class="chat-message-title">💤 Rest</h3></div><div class="chat-message-content">${this.actor.name} has rested, restoring all Stamina and Mana.</div></div>`,
+				});
+			  }
+			  return; // skip shared updates/message block
+			}
 
 		  case 'trustIncrease': {
 			const currentTrustPoints = this.actor.system.trust?.points ?? 0;
@@ -3552,12 +3611,14 @@ export class StryderActorSheet extends ActorSheet {
  * Creates a fixed-position div anchored to the bottom of the viewport.
  * Destroys and recreates any existing window so item lists stay fresh.
  */
-function _openPokemonBattleWindow(actor) {
+function _openPokemonBattleWindow(actorRef) {
+  // Re-derive synthetic actors from their token to pick up latest actorDelta changes
+  const actor = actorRef.token?.actor ?? actorRef;
   const existing = document.getElementById('stryder-pokemon-battle');
   if (existing) existing.remove();
 
-  const skills       = actor.items.filter(i => i.type === 'skill');
-  const playerActions = actor.items.filter(i => i.type === 'action');
+  const skills        = actor.items.filter(i => i.type === 'skill' || (i.type === 'action' && i.system?.isAspectAbility));
+  const playerActions = actor.items.filter(i => i.type === 'action' && !i.system?.isAspectAbility);
   const elixirs      = actor.items.filter(i => i.type === 'elixir');
   const consumes     = actor.items.filter(i => i.type === 'consumable');
   const items        = [...elixirs, ...consumes];
@@ -3614,6 +3675,22 @@ function _openPokemonBattleWindow(actor) {
       </button>` : ''}
     </div>`;
 
+  // Helper: attach click/contextmenu handlers to all spb-roll-item elements in a container
+  const attachRollHandlers = (container) => {
+    container.querySelectorAll('[data-action="spb-roll-item"]').forEach(el => {
+      el.addEventListener('click', async () => {
+        const item = actor.items.get(el.dataset.itemId);
+        if (!item) return;
+        if (typeof item.roll === 'function') await item.roll();
+        else item.sheet.render(true);
+      });
+      el.addEventListener('contextmenu', ev => {
+        ev.preventDefault();
+        actor.items.get(el.dataset.itemId)?.sheet.render(true);
+      });
+    });
+  };
+
   const win = document.createElement('div');
   win.id = 'stryder-pokemon-battle';
   win.innerHTML = `
@@ -3665,12 +3742,28 @@ function _openPokemonBattleWindow(actor) {
 
   document.body.appendChild(win);
 
-  // Navigate to a sub-panel
+  // Navigate to a sub-panel — rebuild item lists fresh on each navigation
   win.querySelectorAll('[data-spb-nav]').forEach(btn => {
     btn.addEventListener('click', () => {
       win.querySelector('#spb-main').style.display = 'none';
       win.querySelectorAll('.spb-panel').forEach(p => p.classList.remove('active'));
-      win.querySelector(`#spb-panel-${btn.dataset.spbNav}`).classList.add('active');
+      const panel = win.querySelector(`#spb-panel-${btn.dataset.spbNav}`);
+      panel.classList.add('active');
+      // Rebuild item lists so deleted/added items are always current
+      if (btn.dataset.spbNav === 'skills') {
+        const freshSkills = actor.items.filter(i => i.type === 'skill' || (i.type === 'action' && i.system?.isAspectAbility));
+        panel.querySelector('.spb-panel-list').innerHTML = _renderItems(freshSkills, true);
+        attachRollHandlers(panel.querySelector('.spb-panel-list'));
+      } else if (btn.dataset.spbNav === 'actions') {
+        const freshActions = actor.items.filter(i => i.type === 'action' && !i.system?.isAspectAbility);
+        panel.querySelector('.spb-panel-list').innerHTML = _renderItems(freshActions, true);
+        attachRollHandlers(panel.querySelector('.spb-panel-list'));
+      } else if (btn.dataset.spbNav === 'items') {
+        const freshElixirs  = actor.items.filter(i => i.type === 'elixir');
+        const freshConsumes = actor.items.filter(i => i.type === 'consumable');
+        panel.querySelector('.spb-panel-list').innerHTML = _renderItems([...freshElixirs, ...freshConsumes]);
+        attachRollHandlers(panel.querySelector('.spb-panel-list'));
+      }
     });
   });
 
@@ -3692,69 +3785,4 @@ function _openPokemonBattleWindow(actor) {
   });
 
   // Close
-  win.querySelector('#spb-close').addEventListener('click', () => win.remove());
-
-  // Item left-click → roll; right-click → open sheet
-  win.querySelectorAll('[data-action="spb-roll-item"]').forEach(el => {
-    el.addEventListener('click', async () => {
-      const item = actor.items.get(el.dataset.itemId);
-      if (!item) return;
-      if (typeof item.roll === 'function') await item.roll();
-      else item.sheet.render(true);
-    });
-    el.addEventListener('contextmenu', ev => {
-      ev.preventDefault();
-      actor.items.get(el.dataset.itemId)?.sheet.render(true);
-    });
-  });
-
-  // Defense roll clicks
-  win.querySelectorAll('.spb-def-row').forEach(el => {
-    el.addEventListener('click', async () => {
-      const roll = new Roll(el.dataset.roll);
-      await roll.evaluate();
-      await roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor }),
-        flavor: `<strong>${actor.name}</strong> — ${el.dataset.label}`,
-      });
-    });
-  });
-
-  // Block button click (Dual Wield)
-  const blockBtn = win.querySelector('.spb-block-btn');
-  if (blockBtn) {
-    blockBtn.addEventListener('click', async () => {
-      const reduction = parseInt(blockBtn.dataset.blockReduction) || 0;
-      const currentStamina = actor.system.resources?.stamina?.value ?? 0;
-      if (currentStamina < 1) {
-        ui.notifications.warn(`${actor.name} doesn't have enough Stamina to Block!`);
-        return;
-      }
-      await actor.update({ 'system.resources.stamina.value': currentStamina - 1 });
-      await ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({ actor }),
-        content: `
-          <div class="chat-message-card">
-            <div class="chat-message-header">
-              <div class="chat-message-title">🛡 Block</div>
-              <div class="chat-message-subtitle">Trigger · [Breach]</div>
-            </div>
-            <div class="chat-message-details">
-              <div class="chat-message-detail-row">
-                <span class="chat-message-detail-label">Trigger:</span>
-                <span>Targeted Attack against ${actor.name}</span>
-              </div>
-              <div class="chat-message-detail-row">
-                <span class="chat-message-detail-label">Reduces damage by:</span>
-                <span><strong>${reduction}</strong></span>
-              </div>
-              <div class="chat-message-detail-row">
-                <span class="chat-message-detail-label">Cost:</span>
-                <span>1 Stamina (spent)</span>
-              </div>
-            </div>
-          </div>`
-      });
-    });
-  }
-}
+  win.querySelector('#spb-close').addEventListener('click', () => wi

@@ -6,6 +6,7 @@
 export const preloadHandlebarsTemplates = async function () {
   return loadTemplates([
     // Actor partials.
+    'systems/stryder/templates/actor/actor-party-sheet.hbs',
     'systems/stryder/templates/actor/parts/actor-features.hbs',
     'systems/stryder/templates/actor/parts/actor-stats.hbs',
     'systems/stryder/templates/actor/parts/actor-items.hbs',
@@ -29,6 +30,4 @@ export const preloadHandlebarsTemplates = async function () {
 	"systems/stryder/templates/combat/combat-tracker.hbs",
 	"systems/stryder/templates/combat/combat-tracker-footer.hbs",
 	'systems/stryder/templates/combat/chat-combat-end.hbs',
-	'systems/stryder/templates/combat/dialog-first-turn.hbs',
-  ]);
-};
+	'syste

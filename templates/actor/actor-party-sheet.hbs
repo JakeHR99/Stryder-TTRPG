@@ -1,0 +1,92 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+  {{!-- Sheet Header --}}
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+    <div class="header-fields">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{actor.name}}" placeholder="Party Name" />
+      </h1>
+      <div class="header-subtitle">Party · {{members.length}} Members</div>
+    </div>
+  </header>
+
+  {{!-- Sheet Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="members">👥 Members</a>
+    <a class="item" data-tab="actions">⚔ Actions</a>
+    <a class="item" data-tab="camp">🏕 Camp Tasks</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- MEMBERS TAB --}}
+    <div class="tab members" data-group="primary" data-tab="members">
+      <div class="party-member-hint" style="font-size:11px;opacity:0.6;margin-bottom:8px;">
+        Drag character actors here to add them to the party.
+      </div>
+      <div class="party-members-grid">
+        {{#each members as |member|}}
+        <div class="party-member-card">
+          <img class="member-portrait" src="{{member.img}}" title="{{member.name}}"
+               data-uuid="{{member.uuid}}" style="cursor:pointer;" />
+          <div class="member-name">{{member.name}}</div>
+          <div class="member-resources">
+            <span class="res-hp" title="Health">❤ {{member.health.value}}/{{member.health.max}}</span>
+            <span class="res-sp" title="Stamina">⚡ {{member.stamina.value}}/{{member.stamina.max}}</span>
+            <span class="res-mp" title="Mana">✨ {{member.mana.value}}/{{member.mana.max}}</span>
+          </div>
+          <button class="member-remove" data-uuid="{{member.uuid}}" title="Remove from party"
+                  style="background:none;border:none;cursor:pointer;color:#c44;font-size:10px;">✖ Remove</button>
+        </div>
+        {{else}}
+        <p style="opacity:0.5;font-style:italic;">No members yet. Drag character actors here.</p>
+        {{/each}}
+      </div>
+    </div>
+
+    {{!-- ACTIONS TAB --}}
+    <div class="tab actions" data-group="primary" data-tab="actions">
+      <div class="items-header" style="font-size:11px;opacity:0.6;margin-bottom:6px;">
+        Party-wide actions. Drag action items here to add them.
+      </div>
+      <ol class="item-list">
+        {{#each actions as |item|}}
+        <li class="item flexrow" data-item-id="{{item.id}}">
+          <img class="item-image" src="{{item.img}}" title="{{item.name}}" />
+          <div class="item-name">{{item.name}}</div>
+          <div class="item-controls">
+            <a class="item-roll" title="Use"><i class="fas fa-dice-d20"></i></a>
+            <a class="item-delete" title="Delete"><i class="fas fa-trash"></i></a>
+          </div>
+        </li>
+        {{else}}
+        <li style="opacity:0.5;font-style:italic;padding:8px;">No party actions. Drag action items here.</li>
+        {{/each}}
+      </ol>
+    </div>
+
+    {{!-- CAMP TASKS TAB --}}
+    <div class="tab camp" data-group="primary" data-tab="camp">
+      <div class="items-header" style="font-size:11px;opacity:0.6;margin-bottom:6px;">
+        Camp tasks are available when the party draws a Campsite from the Expedition Deck.
+        Drag action items here and mark them as Camp Tasks.
+      </div>
+      <ol class="item-list">
+        {{#each campTasks as |item|}}
+        <li class="item flexrow" data-item-id="{{item.id}}">
+          <img class="item-image" src="{{item.img}}" title="{{item.name}}" />
+          <div class="item-name">{{item.name}}</div>
+          <div class="item-controls">
+            <a class="item-roll" title="Use"><i class="fas fa-dice-d20"></i></a>
+            <a class="item-delete" title="Delete"><i class="fas fa-trash"></i></a>
+          </div>
+        </li>
+        {{else}}
+        <li style="opacity:0.5;font-style:italic;padding:8px;">No camp tasks yet. Drag action items here and enable isCampTask on them.</li>
+        {{/each}}
+      </ol>
+    </div>
+
+  </section>
+</form>

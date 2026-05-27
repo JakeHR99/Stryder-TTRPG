@@ -52,6 +52,7 @@
         roll: { diceBonus: 0, diceNum: 2, diceSize: 6 },
         limit: { max: limit, value: 0 },
         hasReflexTag: false,
+        isAspectAbility: true,
         tag1, tag2, tag3
       },
       effects: [], ownership: { default: 0 }, flags: {}, _stats: stats

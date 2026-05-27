@@ -3,6 +3,7 @@ import { StryderActor } from './documents/actor.mjs';
 import { StryderItem } from './documents/item.mjs';
 // Import sheet classes.
 import { StryderActorSheet } from './sheets/actor-sheet.mjs';
+import { StryderPartySheet } from './sheets/party-sheet.mjs';
 import { StryderItemSheet } from './sheets/item-sheet.mjs';
 // Import combat classes.
 import { StryderCombat, ALLIED, ENEMY } from './combat/combat.mjs';
@@ -34,6 +35,9 @@ let auraUpdateTimer = null;
 import { handleBanglelessApplication, isActorBangleless } from './conditions/bangleless.mjs';
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
+// Import expedition system.
+import { openExpeditionSetup, triggerSiteEvent, clearExpedition } from './expedition/expedition-manager.mjs';
+import { handleOpenWorldMove, openOpenWorldSetup, designateHexPrompt, resetOpenWorldTable, clearOpenWorld } from './expedition/open-world-manager.mjs';
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -875,6 +879,11 @@ Hooks.once('init', async function () {
     makeDefault: true,
     label: 'STRYDER.SheetLabels.Actor',
   });
+  Actors.registerSheet('stryder', StryderPartySheet, {
+    types: ['party'],
+    makeDefault: true,
+    label: 'STRYDER.SheetLabels.Party',
+  });
   Items.unregisterSheet('core', ItemSheet);
   Items.registerSheet('stryder', StryderItemSheet, {
     makeDefault: true,
@@ -1241,6 +1250,12 @@ Hooks.once('ready', async function () {
     handleDamageApply(event);
   });
 
+  // Helper: find any actor from a token ID (works for linked and unlinked tokens)
+  function getActorFromTokenId(tokenId) {
+    if (!tokenId) return null;
+    return canvas.tokens.get(tokenId)?.actor ?? null;
+  }
+
   // ── Spirit Aspect chat button handlers ──────────────────────
 
   // Remove condition (Revitalize)
@@ -1248,16 +1263,22 @@ Hooks.once('ready', async function () {
     event.preventDefault();
     const btn = event.currentTarget;
     const condition = btn.dataset.condition;
-    const targetActor = game.actors.get(btn.dataset.actorId);
-    if (!targetActor) return ui.notifications.warn("Target actor not found.");
+    const targetActor = getActorFromTokenId(btn.dataset.tokenId);
+    if (!targetActor) return ui.notifications.warn("No target found — target a token before using this ability.");
     const effects = targetActor.effects.contents;
     let toRemove = [];
     if (condition === "poison") {
-      toRemove = effects.filter(e => (e.name ?? e.label ?? '').includes("Poisoned"));
+      toRemove = effects.filter(e =>
+        e.statuses?.has("poisoned") || (e.name ?? e.label ?? '').includes("Poisoned")
+      );
     } else if (condition === "burning") {
-      toRemove = effects.filter(e => (e.name ?? e.label ?? '') === "Burning");
+      toRemove = effects.filter(e =>
+        e.statuses?.has("burning") || (e.name ?? e.label ?? '') === "Burning"
+      );
     } else if (condition === "bleeding") {
-      toRemove = effects.filter(e => (e.name ?? e.label ?? '') === "Bleeding Wound");
+      toRemove = effects.filter(e =>
+        e.statuses?.has("bleeding-wound") || (e.name ?? e.label ?? '') === "Bleeding Wound"
+      );
     }
     if (!toRemove.length) return ui.notifications.info(`${targetActor.name} doesn't have that condition.`);
     await targetActor.deleteEmbeddedDocuments("ActiveEffect", toRemove.map(e => e.id));
@@ -1274,9 +1295,9 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".spirit-remove-enhance", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const targetActor = game.actors.get(btn.dataset.actorId);
+    const targetActor = getActorFromTokenId(btn.dataset.tokenId);
     const talent = btn.dataset.talent;
-    if (!targetActor) return ui.notifications.warn("Target actor not found.");
+    if (!targetActor) return ui.notifications.warn("No target found — target a token before using this ability.");
     const toRemove = targetActor.effects.filter(e =>
       e.flags?.stryder?.isEnhanceProwess && e.flags?.stryder?.talent === talent
     ).map(e => e.id);
@@ -1293,10 +1314,10 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".spirit-resolve-undeath", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const targetActor = game.actors.get(btn.dataset.actorId);
-    if (!targetActor) return ui.notifications.warn("Target actor not found.");
-    const curHP = targetActor.system.resources?.health?.value ?? 0;
-    const maxHP = targetActor.system.resources?.health?.max ?? 0;
+    const targetActor = getActorFromTokenId(btn.dataset.tokenId);
+    if (!targetActor) return ui.notifications.warn("No target found — target a token before using this ability.");
+    const curHP = targetActor.system.health?.value ?? 0;
+    const maxHP = targetActor.system.health?.max ?? 0;
     await targetActor.unsetFlag('stryder', 'undeathActive');
     await targetActor.unsetFlag('stryder', 'undeathLimit');
     if (curHP >= 0) {
@@ -1305,8 +1326,8 @@ Hooks.once('ready', async function () {
     const negAmt = Math.abs(curHP);
     const maxHPReduction = Math.floor(negAmt / 2);
     await targetActor.update({
-      'system.resources.health.value': 1,
-      'system.resources.health.max': Math.max(1, maxHP - maxHPReduction)
+      'system.health.value': 1,
+      'system.health.max': Math.max(1, maxHP - maxHPReduction)
     });
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: targetActor }),
@@ -1322,7 +1343,7 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".spirit-ruin-mana-roll", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const actor = game.actors.get(btn.dataset.actorId);
+    const actor = getActorFromTokenId(btn.dataset.tokenId);
     const roll = new Roll("2d6");
     await roll.evaluate();
     await roll.toMessage({
@@ -1335,12 +1356,12 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".spirit-heal-apply", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const targetActor = game.actors.get(btn.dataset.actorId);
+    const targetActor = getActorFromTokenId(btn.dataset.tokenId);
     const healAmt = parseInt(btn.dataset.amount) || 0;
-    if (!targetActor) return ui.notifications.warn("Target actor not found.");
-    const curHP = targetActor.system.resources?.health?.value ?? 0;
-    const maxHP = targetActor.system.resources?.health?.max ?? curHP;
-    await targetActor.update({ 'system.resources.health.value': Math.min(maxHP, curHP + healAmt) });
+    if (!targetActor) return ui.notifications.warn("No target found — target a token before using this ability.");
+    const curHP = targetActor.system.health?.value ?? 0;
+    const maxHP = targetActor.system.health?.max ?? curHP;
+    await targetActor.update({ 'system.health.value': Math.min(maxHP, curHP + healAmt) });
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: targetActor }),
       content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
@@ -1355,7 +1376,7 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".resilience-ancient-armor-roll", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const actor = game.actors.get(btn.dataset.actorId);
+    const actor = getActorFromTokenId(btn.dataset.tokenId);
     const bonus = parseInt(btn.dataset.bonus) || 0;
     const roll = new Roll(`2d6 + ${bonus}`);
     await roll.evaluate();
@@ -1369,8 +1390,8 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".resilience-irresistible-rage-taunt", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const targetActor = game.actors.get(btn.dataset.actorId);
-    if (!targetActor) return ui.notifications.warn("Target actor not found.");
+    const targetActor = getActorFromTokenId(btn.dataset.tokenId);
+    if (!targetActor) return ui.notifications.warn("No target found — target a token before using this ability.");
     const effectData = [{
       name: 'Taunted',
       label: 'Taunted',
@@ -1390,9 +1411,9 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".resilience-revenge-activate", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const actor = game.actors.get(btn.dataset.actorId);
+    const actor = getActorFromTokenId(btn.dataset.tokenId);
     const reduction = parseInt(btn.dataset.reduction) || 0;
-    if (!actor) return ui.notifications.warn("Actor not found.");
+    if (!actor) return ui.notifications.warn("No target found — target a token before using this ability.");
     await actor.setFlag('stryder', 'revengeAmount', reduction);
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
@@ -1406,8 +1427,8 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".resilience-full-brace-clear", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const actor = game.actors.get(btn.dataset.actorId);
-    if (!actor) return ui.notifications.warn("Actor not found.");
+    const actor = getActorFromTokenId(btn.dataset.tokenId);
+    if (!actor) return ui.notifications.warn("No target found — target a token before using this ability.");
     await actor.unsetFlag('stryder', 'fullBraceMovementPenalty');
     await ChatMessage.create({
       content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
@@ -1420,8 +1441,8 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".resilience-unbreakable-clear", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const actor = game.actors.get(btn.dataset.actorId);
-    if (!actor) return ui.notifications.warn("Actor not found.");
+    const actor = getActorFromTokenId(btn.dataset.tokenId);
+    if (!actor) return ui.notifications.warn("No target found — target a token before using this ability.");
     await actor.unsetFlag('stryder', 'unbreakableActive');
     await ChatMessage.create({
       content: `<div class="chat-message-card"><div class="chat-message-detail-row" style="padding:8px 12px;">
@@ -1434,8 +1455,8 @@ Hooks.once('ready', async function () {
   $(document).on("click", ".resilience-atlas-clear", async function(event) {
     event.preventDefault();
     const btn = event.currentTarget;
-    const actor = game.actors.get(btn.dataset.actorId);
-    if (!actor) return ui.notifications.warn("Actor not found.");
+    const actor = getActorFromTokenId(btn.dataset.tokenId);
+    if (!actor) return ui.notifications.warn("No target found — target a token before using this ability.");
     await actor.unsetFlag('stryder', 'atlasResilienceActive');
     await actor.unsetFlag('stryder', 'armoredSoulMode');
     await actor.unsetFlag('stryder', 'armoredSoulDR');
@@ -2463,6 +2484,107 @@ Hooks.on('ready', () => {
   
   // Store socket for use in request functions
   game.stryder.socket = socket;
+
+  // ── Expedition: detect party token entering a Site ──────
+  Hooks.on('updateToken', async (tokenDoc, changes, options, userId) => {
+    if (!('x' in changes) && !('y' in changes)) return;
+    const scene = tokenDoc.parent;
+    const isMap = scene?.getFlag('stryder', 'isExpeditionMap');
+    if (!isMap) return;
+
+    // Skip site tokens themselves
+    if (tokenDoc.getFlag('stryder', 'isExpeditionSite')) return;
+
+    // If there's a party actor token on this scene, only respond to it
+    const partyTokens = Array.from(scene.tokens).filter(t => t.actor?.type === 'party');
+    if (partyTokens.length > 0 && tokenDoc.actor?.type !== 'party') return;
+
+    const gs = canvas.grid.size;
+    const partyX = (changes.x ?? tokenDoc.x) + gs / 2;
+    const partyY = (changes.y ?? tokenDoc.y) + gs / 2;
+
+    const sites = Array.from(scene.tokens).filter(t =>
+      t.getFlag('stryder', 'isExpeditionSite') &&
+      !t.getFlag('stryder', 'visited')
+    );
+
+    for (const site of sites) {
+      const siteX = site.x + gs / 2;
+      const siteY = site.y + gs / 2;
+      const dist = Math.hypot(partyX - siteX, partyY - siteY);
+      if (dist <= gs * 1.5) {
+        await triggerSiteEvent(site, scene, tokenDoc);
+        break;
+      }
+    }
+  });
+
+  // ── Open World: detect party token moving to a new hex ──
+  Hooks.on('updateToken', async (tokenDoc, changes, options, userId) => {
+    if (!('x' in changes) && !('y' in changes)) return;
+    const scene = tokenDoc.parent;
+    if (!scene?.getFlag('stryder', 'isOpenWorld')) return;
+    if (tokenDoc.getFlag('stryder', 'isOpenWorldMarker')) return;
+    // Only respond to the party actor token
+    const partyTokens = Array.from(scene.tokens).filter(t => t.actor?.type === 'party');
+    if (partyTokens.length > 0 && tokenDoc.actor?.type !== 'party') return;
+    await handleOpenWorldMove(tokenDoc, scene);
+  });
+});
+
+// ── Expedition: scene control buttons (GM only) ──────────
+// v13: controls is a plain object keyed by control name; tools is also a plain object keyed by tool name
+Hooks.on('getSceneControlButtons', (controls) => {
+  const tokenControls = controls['tokens'];
+  if (!tokenControls) return;
+  tokenControls.tools['expedition-generate'] = {
+    name: 'expedition-generate',
+    title: 'Generate Expedition',
+    icon: 'fas fa-route',
+    visible: game.user.isGM,
+    onClick: () => openExpeditionSetup(),
+    button: true
+  };
+  tokenControls.tools['expedition-clear'] = {
+    name: 'expedition-clear',
+    title: 'Clear Expedition',
+    icon: 'fas fa-times-circle',
+    visible: game.user.isGM,
+    onClick: () => clearExpedition(),
+    button: true
+  };
+  tokenControls.tools['openworld-generate'] = {
+    name: 'openworld-generate',
+    title: 'Generate Open World',
+    icon: 'fas fa-globe',
+    visible: game.user.isGM,
+    onClick: () => openOpenWorldSetup(),
+    button: true
+  };
+  tokenControls.tools['openworld-designate'] = {
+    name: 'openworld-designate',
+    title: 'Designate Hex',
+    icon: 'fas fa-map-pin',
+    visible: game.user.isGM,
+    onClick: () => designateHexPrompt(),
+    button: true
+  };
+  tokenControls.tools['openworld-reset-table'] = {
+    name: 'openworld-reset-table',
+    title: 'Reset Expedition Deck',
+    icon: 'fas fa-redo',
+    visible: game.user.isGM,
+    onClick: () => resetOpenWorldTable(),
+    button: true
+  };
+  tokenControls.tools['openworld-clear'] = {
+    name: 'openworld-clear',
+    title: 'Clear Open World',
+    icon: 'fas fa-globe',
+    visible: game.user.isGM,
+    onClick: () => clearOpenWorld(),
+    button: true
+  };
 });
 
 // Add aura testing function to global game object
@@ -2731,73 +2853,4 @@ async function applyGrappledCondition(actor) {
     await actor.createEmbeddedDocuments("ActiveEffect", [effectData]);
     ui.notifications.info(`${actor.name} is now Grappled!`);
   } catch (error) {
-    console.error("Error applying Grappled condition:", error);
-    ui.notifications.error("Failed to apply Grappled condition!");
-  }
-}
-
-/* -------------------------------------------- */
-/*  Hotbar Macros                               */
-/* -------------------------------------------- */
-
-/**
- * Create a Macro from an Item drop.
- * Get an existing item macro if one exists, otherwise create a new one.
- * @param {Object} data     The dropped data
- * @param {number} slot     The hotbar slot to use
- * @returns {Promise}
- */
-async function createItemMacro(data, slot) {
-  // First, determine if this is a valid owned item.
-  if (data.type !== 'Item') return;
-  if (!data.uuid.includes('Actor.') && !data.uuid.includes('Token.')) {
-    return ui.notifications.warn(
-      'You can only create macro buttons for owned Items'
-    );
-  }
-  // If it is, retrieve it based on the uuid.
-  const item = await Item.fromDropData(data);
-
-  // Create the macro command using the uuid.
-  const command = `game.stryder.rollItemMacro("${data.uuid}");`;
-  let macro = game.macros.find(
-    (m) => m.name === item.name && m.command === command
-  );
-  if (!macro) {
-    macro = await Macro.create({
-      name: item.name,
-      type: 'script',
-      img: item.img,
-      command: command,
-      flags: { 'stryder.itemMacro': true },
-    });
-  }
-  game.user.assignHotbarMacro(macro, slot);
-  return false;
-}
-
-/**
- * Create a Macro from an Item drop.
- * Get an existing item macro if one exists, otherwise create a new one.
- * @param {string} itemUuid
- */
-function rollItemMacro(itemUuid) {
-  // Reconstruct the drop data so that we can load the item.
-  const dropData = {
-    type: 'Item',
-    uuid: itemUuid,
-  };
-  // Load the item from the uuid.
-  Item.fromDropData(dropData).then((item) => {
-    // Determine if the item loaded and if it's an owned item.
-    if (!item || !item.parent) {
-      const itemName = item?.name ?? itemUuid;
-      return ui.notifications.warn(
-        `Could not find item ${itemName}. You may need to delete and recreate this macro.`
-      );
-    }
-
-    // Trigger the item roll
-    item.roll();
-  });
-}
+    console.error("Error applying Grappled condition:", error

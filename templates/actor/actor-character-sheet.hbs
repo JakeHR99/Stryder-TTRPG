@@ -154,32 +154,38 @@
 			<div class="jrpg-portrait-frame">
 				<img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
 			</div>
-			<div class="jrpg-player-card">
-				<div class="jrpg-player-portrait-wrap">
-					<div class="jrpg-player-portrait-diamond">
-						<img src="{{actor.prototypeToken.texture.src}}" class="jrpg-player-portrait-img" data-edit="prototypeToken.texture.src" title="Set card portrait" />
+			<div class="jrpg-player-card-wrap">
+				<div class="jrpg-player-card">
+					<div class="jrpg-player-portrait-wrap">
+						<div class="jrpg-player-portrait-diamond">
+							<img src="{{actor.prototypeToken.texture.src}}" class="jrpg-player-portrait-img" data-edit="prototypeToken.texture.src" title="Set card portrait" />
+						</div>
+					</div>
+					<div class="jrpg-player-info">
+						<div class="jrpg-player-name">
+							{{actor.name}}<span class="jrpg-player-level-sep"> · </span><span class="jrpg-player-level">Lv. {{system.attributes.level.value}}</span>
+						</div>
+						<div class="jrpg-player-class-folk">{{system.class.name}}{{#if system.folk.name}} · {{system.folk.name}}{{/if}}</div>
+						<div class="jrpg-player-stat-row">
+							<span class="jrpg-pstat-label hp-label">HP</span>
+							<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar hp-pfill" style="width:{{hpPct}}%"></div></div>
+							<span class="jrpg-pstat-values hp-label">{{system.health.value}}<span class="jrpg-pstat-sep">/</span>{{system.health.max}}</span>
+						</div>
+						<div class="jrpg-player-stat-row">
+							<span class="jrpg-pstat-label mp-label">MP</span>
+							<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar mp-pfill" style="width:{{mpPct}}%"></div></div>
+							<span class="jrpg-pstat-values mp-label">{{system.mana.value}}<span class="jrpg-pstat-sep">/</span>{{system.mana.max}}</span>
+						</div>
+						<div class="jrpg-player-stat-row">
+							<span class="jrpg-pstat-label sp-label">STA</span>
+							<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar sp-pfill" style="width:{{staPct}}%"></div></div>
+							<span class="jrpg-pstat-values sp-label">{{system.stamina.value}}<span class="jrpg-pstat-sep">/</span>{{system.stamina.max}}</span>
+						</div>
 					</div>
 				</div>
-				<div class="jrpg-player-info">
-					<div class="jrpg-player-name">
-						{{actor.name}}<span class="jrpg-player-level-sep"> · </span><span class="jrpg-player-level">Lv. {{system.attributes.level.value}}</span>
-					</div>
-					<div class="jrpg-player-class-folk">{{system.class.name}}{{#if system.folk.name}} · {{system.folk.name}}{{/if}}</div>
-					<div class="jrpg-player-stat-row">
-						<span class="jrpg-pstat-label hp-label">HP</span>
-						<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar hp-pfill" style="width:{{hpPct}}%"></div></div>
-						<span class="jrpg-pstat-values hp-label">{{system.health.value}}<span class="jrpg-pstat-sep">/</span>{{system.health.max}}</span>
-					</div>
-					<div class="jrpg-player-stat-row">
-						<span class="jrpg-pstat-label mp-label">MP</span>
-						<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar mp-pfill" style="width:{{mpPct}}%"></div></div>
-						<span class="jrpg-pstat-values mp-label">{{system.mana.value}}<span class="jrpg-pstat-sep">/</span>{{system.mana.max}}</span>
-					</div>
-					<div class="jrpg-player-stat-row">
-						<span class="jrpg-pstat-label sp-label">STA</span>
-						<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar sp-pfill" style="width:{{staPct}}%"></div></div>
-						<span class="jrpg-pstat-values sp-label">{{system.stamina.value}}<span class="jrpg-pstat-sep">/</span>{{system.stamina.max}}</span>
-					</div>
+				<div style="display:flex;flex-direction:row;gap:6px;justify-content:center;margin-top:4px;pointer-events:auto;">
+					<button type="button" class="jrpg-recovery-btn" data-action="springOfLife" style="display:inline-flex;align-items:center;justify-content:center;width:auto;flex:0 0 auto;background:rgba(100,55,130,0.88);border:1px solid rgba(190,140,220,0.55);border-radius:3px;color:rgba(245,235,255,0.88);font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.10em;text-transform:uppercase;padding:4px 18px;line-height:1;cursor:pointer;pointer-events:auto;">Spring of Life</button>
+					<button type="button" class="jrpg-recovery-btn" data-action="resting" style="display:inline-flex;align-items:center;justify-content:center;width:auto;flex:0 0 auto;background:rgba(100,55,130,0.88);border:1px solid rgba(190,140,220,0.55);border-radius:3px;color:rgba(245,235,255,0.88);font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.10em;text-transform:uppercase;padding:4px 18px;line-height:1;cursor:pointer;pointer-events:auto;">Rest</button>
 				</div>
 			</div>
 		</div>

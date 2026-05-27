@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from '../helpers/constants.mjs';
+import { resolveStaminaCost } from '../helpers/stamina-conversion.mjs';
 import { handleConfusedApplication, handleConfusedRollIntercept, confusedState } from '../conditions/confused.mjs';
 import { isActorPanicked, getPanickedRollQuality } from '../conditions/panicked.mjs';
 import { isActorHorrified, getHorrifiedRollQuality } from '../conditions/horrified.mjs';
@@ -742,11 +743,14 @@ export class StryderItem extends Item {
 		
 		// Use the stunned-adjusted cost for the rest of the function
 		adjustedStaminaCost = stunnedResult.cost;
-		
-		if (staminaActor.system.stamina.value < adjustedStaminaCost) {
-		  canAfford = false;
-		  warningMessage += `Not enough Stamina (${staminaActor.system.stamina.value}/${adjustedStaminaCost})`;
-		}
+
+		// Show mana-conversion dialog — handles affordability check and immediate deduction
+		const staminaPayment = await resolveStaminaCost(staminaActor, adjustedStaminaCost);
+		if (staminaPayment === null) return; // cancelled or unaffordable
+		const staminaUpdates = {};
+		if (staminaPayment.staminaToSpend > 0) staminaUpdates['system.stamina.value'] = staminaActor.system.stamina.value - staminaPayment.staminaToSpend;
+		if (staminaPayment.manaToSpend > 0) staminaUpdates['system.mana.value'] = (staminaActor.system.mana?.value ?? 0) - staminaPayment.manaToSpend;
+		if (Object.keys(staminaUpdates).length) await staminaActor.update(staminaUpdates);
 	  }
 
 	  if (manaCost > 0) {
@@ -816,17 +820,8 @@ export class StryderItem extends Item {
 		  const updates = {};
 		  updates['system.mana.value'] = Math.max(0, manaActor.system.mana.value - manaCost - overflowAmount);
 		  
-		  let stunnedAdditionalCost = 0;
-		  if (staminaCost > 0) {
-			const staminaActor = linkedActor || actor;
-			if (staminaActor.system.stamina?.value !== undefined) {
-			  // Use the stunned-adjusted cost if we calculated it earlier
-			  const finalStaminaCost = adjustedStaminaCost || staminaCost;
-			  stunnedAdditionalCost = finalStaminaCost - staminaCost;
-			  
-			  updates['system.stamina.value'] = Math.max(0, staminaActor.system.stamina.value - finalStaminaCost);
-			}
-		  }
+		  // Stamina already deducted via resolveStaminaCost — track stunned extra cost only
+		  const stunnedAdditionalCost = (adjustedStaminaCost || staminaCost) - staminaCost;
 		  
 		  if (focusCost > 0) {
 			const focusActor = linkedActor || actor;
@@ -929,15 +924,9 @@ export class StryderItem extends Item {
 	  let stunnedAdditionalCost = 0;
 
 	  if (staminaCost > 0) {
-		const staminaActor = linkedActor || actor;
-		if (staminaActor.system.stamina?.value !== undefined) {
-		  // Use the stunned-adjusted cost if we calculated it earlier
-		  const finalStaminaCost = adjustedStaminaCost || staminaCost;
-		  stunnedAdditionalCost = finalStaminaCost - staminaCost;
-		  
-		  mainUpdates['system.stamina.value'] = Math.max(0, staminaActor.system.stamina.value - finalStaminaCost);
-		  hasResources = true;
-		}
+		// Stamina already deducted via resolveStaminaCost — track stunned extra cost
+		stunnedAdditionalCost = (adjustedStaminaCost || staminaCost) - staminaCost;
+		hasResources = true;
 	  }
 
 	  if (manaCost > 0) {
