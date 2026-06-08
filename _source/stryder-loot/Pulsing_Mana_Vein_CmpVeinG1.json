@@ -1,0 +1,33 @@
+{
+  "name": "Pulsing Mana Vein",
+  "type": "component",
+  "img": "systems/stryder/assets/components/mana_veins_g1.png",
+  "system": {
+    "description": "<p>Veins that crackle with barely-contained magical energy even after death. Handling requires care \u2014 the current can arc unexpectedly and scorch careless hands.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G1",
+    "sell_price": 250
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpVeinG1",
+  "sort": 1500000,
+  "_key": "!items!CmpVeinG1"
+}

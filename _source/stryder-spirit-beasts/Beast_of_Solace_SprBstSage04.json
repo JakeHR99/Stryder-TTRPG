@@ -3,18 +3,62 @@
   "type": "spirit-beast",
   "img": "icons/svg/aura.svg",
   "system": {
-    "health": { "value": 5, "min": 0, "max": { "value": 5, "mod": 0 } },
-    "mana": { "value": 0, "min": 0, "max": { "value": 0, "mod": 0 } },
-    "stamina": { "value": 0, "min": 0, "max": { "value": 0, "mod": 0 } },
-    "ward": { "value": 0, "min": 0 },
-    "resource1": { "value": 0, "min": 0, "max": 0 },
-    "resource2": { "value": 0, "min": 0, "max": 0 },
-    "initiative": { "bonus": 0 },
-    "dodge": { "bonus": 0 },
-    "evade": { "bonus": 0 },
-    "reflex_tag": { "bonus": 0 },
-    "leap_bonus": { "bonus": 0 },
-    "elixir_sickness": { "value": 0 },
+    "health": {
+      "value": 5,
+      "min": 0,
+      "max": {
+        "value": 5,
+        "mod": 0
+      }
+    },
+    "mana": {
+      "value": 0,
+      "min": 0,
+      "max": {
+        "value": 0,
+        "mod": 0
+      }
+    },
+    "stamina": {
+      "value": 0,
+      "min": 0,
+      "max": {
+        "value": 0,
+        "mod": 0
+      }
+    },
+    "ward": {
+      "value": 0,
+      "min": 0
+    },
+    "resource1": {
+      "value": 0,
+      "min": 0,
+      "max": 0
+    },
+    "resource2": {
+      "value": 0,
+      "min": 0,
+      "max": 0
+    },
+    "initiative": {
+      "bonus": 0
+    },
+    "dodge": {
+      "bonus": 0
+    },
+    "evade": {
+      "bonus": 0
+    },
+    "reflex_tag": {
+      "bonus": 0
+    },
+    "leap_bonus": {
+      "bonus": 0
+    },
+    "elixir_sickness": {
+      "value": 0
+    },
     "physical_reduction": 0,
     "magykal_reduction": 0,
     "physical_resist_mod": 0,
@@ -25,20 +69,38 @@
     "attributes": {
       "creature_size": "0.5",
       "move": {
-        "running": { "value": 7, "expertise": false },
-        "flying": { "value": 0, "expertise": false }
+        "running": {
+          "value": 7,
+          "expertise": false
+        },
+        "flying": {
+          "value": 0,
+          "expertise": false
+        }
       }
     },
-    "abilities": { "primary": "", "defense": "" }
+    "abilities": {
+      "primary": "<p>The Spirit inflicts the <strong>Energized</strong> Condition on 1 or 2 creatures within 3 Spaces.</p>",
+      "defense": "<p>When it becomes the target of an attack, its attacker becomes <strong>Shocked</strong>.</p>"
+    },
+    "description": "<p><strong>Sage Gate — Beast of Solace</strong></p><p>Small size | 5 Health | 7 Movement</p><p><strong>Primary:</strong> The Spirit inflicts the Energized Condition on 1 or 2 creatures within 3 Spaces.</p><p><strong>Defense:</strong> When it becomes the target of an attack, its attacker becomes Shocked.</p>"
   },
   "items": [],
   "effects": [],
-  "ownership": { "default": 0 },
+  "ownership": {
+    "default": 0
+  },
   "flags": {},
   "_stats": {
-    "compendiumSource": null, "duplicateSource": null,
-    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
-    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
   },
   "_id": "SprBstSage04",
   "sort": 400000,

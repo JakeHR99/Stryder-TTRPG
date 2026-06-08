@@ -1,0 +1,31 @@
+{
+  "folder": "ShmClsFolder01",
+  "name": "Approximate Ascension",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Gained at Level 15. 3 Mana Focused Action.</em></p><p>For the next 3 Rounds you and your Lordling gain:</p><ul><li>Your Lordling becomes Massive size.</li><li>Shaman and Lordling raise each other's Stats by an amount equal to their own Stats (can surpass limits).</li><li>Your Lordling can utilize ALL Aspects without changing form.</li><li>Your maximum Tactic Points is doubled (expended TP are not restored).</li><li>You gain access to the <strong>Spirit's Wrath</strong> and <strong>Spirit's Compassion</strong> Tactics.</li></ul><p><strong>Spirit's Wrath</strong> | Focused | 7 TP, 2 Stamina, 2 Mana: A massive breath attack in a 14-space line, 3 spaces wide. Deals [4×Soul] damage. Evasion Value: 15.</p><p><strong>Spirit's Compassion</strong> | Focused | 7 TP, 2 Stamina, 2 Mana: A wave of healing. Every allied creature within 6 spaces regains 15 Health. You do not regain Health from this.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 3,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ShmAbil05ApAsc",
+  "sort": 100000,
+  "_key": "!items!ShmAbil05ApAsc"
+}

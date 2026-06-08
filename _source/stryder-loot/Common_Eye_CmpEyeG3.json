@@ -1,0 +1,33 @@
+{
+  "name": "Common Eye",
+  "type": "component",
+  "img": "systems/stryder/assets/components/eyes_g3.png",
+  "system": {
+    "description": "<p>A serviceable monster eye with intact crystalline structure. Retains mild perceptive resonance, useful in scrying aids and detection compounds.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G3",
+    "sell_price": 25
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpEyeG3",
+  "sort": 800000,
+  "_key": "!items!CmpEyeG3"
+}

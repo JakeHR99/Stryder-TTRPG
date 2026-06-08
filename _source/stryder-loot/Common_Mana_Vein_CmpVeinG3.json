@@ -1,0 +1,33 @@
+{
+  "name": "Common Mana Vein",
+  "type": "component",
+  "img": "systems/stryder/assets/components/mana_veins_g3.png",
+  "system": {
+    "description": "<p>Intact mana conduit tissue with a steady, if modest, flow of residual energy. A standard material for mana-based crafting and enchantment work.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G3",
+    "sell_price": 25
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpVeinG3",
+  "sort": 1300000,
+  "_key": "!items!CmpVeinG3"
+}

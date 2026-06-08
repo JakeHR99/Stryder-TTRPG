@@ -1,0 +1,31 @@
+{
+  "folder": "Tech2XPFolder01",
+  "name": "Inverted Essence",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Every dawn, you can attune yourself to the realm of spirits for a brief moment. During this time, you can agree to let a Warden Spirit invert your flow of mana so that it only flows inwards, reinforcing the body at a cost. This effect lasts for 24 hours.</p><p><strong>Restrictions while active:</strong></p><ul><li>Cannot access or use any Mortal or Immortal Aspects.</li><li>Cannot activate items or equipment that require expending Mana.</li><li>Mana can only be used to convert to Stamina.</li><li>Unarmed attacks do no harm to monsters — only Reverence Steel weapons or damage-dealing equipment work.</li></ul><p><strong>Benefits while active:</strong></p><ul><li>Maximum Movement +4.</li><li>Maximum Mana reduced by half.</li><li>Maximum Health +Level.</li><li>Arcane Sense becomes 0 and cannot be rolled.</li><li>All Senses except Arcane raise by 2 (can exceed 5, max 7).</li><li>All Physical Talents raise by 4 (can exceed 5, max 7).</li><li>Physical Resistance rolls +2.</li><li>Magykal Resistance rolls -5.</li><li>Cannot be detected by Arcane Sense.</li><li>Gain Expertise in all forms of movement (if not already possessed).</li><li>Falling, collision, and crashing damage is halved.</li><li>2 Damage Reduction from all damage types except Ahl.</li></ul>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Daily — activated at dawn; lasts 24 hours",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 2 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil21InvEss",
+  "sort": 100000,
+  "_key": "!items!TechAbil21InvEss"
+}

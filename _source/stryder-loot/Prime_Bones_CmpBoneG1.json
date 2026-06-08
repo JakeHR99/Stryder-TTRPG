@@ -1,0 +1,33 @@
+{
+  "name": "Prime Bones",
+  "type": "component",
+  "img": "systems/stryder/assets/components/bones_g1.png",
+  "system": {
+    "description": "<p>Immaculate bones from a formidable beast. The material is unnaturally hard and hums faintly with residual vitality. Sought by master craftsmen across Alstoria.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G1",
+    "sell_price": 250
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpBoneG1",
+  "sort": 500000,
+  "_key": "!items!CmpBoneG1"
+}

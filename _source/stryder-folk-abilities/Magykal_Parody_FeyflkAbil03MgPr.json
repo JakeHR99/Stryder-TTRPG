@@ -4,7 +4,7 @@
   "type": "racial",
   "img": "icons/svg/aura.svg",
   "system": {
-    "description": "<p>Using Golden Mana you can emulate an ability used from any Aspect that you have seen be used during the current day. The damage it would deal uses either your Soul or Arcana as base damage, whichever is higher. When you activate Magykal Parody you must also pay the cost of the mimicked ability, including Action, Mana, or Stamina.</p><p>Warriors can evoke Mystic Aspect abilities this way as they use their Golden Mana as a conduit.</p>",
+    "description": "<p>Using Golden Mana you can emulate an ability used from any Aspect that you have seen be used during the current day. The damage it would deal uses either your Soul as base damage. When you activate Magykal Parody you must also pay the cost of the mimicked ability, including Action, Mana, or Stamina.</p><p>Warriors can evoke Mystic Aspect abilities this way as they use their Golden Mana as a conduit.</p>",
     "roll": {
       "diceBonus": 0,
       "diceNum": 2,

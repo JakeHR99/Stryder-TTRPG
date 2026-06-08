@@ -30,6 +30,344 @@ const STRYDER_CLASS_DATA = {
 };
 
 // ---------------------------------------------------------------------------
+// Stat Distribution Popup — shown when a Warrior aug grants extra stat points
+// ---------------------------------------------------------------------------
+async function _showStatDistributePopup(actor, pts) {
+  const STATS   = ['Soul', 'Reflex', 'Grit', 'Will'];
+  const MAX_VAL = 7;
+  const deltas  = Object.fromEntries(STATS.map(s => [s, 0]));
+  let remaining = pts;
+
+  const rows = STATS.map(s => {
+    const cur = actor.system.abilities?.[s]?.value ?? 0;
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:4px 6px;border-radius:3px;background:rgba(255,255,255,0.03);">
+      <span style="width:64px;font-size:13px;font-weight:700;color:rgba(180,210,255,0.75);letter-spacing:1px;text-transform:uppercase;flex-shrink:0;">${s}</span>
+      <span style="width:22px;text-align:right;font-size:13px;color:rgba(180,210,255,0.4);flex-shrink:0;" data-sdc-base="${s}">${cur}</span>
+      <button type="button" class="sdc-minus" data-stat="${s}" style="width:24px;height:24px;background:rgba(255,80,80,0.12);border:1px solid rgba(255,100,100,0.25);border-radius:3px;color:#ff9999;cursor:pointer;font-size:15px;line-height:1;padding:0;flex-shrink:0;">−</button>
+      <span style="min-width:32px;text-align:center;font-size:17px;font-weight:700;color:#e8f4ff;flex-shrink:0;" data-sdc-val="${s}">${cur}</span>
+      <button type="button" class="sdc-plus" data-stat="${s}" style="width:24px;height:24px;background:rgba(80,180,255,0.12);border:1px solid rgba(100,180,255,0.25);border-radius:3px;color:#88ccff;cursor:pointer;font-size:15px;line-height:1;padding:0;flex-shrink:0;">+</button>
+      <span style="font-size:11px;color:rgba(100,200,255,0.55);min-width:24px;flex-shrink:0;" data-sdc-delta="${s}"></span>
+    </div>`;
+  }).join('');
+
+  const content = `<div style="padding:8px 0;font-family:'Rajdhani',sans-serif;">
+    <p style="margin:0 0 10px;color:rgba(180,210,255,0.7);font-size:13px;line-height:1.4;">
+      Distribute <strong style="color:#88aadf;">${pts}</strong> new stat points (max 7 per stat).
+    </p>
+    <div style="margin-bottom:14px;font-size:12px;color:rgba(150,190,230,0.6);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;">
+      Points remaining:&ensp;<strong id="sdc-remaining" style="font-size:16px;color:#88aadf;">${pts}</strong>
+    </div>
+    ${rows}
+  </div>`;
+
+  return new Promise(resolve => {
+    new Dialog({
+      title: `Distribute +${pts} Stat Points`,
+      content,
+      buttons: {
+        confirm: {
+          label: 'Confirm',
+          callback: async (html) => {
+            const updates = {};
+            for (const s of STATS) {
+              if (deltas[s] !== 0)
+                updates[`system.abilities.${s}.value`] = (actor.system.abilities?.[s]?.value ?? 0) + deltas[s];
+            }
+            if (Object.keys(updates).length) await actor.update(updates);
+            resolve();
+          }
+        },
+        skip: { label: 'Assign Later', callback: () => resolve() }
+      },
+      default: 'confirm',
+      render: (html) => {
+        html.find('.sdc-plus').on('click', function () {
+          const s   = this.dataset.stat;
+          const cur = actor.system.abilities?.[s]?.value ?? 0;
+          if (remaining <= 0 || (cur + deltas[s]) >= MAX_VAL) return;
+          deltas[s]++; remaining--;
+          html.find(`[data-sdc-val="${s}"]`).text(cur + deltas[s]);
+          html.find(`[data-sdc-delta="${s}"]`).text(`+${deltas[s]}`);
+          html.find('#sdc-remaining').text(remaining);
+        });
+        html.find('.sdc-minus').on('click', function () {
+          const s = this.dataset.stat;
+          if (deltas[s] <= 0) return;
+          const cur = actor.system.abilities?.[s]?.value ?? 0;
+          deltas[s]--; remaining++;
+          html.find(`[data-sdc-val="${s}"]`).text(cur + deltas[s]);
+          html.find(`[data-sdc-delta="${s}"]`).text(deltas[s] > 0 ? `+${deltas[s]}` : '');
+          html.find('#sdc-remaining').text(remaining);
+        });
+      }
+    }, { width: 320, classes: ['dialog', 'stryder-stat-popup'] }).render(true);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Class Augmentation Options
+// Hardcoded per-class so the Growth panel never relies on compendium HTML.
+// Each option: { label, sublabel, apply: async (actor) => {} }
+// ---------------------------------------------------------------------------
+const CLASS_AUG_OPTIONS = {
+  // ── Warrior ──────────────────────────────────────────────────────────────
+  WrrAbil02WaI: [
+    {
+      label: 'Excellent range becomes 10–12',
+      sublabel: 'Attack roll quality extended',
+      apply: async (actor) => {
+        await actor.setFlag('stryder', 'augExcellentRange1012', true);
+        ui.notifications.info(`${actor.name}: Excellent range is now 10–12.`);
+      },
+    },
+    {
+      label: '+2 Extra Stat Points',
+      sublabel: 'Can exceed 5 (max 7) — distribute in Stats',
+      apply: async (actor) => {
+        const cur = actor.getFlag('stryder', 'augExtraStatPoints') ?? 0;
+        await actor.setFlag('stryder', 'augExtraStatPoints', cur + 2);
+        await _showStatDistributePopup(actor, 2);
+      },
+    },
+    {
+      label: '+2 Experience Points',
+      sublabel: 'Granted immediately',
+      apply: async (actor) => {
+        const cur = actor.system.attributes?.xp?.value ?? 0;
+        await actor.update({ 'system.attributes.xp.value': cur + 2 });
+        ui.notifications.info(`${actor.name} gained 2 XP.`);
+      },
+    },
+  ],
+  WrrAbil03WaII: [
+    {
+      label: '+1 to Attack Rolls',
+      sublabel: 'Applies to all 2d6 attack rolls',
+      apply: async (actor) => {
+        const cur = actor.getFlag('stryder', 'augAttackBonus') ?? 0;
+        await actor.setFlag('stryder', 'augAttackBonus', cur + 1);
+        ui.notifications.info(`${actor.name}: +1 to all attack rolls.`);
+      },
+    },
+    {
+      label: '+5 Maximum Health',
+      sublabel: 'Permanent increase',
+      apply: async (actor) => {
+        // Store as a flag so _calcMaxStats can include it — a direct write to
+        // health.max would be overwritten every render by _syncComputedStats.
+        const cur = actor.getFlag('stryder', 'augHealthBonus') ?? 0;
+        await actor.setFlag('stryder', 'augHealthBonus', cur + 5);
+        ui.notifications.info(`${actor.name}: Maximum Health increased by 5.`);
+      },
+    },
+    {
+      label: '+2 Maximum Movement',
+      sublabel: 'Running & Marching speeds',
+      apply: async (actor) => {
+        const move = actor.system.attributes?.move ?? {};
+        await actor.update({
+          'system.attributes.move.running.value':  (move.running?.value  ?? 7) + 2,
+          'system.attributes.move.marching.value': (move.marching?.value ?? 4) + 2,
+        });
+        ui.notifications.info(`${actor.name}: Running +2, Marching +2.`);
+      },
+    },
+  ],
+  WrrAbil04WaIII: [
+    {
+      label: 'Poor range → 1 · Daily combat reroll',
+      sublabel: 'Once per day while in combat',
+      apply: async (actor) => {
+        await actor.setFlag('stryder', 'augPoorRangeOverride', 1);
+        await actor.setFlag('stryder', 'augDailyRerollAvailable', true);
+        ui.notifications.info(`${actor.name}: Poor range is now 1. Daily reroll granted.`);
+      },
+    },
+    {
+      label: '+3 Extra Stat Points',
+      sublabel: 'Can exceed 5 (max 7) — distribute in Stats',
+      apply: async (actor) => {
+        const cur = actor.getFlag('stryder', 'augExtraStatPoints') ?? 0;
+        await actor.setFlag('stryder', 'augExtraStatPoints', cur + 3);
+        await _showStatDistributePopup(actor, 3);
+      },
+    },
+    {
+      label: '+3 Experience Points',
+      sublabel: 'Granted immediately',
+      apply: async (actor) => {
+        const cur = actor.system.attributes?.xp?.value ?? 0;
+        await actor.update({ 'system.attributes.xp.value': cur + 3 });
+        ui.notifications.info(`${actor.name} gained 3 XP.`);
+      },
+    },
+  ],
+  WrrAbil05WaIV: [
+    {
+      label: 'Double damage on Excellent Attacks',
+      sublabel: 'Focused attacks only',
+      apply: async (actor) => {
+        await actor.setFlag('stryder', 'augDoubleExcellentDamage', true);
+        ui.notifications.info(`${actor.name}: Excellent Attacks now deal double damage.`);
+      },
+    },
+    {
+      label: '+5 Damage Reduction (all sources)',
+      sublabel: 'Physical & Magykal',
+      apply: async (actor) => {
+        // _calculateReductionBonuses is disabled in actor.mjs (prevents armor overwrites),
+        // so the flag alone would never be applied. Store the flag AND directly write to
+        // the reduction fields which are manually managed.
+        const cur = actor.getFlag('stryder', 'augDamageReduction') ?? 0;
+        await actor.setFlag('stryder', 'augDamageReduction', cur + 5);
+        const physCur = actor.system.physical_reduction ?? 0;
+        const magyCur = actor.system.magykal_reduction  ?? 0;
+        await actor.update({
+          'system.physical_reduction': physCur + 5,
+          'system.magykal_reduction':  magyCur + 5,
+        });
+        ui.notifications.info(`${actor.name}: +5 Damage Reduction from all sources.`);
+      },
+    },
+    {
+      label: '+2 Maximum Stamina',
+      sublabel: 'Permanent increase',
+      apply: async (actor) => {
+        // Store as a flag so _calcMaxStats can include it — same reason as augHealthBonus.
+        const cur = actor.getFlag('stryder', 'augStaminaBonus') ?? 0;
+        await actor.setFlag('stryder', 'augStaminaBonus', cur + 2);
+        ui.notifications.info(`${actor.name}: Maximum Stamina increased by 2.`);
+      },
+    },
+  ],
+};
+
+const STRYDER_CLASS_FEATURES = {
+  Warrior: [
+    { level: 1,  feats: [{ id: 'WrrAbil01AugCmb', name: 'Augmented Combatant' }] },
+    { level: 4,  feats: [{ id: 'WrrAbil02WaI',    name: 'Warrior Augmentations I',   isChoice: true }] },
+    { level: 8,  feats: [{ id: 'WrrAbil03WaII',   name: 'Warrior Augmentations II',  isChoice: true }] },
+    { level: 12, feats: [{ id: 'WrrAbil04WaIII',  name: 'Warrior Augmentations III', isChoice: true }] },
+    { level: 15, feats: [{ id: 'WrrAbil05WaIV',   name: 'Warrior Augmentations IV',  isChoice: true }] },
+  ],
+  Ranger: [
+    { level: 1,  feats: [{ id: 'RngrCls01CrWk',    name: 'Create Weakness' },     { id: null, name: 'Ranger Technique', isTechChoice: true }] },
+    { level: 4,  feats: [{ id: 'RngrCls02BhSl000', name: 'Behemoth Slayer' },     { id: null, name: 'Ranger Technique', isTechChoice: true }] },
+    { level: 8,  feats: [{ id: 'RngrCls03ExWk',    name: 'Exploit Weakness' },    { id: null, name: 'Ranger Technique', isTechChoice: true }] },
+    { level: 12, feats: [{ id: 'RngrCls04BhSlII0', name: 'Behemoth Slayer II' },  { id: null, name: 'Ranger Technique', isTechChoice: true }] },
+    { level: 15, feats: [{ id: 'RngrCls05TyEx000', name: 'Tyrant Executioner' },  { id: null, name: 'Ranger Technique', isTechChoice: true }] },
+  ],
+  Shaman: [
+    { level: 1,  feats: [
+      { id: 'ShmAbil01BndLv', name: 'Bonded Lives' },
+      { id: 'ShmTac01Atk',   name: 'Tactic — Attack' },
+      { id: 'ShmTac02Heal',  name: 'Tactic — Heal' },
+      { id: 'ShmTac03DgEv',  name: 'Tactic — Dodge/Evasion' },
+      { id: 'ShmTac04Ret',   name: 'Tactic — Return' },
+      { id: 'ShmTac05Met',   name: 'Tactic — Metamorph' },
+      { id: null, name: 'Lordly Aspects (×3)', isLordlyChoice: true, count: 3, startIdx: 0 },
+    ]},
+    { level: 4,  feats: [
+      { id: 'ShmAbil02ExpBnd', name: 'Expanding Bond' },
+      { id: null, name: 'Mystic Blessings', isMysticBlessing: true },
+      { id: 'ShmTac06Rtr',   name: 'Tactic — Retreat' },
+      { id: 'ShmTac07TrTl',  name: 'Tactic — Transfer Talent' },
+      { id: null, name: 'Lordly Aspect', isLordlyChoice: true, count: 1, startIdx: 3 },
+    ]},
+    { level: 8,  feats: [
+      { id: 'ShmAbil02ExpBnd', name: 'Expanding Bond II', milestone: true },
+      { id: 'ShmAbil03DspStr', name: 'Desperate Strength' },
+      { id: null, name: 'Memories of Past Lives', isMasteryGrant: true, masteryAmount: 3 },
+      { id: null, name: 'Lordly Aspects (×2)', isLordlyChoice: true, count: 2, startIdx: 4 },
+    ]},
+    { level: 12, feats: [
+      { id: 'ShmAbil02ExpBnd', name: 'Expanding Bond III', milestone: true },
+      { id: 'ShmAbil04SprArm', name: 'Spirit Armament' },
+      { id: null, name: 'Lordly Aspect', isLordlyChoice: true, count: 1, startIdx: 6 },
+    ]},
+    { level: 15, feats: [
+      { id: 'ShmAbil02ExpBnd', name: 'Unbreakable Bond', milestone: true },
+      { id: 'ShmAbil05ApAsc', name: 'Approximate Ascension' },
+      { id: null, name: 'Lordly Aspect', isLordlyChoice: true, count: 1, startIdx: 7 },
+    ]},
+  ],
+  Summoner: [
+    { level: 1,  feats: [
+      { id: 'SmnAbil01BlsPhy', name: 'Blessed Physiology' },
+      { id: 'SmnAbil02BndGt', name: 'The Binding Gates' },
+    ]},
+    { level: 4,  feats: [
+      { id: 'SmnAbil03RefGt', name: 'Reinforced Gates' },
+      { id: 'SmnAbil04MyrI',  name: 'Myriad Gates I' },
+      { id: 'SmnAbil05SacRI', name: 'Sacrificed Remains I' },
+    ]},
+    { level: 8,  feats: [
+      { id: 'SmnAbil06SzMt',  name: 'Size and Matter' },
+      { id: 'SmnAbil07ImbStr', name: 'Imbuing Strength' },
+      { id: 'SmnAbil08SacRII', name: 'Sacrificed Remains II' },
+    ]},
+    { level: 12, feats: [
+      { id: 'SmnAbil09ChimGt', name: 'Chimeric Gate' },
+      { id: 'SmnAbil10MyrII',  name: 'Myriad Gates II' },
+    ]},
+    { level: 15, feats: [{ id: 'SmnAbil11BstDis', name: 'Beast of Disaster' }] },
+  ],
+  Warlock: [
+    { level: 1,  feats: [
+      { id: 'WrlkAbil01BdWr',  name: 'Body of War' },
+      { id: 'WrlkAbil02ScStr', name: 'Scarlet Strike' },
+      { id: 'WrlkAbil03ScWrd', name: 'Scarlet Warden' },
+    ]},
+    { level: 4,  feats: [
+      { id: 'WrlkAbil04SnSph', name: 'Sin Siphon' },
+      { id: 'WrlkAbil05BlTth', name: 'Blood Tithes' },
+    ]},
+    { level: 8,  feats: [
+      { id: 'WrlkAbil06SngIch', name: 'Sanguine Ichor' },
+      { id: 'WrlkAbil07CrmCrn', name: 'Crimson Crown' },
+    ]},
+    { level: 12, feats: [
+      { id: 'WrlkAbil08HmrLnc', name: 'Hemorrhaging Lance' },
+      { id: 'WrlkAbil09SacWrl', name: 'Sacrifice' },
+    ]},
+    { level: 15, feats: [
+      { id: 'WrlkAbil10BldEcl', name: 'Bloodied Eclipse' },
+      { id: 'WrlkAbil11MscRtn', name: 'Masochistic Returns' },
+    ]},
+  ],
+  Wytch: [
+    { level: 1,  feats: [
+      { id: 'WytAbil01MgFcs', name: 'Magykal Focus' },
+      { id: 'WytAbil02HxWld', name: 'Hex Wielding' },
+      { id: 'WytHex01Sck',    name: 'Hex — Sicken' },
+      { id: 'WytHex02Bnd',    name: 'Hex — Bind' },
+      { id: 'WytHex03Dny',    name: 'Hex — Deny' },
+    ]},
+    { level: 4,  feats: [
+      { id: 'WytAbil03FcsRmn', name: 'Focus & Remains' },
+      { id: 'WytHex04Mut',     name: 'Hex — Mutilate' },
+      { id: 'WytHex05Enr',     name: 'Hex — Enrage' },
+      { id: 'WytHex06Pnc',     name: 'Hex — Panic' },
+    ]},
+    { level: 8,  feats: [
+      { id: 'WytAbil04WytEye', name: "The Wytche's Eye" },
+      { id: 'WytHex07Srg',     name: 'Hex — Surge' },
+      { id: 'WytHex08Rise',    name: 'Hex — Rise' },
+      { id: 'WytHex09Give',    name: 'Hex — Give' },
+    ]},
+    { level: 12, feats: [
+      { id: 'WytHex10Add', name: 'Hex — Addle' },
+      { id: 'WytHex11Sfr', name: 'Hex — Suffer' },
+      { id: 'WytHex12Del', name: 'Hex — Delude' },
+    ]},
+    { level: 15, feats: [
+      { id: 'WytAbil05HxMst',  name: 'Hex Mastery' },
+      { id: 'WytAbil06TrFcs',  name: 'True Focus Over Remains' },
+    ]},
+  ],
+};
+
+// ---------------------------------------------------------------------------
 // Stryder folk tables
 // ---------------------------------------------------------------------------
 const STRYDER_FOLK_DATA = {
@@ -60,7 +398,8 @@ const STRYDER_FOLK_DATA = {
     senses:  { Arcane: 1, Hearing: 1 },
     passives: ['Divergent: Choose an origin folk for appearance and size only. You gain NONE of that folk\'s abilities.'],
     subfolks: null, freePoints: null,
-    originFolkPicker: true
+    originFolkPicker: true,
+    afflictionPicker: true,
   },
   Halfling: {
     size: 'Small', weight: 3,
@@ -153,6 +492,97 @@ const STRYDER_COLOSSUS_SUBFOLK = {
   }
 };
 
+// Oumen affliction data — passive/active item definitions + AE changes per affliction
+const STRYDER_OUMEN_AFFLICTIONS = {
+  'Cursed Horns': {
+    summary: '+2 Max Mana; laser beam (Swift, Limit 1)',
+    aeChanges: [{ key: 'system.mana.max', mode: 2, value: '2', priority: 50 }],
+    passive: {
+      name: 'Cursed Horns (Passive)',
+      description: '<p>Your horns are a conduit of power for your mana. You gain +2 Maximum Mana.</p>',
+      cooldown_value: 0,
+    },
+    active: {
+      name: 'Cursed Horns (Active)',
+      description: '<p><strong>Swift Action</strong> | Range: 10 Spaces | Ahl Damage | Limit: 1</p><p>You charge a surge of the Other between your horns. At the start of your next turn you select a target within range and fire an impossibly fast laser that deals damage equal to 2× your Soul. This attack cannot be dodged.</p>',
+      cooldown_value: 1,
+    },
+  },
+  'Cursed Wing': {
+    summary: 'Immune to fall damage; hover (Swift, Limit 3)',
+    aeChanges: [],
+    passive: {
+      name: 'Cursed Wing (Passive)',
+      description: '<p>Your wing reflexively snaps out to protect you if you fall, making you immune to falling or colliding damage so long as your wing is unbound so that it may unfurl and nullify your momentum before impact.</p>',
+      cooldown_value: 0,
+    },
+    active: {
+      name: 'Cursed Wing (Active)',
+      description: '<p><strong>Swift Action</strong> | Limit: 3</p><p>Your wing emits a consistent flow of magyk that you can use to hover. While hovering, expending Movement ignores additional costs from Marching terrain as well as granting you the ability to cross open air between two points as if they were solid land, but you cannot end your turn in open air or you will begin to fall. This hover lasts until the start of your next turn.</p>',
+      cooldown_value: 3,
+    },
+  },
+  'Cursed Arm': {
+    summary: 'Strength → 5; quick strike + knockback (Swift, Limit 2)',
+    aeChanges: [{ key: 'system.attributes.talent.strength.value', mode: 4, value: '5', priority: 55 }],
+    passive: {
+      name: 'Cursed Arm (Passive)',
+      description: '<p>Your Strength Talent increases to 5.</p>',
+      cooldown_value: 0,
+    },
+    active: {
+      name: 'Cursed Arm (Active)',
+      description: '<p><strong>Swift Action</strong> | Limit: 2</p><p>While this ability is active you can make a 1 Stamina Quick Attack with the arm that deals 5 damage. On a failed Physical Resist vs your highest Potency, the target is sent flying a number of spaces equal to your Soul.</p>',
+      cooldown_value: 2,
+    },
+  },
+  'Cursed Leg': {
+    summary: 'Movement +2, +1 Evasion; empowered leap (Swift, Limit 2)',
+    aeChanges: [{ key: 'system.attributes.move.running.value', mode: 2, value: '2', priority: 50 }],
+    passive: {
+      name: 'Cursed Leg (Passive)',
+      description: '<p>Your Movement increases by 2 and you gain a +1 bonus to Evasion.</p>',
+      cooldown_value: 0,
+    },
+    active: {
+      name: 'Cursed Leg (Active)',
+      description: '<p><strong>Swift Action</strong> | Limit: 2</p><p>You can do an empowered version of the Leap Action. When you do, you travel twice as far and you do not suffer fall damage as a result of this ability.</p>',
+      cooldown_value: 2,
+    },
+  },
+};
+
+// ── Lordly Aspect Features — categorised for the picker UI ──────────────────
+// NOTE: Monkey Paw (LrdRylAbil03MnPw) and Tigers Pounce (LrdRylAbil05TgPn)
+// have Royal-prefixed IDs in the source but are Wild Aspect features per the rulebook.
+const LORDLY_ASPECT_FEATURES = {
+  Wild: [
+    { id: 'LrdWldAbil01StTg', name: 'Strike Together',        tag: 'Tactic — Swift'   },
+    { id: 'LrdRylAbil03MnPw', name: 'Monkey Paw',             tag: 'Tactic — Focused' },
+    { id: 'LrdRylAbil05TgPn', name: 'Tigers Pounce',          tag: 'Tactic — Focused' },
+    { id: 'LrdWldAbil02AgMt', name: 'Agile Mount',            tag: 'Passive'          },
+    { id: 'LrdWldAbil03StWd', name: 'Stride of the Wild Ones',tag: 'Passive'          },
+    { id: 'LrdWldAbil04Bmbd', name: 'Bombardment',            tag: 'Tactic — Swift'   },
+  ],
+  Royal: [
+    { id: 'LrdRylAbil01MrQk', name: 'Marching Quake',         tag: 'Tactic — Focused' },
+    { id: 'LrdRylAbil02SgBs', name: 'Siege Beast',            tag: 'Passive'          },
+    { id: 'LrdRylAbil04ImMt', name: 'Imposing Mount',         tag: 'Passive'          },
+    { id: 'LrdRylAbil06Ftbl', name: 'Fastball',               tag: 'Tactic — Focused' },
+    { id: 'LrdRylAbil07MyRj', name: 'Mystical Rejuvenation',  tag: 'Tactic — Focused' },
+    { id: 'LrdRylAbil08RyDc', name: "Royal's Decree",         tag: 'Tactic — Swift'   },
+  ],
+  Spirit: [
+    { id: 'LrdSprAbil01DbRm', name: 'Diamond Body, Reverent Mind', tag: 'Tactic — Swift' },
+    { id: 'LrdSprAbil02RgAr', name: 'Ranged Arsenal',              tag: 'Passive'         },
+    { id: 'LrdSprAbil03BlMs', name: 'Blink and Miss',              tag: 'Tactic — Focused'},
+    { id: 'LrdSprAbil04FtMe', name: 'Fight Through Me',            tag: 'Passive'         },
+  ],
+};
+const LORDLY_ASPECT_FEATURE_IDS = new Set(
+  Object.values(LORDLY_ASPECT_FEATURES).flat().map(f => f.id)
+);
+
 // Register Handlebars helpers used by the inventory grid template
 if (!Handlebars.helpers['gt']) {
   Handlebars.registerHelper('gt', (a, b) => a > b);
@@ -174,6 +604,1046 @@ export class StryderActorSheet extends ActorSheet {
       dragDrop: [{ dragSelector: '.item', dropSelector: null }],
     });
   }
+
+  /** Async — fetches compendium data and injects Growth page content. */
+  async _buildGrowthPage(_html) {
+    try {
+      const classPanel = document.getElementById('jrpg-growth-class-panel');
+      const buyPanel   = document.getElementById('jrpg-growth-buy-panel');
+      if (!classPanel || !buyPanel) {
+        console.warn('[Growth] Panels not found in DOM — skipping build');
+        return;
+      }
+
+      // Inject ID-scoped styles — ID selectors (specificity 1,0,0) beat any Foundry class override
+      {
+        const existing = document.getElementById('gw-scoped-styles');
+        if (existing) existing.remove();
+        const s = document.createElement('style');
+        s.id = 'gw-scoped-styles';
+        s.textContent = `
+          /* ── Flex fixes ── */
+          #jrpg-growth-class-panel .gw-panel-header,
+          #jrpg-growth-class-panel .gw-milestone,
+          #jrpg-growth-class-panel .gw-milestone-lv,
+          #jrpg-growth-class-panel .gw-feat,
+          #jrpg-growth-class-panel .gw-feat-body,
+          #jrpg-growth-class-panel .gw-aug-opt,
+          #jrpg-growth-buy-panel .gw-panel-header,
+          #jrpg-growth-buy-panel .gw-tabs,
+          #jrpg-growth-buy-panel .gw-item,
+          #jrpg-growth-buy-panel .gw-item-buy,
+          #jrpg-growth-buy-panel .gw-xp-cost { display: flex !important; }
+
+          /* ── Panel headers ── */
+          #jrpg-growth-class-panel .gw-panel-header,
+          #jrpg-growth-buy-panel   .gw-panel-header {
+            align-items: center; gap: 10px;
+            padding: 10px 16px 8px; flex-shrink: 0;
+            background: rgba(6,10,26,0.8);
+            border-bottom: 1px solid rgba(50,80,160,0.2);
+          }
+          #jrpg-growth-class-panel .gw-panel-label,
+          #jrpg-growth-buy-panel   .gw-panel-label {
+            font-family: 'Cinzel',serif; font-size: 10px; letter-spacing: .16em;
+            text-transform: uppercase; color: rgba(220,230,255,0.45);
+            text-shadow: 0 0 8px rgba(160,185,255,0.15);
+          }
+          #jrpg-growth-class-panel .gw-panel-class {
+            font-family: 'Cinzel',serif; font-size: 12px;
+            color: rgba(230,245,240,0.8); letter-spacing: .06em;
+            text-shadow: 0 0 8px rgba(140,220,190,0.2);
+          }
+          #jrpg-growth-buy-panel .gw-panel-xp {
+            margin-left: auto; align-items: center; gap: 5px;
+            font-family: 'Cinzel',serif; font-size: 11px;
+            color: rgba(210,240,230,0.8);
+            text-shadow: 0 0 8px rgba(120,210,175,0.2);
+          }
+
+          /* ── Milestone rows ── */
+          #jrpg-growth-class-panel .gw-milestone {
+            align-items: flex-start; gap: 0;
+            padding: 5px 12px 5px 10px;
+          }
+          #jrpg-growth-class-panel .gw-milestone--locked { opacity: 0.35; }
+          #jrpg-growth-class-panel .gw-milestone-lv {
+            flex-direction: column; align-items: center;
+            width: 38px; flex-shrink: 0; padding-top: 6px; padding-right: 8px;
+          }
+          #jrpg-growth-class-panel .gw-lv-num {
+            font-family: 'Cinzel',serif; font-size: 10px; font-weight: 600;
+            color: rgba(225,235,255,0.7); letter-spacing: .04em;
+            background: rgba(30,50,120,0.25);
+            border: 1px solid rgba(80,110,200,0.2);
+            border-radius: 3px; padding: 3px 6px;
+            line-height: 1; white-space: nowrap;
+            text-shadow: 0 0 8px rgba(160,185,255,0.2);
+          }
+          #jrpg-growth-class-panel .gw-lv-line {
+            flex: 1; width: 1px; min-height: 12px; margin-top: 6px;
+            background: rgba(60,95,180,0.15);
+          }
+          #jrpg-growth-class-panel .gw-milestone-feats {
+            flex: 1; min-width: 0; padding-bottom: 4px;
+          }
+
+          /* ── Feature cards ── */
+          #jrpg-growth-class-panel .gw-feat {
+            align-items: flex-start; gap: 8px;
+            padding: 8px 12px 8px 10px; margin-bottom: 4px;
+            border-radius: 0 5px 5px 0;
+            border-left: 2px solid transparent;
+            background: rgba(12,20,48,0.55);
+          }
+          #jrpg-growth-class-panel .gw-feat--owned {
+            border-left-color: rgba(50,160,110,0.55);
+            background: rgba(12,28,52,0.65);
+          }
+          #jrpg-growth-class-panel .gw-feat--available {
+            border-left-color: #3db87a;
+            background: rgba(8,34,20,0.7);
+          }
+          #jrpg-growth-class-panel .gw-feat--locked {
+            border-left-color: rgba(50,70,130,0.18);
+            background: rgba(8,12,30,0.3);
+            opacity: 0.4;
+          }
+          #jrpg-growth-class-panel .gw-feat--milestone {
+            border-left-color: rgba(60,120,240,0.5);
+            background: rgba(14,28,72,0.5);
+          }
+
+          /* ── Feature pip ── */
+          #jrpg-growth-class-panel .gw-feat-pip {
+            flex-shrink: 0; font-size: 12px; line-height: 1.5;
+            width: 16px; text-align: center; margin-top: 1px;
+          }
+          #jrpg-growth-class-panel .gw-pip--check { color: #3db87a; }
+          #jrpg-growth-class-panel .gw-pip--new   { color: #3db87a; }
+          #jrpg-growth-class-panel .gw-pip--lock  { color: rgba(60,80,140,0.35); }
+          #jrpg-growth-class-panel .gw-pip--up    { color: rgba(80,140,255,0.65); }
+
+          /* ── Feature body ── */
+          #jrpg-growth-class-panel .gw-feat-body {
+            flex-direction: column; flex: 1; min-width: 0; gap: 3px;
+          }
+          #jrpg-growth-class-panel .gw-feat-name {
+            font-family: 'Cinzel',serif; font-size: 13px;
+            color: #c8d8f4; letter-spacing: .04em; line-height: 1.3; display: block;
+          }
+          #jrpg-growth-class-panel .gw-feat--available .gw-feat-name { color: #7de0b2; }
+          #jrpg-growth-class-panel .gw-feat--locked    .gw-feat-name { color: rgba(80,100,155,0.6); }
+          #jrpg-growth-class-panel .gw-feat-sub {
+            font-size: 10px; color: rgba(120,155,210,0.55);
+            font-style: italic; line-height: 1.4; display: block;
+          }
+
+          /* ── Collect / Confirm buttons ── */
+          #jrpg-growth-class-panel button.gw-btn {
+            width: auto !important; height: auto !important;
+            flex: none !important; min-height: 0 !important;
+            line-height: 1 !important; display: inline-block !important;
+            font-family: 'Cinzel',serif !important; font-size: 9px !important;
+            letter-spacing: .12em !important; text-transform: uppercase !important;
+            padding: 4px 12px !important; margin-top: 6px !important;
+            border-radius: 3px !important;
+            border: 1px solid rgba(50,155,110,0.4) !important;
+            background: rgba(14,55,36,0.6) !important;
+            color: #60c898 !important; cursor: pointer !important;
+          }
+          #jrpg-growth-class-panel button.gw-btn--confirm {
+            border-color: rgba(55,100,200,0.4) !important;
+            background: rgba(14,35,80,0.6) !important;
+            color: #88aadf !important;
+          }
+
+          /* ── Buy panel tabs ── */
+          #jrpg-growth-buy-panel .gw-tabs {
+            border-bottom: 1px solid rgba(50,80,160,0.2); flex-shrink: 0;
+          }
+          #jrpg-growth-buy-panel button.gw-tab {
+            width: auto !important; height: auto !important;
+            flex: none !important; min-height: 0 !important;
+            line-height: 1 !important; display: inline-block !important;
+            border: none !important; border-bottom: 2px solid transparent !important;
+            background: transparent !important; padding: 8px 14px !important;
+            font-family: 'Cinzel',serif !important; font-size: 10px !important;
+            letter-spacing: .14em !important; text-transform: uppercase !important;
+            color: rgba(215,225,255,0.45) !important; cursor: pointer !important;
+            margin-bottom: -1px !important;
+          }
+          #jrpg-growth-buy-panel button.gw-tab.gw-tab--active {
+            color: rgba(150,195,255,0.95) !important;
+            border-bottom-color: rgba(90,160,255,0.7) !important;
+          }
+          #jrpg-growth-buy-panel button.gw-tab:hover:not(.gw-tab--active) {
+            color: rgba(130,175,255,0.65) !important;
+          }
+
+          /* ── Tab body show/hide — scoped to beat any cached stryder.css ── */
+          #jrpg-growth-buy-panel .gw-tab-body {
+            display: none !important; overflow-y: auto; flex: 1; padding: 8px 10px 14px;
+          }
+          #jrpg-growth-buy-panel .gw-tab-body.gw-tab-body--active {
+            display: block !important;
+          }
+
+          /* ── Buy panel item rows ── */
+          #jrpg-growth-buy-panel .gw-item {
+            align-items: center; gap: 10px;
+            padding: 8px 12px; margin-bottom: 3px;
+            border-radius: 4px;
+            background: rgba(8,14,38,0.6);
+            border: 1px solid rgba(40,65,140,0.14);
+          }
+          #jrpg-growth-buy-panel .gw-item:hover {
+            background: rgba(12,22,55,0.85);
+            border-color: rgba(60,95,190,0.28);
+          }
+          #jrpg-growth-buy-panel .gw-item--owned {
+            border-left: 2px solid rgba(50,160,110,0.45);
+          }
+          #jrpg-growth-buy-panel .gw-item-info { flex: 1; min-width: 0; }
+          #jrpg-growth-buy-panel .gw-item-name {
+            font-family: 'Cinzel',serif; font-size: 13px;
+            color: #b8ccec; display: block;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          }
+          #jrpg-growth-buy-panel .gw-item-type {
+            font-family: 'Cinzel',serif; font-size: 9px;
+            letter-spacing: .08em; text-transform: capitalize;
+            color: rgba(95,130,195,0.5);
+          }
+          #jrpg-growth-buy-panel .gw-item-buy { align-items: center; gap: 8px; flex-shrink: 0; }
+          #jrpg-growth-buy-panel .gw-item-owned-mark { color: #3db87a; font-size: 13px; }
+          #jrpg-growth-buy-panel .gw-xp-cost {
+            align-items: center; gap: 4px;
+            font-family: 'Cinzel',serif; font-size: 11px; color: #7de8b8;
+          }
+          #jrpg-growth-buy-panel .gw-xp-gem {
+            display: inline-block; width: 8px; height: 8px;
+            border-radius: 50%; background: #50c090; flex-shrink: 0;
+          }
+          #jrpg-growth-buy-panel .gw-xp-gem--2xp { background: #c09038; }
+          #jrpg-growth-buy-panel button.gw-btn--buy {
+            width: auto !important; height: auto !important;
+            flex: none !important; min-height: 0 !important;
+            line-height: 1 !important; display: inline-block !important;
+            font-family: 'Cinzel',serif !important; font-size: 9px !important;
+            letter-spacing: .12em !important; text-transform: uppercase !important;
+            padding: 5px 14px !important; border-radius: 3px !important;
+            border: 1px solid rgba(50,155,110,0.35) !important;
+            background: rgba(14,55,36,0.55) !important;
+            color: #68d8a8 !important; cursor: pointer !important;
+          }
+          #jrpg-growth-buy-panel button.gw-btn--buy:hover {
+            background: rgba(20,75,50,0.8) !important;
+            border-color: rgba(55,175,115,0.55) !important;
+          }
+          #jrpg-growth-buy-panel button.gw-btn--buy-disabled {
+            opacity: 0.28 !important; cursor: not-allowed !important;
+          }
+          #jrpg-growth-buy-panel .gw-empty {
+            font-family: 'Cinzel',serif; font-size: 11px;
+            color: rgba(210,222,255,0.38); padding: 20px;
+            text-align: center; letter-spacing: .1em;
+          }
+
+          /* ── Choice UI ── */
+          #jrpg-growth-class-panel .gw-tech-choice { margin-top: 7px; }
+          #jrpg-growth-class-panel .gw-tech-select {
+            font-family: 'Cinzel',serif; font-size: 10px;
+            background: rgb(6,14,38) !important; color: #88acd8 !important;
+            border: 1px solid rgba(50,90,200,0.45); border-radius: 3px;
+            padding: 4px 8px; width: 100%; margin-bottom: 5px;
+            appearance: none; -webkit-appearance: none;
+            cursor: pointer;
+          }
+          #jrpg-growth-class-panel .gw-tech-select option {
+            background: rgb(6,14,38) !important; color: #a8c8f0 !important;
+            font-family: 'Cinzel',serif;
+          }
+          #jrpg-growth-class-panel .gw-tech-select option:checked,
+          #jrpg-growth-class-panel .gw-tech-select option:hover {
+            background: rgb(20,50,120) !important; color: #d0e8ff !important;
+          }
+          #jrpg-growth-class-panel .gw-aug-opt {
+            align-items: flex-start; gap: 8px;
+            padding: 4px 6px; border-radius: 2px; cursor: pointer; margin-bottom: 2px;
+          }
+          #jrpg-growth-class-panel .gw-aug-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            border: 1px solid rgba(70,110,190,0.5); flex-shrink: 0; margin-top: 3px;
+          }
+          #jrpg-growth-class-panel .gw-aug-dot.selected { background: #4888d0; border-color: #4888d0; }
+          #jrpg-growth-class-panel .gw-aug-text {
+            font-size: 10px; color: rgba(150,185,240,0.72); line-height: 1.45;
+          }
+
+          /* ── Lordly Aspect picker ── */
+          #jrpg-growth-class-panel .gw-lordly-tabs {
+            display: flex; gap: 3px; margin: 6px 0 4px;
+          }
+          #jrpg-growth-class-panel .gw-lordly-tab {
+            flex: 1; padding: 4px 0; font-family: 'Cinzel',serif; font-size: 9px;
+            letter-spacing: .08em; text-transform: uppercase; text-align: center;
+            background: rgba(14,22,55,0.7); border: 1px solid rgba(50,80,180,0.25);
+            border-radius: 3px; color: rgba(130,165,225,0.55); cursor: pointer;
+          }
+          #jrpg-growth-class-panel .gw-lordly-tab.active {
+            background: rgba(25,45,110,0.85); border-color: rgba(80,130,240,0.45);
+            color: #88b8f0;
+          }
+          #jrpg-growth-class-panel .gw-lordly-tab-body { display: none; }
+          #jrpg-growth-class-panel .gw-lordly-tab-body.active { display: block; }
+          #jrpg-growth-class-panel .gw-lordly-opt {
+            display: flex; align-items: center; gap: 6px;
+            padding: 3px 6px; border-radius: 2px; cursor: pointer; margin-bottom: 1px;
+          }
+          #jrpg-growth-class-panel .gw-lordly-opt:hover {
+            background: rgba(35,65,150,0.3);
+          }
+          #jrpg-growth-class-panel .gw-lordly-opt input[type=radio] { flex-shrink: 0; }
+          #jrpg-growth-class-panel .gw-lordly-opt-name {
+            font-size: 10px; color: rgba(175,210,255,0.8); flex: 1;
+          }
+          #jrpg-growth-class-panel .gw-lordly-opt-tag {
+            font-size: 9px; color: rgba(110,150,210,0.5); letter-spacing: .04em;
+          }
+          #jrpg-growth-class-panel .gw-lordly-slot { margin-bottom: 6px; padding: 5px 6px; background: rgba(10,16,42,0.6); border-radius: 3px; }
+          #jrpg-growth-class-panel .gw-lordly-slot-label { font-size: 9px; color: rgba(100,140,210,0.5); letter-spacing: .08em; margin-bottom: 3px; }
+
+          /* ── Aspect groups ── */
+          #jrpg-growth-buy-panel .gw-aspect-group {
+            margin-bottom: 3px;
+            border: 1px solid rgba(45,70,150,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+          }
+          #jrpg-growth-buy-panel .gw-aspect-header {
+            display: flex !important; align-items: center; gap: 8px;
+            padding: 7px 12px;
+            background: rgba(18,28,65,0.75);
+            border-bottom: 1px solid rgba(45,70,150,0.2);
+          }
+          #jrpg-growth-buy-panel .gw-aspect-name {
+            font-family: 'Cinzel',serif; font-size: 11px; letter-spacing: .06em;
+            color: #c0d4f0; flex: 1;
+          }
+          #jrpg-growth-buy-panel .gw-aspect-tag {
+            font-family: 'Cinzel',serif; font-size: 7px; letter-spacing: .14em;
+            text-transform: uppercase; padding: 2px 6px; border-radius: 2px;
+          }
+          #jrpg-growth-buy-panel .gw-aspect-tag--mortal {
+            background: rgba(180,80,50,0.2); color: rgba(230,140,110,0.8);
+            border: 1px solid rgba(180,80,50,0.3);
+          }
+          #jrpg-growth-buy-panel .gw-aspect-tag--immortal {
+            background: rgba(80,50,200,0.2); color: rgba(160,140,255,0.8);
+            border: 1px solid rgba(80,50,200,0.3);
+          }
+          #jrpg-growth-buy-panel .gw-aspect-unlocked {
+            font-family: 'Cinzel',serif; font-size: 8px;
+            color: rgba(60,190,120,0.7); letter-spacing: .06em;
+          }
+          #jrpg-growth-buy-panel .gw-aspect-items { padding: 4px 6px 6px; }
+          #jrpg-growth-buy-panel .gw-core-badge {
+            font-family: 'Cinzel',serif; font-size: 7px; letter-spacing: .1em;
+            background: rgba(60,120,200,0.25); color: rgba(120,180,255,0.8);
+            border: 1px solid rgba(60,120,200,0.35); border-radius: 2px;
+            padding: 1px 5px; vertical-align: middle; margin-left: 5px;
+          }
+          #jrpg-growth-buy-panel .gw-item--locked {
+            opacity: 0.38; cursor: not-allowed;
+          }
+          #jrpg-growth-buy-panel .gw-item-locked-mark {
+            font-size: 11px; flex-shrink: 0;
+          }
+        `;
+        document.head.appendChild(s);
+      }
+
+      const actor     = this.actor;
+      const className = actor.system.class?.name ?? '';
+      const level     = actor.system.attributes?.level?.value ?? 1;
+      const xp        = actor.system.attributes?.xp?.value ?? 0;
+      const ownedNames = new Set(actor.items.map(i => i.name));
+
+      // ── Fetch compendium packs ──────────────────────────────────────────────
+      // Auto-grant class features: non-choice features at or below current level
+      // are granted automatically — no manual collect needed.
+      const cfPack     = game.packs.get('stryder.stryder-class-features');
+      const techPack   = game.packs.get('stryder.stryder-techniques');
+      const aspectPack = game.packs.get('stryder.stryder-actions');
+      const [cfDocs, techDocs, aspectDocs] = await Promise.all([
+        cfPack     ? cfPack.getDocuments()     : [],
+        techPack   ? techPack.getDocuments()   : [],
+        aspectPack ? aspectPack.getDocuments() : [],
+      ]);
+
+      // Build folder map: id → { name, parentId }
+      const aspectFolderMap = {};
+      if (aspectPack) {
+        (aspectPack.folders?.contents ?? []).forEach(f => {
+          aspectFolderMap[f.id] = { name: f.name, parentId: typeof f.folder === 'string' ? f.folder : f.folder?.id ?? null };
+        });
+      }
+
+      // Group aspect items by their Aspect folder (skip top-level Mortal/Immortal containers)
+      const PARENT_FOLDERS = new Set(['MrtalAspFolder01', 'ImmrtAspFolder01', 'SprBstAbilFolder']);
+      const aspectGroups = {}; // folderId → { name, tag, items[] }
+      aspectDocs.forEach(item => {
+        const folderId = typeof item.folder === 'string' ? item.folder : item.folder?.id ?? null;
+        if (!folderId) return;
+        const folderInfo = aspectFolderMap[folderId];
+        if (!folderInfo) return;
+        if (PARENT_FOLDERS.has(folderId)) return;
+        if (!aspectGroups[folderId]) {
+          const parentId = folderInfo.parentId;
+          const tag = parentId === 'ImmrtAspFolder01' ? 'Immortal' : 'Mortal';
+          aspectGroups[folderId] = { name: folderInfo.name, tag, items: [] };
+        }
+        aspectGroups[folderId].items.push(item);
+      });
+      // Sort items within each group by sort value; index 0 = Core
+      Object.values(aspectGroups).forEach(g => g.items.sort((a,b) => (a.sort ?? 0) - (b.sort ?? 0)));
+      // Sort groups: Mortal first, then Immortal, both alphabetically
+      const sortedGroups = Object.values(aspectGroups).sort((a,b) => {
+        if (a.tag !== b.tag) return a.tag === 'Mortal' ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      });
+      const cfById = Object.fromEntries(cfDocs.map(d => [d._id, d]));
+      // Ranger Techniques — identified by known IDs, folder name, or explicit flag.
+      // Checking folder?.name alone is unreliable for compendium docs in v13 (folder may be a string ID).
+      const RANGER_TECH_IDS = new Set([
+        'RngrAbil01BckStp','RngrAbil02BhmHnt','RngrAbil03GdgStr','RngrAbil04LgtSrf',
+        'RngrAbil05PrcFrm','RngrAbil06StlBrt','RngrAbil07TrlSht','RngrAbil08Vault0',
+      ]);
+      const rangerTechs = cfDocs.filter(d =>
+        RANGER_TECH_IDS.has(d._id) ||
+        d.folder?.name === 'Ranger Techniques' ||
+        d.flags?.stryder?.isRangerTech
+      ).sort((a, b) => a.name.localeCompare(b.name));
+
+      // ── Retroactive migration: stamp aspectName on items bought before this feature ──
+      // Runs every load but is a no-op once all items are stamped.
+      {
+        const stampUpdates = [];
+        for (const group of sortedGroups) {
+          const knownNames = new Set(group.items.map(i => i.name));
+          for (const actorItem of actor.items) {
+            if (actorItem.type === 'action'
+                && !actorItem.flags?.stryder?.aspectName
+                && !actorItem.flags?.stryder?.isTechnique
+                && actorItem.flags?.stryder?.xpCost === undefined
+                && knownNames.has(actorItem.name)) {
+              stampUpdates.push(actorItem.update({ 'flags.stryder.aspectName': group.name }));
+            }
+          }
+        }
+        if (stampUpdates.length) await Promise.all(stampUpdates);
+      }
+
+      // ── Ranger rework migration: remove retired class features ──
+      // Slayer's Strike I/II and Tyrant Hunter were replaced by Behemoth Slayer I/II
+      // and Tyrant Executioner. Safe to run every load — no-op once cleaned.
+      if (className === 'Ranger') {
+        const RETIRED_RANGER_FEATURES = new Set(["Slayer's Strike I", "Slayer's Strike II", 'Tyrant Hunter']);
+        const staleIds = actor.items.filter(i => RETIRED_RANGER_FEATURES.has(i.name)).map(i => i.id);
+        if (staleIds.length) {
+          await actor.deleteEmbeddedDocuments('Item', staleIds);
+          ui.notifications.info(`${actor.name}: removed retired Ranger features (class rework).`);
+        }
+      }
+
+      // Auto-grant non-choice class features at or below the actor's current level.
+      // Looks up by ID first, falls back to name so stale pack IDs never block grants.
+      if (className && cfDocs.length) {
+        const cfByName = Object.fromEntries(cfDocs.map(d => [d.name, d]));
+        const classMilestonesForGrant = STRYDER_CLASS_FEATURES[className] ?? [];
+        const toGrant = [];
+        for (const ms of classMilestonesForGrant) {
+          if (ms.level > level) break;
+          for (const feat of ms.feats) {
+            if (feat.isChoice || feat.isTechChoice || feat.milestone) continue;
+            if (ownedNames.has(feat.name)) continue;
+            const doc = (feat.id && cfById[feat.id]) || cfByName[feat.name];
+            if (doc) toGrant.push(doc);
+          }
+        }
+        if (toGrant.length) {
+          await actor.createEmbeddedDocuments('Item', toGrant.map(d => d.toObject()));
+          toGrant.forEach(d => ownedNames.add(d.name));
+        }
+      }
+
+      // ── CLASS PATH PANEL ────────────────────────────────────────────────────
+      const classMilestones = STRYDER_CLASS_FEATURES[className] ?? [];
+
+      const featHTML = (feat, milestoneLevel) => {
+        // Tech choice (Ranger)
+        if (feat.isTechChoice) {
+          const flagKey    = `techChoice_lv${milestoneLevel}`;
+          const chosenName = actor.getFlag('stryder', flagKey);
+          if (chosenName) return `
+            <div class="gw-feat gw-feat--owned">
+              <span class="gw-feat-pip gw-pip--check">✦</span>
+              <div class="gw-feat-body"><span class="gw-feat-name">${chosenName}</span><span class="gw-feat-sub">Ranger Technique</span></div>
+            </div>`;
+          if (level >= milestoneLevel) {
+            const opts = rangerTechs.map(t => `<option value="${t._id}">${t.name}</option>`).join('');
+            return `
+              <div class="gw-feat gw-feat--available">
+                <span class="gw-feat-pip gw-pip--new">◈</span>
+                <div class="gw-feat-body">
+                  <span class="gw-feat-name">Choose a Ranger Technique</span>
+                  <div class="gw-tech-choice">
+                    <select class="gw-tech-select" data-flag-key="${flagKey}">
+                      <option value="">— Pick a Technique —</option>${opts}
+                    </select>
+                    <button class="gw-btn gw-btn--confirm" data-flag-key="${flagKey}">Confirm</button>
+                  </div>
+                </div>
+              </div>`;
+          }
+          return `<div class="gw-feat gw-feat--locked"><span class="gw-feat-pip gw-pip--lock">○</span><div class="gw-feat-body"><span class="gw-feat-name">Ranger Technique</span></div></div>`;
+        }
+
+        // Augmentation choice (Warrior and future classes)
+        if (feat.isChoice) {
+          const flagKey   = `augChoice_${feat.id}`;
+          const chosen    = actor.getFlag('stryder', flagKey); // integer index or undefined
+          const isOwned   = chosen !== undefined && chosen !== null;
+          const avail     = level >= milestoneLevel;
+          const cls       = isOwned ? 'gw-feat--owned' : avail ? 'gw-feat--available' : 'gw-feat--locked';
+          const pip       = isOwned ? '<span class="gw-feat-pip gw-pip--check">✦</span>'
+                          : avail   ? '<span class="gw-feat-pip gw-pip--new">◈</span>'
+                                    : '<span class="gw-feat-pip gw-pip--lock">○</span>';
+
+          // Try hardcoded options first, fall back to compendium description parsing
+          const hardcodedOpts = CLASS_AUG_OPTIONS[feat.id];
+          let inner = '';
+
+          if (isOwned) {
+            // Show which option was chosen
+            const chosenLabel = hardcodedOpts?.[chosen]?.label ?? `Option ${chosen + 1}`;
+            inner = `<span class="gw-feat-sub gw-aug-chosen">&#x2756; ${chosenLabel}</span>`;
+          } else if (avail) {
+            if (hardcodedOpts) {
+              // Render from hardcoded data
+              const opts = hardcodedOpts.map((o, i) =>
+                `<div class="gw-aug-opt" data-opt="${i}">
+                  <span class="gw-aug-dot"></span>
+                  <span class="gw-aug-text">
+                    <strong>${o.label}</strong>
+                    ${o.sublabel ? `<em class="gw-aug-sub">${o.sublabel}</em>` : ''}
+                  </span>
+                </div>`
+              ).join('');
+              inner = `<div class="gw-aug-choices" data-flag-key="${flagKey}" data-feat-id="${feat.id}">${opts}<button class="gw-btn gw-btn--confirm" data-feat-id="${feat.id}" data-flag-key="${flagKey}">Confirm Augment</button></div>`;
+            } else {
+              // Fallback: parse <li> from compendium item description
+              const doc  = feat.id ? cfById[feat.id] : null;
+              const desc = doc?.system?.description ?? '';
+              const opts = [...desc.matchAll(/<li>(.*?)<\/li>/gs)].map((m, i) =>
+                `<div class="gw-aug-opt" data-opt="${i}"><span class="gw-aug-dot"></span><span class="gw-aug-text">${m[1].replace(/<[^>]+>/g,'')}</span></div>`
+              ).join('');
+              if (opts) inner = `<div class="gw-aug-choices" data-flag-key="${flagKey}" data-feat-id="${feat.id}">${opts}<button class="gw-btn gw-btn--confirm" data-feat-id="${feat.id}" data-flag-key="${flagKey}">Confirm Augment</button></div>`;
+            }
+          }
+
+          return `<div class="gw-feat ${cls}">${pip}<div class="gw-feat-body"><span class="gw-feat-name">${stripClassPrefix(feat.name)}</span>${inner}</div></div>`;
+        }
+
+        // ── Lordly Aspect Feature picker (Shaman) ──────────────────────────
+        if (feat.isLordlyChoice) {
+          const linkedLordling = game.actors.find(a => a.type === 'lordling' && a.system.linkedCharacterId === actor.id);
+          if (!linkedLordling) {
+            return `<div class="gw-feat gw-feat--locked">
+              <span class="gw-feat-pip gw-pip--lock">○</span>
+              <div class="gw-feat-body">
+                <span class="gw-feat-name">${feat.name}</span>
+                <span class="gw-feat-sub" style="color:rgba(200,120,80,0.7);">⚠ No Lordling linked — select Shaman on the Character page first</span>
+              </div>
+            </div>`;
+          }
+          const avail = level >= milestoneLevel;
+          let html = `<div class="gw-feat ${avail ? 'gw-feat--available' : 'gw-feat--locked'}">
+            <span class="gw-feat-pip ${avail ? 'gw-pip--new' : 'gw-pip--lock'}">${avail ? '◈' : '○'}</span>
+            <div class="gw-feat-body"><span class="gw-feat-name">${feat.name}</span>`;
+          if (avail) {
+            for (let i = 0; i < feat.count; i++) {
+              const slotIdx = feat.startIdx + i;
+              const flagKey = `lordlyFeature_${slotIdx}`;
+              const chosenName = actor.getFlag('stryder', flagKey);
+              if (chosenName) {
+                html += `<div class="gw-feat gw-feat--owned" style="margin:3px 0;">
+                  <span class="gw-feat-pip gw-pip--check" style="font-size:9px;">✦</span>
+                  <div class="gw-feat-body"><span class="gw-feat-name" style="font-size:10px;">${chosenName}</span><span class="gw-feat-sub">Lordly Feature</span></div>
+                </div>`;
+              } else {
+                // Build tabbed picker for this slot
+                const uid = `laf-${slotIdx}`;
+                let tabHTML = `<div class="gw-lordly-slot" data-slot="${slotIdx}">
+                  <div class="gw-lordly-slot-label">Pick ${i + 1}</div>
+                  <div class="gw-lordly-tabs">
+                    <button type="button" class="gw-lordly-tab active" data-tab="Wild" data-uid="${uid}">Wild</button>
+                    <button type="button" class="gw-lordly-tab" data-tab="Royal" data-uid="${uid}">Royal</button>
+                    <button type="button" class="gw-lordly-tab" data-tab="Spirit" data-uid="${uid}">Spirit</button>
+                  </div>`;
+                for (const [cat, feats] of Object.entries(LORDLY_ASPECT_FEATURES)) {
+                  const isFirst = cat === 'Wild';
+                  tabHTML += `<div class="gw-lordly-tab-body${isFirst ? ' active' : ''}" data-uid="${uid}" data-cat="${cat}">`;
+                  for (const lf of feats) {
+                    const alreadyChosen = [...Array(8).keys()].some(s => actor.getFlag('stryder', `lordlyFeature_${s}`) === lf.name);
+                    tabHTML += `<label class="gw-lordly-opt">
+                      <input type="radio" name="lordly-pick-${slotIdx}" value="${lf.id}" ${alreadyChosen ? 'disabled' : ''}>
+                      <span class="gw-lordly-opt-name">${lf.name}</span>
+                      <span class="gw-lordly-opt-tag">${lf.tag}</span>
+                    </label>`;
+                  }
+                  tabHTML += `</div>`;
+                }
+                tabHTML += `<button class="gw-btn gw-btn--confirm" data-lordly-slot="${slotIdx}" style="margin-top:4px;">Confirm</button></div>`;
+                html += tabHTML;
+              }
+            }
+          }
+          html += `</div></div>`;
+          return html;
+        }
+
+        // ── Mystic Blessings (Shaman Lv4) ──────────────────────────────────
+        if (feat.isMysticBlessing) {
+          const avail   = level >= milestoneLevel;
+          const senseKey = actor.getFlag('stryder', 'mysticBlessingsSense');
+          if (senseKey) {
+            return `<div class="gw-feat gw-feat--owned">
+              <span class="gw-feat-pip gw-pip--check">✦</span>
+              <div class="gw-feat-body">
+                <span class="gw-feat-name">Mystic Blessings</span>
+                <span class="gw-feat-sub">Movement +2 · ${senseKey} Sense +2</span>
+              </div>
+            </div>`;
+          }
+          if (!avail) return `<div class="gw-feat gw-feat--locked"><span class="gw-feat-pip gw-pip--lock">○</span><div class="gw-feat-body"><span class="gw-feat-name">Mystic Blessings</span></div></div>`;
+          const senses = ['Arcane','Hearing','Sight','Smell','Touch'];
+          const senseOpts = senses.map(s => `<option value="${s}">${s}</option>`).join('');
+          return `<div class="gw-feat gw-feat--available">
+            <span class="gw-feat-pip gw-pip--new">◈</span>
+            <div class="gw-feat-body">
+              <span class="gw-feat-name">Mystic Blessings</span>
+              <span class="gw-feat-sub">+2 Movement (auto) · choose +2 Sense</span>
+              <div class="gw-tech-choice" style="margin-top:5px;">
+                <select class="gw-tech-select" id="mystic-sense-pick">
+                  <option value="">— Choose Sense —</option>${senseOpts}
+                </select>
+                <button class="gw-btn gw-btn--confirm" data-action="mysticBlessings">Confirm</button>
+              </div>
+            </div>
+          </div>`;
+        }
+
+        // ── Memories of Past Lives (Shaman Lv8) ────────────────────────────
+        if (feat.isMasteryGrant) {
+          const avail   = level >= milestoneLevel;
+          const claimed = actor.getFlag('stryder', 'memoriesOfPastLivesClaimed') ?? false;
+          if (claimed) return `<div class="gw-feat gw-feat--owned">
+            <span class="gw-feat-pip gw-pip--check">✦</span>
+            <div class="gw-feat-body"><span class="gw-feat-name">Memories of Past Lives</span><span class="gw-feat-sub">+${feat.masteryAmount} Mastery Points granted</span></div>
+          </div>`;
+          if (!avail) return `<div class="gw-feat gw-feat--locked"><span class="gw-feat-pip gw-pip--lock">○</span><div class="gw-feat-body"><span class="gw-feat-name">Memories of Past Lives</span></div></div>`;
+          return `<div class="gw-feat gw-feat--available">
+            <span class="gw-feat-pip gw-pip--new">◈</span>
+            <div class="gw-feat-body">
+              <span class="gw-feat-name">Memories of Past Lives</span>
+              <span class="gw-feat-sub">Claim +${feat.masteryAmount} Mastery Points</span>
+              <button class="gw-btn gw-btn--confirm" data-action="memoriesOfPastLives" data-mastery="${feat.masteryAmount}" style="margin-top:5px;">Claim</button>
+            </div>
+          </div>`;
+        }
+
+        // Milestone (passive upgrade marker)
+        if (feat.milestone) {
+          const active = level >= milestoneLevel;
+          // Show the right subtitle for Shaman Bond milestones vs generic
+          const bondMilestone = feat.name.includes('Bond') || feat.name.includes('Unbreakable');
+          const sub = bondMilestone ? 'Bond range +2 · Tactic Points +1' : 'Passive upgrade';
+          return `<div class="gw-feat ${active ? 'gw-feat--milestone' : 'gw-feat--locked'}">
+            <span class="gw-feat-pip ${active ? 'gw-pip--up' : 'gw-pip--lock'}">${active ? '↑' : '○'}</span>
+            <div class="gw-feat-body"><span class="gw-feat-name">${stripClassPrefix(feat.name)}</span><span class="gw-feat-sub">${sub}</span></div>
+          </div>`;
+        }
+
+        // Standard feature — class path features are automatically granted at level.
+        const doc       = feat.id ? (cfById[feat.id] ?? null) : null;
+        const granted   = level >= milestoneLevel;
+        const cls       = granted ? 'gw-feat--owned' : 'gw-feat--locked';
+        const pip       = granted
+          ? '<span class="gw-feat-pip gw-pip--check">&#x2756;</span>'
+          : '<span class="gw-feat-pip gw-pip--lock">&#x25CB;</span>';
+        const shortDesc = doc?.system?.description
+          ? doc.system.description.replace(/<[^>]+>/g,'').trim().slice(0, 72) + '...'
+          : '';
+        return `<div class="gw-feat ${cls}">
+          ${pip}
+          <div class="gw-feat-body">
+            <span class="gw-feat-name">${stripClassPrefix(feat.name)}</span>
+            ${shortDesc ? `<span class="gw-feat-sub">${shortDesc}</span>` : ''}
+          </div>
+        </div>`;
+      };
+
+      // Strip class name prefix from displayed feature names (e.g. "Warrior Augmentations I" → "Augmentations I")
+      const stripClassPrefix = (name) =>
+        className && name.startsWith(className + ' ') ? name.slice(className.length + 1) : name;
+
+      let classHTML = `<div class="gw-panel-header"><span class="gw-panel-label">Class Path</span></div>`;
+
+      if (!classMilestones.length) {
+        classHTML += `<div class="gw-empty">No class path data for <em>${className || 'this class'}</em>.</div>`;
+      } else {
+        for (const ms of classMilestones) {
+          const unlocked = level >= ms.level;
+          classHTML += `
+            <div class="gw-milestone ${unlocked ? 'gw-milestone--unlocked' : 'gw-milestone--locked'}">
+              <div class="gw-milestone-lv">
+                <span class="gw-lv-num">${ms.level}</span>
+                <span class="gw-lv-line"></span>
+              </div>
+              <div class="gw-milestone-feats">
+                ${ms.feats.map(f => featHTML(f, ms.level)).join('')}
+              </div>
+            </div>`;
+        }
+      }
+      classPanel.innerHTML = `<div class="gw-scroll">${classHTML}</div>`;
+
+      // ── PURCHASE PANEL ──────────────────────────────────────────────────────
+      const itemRow = (item) => {
+        const owned    = ownedNames.has(item.name);
+        const type     = item.system?.action_type ?? '';
+        const xpCost   = item.flags?.stryder?.xpCost ?? 1;
+        const canAfford = (actor.system.attributes.xp?.value ?? 0) >= xpCost;
+        const gemClass = xpCost > 1 ? 'gw-xp-gem gw-xp-gem--2xp' : 'gw-xp-gem';
+        return `
+          <div class="gw-item ${owned ? 'gw-item--owned' : ''}">
+            <div class="gw-item-info">
+              <span class="gw-item-name">${item.name}</span>
+              <span class="gw-item-type">${type}</span>
+            </div>
+            ${owned
+              ? '<span class="gw-item-owned-mark">✦</span>'
+              : `<div class="gw-item-buy">
+                   <span class="gw-xp-cost"><span class="${gemClass}"></span>${xpCost}</span>
+                   <button class="gw-btn gw-btn--buy${!canAfford ? ' gw-btn--buy-disabled' : ''}"
+                     data-item-uuid="${item.uuid}"
+                     data-item-name="${item.name}"
+                     data-xp-cost="${xpCost}"
+                     data-is-technique="true"
+                     ${!canAfford ? 'disabled' : ''}>Buy</button>
+                 </div>`}
+          </div>`;
+      };
+
+      // ── BUILD ASPECT ROWS ─────────────────────────────────────────────────
+      // Core Skillset = all items up to and including "Attached Bonus" or "Attached Effect".
+      // These are purchased together as one bundle for 1 XP.
+      // For aspects with no Attached Bonus/Effect (e.g. Discipline) use the first 2 items.
+      const CORE_END_NAMES = new Set(['Attached Bonus', 'Attached Effect']);
+      const splitAspect = (items) => {
+        const idx = items.findIndex(i => CORE_END_NAMES.has(i.name));
+        const coreCount = idx === -1 ? Math.min(2, items.length) : idx + 1;
+        return { coreItems: items.slice(0, coreCount), abilityItems: items.slice(coreCount) };
+      };
+
+      const aspectTabHTML = sortedGroups.map(group => {
+        const { coreItems, abilityItems } = splitAspect(group.items);
+        // Core is owned if the first core item is owned (they're always granted together)
+        const coreOwned   = coreItems.length > 0 && ownedNames.has(coreItems[0].name);
+        const canAffordCore = xp >= 1;
+
+        // ── Core Skillset row ──
+        const coreNames = coreItems.map(i => i.name).join(' · ');
+        const coreUuids = coreItems.map(i => i.uuid).join(',');
+        let coreSection = '';
+        if (coreOwned) {
+          coreSection = `
+            <div class="gw-item gw-item--owned">
+              <div class="gw-item-info">
+                <span class="gw-item-name">Core Skillset <span class="gw-core-badge">CORE</span></span>
+                <span class="gw-item-type">${coreNames}</span>
+              </div>
+              <span class="gw-item-owned-mark">&#x2756;</span>
+            </div>`;
+        } else {
+          coreSection = `
+            <div class="gw-item">
+              <div class="gw-item-info">
+                <span class="gw-item-name">Core Skillset <span class="gw-core-badge">CORE</span></span>
+                <span class="gw-item-type">${coreNames}</span>
+              </div>
+              <div class="gw-item-buy">
+                <span class="gw-xp-cost"><span class="gw-xp-gem"></span>1</span>
+                <button class="gw-btn--buy gw-btn--core-buy${!canAffordCore ? ' gw-btn--buy-disabled' : ''}"
+                  data-core-uuids="${coreUuids}"
+                  data-aspect-name="${group.name}"
+                  data-xp-cost="1"
+                  ${!canAffordCore ? 'disabled' : ''}>Buy</button>
+              </div>
+            </div>`;
+        }
+
+        // ── Individual ability rows ──
+        // Abilities are hidden until Core Skillset is purchased to reduce clutter.
+        // Exception: show any ability the character already owns (e.g. from an older grant).
+        const visibleAbilityItems = abilityItems.filter(item =>
+          coreOwned || ownedNames.has(item.name)
+        );
+        const hiddenCount = abilityItems.length - visibleAbilityItems.length;
+
+        const abilityRows = visibleAbilityItems.map(item => {
+          const owned     = ownedNames.has(item.name);
+          const canAfford = xp >= 1;
+          const type      = item.system?.action_type ?? '';
+          return `<div class="gw-item ${owned ? 'gw-item--owned' : ''}">
+            <div class="gw-item-info">
+              <span class="gw-item-name">${item.name}</span>
+              <span class="gw-item-type">${type}</span>
+            </div>
+            ${owned
+              ? '<span class="gw-item-owned-mark">&#x2756;</span>'
+              : `<div class="gw-item-buy">
+                   <span class="gw-xp-cost"><span class="gw-xp-gem"></span>1</span>
+                   <button class="gw-btn--buy${!canAfford ? ' gw-btn--buy-disabled' : ''}"
+                     data-item-uuid="${item.uuid}"
+                     data-item-name="${item.name}"
+                     data-aspect-name="${group.name}"
+                     data-xp-cost="1"
+                     ${!canAfford ? 'disabled' : ''}>Buy</button>
+                 </div>`
+            }
+          </div>`;
+        }).join('');
+
+        // Show a subtle hint when abilities are hidden behind Core Skillset
+        const lockedHint = (!coreOwned && hiddenCount > 0)
+          ? `<div class="gw-locked-hint">${hiddenCount} ${hiddenCount === 1 ? 'ability' : 'abilities'} — purchase Core Skillset to unlock</div>`
+          : '';
+
+        return `<div class="gw-aspect-group">
+          <div class="gw-aspect-header">
+            <span class="gw-aspect-name">${group.name}</span>
+            <span class="gw-aspect-tag gw-aspect-tag--${group.tag.toLowerCase()}">${group.tag}</span>
+            ${coreOwned ? '<span class="gw-aspect-unlocked">&#x2756; Unlocked</span>' : ''}
+          </div>
+          <div class="gw-aspect-items">${coreSection}${abilityRows}${lockedHint}</div>
+        </div>`;
+      }).join('') || '<div class="gw-empty">No aspects found in compendium.</div>';
+
+      // ── TECH ROWS ─────────────────────────────────────────────────────────
+      const techTabHTML = techDocs.length
+        ? techDocs.sort((a,b) => a.name.localeCompare(b.name)).map(i => itemRow(i)).join('')
+        : '<div class="gw-empty">No techniques found &#8212; rebuild the stryder-techniques pack.</div>';
+
+      // ── BUY PANEL ─────────────────────────────────────────────────────────
+      buyPanel.innerHTML = `
+        <div class="gw-panel-header">
+          <span class="gw-panel-label">Purchase</span>
+        </div>
+        <div class="gw-tabs">
+          <button class="gw-tab gw-tab--active" data-gtab="aspects">Aspects</button>
+          <button class="gw-tab" data-gtab="techniques">Techniques</button>
+        </div>
+        <div class="gw-tab-body gw-tab-body--active" id="gtab-aspects">${aspectTabHTML}</div>
+        <div class="gw-tab-body" id="gtab-techniques">${techTabHTML}</div>`;
+
+      // Wire tabs — look up panel fresh on each click to avoid stale closure references
+      buyPanel.querySelectorAll('.gw-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const panel = document.getElementById('jrpg-growth-buy-panel');
+          if (!panel) return;
+          panel.querySelectorAll('.gw-tab').forEach(b => b.classList.remove('gw-tab--active'));
+          panel.querySelectorAll('.gw-tab-body').forEach(c => c.classList.remove('gw-tab-body--active'));
+          btn.classList.add('gw-tab--active');
+          const target = panel.querySelector(`#gtab-${btn.dataset.gtab}`);
+          if (target) target.classList.add('gw-tab-body--active');
+        });
+      });
+
+      // Wire individual ability buy buttons
+      buyPanel.querySelectorAll('.gw-btn--buy:not(.gw-btn--core-buy)').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const xpCost = parseInt(btn.dataset.xpCost ?? '1');
+          const cur    = actor.system.attributes.xp?.value ?? 0;
+          if (cur < xpCost) {
+            ui.notifications.warn(`Not enough Experience Points (need ${xpCost}, have ${cur}).`);
+            return;
+          }
+          const doc = await fromUuid(btn.dataset.itemUuid);
+          if (!doc) return;
+          const itemData = doc.toObject();
+          // Tag technique purchases so they appear in the Techniques section of the Battle tab
+          if (btn.dataset.isTechnique === 'true') {
+            foundry.utils.setProperty(itemData, 'flags.stryder.isTechnique', true);
+          } else if (btn.dataset.aspectName) {
+            foundry.utils.setProperty(itemData, 'flags.stryder.aspectName', btn.dataset.aspectName);
+          }
+          await actor.createEmbeddedDocuments('Item', [itemData]);
+          await actor.update({ 'system.attributes.xp.value': cur - xpCost });
+        });
+      });
+
+      // Wire Core Skillset buy buttons — grants all core items at once for 1 XP
+      buyPanel.querySelectorAll('.gw-btn--core-buy').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const xpCost    = parseInt(btn.dataset.xpCost ?? '1');
+          const aspectName = btn.dataset.aspectName ?? null;
+          const cur       = actor.system.attributes.xp?.value ?? 0;
+          if (cur < xpCost) {
+            ui.notifications.warn(`Not enough Experience Points (need ${xpCost}, have ${cur}).`);
+            return;
+          }
+          const uuids = (btn.dataset.coreUuids ?? '').split(',').filter(Boolean);
+          const docs  = await Promise.all(uuids.map(u => fromUuid(u)));
+          const valid = docs.filter(Boolean);
+          if (!valid.length) return;
+          // Stamp each core item with the aspect name for battle-tab routing
+          const itemsData = valid.map(d => {
+            const data = d.toObject();
+            if (aspectName) foundry.utils.setProperty(data, 'flags.stryder.aspectName', aspectName);
+            return data;
+          });
+          await actor.createEmbeddedDocuments('Item', itemsData);
+          await actor.update({ 'system.attributes.xp.value': cur - xpCost });
+        });
+      });
+
+      // Wire collect buttons
+      classPanel.querySelectorAll('.gw-btn--collect').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const doc = cfById[btn.dataset.featId];
+          if (!doc) return;
+          await actor.createEmbeddedDocuments('Item', [doc.toObject()]);
+          ui.notifications.info(`${btn.dataset.featName} added to your sheet.`);
+        });
+      });
+
+      // Wire ranger tech confirm
+      classPanel.querySelectorAll('.gw-btn--confirm[data-flag-key]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const block  = btn.closest('.gw-feat--available');
+          const select = block?.querySelector('.gw-tech-select');
+          if (!select?.value) { ui.notifications.warn('Select a Technique first.'); return; }
+          const doc = cfById[select.value];
+          if (!doc) return;
+          // Tag as a class feature so it routes to the Class Features section on the battle tab
+          const itemData = doc.toObject();
+          foundry.utils.setProperty(itemData, 'flags.stryder.isClassFeature', true);
+          await actor.setFlag('stryder', btn.dataset.flagKey, doc.name);
+          await actor.createEmbeddedDocuments('Item', [itemData]);
+          ui.notifications.info(`${doc.name} added to your sheet.`);
+        });
+      });
+
+      // ── Lordly Aspect tab switching ─────────────────────────────────────────
+      classPanel.querySelectorAll('.gw-lordly-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const uid = tab.dataset.uid;
+          const cat = tab.dataset.tab;
+          classPanel.querySelectorAll(`.gw-lordly-tab[data-uid="${uid}"]`).forEach(t => t.classList.remove('active'));
+          classPanel.querySelectorAll(`.gw-lordly-tab-body[data-uid="${uid}"]`).forEach(b => b.classList.remove('active'));
+          tab.classList.add('active');
+          classPanel.querySelector(`.gw-lordly-tab-body[data-uid="${uid}"][data-cat="${cat}"]`)?.classList.add('active');
+        });
+      });
+
+      // ── Lordly Aspect confirm ───────────────────────────────────────────────
+      classPanel.querySelectorAll('.gw-btn--confirm[data-lordly-slot]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const linkedLordling = game.actors.find(a => a.type === 'lordling' && a.system.linkedCharacterId === actor.id);
+          if (!linkedLordling) {
+            ui.notifications.warn('No Lordling linked. Go to the Character page, select Shaman as your class, and link or create a Lordling first.');
+            return;
+          }
+          const slotIdx = parseInt(btn.dataset.lordlySlot);
+          const slotBlock = btn.closest('.gw-lordly-slot');
+          const checked = slotBlock?.querySelector(`input[name="lordly-pick-${slotIdx}"]:checked`);
+          if (!checked?.value) { ui.notifications.warn('Select a Lordly Aspect Feature first.'); return; }
+          const doc = cfById[checked.value];
+          if (!doc) { ui.notifications.warn('Feature not found in compendium.'); return; }
+          await actor.setFlag('stryder', `lordlyFeature_${slotIdx}`, doc.name);
+          const itemData = doc.toObject();
+          foundry.utils.setProperty(itemData, 'flags.stryder.isLordlyFeature', true);
+          await linkedLordling.createEmbeddedDocuments('Item', [itemData]);
+          ui.notifications.info(`${doc.name} added to ${linkedLordling.name}.`);
+        });
+      });
+
+      // ── Mystic Blessings confirm ────────────────────────────────────────────
+      classPanel.querySelector('.gw-btn--confirm[data-action="mysticBlessings"]')?.addEventListener('click', async () => {
+        const sensePick = classPanel.querySelector('#mystic-sense-pick')?.value;
+        if (!sensePick) { ui.notifications.warn('Choose a Sense first.'); return; }
+        await actor.setFlag('stryder', 'mysticBlessingsSense', sensePick);
+        // Apply movement +2
+        const curMove = actor.system.attributes.move.running.value ?? 7;
+        await actor.update({ 'system.attributes.move.running.value': curMove + 2 });
+        // Apply sense +2
+        const senseKey = sensePick.toLowerCase();
+        const curSense = actor.system.attributes.sense?.[senseKey]?.value ?? 0;
+        await actor.update({ [`system.attributes.sense.${senseKey}.value`]: curSense + 2 });
+        ui.notifications.info(`${actor.name}: Mystic Blessings — Movement +2, ${sensePick} Sense +2 applied.`);
+      });
+
+      // ── Memories of Past Lives claim ────────────────────────────────────────
+      classPanel.querySelector('.gw-btn--confirm[data-action="memoriesOfPastLives"]')?.addEventListener('click', async () => {
+        const amount = parseInt(classPanel.querySelector('[data-action="memoriesOfPastLives"]')?.dataset.mastery ?? '3');
+        await actor.setFlag('stryder', 'memoriesOfPastLivesClaimed', true);
+        const cur = actor.system.masteryPoints?.essence ?? 0;
+        await actor.update({ 'system.masteryPoints.essence': cur + amount });
+        ui.notifications.info(`${actor.name}: Memories of Past Lives — +${amount} Mastery Points.`);
+      });
+
+      // Wire augment choices
+      classPanel.querySelectorAll('.gw-aug-choices').forEach(block => {
+        block.querySelectorAll('.gw-aug-opt').forEach(opt => {
+          opt.addEventListener('click', () => {
+            block.querySelectorAll('.gw-aug-dot').forEach(d => d.classList.remove('selected'));
+            opt.querySelector('.gw-aug-dot').classList.add('selected');
+            block.dataset.selectedOpt = opt.dataset.opt;
+          });
+        });
+        block.querySelector('.gw-btn--confirm')?.addEventListener('click', async () => {
+          const idx    = block.dataset.selectedOpt;
+          const featId = block.dataset.featId;
+          if (idx === undefined) { ui.notifications.warn('Select an augment option first.'); return; }
+          const optIndex = parseInt(idx);
+
+          // Store the choice flag
+          await actor.setFlag('stryder', block.dataset.flagKey, optIndex);
+
+          // Apply hardcoded effect if available
+          const applyFn = CLASS_AUG_OPTIONS[featId]?.[optIndex]?.apply;
+          if (applyFn) {
+            await applyFn(actor);
+          }
+
+          // Also add the compendium item to the sheet if present (for reference)
+          const doc = cfById[featId];
+          if (doc) {
+            await actor.createEmbeddedDocuments('Item', [doc.toObject()]);
+          }
+        });
+      });
+
+    } catch(err) {
+      console.error('[Growth] _buildGrowthPage failed:', err);
+    }
+  }
+
+  /** Stub — collapse is handled by the renderStryderActorSheet hook below. */
+  _restoreSectionStates(_html) {}
 
 	/**
 	 * Toggle the visibility of item lists in the actor sheet
@@ -334,6 +1804,14 @@ export class StryderActorSheet extends ActorSheet {
     context.mpPct  = _pct(actorData.system.mana.value,    actorData.system.mana.max);
     context.staPct = _pct(actorData.system.stamina.value, actorData.system.stamina.max);
 
+    // Lordling-specific context
+    if (actorData.type === 'lordling') {
+      context.tpPct = _pct(actorData.system.tactics?.value, actorData.system.tactics?.max);
+      const linkedId = actorData.system.linkedCharacterId;
+      context.linkedCharacterName = linkedId ? (game.actors.get(linkedId)?.name ?? '') : '';
+      context.characters = game.actors.filter(a => a.type === 'character').map(a => ({ id: a.id, name: a.name }));
+    }
+
     // Prepare character data and items.
     if (actorData.type == 'character') {
       this._prepareItems(context);
@@ -350,6 +1828,23 @@ export class StryderActorSheet extends ActorSheet {
       context.gritHpBonus          = grit * gritMilestones;
       context.gritMilestonesReached = gritMilestones;
 
+      // Aspect active flags for template conditionals
+      const _activeAspect = actorData.flags?.stryder?.activeAspect ?? '';
+      context.isBrutalityActive = _activeAspect.includes('Brutality');
+
+      // Warlock resource panels (Bloodloss / Manaburn)
+      context.isWarlockClass   = (actorData.system.class?.name ?? '') === 'Warlock'
+        || this.actor.items.some(i => i.type === 'class' && i.name === 'Warlock');
+      context.warlockBloodloss = actorData.flags?.stryder?.bloodlossHealthReduction ?? 0;
+      context.warlockManaburn  = actorData.flags?.stryder?.manaburn ?? 0;
+
+      // Stat point pool for the Stats stepper UI
+      const augStatBonus         = this.actor.getFlag('stryder', 'augExtraStatPoints') ?? 0;
+      context.statPointTotal     = 9 + augStatBonus;
+      context.statPointSpent     = ['Soul', 'Reflex', 'Grit', 'Will']
+        .reduce((sum, k) => sum + (actorData.system.abilities?.[k]?.value ?? 0), 0);
+      context.statPointRemaining = context.statPointTotal - context.statPointSpent;
+
       // Folk display context
       const folkName = actorData.system.folk?.name ?? '';
       const folkData = STRYDER_FOLK_DATA[folkName];
@@ -365,13 +1860,21 @@ export class StryderActorSheet extends ActorSheet {
 
       // Inventory grid context (all item types → 44-slot visual grid)
       context.inventoryGrid = this._buildInventoryGrid(context.items || []);
-      const usedSlots       = (context.items || []).reduce((sum, i) => {
-        const s = i.system?.size ?? i.system?.inventory_size ?? 1;
-        return sum + Math.max(1, Math.min(s, 11));
-      }, 0);
+      // Only count types that actually appear in the grid — same set as _buildInventoryGrid
+      const INVENTORY_COUNT_TYPES = new Set(['loot','gear','consumable','component','elixir','miscellaneous','ingredient','head','back','arms','legs','gems','aegiscore','legacies']);
+      const usedSlots = (context.items || [])
+        .filter(i => INVENTORY_COUNT_TYPES.has(i.type))
+        .reduce((sum, i) => {
+          const s = i.system?.size ?? i.system?.inventory_size ?? 1;
+          return sum + Math.max(1, Math.min(s, 11));
+        }, 0);
       context.inventoryUsed = Math.min(44, usedSlots);
       context.inventoryMax  = 44;
       context.inventoryFull = usedSlots >= 44;
+
+      // Favorites — stored as array of item IDs, exposed as object for HBS lookup
+      const favArr = this.actor.getFlag('stryder', 'favorites') || [];
+      context.favorites = Object.fromEntries(favArr.map(id => [id, true]));
     }
 
     if (actorData.type == 'lordling') {
@@ -493,7 +1996,7 @@ export class StryderActorSheet extends ActorSheet {
    */
   _buildInventoryGrid(items) {
     // Only physical inventory types go into the grid
-    const INVENTORY_TYPES = new Set(['loot','gear','consumable','component','head','back','arms','legs','gems','aegiscore','legacies']);
+    const INVENTORY_TYPES = new Set(['loot','gear','consumable','component','elixir','miscellaneous','ingredient','head','back','arms','legs','gems','aegiscore','legacies']);
     const gearItems = items.filter(i => INVENTORY_TYPES.has(i.type));
 
     const COLS  = 11;
@@ -633,8 +2136,13 @@ export class StryderActorSheet extends ActorSheet {
     const gritMilestones = [1, 5, 10, 15].filter(m => clamped >= m).length;
     const gritHpBonus = grit * gritMilestones;
 
-    const maxHealth  = baseHp + (hpPerLevel * (clamped - 1)) + gritHpBonus;
-    const maxStamina = STRYDER_STAMINA_BY_LEVEL[clamped] ?? 3;
+    // Warrior aug bonuses — stored as flags so _syncComputedStats doesn't clobber them.
+    // Works whether actorData is the full document (has flags.stryder) or a getData() clone.
+    const augHealthBonus  = actorData.flags?.stryder?.augHealthBonus  ?? 0;
+    const augStaminaBonus = actorData.flags?.stryder?.augStaminaBonus ?? 0;
+
+    const maxHealth  = baseHp + (hpPerLevel * (clamped - 1)) + gritHpBonus + augHealthBonus;
+    const maxStamina = (STRYDER_STAMINA_BY_LEVEL[clamped] ?? 3) + augStaminaBonus;
     const maxMana    = STRYDER_MANA_BY_LEVEL[clamped]    ?? 4;
 
     return { maxHealth, maxStamina, maxMana };
@@ -703,6 +2211,7 @@ export class StryderActorSheet extends ActorSheet {
     // Initialize containers.
     const actions = [];
     const aspectAbilities = [];
+    const playerActions = [];  // Universal Player Actions
     const generic = [];
     const armament = [];
     const aegiscore = [];
@@ -726,6 +2235,7 @@ export class StryderActorSheet extends ActorSheet {
     const bonds = [];
     const passive = [];
     const miscellaneous = [];
+    const ingredient = [];
     const classchoice = [];
     const folk = [];
     const spells = {
@@ -746,8 +2256,18 @@ export class StryderActorSheet extends ActorSheet {
       i.img = i.img || Item.DEFAULT_ICON;
       // Append to actions.
       if (i.type === 'action') {
-        if (i.system?.isAspectAbility) {
+        // Class Features: action items explicitly tagged as class features (e.g. Ranger Techniques)
+        if (i.flags?.stryder?.isClassFeature) {
+          features.push(i);
+        // Techniques: flagged isTechnique or have xpCost (techniques pack sets xpCost, aspect abilities don't)
+        } else if (i.flags?.stryder?.isTechnique || i.flags?.stryder?.xpCost !== undefined) {
+          techniques.push(i);
+        // Aspect abilities: flagged with aspectName (new) or isAspectAbility (legacy)
+        // Passives (Form Passive, Attached Bonus, etc.) are automated — don't show as clickable items
+        } else if ((i.flags?.stryder?.aspectName || i.system?.isAspectAbility) && i.system?.action_type !== 'passive') {
           aspectAbilities.push(i);
+        } else if (i.system?.isUniversalAction) {
+          playerActions.push(i);
         } else {
           actions.push(i);
         }
@@ -844,6 +2364,10 @@ export class StryderActorSheet extends ActorSheet {
       else if (i.type === 'miscellaneous') {
         miscellaneous.push(i);
       }
+      // Append to ingredient.
+      else if (i.type === 'ingredient') {
+        ingredient.push(i);
+      }
       // Append to class.
       else if (i.type === 'class') {
         classchoice.push(i);
@@ -862,7 +2386,18 @@ export class StryderActorSheet extends ActorSheet {
 
     // Assign and return
     context.actions = actions;
+
+    // Aspect abilities — annotate each with isActiveAspect for battle-tab grey-out
+    const activeAspect = context.actor?.flags?.stryder?.activeAspect ?? null;
+    context.activeAspect = activeAspect;
+    context.activeAspectLabel = activeAspect ? activeAspect.replace('Aspect of ', '') : '';
+    for (const item of aspectAbilities) {
+      const asp = item.flags?.stryder?.aspectName ?? null;
+      item.isActiveAspect = !activeAspect || asp === activeAspect;
+    }
     context.aspectAbilities = aspectAbilities;
+
+    context.playerActions = playerActions.sort((a, b) => a.name.localeCompare(b.name));
     context.generic = generic;
     context.armament = armament;
     context.aegiscore = aegiscore;
@@ -876,6 +2411,7 @@ export class StryderActorSheet extends ActorSheet {
     context.component = component;
     context.consumable = consumable;
     context.gear = gear;
+    context.ingredient = ingredient;
     context.hexes = hexes;
     context.skills = skills;
     context.features = features;
@@ -897,6 +2433,112 @@ export class StryderActorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
+    // Lordling: set a narrow default window size on first open
+    if (this.actor.type === 'lordling') {
+      setTimeout(() => this.setPosition({ width: 420, height: 555 }), 80);
+    }
+
+    // ── Monster Field Guide — tabs, wound pips, guard thresholds ──
+    if (this.actor.type === 'monster') {
+      // Set default window size on first open
+      if (!this._monsterSizeSet) {
+        this._monsterSizeSet = true;
+        setTimeout(() => this.setPosition({ width: 700, height: 520 }), 80);
+      }
+
+      // Tab drawer — click to open, click active tab again to close
+      html.find('.ms-tab').on('click', function() {
+        const page = $(this).data('page');
+        const tabPages = html.find('.ms-tab-pages');
+        const isAlreadyActive = $(this).hasClass('active') && tabPages.hasClass('is-open');
+        if (isAlreadyActive) {
+          // Collapse drawer
+          tabPages.removeClass('is-open');
+          $(this).removeClass('active');
+        } else {
+          // Switch page and open drawer
+          html.find('.ms-tab').removeClass('active');
+          $(this).addClass('active');
+          html.find('.ms-page').hide();
+          html.find(`.ms-page[data-page="${page}"]`).show();
+          tabPages.addClass('is-open');
+        }
+      });
+
+      // Wound pip renderer — 3 states: 0=empty, 1=wound, 2=grave wound
+      // States stored in system.wounds.states (array of ints, length = max)
+      const _getWoundStates = () => {
+        const max = parseInt(this.actor.system.wounds?.max ?? 4);
+        const raw = this.actor.system.wounds?.states ?? [];
+        // Ensure array is always exactly `max` length
+        const states = Array.from({ length: max }, (_, i) => raw[i] ?? 0);
+        return states;
+      };
+
+      const STATE_CLASSES = ['', 'ms-wound-filled', 'ms-wound-grave'];
+      const STATE_TITLES  = ['Empty', 'Wound', 'Grave Wound'];
+
+      const renderWoundPips = () => {
+        const max = parseInt(this.actor.system.wounds?.max ?? 4);
+        const states = _getWoundStates();
+        const container = html.find('.ms-wounds-pips')[0];
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 0; i < max; i++) {
+          const s = states[i] ?? 0;
+          const pip = document.createElement('div');
+          pip.className = 'ms-wound-pip' + (STATE_CLASSES[s] ? ` ${STATE_CLASSES[s]}` : '');
+          pip.dataset.index = i;
+          pip.title = STATE_TITLES[s];
+          container.appendChild(pip);
+        }
+        // Sync wounds.value to count of non-empty pips
+        const filled = states.filter(s => s > 0).length;
+        html.find('.ms-wounds-val').val(filled);
+      };
+      renderWoundPips();
+
+      // Click cycles: empty(0) → wound(1) → grave(2) → empty(0)
+      html.on('click', '.ms-wound-pip', async (ev) => {
+        const idx = parseInt(ev.currentTarget.dataset.index);
+        const states = _getWoundStates();
+        states[idx] = (states[idx] + 1) % 3;
+        const filled = states.filter(s => s > 0).length;
+        await this.actor.update({
+          'system.wounds.states': states,
+          'system.wounds.value': filled
+        });
+      });
+
+      // isAttack toggle on ability rows
+      html.on('click', '.ms-atk-toggle', async (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const itemId = ev.currentTarget.dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (!item) return;
+        await item.update({ 'system.isAttack': !item.system.isAttack });
+      });
+
+      // Guard threshold display
+      const renderGuardThresholds = () => {
+        const guard = parseInt(this.actor.system.guard ?? 0);
+        const el = html.find('.ms-guard-thresholds')[0];
+        if (!el) return;
+        if (guard > 0) {
+          el.textContent = `Grave ≥ ${guard * 3}   ·   Extra ≥ ${guard * 4}`;
+        } else {
+          el.textContent = '';
+        }
+      };
+      renderGuardThresholds();
+
+      // Re-render thresholds when guard input changes
+      html.on('change', 'input[name="system.guard"]', () => {
+        setTimeout(renderGuardThresholds, 100);
+      });
+    }
+
     // Inject battle strip + Pokemon window styles once
     if (!document.getElementById('stryder-battle-system-styles')) {
       const style = document.createElement('style');
@@ -911,7 +2553,8 @@ export class StryderActorSheet extends ActorSheet {
           grid-template-columns: 1fr 1fr;
           gap: 8px;
           align-items: stretch;
-          height: 60px;
+          min-height: 60px;
+          height: auto;
         }
         .jrpg-battle-left-btns {
           display: grid;
@@ -1002,14 +2645,70 @@ export class StryderActorSheet extends ActorSheet {
           border-color: rgba(255,230,100,0.95); color: #0d0800;
           box-shadow: 0 0 22px rgba(240,180,20,0.70), inset 0 1px 0 rgba(255,250,150,0.45);
         }
-        /* Force the engage button to fill its grid cell height */
-        .jrpg-battle-engage-row > .jrpg-battle-engage-btn {
-          height: 100% !important;
-          margin-top: 0 !important;
-          box-sizing: border-box !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
+        /* Right-side battle button group — fills the grid cell, stacks two buttons equally */
+        .jrpg-battle-right-btns {
+          display: grid;
+          grid-template-rows: 1fr 1fr;
+          gap: 5px;
+          min-height: 0;
+        }
+        .jrpg-battle-right-btns > button {
+          width: 100%;
+          height: 100%;
+          min-height: 26px;
+          box-sizing: border-box;
+        }
+
+        /* ── Focused Attack Button ── */
+        .jrpg-focused-atk-btn {
+          display: block; width: 100%; padding: 5px 12px;
+          background: linear-gradient(135deg, rgba(20,60,120,0.85) 0%, rgba(30,80,160,0.85) 50%, rgba(15,45,100,0.85) 100%);
+          border: 1px solid rgba(100,170,255,0.55); border-radius: 6px;
+          color: rgba(180,220,255,0.95); font-size: 12px; font-weight: 700;
+          letter-spacing: 0.10em; text-transform: uppercase; cursor: pointer;
+          box-shadow: 0 0 10px rgba(80,140,255,0.3), inset 0 1px 0 rgba(150,200,255,0.2);
+          transition: all 0.15s ease; font-family: 'Cinzel', serif;
+          white-space: nowrap;
+        }
+        .jrpg-focused-atk-btn:hover {
+          background: linear-gradient(135deg, rgba(25,75,150,0.95) 0%, rgba(40,100,200,0.95) 50%, rgba(20,60,130,0.95) 100%);
+          border-color: rgba(130,195,255,0.85);
+          box-shadow: 0 0 18px rgba(100,170,255,0.5), inset 0 1px 0 rgba(180,220,255,0.3);
+        }
+
+        /* ── Summoner: The Binding Gates ── */
+        .summoner-gates-row {
+          display: flex; gap: 6px; margin: 0 0 8px 0;
+        }
+        .summoner-gates-row > button {
+          flex: 1; padding: 6px 12px;
+          border-radius: 6px; cursor: pointer;
+          font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700;
+          letter-spacing: 0.10em; text-transform: uppercase;
+          transition: all 0.15s ease; white-space: nowrap;
+        }
+        .summoner-btn-icon { opacity: 0.6; font-size: 10px; }
+        .summoner-summon-button {
+          background: linear-gradient(135deg, rgba(110,20,40,0.85) 0%, rgba(160,35,60,0.85) 50%, rgba(85,15,35,0.85) 100%);
+          border: 1px solid rgba(255,110,140,0.55);
+          color: rgba(255,195,210,0.95);
+          box-shadow: 0 0 10px rgba(220,60,100,0.3), inset 0 1px 0 rgba(255,160,180,0.2);
+        }
+        .summoner-summon-button:hover {
+          background: linear-gradient(135deg, rgba(140,25,50,0.95) 0%, rgba(200,45,80,0.95) 50%, rgba(110,20,45,0.95) 100%);
+          border-color: rgba(255,140,170,0.85);
+          box-shadow: 0 0 18px rgba(240,80,120,0.5), inset 0 1px 0 rgba(255,190,205,0.3);
+        }
+        .summoner-dismiss-button {
+          background: linear-gradient(135deg, rgba(35,30,60,0.85) 0%, rgba(55,48,90,0.85) 50%, rgba(28,24,50,0.85) 100%);
+          border: 1px solid rgba(150,130,220,0.40);
+          color: rgba(200,184,240,0.90);
+          box-shadow: 0 0 8px rgba(100,80,180,0.25), inset 0 1px 0 rgba(180,160,240,0.15);
+        }
+        .summoner-dismiss-button:hover {
+          background: linear-gradient(135deg, rgba(48,40,82,0.95) 0%, rgba(72,62,118,0.95) 50%, rgba(38,32,68,0.95) 100%);
+          border-color: rgba(175,155,245,0.70);
+          box-shadow: 0 0 14px rgba(120,100,210,0.40), inset 0 1px 0 rgba(200,180,255,0.25);
         }
 
         /* ── Turn Start / Combat End — top bar ── */
@@ -1212,17 +2911,30 @@ export class StryderActorSheet extends ActorSheet {
 
     renderBattlePips(html);
 
+    // Apply aspect-inactive styling based on data-active-aspect attribute
+    html[0].querySelectorAll('[data-active-aspect]').forEach(li => {
+      const isActive = li.dataset.activeAspect === 'true';
+      li.classList.toggle('stryder-aspect-inactive', !isActive);
+    });
+
     // JRPG Main Menu navigation — persist page across re-renders
+    const _isTemperingSubPage = (t) => t === 'soul-armament' || t === 'growth';
+
     const _showPage = (target, label) => {
       this._jrpgPage = target;
       this._jrpgPageLabel = label;
       html.find('.jrpg-main-screen').hide();
       const subScreen = html.find('.jrpg-sub-screen');
       subScreen.show();
-      subScreen.toggleClass('is-tempering', target === 'tempering' || target === 'soul-armament' || target === 'growth');
+      subScreen.toggleClass('is-tempering', target === 'tempering' || _isTemperingSubPage(target));
+      subScreen.toggleClass('is-growth', target === 'growth');
       html.find('.jrpg-sub-title').text(label);
       html.find('.jrpg-page').hide();
       html.find(`.jrpg-page[data-page="${target}"]`).show();
+      // Show "← Tempering" only on soul-armament / growth; hide main back btn
+      html.find('.jrpg-back-btn').toggle(!_isTemperingSubPage(target));
+      html.find('.jrpg-back-to-tempering-btn').toggle(_isTemperingSubPage(target));
+      if (target === 'growth') this._buildGrowthPage(html);
     };
 
     html.find('.jrpg-menu-btn').on('click', function() {
@@ -1308,9 +3020,159 @@ export class StryderActorSheet extends ActorSheet {
     // Close dropdown when clicking outside
     $(document).on('click.battleFormDropdown', () => _closeFormDropdown());
 
-    // ── Aspect Select (placeholder) ──
-    html.on('click', '[data-action="openAspectSelect"]', () => {
-      ui.notifications.info('Aspect switching coming soon!');
+    // ── Aspect Select ──
+    // Update button label if an aspect is already active
+    {
+      const current = this.actor.getFlag('stryder', 'activeAspect') ?? null;
+      const lbl = html[0].querySelector('.jrpg-aspect-select-label');
+      if (lbl) lbl.textContent = current ? current.replace('Aspect of ', '') : 'Select Aspect';
+    }
+
+    html.on('click', '[data-action="openAspectSelect"]', async (ev) => {
+      const actor = this.actor;
+
+      // Derive unlocked aspects from stamped items
+      const unlockedMap = new Map(); // aspectName → display label
+      for (const item of actor.items) {
+        const asp = item.flags?.stryder?.aspectName;
+        if (asp && !unlockedMap.has(asp)) {
+          unlockedMap.set(asp, asp.replace('Aspect of ', ''));
+        }
+      }
+
+      // Fallback: if no stamped items yet, load compendium and match by name (migration path)
+      if (!unlockedMap.size) {
+        const aspectPack = game.packs.get('stryder.stryder-actions');
+        if (aspectPack) {
+          const aspectDocs = await aspectPack.getDocuments();
+          // Build folder map
+          const folderMap = {};
+          (aspectPack.folders?.contents ?? []).forEach(f => {
+            folderMap[f.id] = { name: f.name, parentId: f.folder?.id ?? null };
+          });
+          const PARENT_FOLDERS = new Set(['MrtalAspFolder01','ImmrtAspFolder01','SprBstAbilFolder']);
+
+          // Group by aspect folder
+          const groups = {};
+          for (const doc of aspectDocs) {
+            const fId = typeof doc.folder === 'string' ? doc.folder : doc.folder?.id ?? null;
+            if (!fId || PARENT_FOLDERS.has(fId) || !folderMap[fId]) continue;
+            if (!groups[fId]) groups[fId] = { name: folderMap[fId].name, names: new Set() };
+            groups[fId].names.add(doc.name);
+          }
+
+          // Find actor items matching any aspect ability name and stamp them
+          const stampPromises = [];
+          for (const [fId, group] of Object.entries(groups)) {
+            for (const actorItem of actor.items) {
+              if (actorItem.type === 'action'
+                  && !actorItem.flags?.stryder?.aspectName
+                  && !actorItem.flags?.stryder?.isTechnique
+                  && actorItem.flags?.stryder?.xpCost === undefined
+                  && group.names.has(actorItem.name)) {
+                stampPromises.push(actorItem.update({ 'flags.stryder.aspectName': group.name }));
+                unlockedMap.set(group.name, group.name.replace('Aspect of ', ''));
+              }
+            }
+          }
+          if (stampPromises.length) await Promise.all(stampPromises);
+        }
+      }
+
+      if (!unlockedMap.size) {
+        ui.notifications.warn('No Aspects unlocked yet — purchase a Core Skillset from the Growth menu first.');
+        return;
+      }
+
+      // Toggle: close if already open
+      const existing = document.getElementById('stryder-aspect-popover');
+      if (existing) { existing.remove(); return; }
+
+      const activeAspect = actor.getFlag('stryder', 'activeAspect') ?? null;
+      const btn = ev.currentTarget;
+      const rect = btn.getBoundingClientRect();
+
+      const pop = document.createElement('div');
+      pop.id = 'stryder-aspect-popover';
+      Object.assign(pop.style, {
+        position: 'fixed', zIndex: '10000',
+        left: rect.left + 'px', top: (rect.bottom + 4) + 'px',
+        minWidth: '200px',
+        background: 'rgba(4,8,24,0.97)',
+        border: '1px solid rgba(60,100,200,0.45)',
+        borderRadius: '6px', padding: '6px',
+        boxShadow: '0 6px 24px rgba(0,0,80,0.55)',
+        fontFamily: "'Cinzel',serif",
+      });
+
+      // Header
+      const header = document.createElement('div');
+      header.textContent = 'Active Aspect';
+      Object.assign(header.style, {
+        fontSize: '9px', letterSpacing: '.18em', textTransform: 'uppercase',
+        color: 'rgba(130,160,220,0.45)', padding: '4px 10px 6px',
+        borderBottom: '1px solid rgba(50,80,180,0.2)', marginBottom: '4px',
+      });
+      pop.appendChild(header);
+
+      // One row per unlocked aspect
+      for (const [asp, label] of [...unlockedMap.entries()].sort((a,b) => a[0].localeCompare(b[0]))) {
+        const row = document.createElement('button');
+        row.type = 'button';
+        row.textContent = label;
+        const isActive = asp === activeAspect;
+        Object.assign(row.style, {
+          display: 'block', width: '100%',
+          background: isActive ? 'rgba(35,70,170,0.45)' : 'transparent',
+          border: isActive ? '1px solid rgba(80,140,255,0.5)' : '1px solid transparent',
+          borderRadius: '4px', padding: '6px 12px', marginBottom: '2px',
+          color: isActive ? '#b0d4ff' : 'rgba(180,210,255,0.72)',
+          fontFamily: "'Cinzel',serif", fontSize: '11px',
+          cursor: 'pointer', textAlign: 'left',
+        });
+        row.addEventListener('click', async () => {
+          await actor.setFlag('stryder', 'activeAspect', asp);
+          const lbl = btn.querySelector('.jrpg-aspect-select-label');
+          if (lbl) lbl.textContent = label;
+          pop.remove();
+        });
+        pop.appendChild(row);
+      }
+
+      // Clear selection
+      if (activeAspect) {
+        const clearRow = document.createElement('button');
+        clearRow.type = 'button';
+        clearRow.textContent = '— No Active Aspect';
+        Object.assign(clearRow.style, {
+          display: 'block', width: '100%',
+          background: 'transparent',
+          border: '1px solid rgba(120,50,50,0.35)',
+          borderRadius: '4px', padding: '5px 12px', marginTop: '4px',
+          color: 'rgba(200,110,100,0.65)',
+          fontFamily: "'Cinzel',serif", fontSize: '10px',
+          cursor: 'pointer', textAlign: 'left',
+        });
+        clearRow.addEventListener('click', async () => {
+          await actor.unsetFlag('stryder', 'activeAspect');
+          const lbl = btn.querySelector('.jrpg-aspect-select-label');
+          if (lbl) lbl.textContent = 'Select Aspect';
+          pop.remove();
+        });
+        pop.appendChild(clearRow);
+      }
+
+      document.body.appendChild(pop);
+
+      // Close on outside click
+      setTimeout(() => {
+        document.addEventListener('click', function _close(e) {
+          if (!pop.contains(e.target) && e.target !== btn) {
+            pop.remove();
+            document.removeEventListener('click', _close);
+          }
+        });
+      }, 0);
     });
 
     // Soul Armament option row clicks
@@ -1396,9 +3258,15 @@ export class StryderActorSheet extends ActorSheet {
       html.find('.jrpg-main-screen').show();
     });
 
+    html.find('.jrpg-back-to-tempering-btn').on('click', () => {
+      _showPage('tempering', 'Tempering');
+    });
+
     // Restore sub-page if a re-render happened while one was open
     if (this._jrpgPage) {
       _showPage(this._jrpgPage, this._jrpgPageLabel || '');
+      // Growth page needs async rebuild on every re-render
+      if (this._jrpgPage === 'growth') this._buildGrowthPage(html);
     }
 
     // JRPG resource bar widths
@@ -1427,6 +3295,17 @@ export class StryderActorSheet extends ActorSheet {
 		this.toggleItems(ev.currentTarget.querySelector('.item-name'));
 	  });
 
+    // Skill favorite toggle — adds/removes from actor's favorites flag
+    html.on('click', '.skill-favorite-toggle', async (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const itemId  = ev.currentTarget.dataset.itemId;
+      const current = new Set(this.actor.getFlag('stryder', 'favorites') || []);
+      if (current.has(itemId)) current.delete(itemId);
+      else current.add(itemId);
+      await this.actor.setFlag('stryder', 'favorites', [...current]);
+    });
+
     // Render the item sheet for viewing/editing prior to the editable check.
     html.on('click', '.item-edit', (ev) => {
       const li = $(ev.currentTarget).parents('.item');
@@ -1434,25 +3313,26 @@ export class StryderActorSheet extends ActorSheet {
       item.sheet.render(true);
     });
 
-    // Spirit Beast ability use — post to chat
+    // Spirit Beast ability use — Stamina cost to linked Summoner + gate extras
     html.on('click', '.spirit-beast-ability-use', async (ev) => {
       ev.preventDefault();
       ev.stopPropagation();
       const ability = ev.currentTarget.dataset.ability;
       if (!ability) return;
-      const actor = this.actor;
-      const content = ability === 'primary' ? actor.system.abilities.primary : actor.system.abilities.defense;
-      const title = ability === 'primary' ? 'Primary Ability' : 'Defense Ability';
-      if (!content) return;
-      const gateColors = { crimson: '#8B0000', violet: '#6A0DAD', azure: '#00539C', sage: '#2E7D32' };
-      const borderColor = gateColors[actor.system.gate] ?? '#c9a66b';
-      await ChatMessage.create({
-        content: `<div style="background: url('systems/stryder/assets/parchment.jpg'); background-size: cover; padding: 15px; border: 2px solid ${borderColor}; border-radius: 4px;">
-          <h3 style="margin-top: 0; border-bottom: 1px solid ${borderColor}; color: ${borderColor};">${actor.name} — ${title}</h3>
-          ${content}
-        </div>`,
-        speaker: ChatMessage.getSpeaker({ actor: actor })
-      });
+      const { useSpiritAbility } = await import('../abilities/summoner-abilities.mjs');
+      await useSpiritAbility(this.actor, ability);
+    });
+
+    // Summoner — The Binding Gates
+    html.on('click', '.summoner-summon-button', async (ev) => {
+      ev.preventDefault();
+      const { openSummonDialog } = await import('../abilities/summoner-abilities.mjs');
+      await openSummonDialog(this.actor);
+    });
+    html.on('click', '.summoner-dismiss-button', async (ev) => {
+      ev.preventDefault();
+      const { requestDismiss } = await import('../abilities/summoner-abilities.mjs');
+      await requestDismiss(this.actor);
     });
 
     // -------------------------------------------------------------
@@ -1519,6 +3399,27 @@ export class StryderActorSheet extends ActorSheet {
     // Inventory grid — click the icon/start cell to open item popup
     html.on('click', '.inv-slot.inv-item[data-clickable="true"]', this._onInventoryItemClick.bind(this));
 
+    // Inventory slot hover glow — direct binding so mouseleave fires reliably
+    html.find('.inv-slot.inv-empty').on('mouseenter', function() {
+      this.style.transition  = 'background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease';
+      this.style.background  = 'rgba(18,28,65,0.85)';
+      this.style.borderColor = 'rgba(80,140,255,0.7)';
+      this.style.boxShadow   = 'inset 0 0 0 1px rgba(80,140,255,0.4), inset 0 0 18px rgba(42,112,224,0.18)';
+    }).on('mouseleave', function() {
+      this.style.background  = 'rgba(8,14,35,0.6)';
+      this.style.borderColor = 'rgba(60,90,160,0.18)';
+      this.style.boxShadow   = 'none';
+    });
+
+    html.find('.inv-slot.inv-item').on('mouseenter', function() {
+      this.style.transition = 'box-shadow 0.18s ease, filter 0.18s ease';
+      this.style.boxShadow  = 'inset 0 0 0 1px rgba(55,138,221,0.6), inset 0 0 18px rgba(42,112,224,0.18)';
+      this.style.filter     = 'brightness(1.2)';
+    }).on('mouseleave', function() {
+      this.style.boxShadow  = 'none';
+      this.style.filter     = 'brightness(1)';
+    });
+
     // Visual drag-over feedback on the inventory grid
     html.find('.jrpg-inv-grid').on('dragover', (e) => {
       e.preventDefault();
@@ -1529,43 +3430,159 @@ export class StryderActorSheet extends ActorSheet {
 
     // Inventory grid — empty slot click opens item creator dialog
     html.on('click', '[data-action="addItemFromSlot"]', async () => {
-      const content = `
-        <div style="display:flex;flex-direction:column;gap:10px;padding:4px 0;">
-          <div style="display:flex;flex-direction:column;gap:4px;">
-            <label style="font-size:12px;color:rgba(160,185,220,0.7);">Item Name</label>
-            <input id="new-item-name" type="text" placeholder="e.g. Iron Sword"
-              style="background:rgba(8,14,35,0.9);border:1px solid rgba(60,90,160,0.4);border-radius:4px;color:rgba(200,220,255,0.9);padding:4px 8px;font-size:13px;" />
+      const actor = this.actor;
+
+      // ── Load compendium index ──────────────────────────────────────────────
+      const INV_PACKS = ['stryder.stryder-loot', 'stryder.stryder-elixirs', 'stryder.stryder-armor'];
+      const INV_TYPES = new Set(['gear','consumable','component','loot','head','back','arms','legs','gems']);
+      const compItems = [];
+      for (const packId of INV_PACKS) {
+        const pack = game.packs.get(packId);
+        if (!pack) continue;
+        const idx = await pack.getIndex({ fields: ['name','type','img'] });
+        for (const e of idx) compItems.push({ ...e, packId });
+      }
+      compItems.sort((a, b) => a.name.localeCompare(b.name));
+
+      const rowHTML = (items) => items.length
+        ? items.map(it => `
+          <button type="button" class="inv-browse-row"
+               data-pack-id="${it.packId}" data-item-id="${it._id}"
+               style="display:flex;align-items:center;gap:8px;padding:5px 10px;width:100%;
+                      border:none;border-bottom:1px solid rgba(42,112,224,0.08);
+                      background:transparent;cursor:pointer;text-align:left;">
+            <img src="${it.img || 'icons/svg/item-bag.svg'}"
+                 style="width:18px;height:18px;object-fit:contain;border-radius:2px;flex-shrink:0;opacity:0.85;">
+            <span style="flex:1;font-size:12px;color:#c8dcf8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${it.name}</span>
+            <span style="font-size:9px;color:rgba(90,134,184,0.45);flex-shrink:0;letter-spacing:0.05em;">${it.type}</span>
+          </button>`).join('')
+        : `<div style="padding:10px;font-size:11px;color:rgba(90,134,184,0.45);text-align:center;">No items found</div>`;
+
+      const inputStyle = `width:100%;box-sizing:border-box;background:rgba(4,8,20,0.9);
+        border:1px solid rgba(42,112,224,0.3);border-radius:2px;color:#d8e8ff;
+        font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;padding:5px 9px;outline:none;`;
+
+      const content = `<div style="background:linear-gradient(135deg,#0d1628 0%,#080e1c 100%);">
+
+        <!-- Compendium browse -->
+        <div style="padding:12px 14px 8px;">
+          <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.14em;
+                      text-transform:uppercase;color:rgba(90,134,184,0.6);margin-bottom:6px;">
+            Browse Compendium</div>
+          <input id="inv-search" type="text" placeholder="Search…" style="${inputStyle}">
+          <div id="inv-browse-list" style="margin-top:5px;max-height:150px;overflow-y:auto;
+               border:1px solid rgba(42,112,224,0.15);border-radius:2px;
+               background:rgba(4,8,20,0.7);">${rowHTML(compItems)}</div>
+        </div>
+
+        <!-- Divider -->
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 14px;">
+          <div style="flex:1;height:1px;background:rgba(42,112,224,0.18);"></div>
+          <span style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.12em;
+                       color:rgba(90,134,184,0.4);">OR CREATE CUSTOM</span>
+          <div style="flex:1;height:1px;background:rgba(42,112,224,0.18);"></div>
+        </div>
+
+        <!-- Custom item -->
+        <div style="padding:8px 14px 14px;display:flex;gap:10px;align-items:flex-end;">
+          <div style="flex:1;">
+            <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.12em;
+                        text-transform:uppercase;color:rgba(90,134,184,0.6);margin-bottom:5px;">Name</div>
+            <input id="new-item-name" type="text" placeholder="e.g. Iron Sword" style="${inputStyle}">
           </div>
-          <div style="display:flex;flex-direction:column;gap:4px;">
-            <label style="font-size:12px;color:rgba(160,185,220,0.7);">Slot Size (1–11)</label>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.12em;
+                        text-transform:uppercase;color:rgba(90,134,184,0.6);margin-bottom:5px;">Size</div>
             <input id="new-item-size" type="number" min="1" max="11" value="1"
-              style="background:rgba(8,14,35,0.9);border:1px solid rgba(60,90,160,0.4);border-radius:4px;color:rgba(200,220,255,0.9);padding:4px 8px;font-size:13px;width:80px;" />
+                   style="width:52px;background:rgba(4,8,20,0.9);border:1px solid rgba(42,112,224,0.3);
+                          border-radius:2px;color:#d8e8ff;font-size:12px;padding:5px 7px;outline:none;">
           </div>
         </div>
-      `;
-      new Dialog({
+      </div>`;
+
+      const btnStyle = {
+        'font-family': "'Cinzel',serif", 'font-size': '9px', 'font-weight': '600',
+        'letter-spacing': '0.12em', 'text-transform': 'uppercase',
+        padding: '5px 0', cursor: 'pointer', 'border-radius': '2px', flex: '1',
+      };
+
+      let dialogInstance;
+      dialogInstance = new Dialog({
         title: 'Add Item to Inventory',
         content,
         buttons: {
-          add: {
-            label: 'Add to Inventory',
-            callback: async (html) => {
-              const name = html.find('#new-item-name').val().trim() || 'New Item';
-              const size = Math.max(1, Math.min(11, parseInt(html.find('#new-item-size').val()) || 1));
-              await Item.create(
-                { name, type: 'gear', system: { size } },
-                { parent: this.actor }
-              );
-            }
-          },
+          add: { label: 'Add Custom', callback: async (dlg) => {
+            const name = dlg.find('#new-item-name').val().trim() || 'New Item';
+            const size = Math.max(1, Math.min(11, parseInt(dlg.find('#new-item-size').val()) || 1));
+            await Item.create({ name, type: 'gear', system: { size } }, { parent: actor });
+          }},
           cancel: { label: 'Cancel' }
         },
         default: 'add',
-        render: (html) => html.find('#new-item-name').focus()
-      }, {
-        classes: ['inv-item-dialog'],
-        width: 300
-      }).render(true);
+        render: (dlg) => {
+          // Style outer window
+          const win = dlg.closest('.app,.window-app');
+          win.css({ background:'linear-gradient(135deg,#0d1628 0%,#080e1c 100%)',
+            border:'1px solid #1e4fa0', 'border-left':'3px solid #2a70e0',
+            'box-shadow':'0 0 24px rgba(20,80,200,0.45)',
+            'clip-path':'polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)' });
+          win.find('.window-header').css({ background:'rgba(6,10,24,0.98)',
+            'border-bottom':'1px solid rgba(42,112,224,0.28)', padding:'7px 12px' });
+          win.find('.window-title').css({ color:'#a8c8e8', 'font-family':"'Cinzel',serif",
+            'font-size':'11px', 'letter-spacing':'0.1em',
+            'text-shadow':'0 0 8px rgba(42,112,224,0.4)' });
+          win.find('.header-button.close').css({ color:'rgba(90,130,185,0.6)' });
+          win.find('.window-content').css({ background:'transparent', padding:'0' });
+          win.find('.dialog-buttons').css({ background:'rgba(4,8,20,0.95)',
+            'border-top':'1px solid rgba(42,112,224,0.18)',
+            padding:'7px 14px', gap:'8px', display:'flex' });
+          win.find('[data-button="add"]').css({ ...btnStyle,
+            background:'linear-gradient(135deg,#162e68 0%,#0d1e48 100%)',
+            color:'#90c8ff', border:'1px solid rgba(42,112,224,0.55)' });
+          win.find('[data-button="cancel"]').css({ ...btnStyle,
+            background:'transparent', color:'rgba(90,130,185,0.6)',
+            border:'1px solid rgba(42,112,224,0.18)' });
+
+          // Delegate from the outer window (persists across re-renders) instead of dlg content
+          win.off('input.invSearch click.invRow mouseenter.invRow mouseleave.invRow');
+
+          win.on('input.invSearch', '#inv-search', function() {
+            const q = this.value.toLowerCase();
+            win.find('.inv-browse-row').each(function() {
+              $(this).toggle($(this).find('span').first().text().toLowerCase().includes(q));
+            });
+          });
+
+          win.on('mouseenter.invRow', '.inv-browse-row', function() {
+            this.style.background = 'rgba(42,112,224,0.14)';
+          }).on('mouseleave.invRow', '.inv-browse-row', function() {
+            this.style.background = 'transparent';
+          });
+
+          win.on('click.invRow', '.inv-browse-row', async function() {
+            const packId = this.dataset.packId;
+            const itemId  = this.dataset.itemId;
+            try {
+              const uuid = `Compendium.${packId}.Item.${itemId}`;
+              let doc = await fromUuid(uuid).catch(() => null);
+              if (!doc) {
+                const pack = game.packs.get(packId);
+                if (pack) doc = await pack.getDocument(itemId).catch(() => null);
+              }
+              if (!doc) { ui.notifications.warn('Item not found in compendium.'); return; }
+              await Item.create(doc.toObject(), { parent: actor });
+              dialogInstance?.close();
+            } catch(err) {
+              console.error('Inventory import failed:', err);
+              ui.notifications.error(`Failed to add item: ${err.message}`);
+            }
+          });
+
+          dlg.find('#inv-search').focus();
+        }
+      }, { classes: ['inv-add-dialog'], width: 360 });
+
+      dialogInstance.render(true);
     });
 
     // Open Compendium
@@ -1642,7 +3659,7 @@ export class StryderActorSheet extends ActorSheet {
     });
 
 	// Resource buttons
-	html.on('click', '.resource-button, .fantasy-action-button, .jrpg-recovery-btn', async (event) => {
+	html.on('click', '.resource-button, .fantasy-action-button, .jrpg-recovery-btn, .jrpg-focused-atk-btn, .lrd-action-btn', async (event) => {
 	  event.preventDefault();
 	  const button = event.currentTarget;
 	  const action = button.dataset.action;
@@ -1661,12 +3678,69 @@ export class StryderActorSheet extends ActorSheet {
 			    message = `${this.actor.name} has regained all Stamina at the start of their turn.`;
 			    updates['system.stamina.value'] = this.actor.system.stamina.max;
 			  }
+			  // ── Brutality: Ichor Aura auto-trigger (8 Ichor at turn start) ──
+			  if ((this.actor.getFlag(SYSTEM_ID, 'activeAspect') ?? '').includes('Brutality')) {
+				const { getIchor, activateIchorAura } = await import('../abilities/brutality-abilities.mjs');
+				if (getIchor(this.actor) >= 8 && !this.actor.getFlag(SYSTEM_ID, 'ichorAuraActive')) {
+				  await activateIchorAura(this.actor, ChatMessage.getSpeaker({ actor: this.actor }),
+					game.settings.get('core', 'rollMode'));
+				}
+				// Clear round-end flags (Impending Doom penalty clears at turn start)
+				await this.actor.unsetFlag(SYSTEM_ID, 'impendingDoomPenalty');
+				await this.actor.unsetFlag(SYSTEM_ID, 'ichorAuraActive');
+			  }
+			  // ── Warlock: Sanguine Ichor lasts 1 Round — clears at next turn start ──
+			  {
+				const { isWarlock } = await import('../abilities/warlock-abilities.mjs');
+				if (isWarlock(this.actor) && this.actor.getFlag(SYSTEM_ID, 'sanguineIchorBonus')) {
+				  await this.actor.unsetFlag(SYSTEM_ID, 'sanguineIchorBonus');
+				  ui.notifications.info(`${this.actor.name}: Sanguine Ichor fades.`);
+				}
+			  }
 			  break;
 
 			case 'tacticsReset':
 			  message = `${this.actor.name} has regained all their Tactics Points at the start of a new Engagement.`;
 			  updates['system.tactics.value'] = this.actor.system.tactics.max;
 			  break;
+
+			case 'setLordlingAspect': {
+			  const aspects = ['Wild', 'Royal', 'Spirit'];
+			  const current = this.actor.getFlag(SYSTEM_ID, 'lordlingAspect') ?? '';
+			  const chosen = await new Promise(resolve => {
+			    new Dialog({
+			      title: 'Set Lordling Aspect',
+			      content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.8);font-size:13px;">Choose the Lordling's Aspect:</p>`,
+			      buttons: {
+			        wild:   { label: '🌿 Wild',    callback: () => resolve('Wild')   },
+			        royal:  { label: '👑 Royal',   callback: () => resolve('Royal')  },
+			        spirit: { label: '✦ Spirit',   callback: () => resolve('Spirit') },
+			        cancel: { label: 'Cancel',     callback: () => resolve(null)     },
+			      },
+			      default: 'wild',
+			    }, { width: 300, classes: ['dialog','stryder-stat-popup'] }).render(true);
+			  });
+			  if (chosen) { await this.actor.setFlag(SYSTEM_ID, 'lordlingAspect', chosen); this.render(false); }
+			  return;
+			}
+
+			case 'setLordlingForm': {
+			  const chosen = await new Promise(resolve => {
+			    new Dialog({
+			      title: 'Set Lordling Form',
+			      content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.8);font-size:13px;">Choose the current battle form:</p>`,
+			      buttons: {
+			        wild:   { label: '🌿 Wild (Medium)',  callback: () => resolve('Wild (Medium)')   },
+			        royal:  { label: '👑 Royal (Huge)',   callback: () => resolve('Royal (Huge)')    },
+			        small:  { label: '🔸 Small (resting)',callback: () => resolve('Small (resting)') },
+			        cancel: { label: 'Cancel',            callback: () => resolve(null)              },
+			      },
+			      default: 'wild',
+			    }, { width: 320, classes: ['dialog','stryder-stat-popup'] }).render(true);
+			  });
+			  if (chosen) { await this.actor.setFlag(SYSTEM_ID, 'lordlingForm', chosen); this.render(false); }
+			  return;
+			}
 
 			case 'limitReset':
 			  const limitItems = this.actor.items.filter(item =>
@@ -1691,44 +3765,173 @@ export class StryderActorSheet extends ActorSheet {
 			  for (const item of combatLimitItems) {
 				await item.update({'system.limit.value': 0});
 			  }
+			  // Reset Discipline Flow and FBA type between combats
+			  await this.actor.setFlag(SYSTEM_ID, 'flow', 0);
+			  await this.actor.unsetFlag(SYSTEM_ID, 'lastFBAType');
+
+			  // ── Brutality: end-of-engagement heal + flag cleanup ──
+			  if ((this.actor.getFlag(SYSTEM_ID, 'activeAspect') ?? '').includes('Brutality')) {
+				const { getIchor, setIchor } = await import('../abilities/brutality-abilities.mjs');
+				const ichor = getIchor(this.actor);
+				if (ichor > 0) {
+				  const curHP = this.actor.system.health?.value ?? 0;
+				  const maxHP = this.actor.system.health?.max   ?? 0;
+				  const newHP = Math.min(maxHP, curHP + ichor);
+				  await this.actor.update({ 'system.health.value': newHP });
+				  await ChatMessage.create({
+					speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+					content: `<div class="chat-message-card" style="padding:6px 10px;">
+					  <span class="aspect-label" style="font-family:'Cinzel';font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(200,140,60,0.85);text-transform:uppercase;">Brutality — Form Passive</span><br>
+					  <span style="font-family:'Rajdhani';font-size:13px;color:rgba(210,230,255,0.8);">End of engagement: ${this.actor.name} heals <strong style="color:#5cb85c;">${ichor} HP</strong> from current Ichor (${curHP} → ${newHP}).</span>
+					</div>`
+				  });
+				}
+				// Clear all Brutality round/combat flags
+				for (const flag of ['impendingDoomActive','impendingDoomPenalty','ichorEdgeBonus',
+				  'onsetOfDoomActive','gougingClawActive','hellishCleaveTargets','ichorAuraActive']) {
+				  await this.actor.unsetFlag(SYSTEM_ID, flag);
+				}
+				await setIchor(this.actor, 0);
+			  }
+
+			  // ── Warlock: end-of-engagement Bloodloss recovery + heal ──
+			  {
+				const { isWarlock, warlockEndOfEngagement } = await import('../abilities/warlock-abilities.mjs');
+				if (isWarlock(this.actor)) {
+				  await warlockEndOfEngagement(this.actor);
+				}
+			  }
+
 			  message = combatLimitItems.length > 0
 				? `${this.actor.name}'s combat has ended. All ability limits have been reset. (${combatLimitItems.length} reset)`
 				: `${this.actor.name}'s combat has ended.`;
 			  break;
 			}
 
+			case 'ichorIncrement': {
+			  const { grantIchor } = await import('../abilities/brutality-abilities.mjs');
+			  await grantIchor(this.actor, 1);
+			  return;
+			}
+
+			case 'ichorDecrement': {
+			  const { spendIchor } = await import('../abilities/brutality-abilities.mjs');
+			  await spendIchor(this.actor, 1);
+			  return;
+			}
+
+			case 'bloodlossIncrement': {
+			  const { payBloodloss } = await import('../abilities/warlock-abilities.mjs');
+			  await payBloodloss(this.actor, 1);
+			  return;
+			}
+
+			case 'bloodlossDecrement': {
+			  const { restoreBloodloss } = await import('../abilities/warlock-abilities.mjs');
+			  await restoreBloodloss(this.actor, 1);
+			  return;
+			}
+
+			case 'manaburnIncrement': {
+			  const { grantManaburn } = await import('../abilities/warlock-abilities.mjs');
+			  await grantManaburn(this.actor, 1);
+			  return;
+			}
+
+			case 'manaburnDecrement': {
+			  const { getManaburn, setManaburn } = await import('../abilities/warlock-abilities.mjs');
+			  await setManaburn(this.actor, getManaburn(this.actor) - 1);
+			  return;
+			}
+
+			case 'focusedAttack': {
+			  const actor = this.actor;
+			  const speaker = ChatMessage.getSpeaker({ actor });
+			  const rollMode = game.settings.get('core', 'rollMode');
+			  const { resolveFocusedAttack, resolveTwinAttack } = await import('../helpers/aspect-attack.mjs');
+
+			  // Check if Dual Wield is active → ask for twin attack
+			  const activeBattleForm = actor.getFlag(SYSTEM_ID, 'activeBattleForm');
+			  const isDualWield = activeBattleForm === 'dual_wield' && actor.system.soul_armament?.form?.dual_wield;
+
+			  if (isDualWield) {
+				const go = await Dialog.confirm({
+				  title: 'Dual Wield — Twin Attack?',
+				  content: `<p style="margin:0;padding:8px 0;">Make a <strong>Twin Attack</strong> (two rolls, combined message)?</p>`,
+				  yes: () => true, no: () => false, defaultYes: true,
+				  options: { classes: ['dialog','stryder-stat-popup'], width: 320 }
+				});
+				if (go) {
+				  return await resolveTwinAttack(actor, { speaker, rollMode });
+				}
+			  }
+
+			  return await resolveFocusedAttack(actor, { speaker, rollMode });
+			}
+
 			case 'battleEngage': {
 			  const actor = this.actor;
 			  const combat = game.combat;
 
-			  // If already in combat, just open the window — don't re-roll initiative
-			  if (combat) {
-			    const existingCombatant = combat.getCombatantByActor(actor.id)
-			      ?? combat.combatants.find(c => c.actorId === actor.id || c.tokenId === actor.token?.id);
-			    if (existingCombatant) {
-			      _openPokemonBattleWindow(actor);
-			      return;
-			    }
+			  // No active encounter — tell player to wait
+			  if (!combat) {
+			    ui.notifications.warn(`No active encounter. Wait for the World Master to begin one.`);
+			    _openPokemonBattleWindow(actor);
+			    return;
 			  }
 
-			  // Not yet in combat — roll initiative
+			  // Resolve the best token document for this actor on the current scene
+			  const sceneToken = actor.token
+			    ?? canvas.tokens?.controlled.find(t => t.actor?.id === actor.id)?.document
+			    ?? canvas.scene?.tokens?.find(t => t.actorId === actor.id);
+
+			  // If already in the encounter, just open the battle window — no re-roll
+			  const existingCombatant = combat.combatants.find(c =>
+			    c.actorId === actor.id || (sceneToken && c.tokenId === sceneToken.id)
+			  );
+			  if (existingCombatant) {
+			    _openPokemonBattleWindow(actor);
+			    return;
+			  }
+
+			  // Roll initiative: 2d6 + highest Sense
 			  const sys = actor.system;
 			  const senses = sys.attributes?.sense ?? {};
 			  const senseValues = Object.values(senses).map(s => (typeof s === 'object' ? (s.value ?? 0) : 0));
 			  const highestSense = senseValues.length ? Math.max(...senseValues) : 0;
-
 			  const initRoll = new Roll(`2d6 + ${highestSense}`);
 			  await initRoll.evaluate();
 
-			  if (combat) {
-			    const created = await combat.createEmbeddedDocuments('Combatant', [{ actorId: actor.id, tokenId: actor.token?.id ?? null }]);
-			    if (created.length) await combat.setInitiative(created[0].id, initRoll.total);
-			  }
+			  // Add combatant to encounter with initiative
+			  const combatantData = {
+			    actorId: actor.id,
+			    tokenId: sceneToken?.id ?? null,
+			    sceneId: combat.scene?.id ?? canvas.scene?.id ?? null,
+			  };
+			  const created = await combat.createEmbeddedDocuments('Combatant', [combatantData]);
+			  if (created.length) await combat.setInitiative(created[0].id, initRoll.total);
 
+			  // Post initiative roll to chat
 			  await initRoll.toMessage({
 			    speaker: ChatMessage.getSpeaker({ actor }),
-			    flavor: `<strong>${actor.name}</strong> enters combat! Initiative roll (2d6 + ${highestSense} Sense)`,
+			    flavor: `<strong>${actor.name}</strong> enters the encounter! Initiative roll (2d6 + ${highestSense} Sense)`,
 			  });
+
+			  // ── Brutality: Attached Bonus — start engagement with 3 Ichor ──
+			  if ((actor.getFlag(SYSTEM_ID, 'activeAspect') ?? '').includes('Brutality')) {
+				const { getIchor, setIchor } = await import('../abilities/brutality-abilities.mjs');
+				const curIchor = getIchor(actor);
+				if (curIchor < 3) {
+				  await setIchor(actor, 3);
+				  await ChatMessage.create({
+					speaker: ChatMessage.getSpeaker({ actor }),
+					content: `<div class="chat-message-card" style="padding:6px 10px;">
+					  <span class="aspect-label" style="font-family:'Cinzel';font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(200,140,60,0.85);text-transform:uppercase;">Brutality — Attached Bonus</span><br>
+					  <span style="font-family:'Rajdhani';font-size:13px;color:rgba(210,230,255,0.8);">${actor.name} begins the engagement with <strong style="color:#c87a30;">3 Ichor</strong>.</span>
+					</div>`
+				  });
+				}
+			  }
 
 			  _openPokemonBattleWindow(actor);
 			  return;
@@ -1760,19 +3963,24 @@ export class StryderActorSheet extends ActorSheet {
 			  break;
 
 			case 'springOfLife': {
-			  // 1. Calculate health restoration
+			  // 1. Calculate health restoration (incl. Warlock Sacrifice — only a
+			  //    Spring of Life can restore Maximum Health paid to Sacrifice)
 			  const burningReduction = this.actor.getFlag(SYSTEM_ID, "burningHealthReduction") || 0;
 			  const bloodlossReduction = this.actor.getFlag(SYSTEM_ID, "bloodlossHealthReduction") || 0;
-			  const totalReduction = burningReduction + bloodlossReduction;
+			  const sacrificeReduction = this.actor.getFlag(SYSTEM_ID, "sacrificeHealthReduction") || 0;
+			  const totalReduction = burningReduction + bloodlossReduction + sacrificeReduction;
 			  const newMax = this.actor.system.health.max + totalReduction;
 
-			  // 2. Apply HP/MP restoration and set springOfLifeActive flag
+			  // 2. Restore max HP directly (automatic max-HP derivation is disabled),
+			  //    refill HP/MP and set springOfLifeActive flag
 			  await this.actor.update({
+				'system.health.max': newMax,
 				'system.health.value': newMax,
 				'system.mana.value': this.actor.system.mana.max,
 				[`flags.${SYSTEM_ID}.springOfLifeActive`]: true,
 				[`flags.${SYSTEM_ID}.burningHealthReduction`]: null,
 				[`flags.${SYSTEM_ID}.bloodlossHealthReduction`]: null,
+				[`flags.${SYSTEM_ID}.sacrificeHealthReduction`]: null,
 			  });
 
 			  // 3. Remove all active effects (conditions), preserving permanent ones
@@ -1796,13 +4004,11 @@ export class StryderActorSheet extends ActorSheet {
 			  // 5. Build and send chat message
 			  let springMessage = `${this.actor.name} has used Spring of Life, restoring all Health and Mana, and clearing all conditions. Stamina cannot be restored until the next Rest.`;
 			  if (totalReduction > 0) {
-				if (burningReduction > 0 && bloodlossReduction > 0) {
-				  springMessage += ` Max Health restored by ${totalReduction} (${burningReduction} from burns, ${bloodlossReduction} from bloodloss).`;
-				} else if (burningReduction > 0) {
-				  springMessage += ` Max Health restored by ${burningReduction} (healed burns).`;
-				} else if (bloodlossReduction > 0) {
-				  springMessage += ` Max Health restored by ${bloodlossReduction} (healed bloodloss).`;
-				}
+				const parts = [];
+				if (burningReduction > 0) parts.push(`${burningReduction} from burns`);
+				if (bloodlossReduction > 0) parts.push(`${bloodlossReduction} from bloodloss`);
+				if (sacrificeReduction > 0) parts.push(`${sacrificeReduction} from Sacrifice`);
+				springMessage += ` Max Health restored by ${totalReduction} (${parts.join(', ')}).`;
 			  }
 			  await ChatMessage.create({
 				user: game.user.id,
@@ -1849,6 +4055,12 @@ export class StryderActorSheet extends ActorSheet {
 			  }
 			  return; // skip shared updates/message block
 			}
+
+		  case 'resetHpMax': {
+			await this._syncComputedStats();
+			ui.notifications.info(`${this.actor.name}: HP/MP/Stamina maximums reset to calculated values.`);
+			return; // skip shared update/message block
+		  }
 
 		  case 'trustIncrease': {
 			const currentTrustPoints = this.actor.system.trust?.points ?? 0;
@@ -1904,8 +4116,7 @@ export class StryderActorSheet extends ActorSheet {
 			const computed = this._calcMaxStats(fakeActorData);
 
 			// XP is a spendable currency for buying Techniques in the Growth menu.
-			// Placeholder: 2 XP per level; tune once Growth menu is built.
-			const xpGain = 2;
+			const xpGain = 1;
 			const currentXp = sys.attributes.xp?.value ?? 0;
 
 			const lvlUpdates = {
@@ -1921,7 +4132,7 @@ export class StryderActorSheet extends ActorSheet {
 
 			await this.actor.update(lvlUpdates);
 			ui.notifications.info(
-			  `${this.actor.name} advanced to Level ${newLevel}! Gained ${xpGain} XP to spend on Techniques.`
+			  `${this.actor.name} advanced to Level ${newLevel}! Gained 1 XP.`
 			);
 			break;
 		  }
@@ -1949,6 +4160,24 @@ export class StryderActorSheet extends ActorSheet {
 		  console.error("Error in resource-button handler:", err);
 		  ui.notifications.error("Failed to update resources!");
 		}
+	});
+
+	// ── Lordling quick tactic buttons ─────────────────────────────────────────
+	html.on('click', '.lrd-tactic-quick', async (ev) => {
+	  ev.preventDefault();
+	  const tactic = ev.currentTarget.dataset.tactic;
+	  if (!tactic) return;
+	  const speaker  = ChatMessage.getSpeaker({ actor: this.actor });
+	  const rollMode = game.settings.get('core', 'rollMode');
+	  // Find the Shaman linked to this Lordling
+	  const shaman = this.actor.type === 'lordling'
+	    ? (game.actors.get(this.actor.system.linkedCharacterId) ?? this.actor)
+	    : this.actor;
+	  const { handleShamanAbility } = await import('../abilities/shaman-abilities.mjs').catch(() => ({ handleShamanAbility: null }));
+	  if (!handleShamanAbility) return;
+	  const tacticNameMap = { attack: 'Tactic — Attack', heal: 'Tactic — Heal', dodge: 'Tactic — Dodge/Evasion', metamorph: 'Tactic — Metamorph', retreat: 'Tactic — Retreat' };
+	  const fakeItem = { name: tacticNameMap[tactic] ?? tactic, system: { description: '' }, flags: { stryder: {} } };
+	  await handleShamanAbility(fakeItem, shaman, speaker, rollMode);
 	});
 
 	// Life Skills functionality
@@ -2164,6 +4393,9 @@ export class StryderActorSheet extends ActorSheet {
 	  const clearFolkEffects = async () => {
 	    const effects = [...this.actor.effects].filter(e => e.flags?.stryder?.isFolkBonus);
 	    for (const e of effects) await e.delete();
+	    // Also remove any items granted by folk (e.g. Oumen affliction abilities)
+	    const folkItems = [...this.actor.items].filter(i => i.flags?.stryder?.isFolkAbility);
+	    for (const i of folkItems) await i.delete();
 	  };
 
 	  // Helper: wipe every stored folk field
@@ -2177,7 +4409,8 @@ export class StryderActorSheet extends ActorSheet {
 	    'system.folk.wildkin_adaptations': [],
 	    'system.folk.talent_free_points':  {},
 	    'system.folk.sense_free_choices':  [],
-	    'system.folk.sense_one_choice':    ''
+	    'system.folk.sense_one_choice':    '',
+	    'system.folk.oumen_affliction':    '',
 	  });
 
 	  // --- Clearing folk entirely ---
@@ -2221,7 +4454,8 @@ export class StryderActorSheet extends ActorSheet {
 	    travelerBoon:  existing.traveler_boon        || '',
 	    adaptations:   existing.wildkin_adaptations  || [],
 	    talentPoints:  existing.talent_free_points   || {},
-	    senseChoices:  existing.sense_free_choices   || []
+	    senseChoices:  existing.sense_free_choices   || [],
+	    affliction:    existing.oumen_affliction      || '',
 	  });
 	});
 
@@ -2261,6 +4495,14 @@ export class StryderActorSheet extends ActorSheet {
 	  });
 
 	  ui.notifications.info(`Class set to ${className}. Max Health updated to ${newMaxHealth}.`);
+
+	  // ── Shaman: prompt to link a Lordling ────────────────────────────────
+	  if (className === 'Shaman') {
+	    const alreadyLinked = game.actors.find(a => a.type === 'lordling' && a.system.linkedCharacterId === this.actor.id);
+	    if (!alreadyLinked) {
+	      await this._promptLordlingLink();
+	    }
+	  }
 	});
 
 	// Re-sync whenever Grit changes so the Grit HP bonus is recalculated immediately.
@@ -2268,6 +4510,53 @@ export class StryderActorSheet extends ActorSheet {
 	html.find('input[name="system.abilities.Grit.value"]').on('change', () => {
 	  setTimeout(() => this._syncComputedStats(), 100);
 	});
+
+	// ── Stat stepper buttons (Character page) ──────────────────────────────
+	if (this.actor.type === 'character') {
+	  const STAT_KEYS  = ['Soul', 'Reflex', 'Grit', 'Will'];
+	  const MAX_NORMAL = 5;
+	  const MAX_AUG    = 7;
+
+	  html.find('.stat-btn-up').on('click', async (ev) => {
+	    const stat      = ev.currentTarget.dataset.stat;
+	    if (!STAT_KEYS.includes(stat)) return;
+	    const cur       = this.actor.system.abilities?.[stat]?.value ?? 0;
+	    const augBonus  = this.actor.getFlag('stryder', 'augExtraStatPoints') ?? 0;
+	    const maxVal    = augBonus > 0 ? MAX_AUG : MAX_NORMAL;
+	    const spent     = STAT_KEYS.reduce((s, k) => s + (this.actor.system.abilities?.[k]?.value ?? 0), 0);
+	    const remaining = (9 + augBonus) - spent;
+	    if (remaining <= 0) { ui.notifications.warn('No stat points remaining.'); return; }
+	    if (cur >= maxVal)  { ui.notifications.warn(`${stat} is already at maximum (${maxVal}).`); return; }
+	    await this.actor.update({ [`system.abilities.${stat}.value`]: cur + 1 });
+	  });
+
+	  html.find('.stat-btn-down').on('click', async (ev) => {
+	    const stat = ev.currentTarget.dataset.stat;
+	    if (!STAT_KEYS.includes(stat)) return;
+	    const cur  = this.actor.system.abilities?.[stat]?.value ?? 0;
+	    if (cur <= 0) return;
+	    await this.actor.update({ [`system.abilities.${stat}.value`]: cur - 1 });
+	  });
+	}
+
+	// ── Lordling stat steppers (no point pool — just clamp 0–5) ───────────
+	if (this.actor.type === 'lordling') {
+	  const STAT_KEYS = ['Spirit', 'Reflex', 'Grit', 'Will'];
+	  html.find('.stat-btn-up').on('click', async (ev) => {
+	    const stat = ev.currentTarget.dataset.stat;
+	    if (!STAT_KEYS.includes(stat)) return;
+	    const cur = this.actor.system.abilities?.[stat]?.value ?? 0;
+	    if (cur >= 5) { ui.notifications.warn(`${stat} is already at maximum (5).`); return; }
+	    await this.actor.update({ [`system.abilities.${stat}.value`]: cur + 1 });
+	  });
+	  html.find('.stat-btn-down').on('click', async (ev) => {
+	    const stat = ev.currentTarget.dataset.stat;
+	    if (!STAT_KEYS.includes(stat)) return;
+	    const cur = this.actor.system.abilities?.[stat]?.value ?? 0;
+	    if (cur <= 0) return;
+	    await this.actor.update({ [`system.abilities.${stat}.value`]: cur - 1 });
+	  });
+	}
 
 	// Sync computed max stats (level/class-driven) back to the document.
 	// Fire-and-forget: no await so it doesn't block the listener setup.
@@ -2702,9 +4991,10 @@ export class StryderActorSheet extends ActorSheet {
     }
 
     // Handle rolls that supply the formula directly.
-    if (dataset.roll) {
+    const formula = dataset.roll || dataset.customRoll;
+    if (formula) {
       let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
+      let roll = new Roll(formula, this.actor.getRollData());
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,
@@ -2829,6 +5119,103 @@ export class StryderActorSheet extends ActorSheet {
    * Apply all folk-derived talent/sense bonuses as a single "Folk Bonuses"
    * ActiveEffect (ADD mode, priority 50).  Replaces any previous folk effect.
    */
+  /**
+   * Called when Shaman is selected as a class. Shows a dialog to link an
+   * existing Lordling actor or create a new one.
+   */
+  async _promptLordlingLink() {
+    const actor = this.actor;
+
+    // Find Lordling actors this user owns that aren't already linked to someone else
+    const available = game.actors.filter(a =>
+      a.type === 'lordling' &&
+      a.isOwner &&
+      (!a.system.linkedCharacterId || a.system.linkedCharacterId === actor.id)
+    );
+
+    const hasLordlings = available.length > 0;
+
+    // Build option list HTML
+    const optionRows = hasLordlings
+      ? available.map(l =>
+          `<label style="display:flex;align-items:center;gap:8px;padding:5px 4px;border-radius:3px;cursor:pointer;color:rgba(200,220,255,0.85);font-size:12px;">
+            <input type="radio" name="lordling-pick" value="${l.id}" style="flex-shrink:0;">
+            <img src="${l.img}" width="24" height="24" style="border:1px solid rgba(80,120,200,0.3);border-radius:3px;object-fit:cover;flex-shrink:0;">
+            <span style="font-family:'Cinzel',serif;font-weight:600;">${l.name}</span>
+          </label>`
+        ).join('')
+      : `<p style="color:rgba(160,180,220,0.55);font-size:11px;font-style:italic;margin:0;">No Lordling actors found. Create one below.</p>`;
+
+    const content = `
+      <div style="font-family:'Rajdhani',sans-serif;padding:4px 0;">
+        <p style="color:rgba(180,210,255,0.8);font-size:13px;margin:0 0 10px;">
+          As a Shaman, <strong>${actor.name}</strong> requires a linked <strong>Lordling</strong> sheet
+          to track their companion's stats, Tactic Points, and Aspect Features.
+        </p>
+        ${hasLordlings ? `<div style="margin-bottom:10px;">${optionRows}</div>` : optionRows}
+      </div>`;
+
+    const choice = await new Promise(resolve => {
+      new Dialog({
+        title: 'Link a Lordling',
+        content,
+        buttons: {
+          ...(hasLordlings ? {
+            link: {
+              label: '🔗 Link Selected',
+              callback: (html) => {
+                const picked = html.find('input[name="lordling-pick"]:checked').val();
+                resolve({ action: 'link', lordlingId: picked ?? null });
+              }
+            }
+          } : {}),
+          create: {
+            label: '✦ Create New Lordling',
+            callback: () => resolve({ action: 'create' })
+          },
+          skip: {
+            label: 'Skip for Now',
+            callback: () => resolve({ action: 'skip' })
+          }
+        },
+        default: hasLordlings ? 'link' : 'create',
+      }, { width: 420, classes: ['dialog', 'stryder-stat-popup'] }).render(true);
+    });
+
+    if (!choice || choice.action === 'skip') {
+      ui.notifications.info('You can link a Lordling later from their sheet by setting the Linked Character field.');
+      return;
+    }
+
+    if (choice.action === 'link') {
+      if (!choice.lordlingId) { ui.notifications.warn('No Lordling selected.'); return; }
+      const lordling = game.actors.get(choice.lordlingId);
+      if (!lordling) return;
+      await lordling.update({ 'system.linkedCharacterId': actor.id });
+      ui.notifications.info(`${lordling.name} is now linked to ${actor.name}.`);
+      lordling.sheet?.render(true);
+      return;
+    }
+
+    if (choice.action === 'create') {
+      // Create a new Lordling actor with sensible defaults, linked to this Shaman
+      const lordlingData = {
+        name:   `${actor.name}'s Lordling`,
+        type:   'lordling',
+        img:    'icons/creatures/mammals/beast-giant-bear-growl.webp',
+        system: {
+          linkedCharacterId: actor.id,
+          tactics: { value: 6, min: 0, max: 6 },
+          health:  { value: actor.system.health?.max ?? 8, max: actor.system.health?.max ?? 8 },
+        },
+        ownership: { [game.user.id]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER },
+      };
+      const [newLordling] = await Actor.createDocuments([lordlingData]);
+      ui.notifications.info(`${newLordling.name} created and linked to ${actor.name}. Configure their stats on the Lordling sheet.`);
+      newLordling.sheet?.render(true);
+    }
+  }
+
   async _applyFolkChoices(folkName, choices) {
     const folkData = STRYDER_FOLK_DATA[folkName];
     if (!folkData) return;
@@ -2892,11 +5279,62 @@ export class StryderActorSheet extends ActorSheet {
       });
     }
 
-    // Remove ALL previous folk effects (guard against duplicates), then create new one
-    const existingEffects = [...this.actor.effects].filter(e => e.flags?.stryder?.isFolkBonus);
-    for (const e of existingEffects) await e.delete();
+    // --- Oumen: grant affliction items + Demon Slayer ---
+    if (folkName === 'Oumen') {
+      // Remove any previously granted folk ability items
+      const oldFolkItems = [...this.actor.items].filter(i => i.flags?.stryder?.isFolkAbility);
+      for (const i of oldFolkItems) await i.delete();
 
+      const itemsToCreate = [];
+
+      // Demon Slayer — all Oumen receive this
+      itemsToCreate.push({
+        name: 'Demon Slayer', type: 'racial', img: 'icons/svg/aura.svg',
+        system: {
+          description: '<p>By nature of your ability to overcome the affect of the Other you are also given a bolstered physical ability to overcome Demons. When dealt damage by any Attack, Skill, or Monster magyk by a Demon you reduce the damage dealt to you by 4.</p>',
+          roll: { diceBonus: 0, diceNum: 2, diceSize: 6 },
+          cooldown_type: 'perRest', cooldown_value: 0, uses_current: 0,
+        },
+        flags: { stryder: { isFolkAbility: true } },
+      });
+
+      // Affliction-specific pair
+      const aff = choices.affliction ? STRYDER_OUMEN_AFFLICTIONS[choices.affliction] : null;
+      if (aff) {
+        // Apply affliction passive AE changes (e.g. +2 mana, Strength → 5, +2 move)
+        for (const c of aff.aeChanges) changes.push(c);
+
+        itemsToCreate.push({
+          name: aff.passive.name, type: 'racial', img: 'icons/svg/aura.svg',
+          system: {
+            description: aff.passive.description,
+            roll: { diceBonus: 0, diceNum: 2, diceSize: 6 },
+            cooldown_type: 'perRest', cooldown_value: 0, uses_current: 0,
+          },
+          flags: { stryder: { isFolkAbility: true } },
+        });
+        itemsToCreate.push({
+          name: aff.active.name, type: 'racial', img: 'icons/svg/aura.svg',
+          system: {
+            description: aff.active.description,
+            roll: { diceBonus: 0, diceNum: 2, diceSize: 6 },
+            cooldown_type: 'perRest',
+            cooldown_value: aff.active.cooldown_value,
+            uses_current: aff.active.cooldown_value,
+          },
+          flags: { stryder: { isFolkAbility: true } },
+        });
+      }
+
+      if (itemsToCreate.length) {
+        await this.actor.createEmbeddedDocuments('Item', itemsToCreate);
+      }
+    }
+
+    // Rebuild AE now that affliction changes may have been appended
     if (changes.length > 0) {
+      const existingEffects2 = [...this.actor.effects].filter(e => e.flags?.stryder?.isFolkBonus);
+      for (const e of existingEffects2) await e.delete();
       await this.actor.createEmbeddedDocuments('ActiveEffect', [{
         name: `Folk Bonuses (${folkName})`,
         icon: 'icons/svg/aura.svg',
@@ -2917,6 +5355,7 @@ export class StryderActorSheet extends ActorSheet {
       'system.folk.wildkin_adaptations': choices.adaptations         || [],
       'system.folk.talent_free_points':  choices.talentPoints        || {},
       'system.folk.sense_free_choices':  choices.senseChoices        || (choices.senseOneChoice ? [choices.senseOneChoice] : []),
+      'system.folk.oumen_affliction':    choices.affliction           || '',
       'system.folk.bonuses_applied':     true
     });
 
@@ -2963,6 +5402,21 @@ export class StryderActorSheet extends ActorSheet {
         content += `<div class="fp-cs-option${sel}" data-value="${f}">${f}</div>`;
       });
       content += `</div><input type="hidden" id="fp-origin" value="${curOrigin}"></div></div>`;
+    }
+
+    // --- Oumen: affliction picker ---
+    if (folkData.afflictionPicker) {
+      const curAffliction = existingChoices.affliction || '';
+      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:6px;">Affliction <span style="font-size:10px;color:#888;">— which body part was corrupted by the Other?</span></label>`;
+      Object.entries(STRYDER_OUMEN_AFFLICTIONS).forEach(([name, aff]) => {
+        const chk = curAffliction === name ? 'checked' : '';
+        content += `<label style="display:block;color:#e0c87a;margin:5px 0;font-size:12px;cursor:pointer;">
+          <input type="radio" name="fp-affliction" value="${name}" ${chk} style="margin-right:6px;">
+          <strong>${name}</strong>
+          <span style="color:#999;font-size:10px;margin-left:4px;">— ${aff.summary}</span>
+        </label>`;
+      });
+      content += `</div>`;
     }
 
     // --- Size picker ---
@@ -3074,6 +5528,10 @@ export class StryderActorSheet extends ActorSheet {
             // Oumen origin folk
             const originEl = html.find('#fp-origin');
             if (originEl.length) choices.originFolk = originEl.val();
+
+            // Oumen affliction
+            const afflictionEl = html.find('input[name="fp-affliction"]:checked');
+            if (afflictionEl.length) choices.affliction = afflictionEl.val();
 
             // Colossus
             const subfolkEl = html.find('input[name="fp-subfolk"]:checked');
@@ -3606,6 +6064,58 @@ export class StryderActorSheet extends ActorSheet {
   }
 }
 
+// ── Section collapse via MutationObserver ──────────────────────────────────────
+// Watches the live document for .stryder-section-header insertions, bypassing
+// all hook and activateListeners timing issues. localStorage preserves state
+// across re-renders without touching actor data.
+function _initCollapseHeader(header) {
+  if (header.dataset.sectionCollapseInit) return;
+  header.dataset.sectionCollapseInit = '1';
+
+  const title = header.querySelector('.stryder-section-title')?.textContent?.trim() || 'section';
+  const lsKey = `stryder-collapse|${title}`;
+  const details = header.closest('details.stryder-section');
+  if (!details) return;
+
+  // Restore collapsed state from localStorage
+  if (localStorage.getItem(lsKey) === '1') details.open = false;
+
+  // Persist state whenever the browser toggles the <details>
+  details.addEventListener('toggle', () => {
+    localStorage.setItem(lsKey, details.open ? '0' : '1');
+  });
+}
+
+Hooks.once('ready', () => {
+  const obs = new MutationObserver(mutations => {
+    for (const mut of mutations) {
+      for (const node of mut.addedNodes) {
+        if (node.nodeType !== 1) continue;
+        if (node.classList?.contains('stryder-section-header')) _initCollapseHeader(node);
+        node.querySelectorAll?.('.stryder-section-header').forEach(_initCollapseHeader);
+      }
+    }
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+});
+
+// Grant starting class XP bonus when a class is first selected on a Level 1 character.
+// Warriors get +2 XP from Augmented Combatant at Level 1.
+const CLASS_STARTING_XP = { Warrior: 2 };
+Hooks.on('updateActor', async (actor, changes) => {
+  const newClass = changes?.system?.class?.name;
+  if (!newClass || !CLASS_STARTING_XP[newClass]) return;
+  if (actor.type !== 'character') return;
+  if ((actor.system.attributes?.level?.value ?? 1) !== 1) return;
+  const flagKey = `startingXpGranted_${newClass}`;
+  if (actor.getFlag('stryder', flagKey)) return; // already granted
+  const bonus = CLASS_STARTING_XP[newClass];
+  const current = actor.system.attributes?.xp?.value ?? 0;
+  await actor.update({ 'system.attributes.xp.value': current + bonus });
+  await actor.setFlag('stryder', flagKey, true);
+  ui.notifications.info(`${actor.name} received ${bonus} bonus XP from ${newClass} class feature (${newClass === 'Warrior' ? 'Augmented Combatant' : 'class bonus'}).`);
+});
+
 /**
  * Opens (or re-focuses) the Pokemon-style battle window for the given actor.
  * Creates a fixed-position div anchored to the bottom of the viewport.
@@ -3617,8 +6127,31 @@ function _openPokemonBattleWindow(actorRef) {
   const existing = document.getElementById('stryder-pokemon-battle');
   if (existing) existing.remove();
 
-  const skills        = actor.items.filter(i => i.type === 'skill' || (i.type === 'action' && i.system?.isAspectAbility));
-  const playerActions = actor.items.filter(i => i.type === 'action' && !i.system?.isAspectAbility);
+  // Known aspect ability names (matches item.mjs routing — name-based, no flag dependency)
+  const ASPECT_ABILITY_NAMES = new Set([
+    // Spirit
+    'Hallowed-Arsenal','Revitalize','Enhance Prowess','Rapid Repair',
+    'Life for a Life','Undeath','Ruin Mana','Healing Wave','Starwalker',
+    // Resilience
+    'Armored Soul','Deep Guard','Attached Bonus','Ancient Armor',
+    'Irresistible Rage','Full Brace','Revenge Shield','Sacrifice','Unbreakable','Atlas Resilience',
+    // Discipline
+    'Full-Body Assault','Flow',
+    'Light Breakdown','Grab Breakdown','Heavy Breakdown',
+    'Light Combo','Grab Combo','Heavy Combo',
+    'Light Counter: Intercepting Strike','Heavy Counter: Crushing Blow','Grab Counter: Redirecting Grab',
+    'Light Finishers','Heavy Finishers','Grab Finishers',
+  ]);
+
+  const isAspectAction = (i) =>
+    i.type === 'action' && (i.system?.isAspectAbility || ASPECT_ABILITY_NAMES.has(i.name));
+
+  // Favorites filter — only show starred items in Skills / Actions panels
+  const favoriteIds   = new Set(actor.getFlag('stryder', 'favorites') || []);
+  const isFav         = (i) => favoriteIds.has(i.id);
+
+  const skills        = actor.items.filter(i => isFav(i) && (i.type === 'skill' || isAspectAction(i)));
+  const playerActions = actor.items.filter(i => isFav(i) && i.type === 'action' && !isAspectAction(i));
   const elixirs      = actor.items.filter(i => i.type === 'elixir');
   const consumes     = actor.items.filter(i => i.type === 'consumable');
   const items        = [...elixirs, ...consumes];
@@ -3670,119 +6203,10 @@ function _openPokemonBattleWindow(actorRef) {
       </button>`).join('')}
       ${dualWieldActive ? `
       <button class="spb-def-row spb-block-btn" data-block-reduction="${blockReductionStat}" style="grid-column: 1 / -1;">
-        <span class="spb-def-label">🛡 Block</span>
-        <span class="spb-def-formula">Trigger · 1 Stamina · [Breach] · Reduces ${blockReductionStat} dmg</span>
+        <span class="spb-def-label">Block</span>
+        <span class="spb-def-formula">-${blockReductionStat}</span>
       </button>` : ''}
     </div>`;
 
-  // Helper: attach click/contextmenu handlers to all spb-roll-item elements in a container
-  const attachRollHandlers = (container) => {
-    container.querySelectorAll('[data-action="spb-roll-item"]').forEach(el => {
-      el.addEventListener('click', async () => {
-        const item = actor.items.get(el.dataset.itemId);
-        if (!item) return;
-        if (typeof item.roll === 'function') await item.roll();
-        else item.sheet.render(true);
-      });
-      el.addEventListener('contextmenu', ev => {
-        ev.preventDefault();
-        actor.items.get(el.dataset.itemId)?.sheet.render(true);
-      });
-    });
-  };
-
-  const win = document.createElement('div');
-  win.id = 'stryder-pokemon-battle';
-  win.innerHTML = `
-    <div class="spb-header">
-      <span class="spb-actor-name">${actor.name}</span>
-      <span class="spb-initiative-badge">In Battle</span>
-      <div class="spb-header-controls">
-        <button class="spb-minimize-btn" id="spb-minimize" title="Minimize">—</button>
-        <button class="spb-close-btn"    id="spb-close"    title="Leave Battle">✕</button>
-      </div>
-    </div>
-    <div class="spb-body">
-      <div class="spb-main-grid" id="spb-main">
-        <button class="spb-big-btn skills"  data-spb-nav="skills">⚔ Skills</button>
-        <button class="spb-big-btn defend"  data-spb-nav="defend">🛡 Defend</button>
-        <button class="spb-big-btn items"   data-spb-nav="items">⚗ Items</button>
-        <button class="spb-big-btn actions" data-spb-nav="actions">✦ Actions</button>
-      </div>
-      <div class="spb-panel skills" id="spb-panel-skills">
-        <div class="spb-panel-header">
-          <button class="spb-back-btn" data-spb-back>← Back</button>
-          <span class="spb-panel-title">Skills</span>
-        </div>
-        <div class="spb-panel-list">${_renderItems(skills, true)}</div>
-      </div>
-      <div class="spb-panel defend" id="spb-panel-defend">
-        <div class="spb-panel-header">
-          <button class="spb-back-btn" data-spb-back>← Back</button>
-          <span class="spb-panel-title">Defense</span>
-        </div>
-        ${_renderDefense()}
-      </div>
-      <div class="spb-panel items" id="spb-panel-items">
-        <div class="spb-panel-header">
-          <button class="spb-back-btn" data-spb-back>← Back</button>
-          <span class="spb-panel-title">Items</span>
-        </div>
-        <div class="spb-panel-list">${_renderItems(items)}</div>
-      </div>
-      <div class="spb-panel actions" id="spb-panel-actions">
-        <div class="spb-panel-header">
-          <button class="spb-back-btn" data-spb-back>← Back</button>
-          <span class="spb-panel-title">Actions</span>
-        </div>
-        <div class="spb-panel-list">${_renderItems(playerActions, true)}</div>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(win);
-
-  // Navigate to a sub-panel — rebuild item lists fresh on each navigation
-  win.querySelectorAll('[data-spb-nav]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      win.querySelector('#spb-main').style.display = 'none';
-      win.querySelectorAll('.spb-panel').forEach(p => p.classList.remove('active'));
-      const panel = win.querySelector(`#spb-panel-${btn.dataset.spbNav}`);
-      panel.classList.add('active');
-      // Rebuild item lists so deleted/added items are always current
-      if (btn.dataset.spbNav === 'skills') {
-        const freshSkills = actor.items.filter(i => i.type === 'skill' || (i.type === 'action' && i.system?.isAspectAbility));
-        panel.querySelector('.spb-panel-list').innerHTML = _renderItems(freshSkills, true);
-        attachRollHandlers(panel.querySelector('.spb-panel-list'));
-      } else if (btn.dataset.spbNav === 'actions') {
-        const freshActions = actor.items.filter(i => i.type === 'action' && !i.system?.isAspectAbility);
-        panel.querySelector('.spb-panel-list').innerHTML = _renderItems(freshActions, true);
-        attachRollHandlers(panel.querySelector('.spb-panel-list'));
-      } else if (btn.dataset.spbNav === 'items') {
-        const freshElixirs  = actor.items.filter(i => i.type === 'elixir');
-        const freshConsumes = actor.items.filter(i => i.type === 'consumable');
-        panel.querySelector('.spb-panel-list').innerHTML = _renderItems([...freshElixirs, ...freshConsumes]);
-        attachRollHandlers(panel.querySelector('.spb-panel-list'));
-      }
-    });
-  });
-
-  // Back to main grid
-  win.querySelectorAll('[data-spb-back]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      win.querySelectorAll('.spb-panel').forEach(p => p.classList.remove('active'));
-      win.querySelector('#spb-main').style.display = 'grid';
-    });
-  });
-
-  // Minimize toggle
-  let minimized = false;
-  win.querySelector('#spb-minimize').addEventListener('click', () => {
-    minimized = !minimized;
-    win.classList.toggle('minimized', minimized);
-    win.querySelector('#spb-minimize').textContent = minimized ? '▲' : '—';
-    win.querySelector('#spb-minimize').title = minimized ? 'Expand' : 'Minimize';
-  });
-
-  // Close
-  win.querySelector('#spb-close').addEventListener('click', () => wi
+  return _renderDefense();
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Mythic Heart",
+  "type": "component",
+  "img": "systems/stryder/assets/components/hearts_mythic.png",
+  "system": {
+    "description": "<p>A heart that refuses to stop beating. The creature's life force has condensed into something beyond mortality. This is the very essence of existence, crystallised into flesh.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "Mythic",
+    "sell_price": 1000
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpHrtMythic",
+  "sort": 2100000,
+  "_key": "!items!CmpHrtMythic"
+}

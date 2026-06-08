@@ -145,7 +145,7 @@
           "value": 1
         },
         "xp": {
-          "value": 0,
+          "value": 3,
           "max": 99
         },
         "move": {
@@ -274,6 +274,12 @@
     },
     "monster": {
       "templates": ["base"],
+      "wounds": {
+        "value": 0,
+        "max": 4,
+        "states": []
+      },
+      "guard": 0,
       "attributes": {
         "creature_size": "1",
         "weight": "",
@@ -713,7 +719,7 @@
     }
   },
   "Item": {
-    "types": ["action", "armament", "generic", "aegiscore", "legacies", "head", "back", "arms", "legs", "gems", "loot", "component", "consumable", "elixir", "gear", "hex", "skill", "feature", "racial", "statperk", "technique", "profession", "bonds", "passive", "miscellaneous", "class", "folk"],
+    "types": ["action", "armament", "generic", "aegiscore", "legacies", "head", "back", "arms", "legs", "gems", "loot", "component", "consumable", "elixir", "gear", "hex", "skill", "feature", "racial", "statperk", "technique", "profession", "bonds", "passive", "miscellaneous", "class", "folk", "ingredient"],
     "templates": {
       "base": {
         "description": "",
@@ -743,6 +749,7 @@
     "generic": {
       "templates": ["base"],
       "parent_ability": "",
+      "isAttack": true,
       "damage_type": "physical",
       "action_type": "focused",
       "range": 0,
@@ -825,6 +832,15 @@
     "component": {
       "templates": ["base"],
       "grade": "G4",
+      "sell_price": 0
+    },
+    "ingredient": {
+      "templates": ["base"],
+      "ingredient_type": "base",
+      "quality": "good",
+      "quality_modifier": 0,
+      "is_enchanted": false,
+      "enchant_type": "",
       "sell_price": 0
     },
     "miscellaneous": {
@@ -955,4 +971,18 @@
       "enableCustomDamage": false,
       "customDamage": { "poor": 0, "good": 0, "excellent": 0 },
       "enableCustomRange": false,
-      "customRange": { "poor": 4, "exce
+      "customRange": { "poor": 4, "excellent": 11 },
+      "action_type": "focused",
+      "range": 0,
+      "stamina_cost": 0,
+      "mana_cost": 0,
+      "other_restrictions": "",
+      "cooldown_value": 0,
+      "cooldown_unit": "rounds",
+      "hasReflexTag": false,
+      "tag1": "",
+      "tag2": "",
+      "tag3": ""
+    }
+  }
+}

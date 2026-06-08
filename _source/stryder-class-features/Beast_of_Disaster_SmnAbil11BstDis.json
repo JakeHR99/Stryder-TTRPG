@@ -1,0 +1,31 @@
+{
+  "folder": "SmnClsFolder01",
+  "name": "Beast of Disaster",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 15.</em></p><p>As you reach the apex of your power, you develop the hidden Fifth Gate — the Golden Divine Gate — which summons the Disaster Beast. Choose a 3-space line within range of your summoning. All creatures within those spaces must make an Evasion Roll or take 50 Damage.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 3,
+    "mana_cost": 7,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SmnAbil11BstDis",
+  "sort": 100000,
+  "_key": "!items!SmnAbil11BstDis"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Dried Herb",
+  "type": "ingredient",
+  "img": "icons/consumables/plants/herb-bundle-dried-green.webp",
+  "system": {
+    "description": "<p>A bundle of dried aromatic herbs — rosemary, thyme, sage, or local Alstoria flora. Adds depth and fragrance to cooked dishes. Foraged during travel or purchased from herbalists and markets.</p>",
+    "ingredient_type": "spice",
+    "quality": "good",
+    "quality_modifier": 0,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 1
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrSpice03Herb",
+  "sort": 1000000,
+  "_key": "!items!IngrSpice03Herb"
+}

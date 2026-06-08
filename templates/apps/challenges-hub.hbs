@@ -1,0 +1,23 @@
+<div class="ch2-wrap">
+
+  {{!-- Active challenges --}}
+  {{#each challenges}}{{#if available}}
+  <div class="ch2-card ch2-active" data-challenge="{{id}}">
+    <img class="ch2-sprite" src="systems/stryder/assets/fishing/fish_06.png" alt="Fishing" />
+    <div class="ch2-title">{{name}}</div>
+    <button class="ch2-play-btn ch-play-btn" data-challenge="{{id}}" type="button">▶ Play</button>
+  </div>
+  {{/if}}{{/each}}
+
+  {{!-- Locked challenges — side by side --}}
+  <div class="ch2-locked-row">
+    {{#each challenges}}{{#unless available}}
+    <div class="ch2-card ch2-locked">
+      <div class="ch2-lock-icon">🔒</div>
+      <div class="ch2-lock-name">{{name}}</div>
+      <div class="ch2-soon">Coming Soon</div>
+    </div>
+    {{/unless}}{{/each}}
+  </div>
+
+</div>

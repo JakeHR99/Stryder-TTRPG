@@ -4,7 +4,7 @@
   "type": "racial",
   "img": "icons/svg/aura.svg",
   "system": {
-    "description": "<p>While this ability is active you can make a Swift Action Quick Attack with the arm that deals physical damage equal to your Arcana or Soul. On a failed Physical Resist vs your highest Potency, the target is sent flying a number of spaces equal to your Arcana or Soul.</p>",
+    "description": "<p>While this ability is active you can make a Swift Action Quick Attack with the arm that deals physical damage equal to your Soul. On a failed Physical Resist vs your highest Potency, the target is sent flying a number of spaces equal to your Soul.</p>",
     "roll": {
       "diceBonus": 0,
       "diceNum": 2,

@@ -1,0 +1,31 @@
+{
+  "folder": "Tech1XPFolder01",
+  "name": "Potent Potencies",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Through training and effort you have raised your Potency to new heights.</p><p>Choose between your Physical Potency and Magykal Potency. The selected Potency gains +2.</p><p><em>This Technique can be learned a second time for the same Potency, beginning at Level 8.</em></p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "Can be learned twice for the same Potency (2nd time: Level 8+)",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 1 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil13PotPot",
+  "sort": 100000,
+  "_key": "!items!TechAbil13PotPot"
+}

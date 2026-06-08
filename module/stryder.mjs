@@ -38,6 +38,8 @@ import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 // Import expedition system.
 import { openExpeditionSetup, triggerSiteEvent, clearExpedition } from './expedition/expedition-manager.mjs';
 import { handleOpenWorldMove, openOpenWorldSetup, designateHexPrompt, resetOpenWorldTable, clearOpenWorld } from './expedition/open-world-manager.mjs';
+// Import mini-games.
+import { FishingMinigame } from './apps/fishing-minigame.mjs';
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -65,6 +67,37 @@ export const senselessState = {
   rolledItems: new Set()
 };
 
+// ── Patch Folder._id validation to allow legacy short IDs in our packs ──────
+// Foundry v13 requires 16-char alphanumeric IDs; our older compendium folder
+// entries (e.g. "RngrClsFolder01") are 14-15 chars. Without this patch,
+// initializePacks throws and the game never loads. Remove once packs are rebuilt.
+Hooks.once('init', function() {
+  const schema = foundry.data.fields;
+  if (!schema?.StringField) return;
+  const _origValidate = schema.StringField.prototype._validateType;
+  if (!_origValidate) return;
+  // Find the DocumentIdField (subclass of StringField) and loosen its check
+  // for Folder documents only.
+  const origFolderFromSource = globalThis.Folder?.fromSource;
+  try {
+    // Patch DataModel._validateId to skip the strict 16-char check for folders
+    const _origDataModelValidate = foundry.abstract.DataModel.prototype.validate;
+    foundry.abstract.DataModel.prototype.validate = function(options = {}) {
+      if (this.documentName === 'Folder' || this.constructor?.documentName === 'Folder') {
+        const id = this._source?._id ?? this._id;
+        if (id && !/^[a-zA-Z0-9]{16}$/.test(id)) {
+          // Skip strict validation — just return without throwing
+          return this;
+        }
+      }
+      return _origDataModelValidate.call(this, options);
+    };
+    console.log('STRYDER | Applied legacy folder ID compatibility patch');
+  } catch(e) {
+    console.warn('STRYDER | Could not apply folder ID patch:', e);
+  }
+});
+
 Hooks.once('init', async function () {
 
   console.log("STRYDER | init: registering classes & preloading templates");
@@ -76,7 +109,10 @@ Hooks.once('init', async function () {
     StryderActor,
     StryderItem,
     rollItemMacro,
+    FishingMinigame,
   };
+
+  // Challenges are now launched from the Party Sheet — no sidebar injection needed.
 
 	Hooks.on('updateActor', async (actor, updateData, options, userId) => {
 	  // Check if this is a character whose health.max was updated
@@ -1035,18 +1071,29 @@ Hooks.on('createActiveEffect', async (effect, options, userId) => {
 
 async function handleBloodlossReset(combatants) {
   console.log("Resetting bloodloss for all combatants");
-  
+
+  const { isWarlock, warlockEndOfEngagement } = await import('./abilities/warlock-abilities.mjs');
+
   for (const combatant of combatants) {
     const actor = combatant.actor;
     if (!actor) continue;
-    
+
+    // Warlocks get the full Evoker in War treatment: max HP restored,
+    // heal for half (full with Bloodied Eclipse), Manaburn + flags cleared.
+    if (isWarlock(actor)) {
+      await warlockEndOfEngagement(actor);
+      continue;
+    }
+
     const bloodlossReduction = actor.getFlag(SYSTEM_ID, "bloodlossHealthReduction") || 0;
-    
+
     if (bloodlossReduction > 0) {
       // Calculate what the new max HP will be after reset
       const newMaxHP = actor.system.health.max + bloodlossReduction;
-      
+
+      // Restore max HP directly (automatic max-HP derivation is disabled)
       await actor.update({
+        'system.health.max': newMaxHP,
         [`flags.${SYSTEM_ID}.bloodlossHealthReduction`]: null
       });
       
@@ -1171,9 +1218,32 @@ Hooks.on('stryderCombatEvent', async (event) => {
     await handleBurningMaxHealthReduction(event.combatant);
     await handlePoisonStage4Unconscious(event.combatant);
   }
-  
+
+  // ── Warlock: all Manaburn is lost at the start of the following Phase ──
+  if (event.type === 'phaseChange') {
+    const { isWarlock, clearManaburnForPhase } = await import('./abilities/warlock-abilities.mjs');
+    for (const combatant of event.combatants) {
+      if (combatant.actor && isWarlock(combatant.actor)) {
+        await clearManaburnForPhase(combatant.actor);
+      }
+    }
+  }
+
+  // ── Warlock: Crimson Crown duration ticks down each round ──
+  if (event.type === 'endOfRound') {
+    const { isWarlock, warlockEndOfRound } = await import('./abilities/warlock-abilities.mjs');
+    for (const combatant of event.combatants) {
+      if (combatant.actor && isWarlock(combatant.actor)) {
+        await warlockEndOfRound(combatant.actor);
+      }
+    }
+  }
+
   if (event.type === 'endOfCombat') {
     await handleBloodlossReset(event.combatants);
+    // Summoner: spirits exit through their Gates, flags reset
+    const { handleSummonerCombatEnd } = await import('./abilities/summoner-abilities.mjs');
+    await handleSummonerCombatEnd();
   }
 });
 
@@ -1216,6 +1286,13 @@ Hooks.once('ready', async function () {
                     StryderCombat.showTurnNotification(data.combatantName);
                 }
                 break;
+            case "summonSpirit":
+            case "dismissSpirits":
+            case "summonerApplyStatus": {
+                const { handleSummonerSocket } = await import('./abilities/summoner-abilities.mjs');
+                await handleSummonerSocket(data);
+                break;
+            }
             default:
                 // Only GMs can process combat actions
                 if (!game.user.isGM) return;
@@ -1247,7 +1324,46 @@ Hooks.once('ready', async function () {
   // Handle damage application buttons
   $(document).on("click", ".damage-apply-button", async function(event) {
     const { handleDamageApply } = await import('./documents/item.mjs');
-    handleDamageApply(event);
+    await handleDamageApply(event);
+
+    // ── Brutality Form Passive: dealing damage grants Ichor ──
+    // Identify the attacker from the chat message this button lives in
+    const damage = parseInt(event.currentTarget.dataset.damage) || 0;
+    if (damage > 0) {
+      const msgEl  = event.currentTarget.closest('[data-message-id]');
+      const msgId  = msgEl?.dataset.messageId;
+      const msg    = msgId ? game.messages.get(msgId) : null;
+      const attackerId = msg?.speaker?.actor;
+      if (attackerId) {
+        const attacker = game.actors.get(attackerId);
+        if ((attacker?.getFlag(SYSTEM_ID, 'activeAspect') ?? '').includes('Brutality')) {
+          const { grantIchor } = await import('./abilities/brutality-abilities.mjs');
+          // Ichor Aura active → grant 2; else grant 1
+          const ichorAmount = attacker.getFlag(SYSTEM_ID, 'ichorAuraActive') ? 2 : 1;
+          await grantIchor(attacker, ichorAmount);
+        }
+      }
+    }
+  });
+
+  // ── Ranger Create Weakness chat buttons ─────────────────────
+  // Apply Cripple/Weaken/Drain to selected token (GM confirms the Wound)
+  $(document).on("click", ".cw-apply-button", async function(event) {
+    const { handleCWApplyClick } = await import('./abilities/ranger-abilities.mjs');
+    await handleCWApplyClick(event);
+  });
+  // Behemoth Slayer II 21+: convert selected monster's wounds to Deep (grave)
+  $(document).on("click", ".cw-grave-button", async function(event) {
+    const { handleCWGraveClick } = await import('./abilities/ranger-abilities.mjs');
+    await handleCWGraveClick(event);
+  });
+  // Dispatch button is also a .damage-apply-button (damage handled above) —
+  // additionally record Exploit Weakness eligibility on the targeted actor
+  $(document).on("click", ".cw-dispatch-button", async function(event) {
+    const { markCreateWeaknessHit } = await import('./abilities/ranger-abilities.mjs');
+    for (const token of canvas.tokens.controlled) {
+      if (token.actor) await markCreateWeaknessHit(event.currentTarget, token.actor);
+    }
   });
 
   // Helper: find any actor from a token ID (works for linked and unlinked tokens)
@@ -1656,6 +1772,41 @@ Hooks.on('renderChatMessage', (message, html, data) => {
     const content = $(this).next('.collapsible-content');
     content.slideToggle(200);
     $(this).find('i').toggleClass('fa-caret-down fa-caret-up');
+  });
+
+  // ── Chat Card Auto-Collapse ──────────────────────────────────────────────
+  // .chat-message-details and .chat-message-content are hidden by default.
+  // Clicking the header expands / collapses them.
+  html.find('.chat-message-card').each(function() {
+    const $card = $(this);
+    const $header = $card.children('.chat-message-header').first();
+    const $collapsible = $card.children('.chat-message-details, .chat-message-content');
+
+    // Nothing to collapse — skip simple notification cards
+    if ($collapsible.length === 0) return;
+
+    // Mark as collapsible and start collapsed
+    $header.addClass('chat-header-collapsible');
+    $card.addClass('chat-collapsed');
+    $collapsible.hide();
+
+    // Inject chevron once (guard against double-render)
+    if (!$header.find('.chat-collapse-chevron').length) {
+      $header.append('<span class="chat-collapse-chevron">▾</span>');
+    }
+
+    // Click header to toggle (ignore clicks on child buttons/links/inputs)
+    $header.off('click.chatcollapse').on('click.chatcollapse', function(ev) {
+      if ($(ev.target).closest('button, a, input').length) return;
+      const isCollapsed = $card.hasClass('chat-collapsed');
+      if (isCollapsed) {
+        $card.removeClass('chat-collapsed').addClass('chat-expanded');
+        $collapsible.slideDown(160);
+      } else {
+        $card.removeClass('chat-expanded').addClass('chat-collapsed');
+        $collapsible.slideUp(120);
+      }
+    });
   });
 
     // Handle effect expiration buttons
@@ -2192,12 +2343,50 @@ Hooks.on('deleteToken', (tokenDocument, options, userId) => {
 Hooks.on('updateActor', (actor, updateData, options, userId) => {
   // Only process for the user who made the change
   if (game.user.id !== userId) return;
-  
+
   // Check if aura.BodyofInfluence was changed
   if (updateData.system?.booleans?.aura?.BodyofInfluence !== undefined) {
-    // Immediate update for better responsiveness
     updateAuraEffectsForUser(userId);
   }
+
+  // ── Brutality Form Passive: taking damage grants +1 Ichor ──
+  const newHP = foundry.utils.getProperty(updateData, 'system.health.value');
+  if (newHP !== undefined && (actor.getFlag(SYSTEM_ID, 'activeAspect') ?? '').includes('Brutality')) {
+    const oldHP = options._prevHP ?? null;
+    if (oldHP !== null && newHP < oldHP) {
+      // HP decreased by ≥1 — grant Ichor
+      import('./abilities/brutality-abilities.mjs').then(({ grantIchor }) => {
+        grantIchor(actor, 1).catch(console.error);
+      });
+    }
+  }
+
+  // ── Warlock — Evoker in War: expending Mana grants Manaburn ──
+  // (and charges Crimson Crown gemstones while the crown is active)
+  const newMana = foundry.utils.getProperty(updateData, 'system.mana.value');
+  if (newMana !== undefined) {
+    const oldMana = options._prevMana ?? null;
+    if (oldMana !== null && oldMana !== undefined && newMana < oldMana) {
+      const spent = oldMana - newMana;
+      import('./abilities/warlock-abilities.mjs').then(async ({ isWarlock, grantManaburn }) => {
+        if (!isWarlock(actor)) return;
+        await grantManaburn(actor, spent);
+        const crown = actor.getFlag(SYSTEM_ID, 'crimsonCrown');
+        if (crown) {
+          await actor.setFlag(SYSTEM_ID, 'crimsonCrown', { ...crown, gems: (crown.gems ?? 0) + spent });
+          ui.notifications.info(`Crimson Crown absorbs the mana — +${spent} gemstone${spent === 1 ? '' : 's'}.`);
+        }
+      }).catch(console.error);
+    }
+  }
+});
+
+// Capture HP/Mana before they change so the updateActor hook can compare
+Hooks.on('preUpdateActor', (actor, changes, options) => {
+  const newHP = foundry.utils.getProperty(changes, 'system.health.value');
+  if (newHP !== undefined) options._prevHP = actor.system.health.value;
+  const newMana = foundry.utils.getProperty(changes, 'system.mana.value');
+  if (newMana !== undefined) options._prevMana = actor.system.mana?.value;
 });
 
 // Hook to update aura effects when effects are added/removed
@@ -2451,6 +2640,49 @@ class StryderSocket {
   }
 }
 
+// ── Data Migration: Master Cut canonical description ───────────────────────
+// Rewrites Master Cut's description to the canonical <li> format with the
+// corrected M3 text, on both the compendium entry and all owned actor copies.
+// No-ops once every instance matches the canonical form.
+Hooks.once('ready', async () => {
+  if (!game.user.isGM) return;
+
+  // Canonical description — correct format AND correct M3 text.
+  const CANONICAL = '<p>Make a quick attack, altering the method of striking slightly to achieve a different outcome. Every use after the first increases the cost of this ability by 1 Stamina.</p><ul><li>M1: +1 to Attack Roll</li><li>M2: -4 to attack but gain the [Sunder] Tag</li><li>M3: +2 additional damage but -1 Attack Roll</li></ul>';
+
+  const needsMigration = (desc) => desc !== CANONICAL;
+
+  // 1. Patch compendium entry
+  try {
+    const pack = game.packs.get('stryder.stryder-actions');
+    if (pack) {
+      const doc = await pack.getDocument('HersmAbil01MstCt');
+      if (doc && needsMigration(doc.system.description ?? '')) {
+        await pack.configure({ locked: false });
+        await doc.update({ 'system.description': CANONICAL });
+        await pack.configure({ locked: true });
+        console.log('Stryder | Migrated Master Cut description in compendium.');
+      }
+    }
+  } catch (e) {
+    console.error('Stryder | Master Cut compendium migration failed:', e);
+  }
+
+  // 2. Patch any owned instances on actors
+  for (const actor of game.actors) {
+    for (const item of actor.items) {
+      if (item.name === 'Master Cut' && needsMigration(item.system.description ?? '')) {
+        try {
+          await item.update({ 'system.description': CANONICAL });
+          console.log(`Stryder | Migrated Master Cut on ${actor.name}.`);
+        } catch (e) {
+          console.error(`Stryder | Failed to migrate Master Cut on ${actor.name}:`, e);
+        }
+      }
+    }
+  }
+});
+
 // Initialize custom socket system
 Hooks.on('ready', () => {
   // Initialize game.stryder if it doesn't exist
@@ -2680,6 +2912,52 @@ Hooks.once('ready', function() {
 });
 
 /* -------------------------------------------- */
+/*  Monster Loot — Token HUD Button             */
+/* -------------------------------------------- */
+
+Hooks.on('renderTokenHUD', (hud, html, data) => {
+  const token = hud.object;
+  const actor = token?.actor;
+  if (!actor || actor.type !== 'monster') return;
+
+  // Map rank value → loot table name
+  const rank = String(actor.system?.attributes?.rank?.value ?? '').trim().toLowerCase();
+  const tableMap = {
+    '4': 'Monster Loot — Rank 4',
+    '3': 'Monster Loot — Rank 3',
+    '2': 'Monster Loot — Rank 2',
+    '1': 'Monster Loot — Rank 1',
+    'tyrant': 'Monster Loot — Tyrant',
+  };
+  const tableName = tableMap[rank];
+  if (!tableName) return;
+
+  // Build button with raw DOM for v13 compatibility
+  // (v13 hooks may pass a raw HTMLElement instead of jQuery)
+  const btn = document.createElement('div');
+  btn.className = 'control-icon stryder-loot-btn';
+  btn.setAttribute('title', `Roll Loot — ${tableName}`);
+  btn.innerHTML = '<i class="fas fa-coins"></i>';
+  btn.addEventListener('click', async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const table = game.tables.getName(tableName);
+    if (!table) {
+      ui.notifications.warn(`Loot table "${tableName}" not found. Run the populate-components macro first.`);
+      return;
+    }
+    await table.draw({ rollMode: 'publicroll' });
+  });
+
+  // Resolve root: html may be a jQuery object or a raw HTMLElement in v13
+  const root = (html instanceof HTMLElement) ? html : (html[0] ?? html);
+
+  // Try left col first (reliable in v13), fall back to right col, then root
+  const target = root.querySelector('.col.left') ?? root.querySelector('.col.right') ?? root;
+  target.appendChild(btn);
+});
+
+/* -------------------------------------------- */
 /*  Grapple Resistance Handling                 */
 /* -------------------------------------------- */
 
@@ -2853,4 +3131,105 @@ async function applyGrappledCondition(actor) {
     await actor.createEmbeddedDocuments("ActiveEffect", [effectData]);
     ui.notifications.info(`${actor.name} is now Grappled!`);
   } catch (error) {
-    console.error("Error applying Grappled condition:", error
+    console.error("Error applying Grappled condition:", error);
+    ui.notifications.error("Failed to apply Grappled condition!");
+  }
+}
+
+/* -------------------------------------------- */
+/*  Hotbar Macros                               */
+/* -------------------------------------------- */
+
+/**
+ * Create a Macro from an Item drop.
+ * Get an existing item macro if one exists, otherwise create a new one.
+ * @param {Object} data     The dropped data
+ * @param {number} slot     The hotbar slot to use
+ * @returns {Promise}
+ */
+async function createItemMacro(data, slot) {
+  // First, determine if this is a valid owned item.
+  if (data.type !== 'Item') return;
+  if (!data.uuid.includes('Actor.') && !data.uuid.includes('Token.')) {
+    return ui.notifications.warn(
+      'You can only create macro buttons for owned Items'
+    );
+  }
+  // If it is, retrieve it based on the uuid.
+  const item = await Item.fromDropData(data);
+
+  // Create the macro command using the uuid.
+  const command = `game.stryder.rollItemMacro("${data.uuid}");`;
+  let macro = game.macros.find(
+    (m) => m.name === item.name && m.command === command
+  );
+  if (!macro) {
+    macro = await Macro.create({
+      name: item.name,
+      type: 'script',
+      img: item.img,
+      command: command,
+      flags: { 'stryder.itemMacro': true },
+    });
+  }
+  game.user.assignHotbarMacro(macro, slot);
+  return false;
+}
+
+/* -------------------------------------------- */
+/*  Auto-embed Universal Player Actions          */
+/* -------------------------------------------- */
+
+/**
+ * When a new character actor is created, automatically embed all Universal
+ * Player Actions from the stryder-player-actions compendium pack.
+ */
+Hooks.on('createActor', async (actor, options, userId) => {
+  // Only run for the creating user, only for characters
+  if (actor.type !== 'character') return;
+  if (game.user.id !== userId) return;
+
+  const pack = game.packs.get('stryder.stryder-player-actions');
+  if (!pack) {
+    console.warn('Stryder | stryder-player-actions pack not found — skipping UPA auto-embed.');
+    return;
+  }
+
+  try {
+    const index = await pack.getIndex();
+    const docs  = await Promise.all(index.map(e => pack.getDocument(e._id)));
+    const itemData = docs.filter(Boolean).map(d => d.toObject());
+    if (itemData.length > 0) {
+      await actor.createEmbeddedDocuments('Item', itemData);
+      console.log(`Stryder | Auto-embedded ${itemData.length} Universal Player Actions on ${actor.name}.`);
+    }
+  } catch (err) {
+    console.error('Stryder | Failed to auto-embed Player Actions:', err);
+  }
+});
+
+/**
+ * Create a Macro from an Item drop.
+ * Get an existing item macro if one exists, otherwise create a new one.
+ * @param {string} itemUuid
+ */
+function rollItemMacro(itemUuid) {
+  // Reconstruct the drop data so that we can load the item.
+  const dropData = {
+    type: 'Item',
+    uuid: itemUuid,
+  };
+  // Load the item from the uuid.
+  Item.fromDropData(dropData).then((item) => {
+    // Determine if the item loaded and if it's an owned item.
+    if (!item || !item.parent) {
+      const itemName = item?.name ?? itemUuid;
+      return ui.notifications.warn(
+        `Could not find item ${itemName}. You may need to delete and recreate this macro.`
+      );
+    }
+
+    // Trigger the item roll
+    item.roll();
+  });
+}

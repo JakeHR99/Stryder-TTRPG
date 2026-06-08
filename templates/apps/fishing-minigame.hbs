@@ -1,0 +1,123 @@
+<div class="fsc-wrap" style="position:relative;height:100%;min-height:540px;display:flex;flex-direction:column;overflow:hidden;background:#040e18;">
+
+  {{!-- Video backdrop --}}
+  <video class="fsc-video-bg" autoplay loop muted playsinline>
+    <source src="systems/stryder/assets/fishing/backdrop.mp4" type="video/mp4">
+  </video>
+  <div class="fsc-overlay"></div>
+
+  <div class="fsc-ui">
+
+    {{!-- Header --}}
+    <div class="fsc-header">
+      <span class="fsc-actor-name">{{#if actorName}}{{actorName}}{{else}}No Character Selected{{/if}}</span>
+      {{#if actorName}}
+        <span class="fsc-level-badge">Fishing Lv. {{fishingLevel}}</span>
+      {{else}}
+        <div class="fsc-level-manual">
+          <label>Fishing Level:</label>
+          <input type="number" name="fishing-level" value="{{fishingLevel}}" min="0" max="20" />
+        </div>
+      {{/if}}
+    </div>
+
+    {{!-- ROULETTE: fish-count phase OR casts phase --}}
+    {{#if isRolling}}
+    <div class="fsc-roulette-scene">
+      {{#if (eq rollPhase "fish")}}
+        <div class="fsc-roulette-sub">Fish in the pond...</div>
+        <div class="fsc-roulette-num">?</div>
+        <div class="fsc-roulette-unit">fish hiding</div>
+      {{else}}
+        <div class="fsc-roulette-sub">Casts available...</div>
+        <div class="fsc-roulette-num">?</div>
+        <div class="fsc-roulette-unit">casts</div>
+      {{/if}}
+    </div>
+    {{/if}}
+
+    {{!-- IDLE / FISHING --}}
+    {{#if showGrid}}
+    {{#if isFishing}}
+    <div class="fsc-status-label">{{castsRemaining}} / {{totalCasts}} casts remaining</div>
+    {{/if}}
+    <div class="fsc-game-row">
+      <div class="fsc-grid">
+        {{#each grid}}
+        <div class="fsc-cell {{cssClass}}" data-cell-idx="{{index}}">
+          {{#if showWater}}<div class="fsc-water"></div>{{/if}}
+          {{#if fishImg}}<img class="fsc-fish-sprite" src="{{fishImg}}" />{{/if}}
+          {{#if hasPearl}}<span class="fsc-pearl">✨</span>{{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{#if hasCatch}}
+      <div class="fsc-caught-panel">
+        <div class="fsc-caught-label">Caught</div>
+        {{#each fishCaught}}
+        <img class="fsc-caught-fish" src="{{this.imgPath}}" title="{{#if this.isLarge}}Large Fish{{else}}Fish{{/if}}" />
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+    {{/if}}
+
+    {{!-- COMPLETE --}}
+    {{#if isComplete}}
+    <div class="fsc-complete-area">
+      {{#if hasCatch}}
+        <div class="fsc-showcase">
+          {{#each fishCaught}}
+          <div class="fsc-showcase-item" data-has-pearl="{{this.hasPearl}}" data-item-idx="{{@index}}">
+            {{!-- Gem sits above the fish, hidden until pearl roll resolves --}}
+            <img class="fsc-pearl-gem" src="systems/stryder/assets/fishing/mana_pearl.png" />
+            <img class="fsc-showcase-fish{{#if this.isLarge}} large{{/if}}" src="{{this.imgPath}}"
+              title="{{#if this.isLarge}}Large Fish{{else}}Fish{{/if}}" />
+            <div class="fsc-pearl-roll"><span class="fsc-pearl-roll-num">2d6</span></div>
+          </div>
+          {{/each}}
+        </div>
+      {{else}}
+        <div class="fsc-no-catch">
+          <span style="font-size:44px;opacity:0.45;">🎣</span>
+          <span>Nothing bit today...</span>
+          <span style="font-size:12px;opacity:0.6;">Better luck next time.</span>
+        </div>
+      {{/if}}
+      <div class="fsc-log">
+        {{#each catchLog}}<div class="fsc-log-entry">{{this}}</div>{{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Bottom HUD --}}
+    <div class="fsc-hud">
+      {{#if isIdle}}
+        <button class="f-roll-btn" type="button">🎣 Roll for Casts</button>
+      {{/if}}
+      {{#if isFishing}}
+        <div class="fsc-cast-hud">
+          <div style="text-align:center;">
+            <div class="fsc-cnum">{{castsRemaining}}</div>
+            <div style="font-size:10px;color:#5a8090;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Casts Left</div>
+          </div>
+          <div class="fsc-msg">{{message}}</div>
+        </div>
+      {{/if}}
+      {{#if isComplete}}
+        <div class="fsc-complete-btns">
+          {{#if hasCatch}}
+            {{#if rewardsCollected}}
+            <button class="f-reward-btn" type="button" disabled style="opacity:0.45;cursor:default;">✓ Fish Collected</button>
+            {{else}}
+            <button class="f-reward-btn" type="button">🎁 Collect Fish</button>
+            {{/if}}
+          {{/if}}
+          <button class="f-again-btn" type="button">🎣 Fish Again</button>
+          <button class="f-done-btn"  type="button">✓ Done</button>
+        </div>
+      {{/if}}
+    </div>
+
+  </div>
+</div>

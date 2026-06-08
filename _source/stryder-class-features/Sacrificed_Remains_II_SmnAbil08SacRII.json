@@ -1,0 +1,31 @@
+{
+  "folder": "SmnClsFolder01",
+  "name": "Sacrificed Remains II",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 8.</em></p><p>When using Rank 2 or Rank 1 components to summon Spirit Beasts, each component type grants a unique benefit (in addition to Rank 3 benefits still applying for Rank 3 components):</p><p><strong>Rank 2 Unique:</strong> Crimson +3 dmg | Violet -2 more dmg | Azure +2 Dodge | Sage Energizes Party regardless of range</p><p><strong>Rank 2 Bones:</strong> +3 Speed | <strong>Sensories:</strong> First instance nullified | <strong>Hearts:</strong> +7 Health</p><p><strong>Rank 1 Unique:</strong> Crimson +5 dmg | Violet -4 more dmg | Azure +3 Dodge | Sage Defense also Stuns</p><p><strong>Rank 1 Bones:</strong> +4 Speed | <strong>Sensories:</strong> 1st and 2nd instance nullified | <strong>Hearts:</strong> +10 Health</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SmnAbil08SacRII",
+  "sort": 100000,
+  "_key": "!items!SmnAbil08SacRII"
+}

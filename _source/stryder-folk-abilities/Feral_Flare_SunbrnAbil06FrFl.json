@@ -4,7 +4,7 @@
   "type": "racial",
   "img": "icons/svg/aura.svg",
   "system": {
-    "description": "<p>With a rapid motion a Sunborn can set a space within 3 Spaces into a sudden blaze. This burst of fire deals damage equal to a Sunborn's Arcana or Soul on a failed Evasion of 11.</p>",
+    "description": "<p>With a rapid motion a Sunborn can set a space within 3 Spaces into a sudden blaze. This burst of fire deals damage equal to a Sunborn's Soul on a failed Evasion of 11.</p>",
     "roll": {
       "diceBonus": 0,
       "diceNum": 2,

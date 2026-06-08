@@ -1,0 +1,31 @@
+{
+  "folder": "Tech1XPFolder01",
+  "name": "Might of Mana",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>A dangerous technique often only used as a last resort or trump card. By expending mana and pushing it directly into the Soul, one can empower their very essence.</p><p>Choose an amount of Mana to expend (1–3). Your Soul Stat increases by that amount for 5 Rounds.</p><p>When the effect ends, roll Magykal Resistance. If your result is lower than [9 + amount of Mana you expended], you gain <strong>Scorched Veins</strong> until you visit a Spring of Life.</p><p><strong>Scorched Veins:</strong> Your maximum Health is reduced by 5 and you lose 2 Health for every Mana you expend.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 1,
+    "tactics_cost": 0,
+    "other_restrictions": "1–3 Mana | Cannot be used while inflicted by Scorched Veins",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 1 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil10MghMna",
+  "sort": 100000,
+  "_key": "!items!TechAbil10MghMna"
+}

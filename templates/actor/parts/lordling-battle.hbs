@@ -1,93 +1,127 @@
-<h2 class="section-header" style="border-bottom: 0px;">
-    <span class="header-decoration left"></span>
-    <img src="systems/stryder/assets/jump-icon.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;">
-    <strong>{{localize "Jump Distances"}}</strong>
-    <span class="header-decoration right"></span>
-</h2>
-<div class="jump-container">
-    <div class="jump-item vertical-jump rollable" data-jump-type="vertical">
-        <img src="systems/stryder/assets/vertical-jump-icon.svg" alt="Vertical Jump" class="jump-icon" style="border:0px">
-        <span class="jump-label">{{localize "Vertical"}}</span>
-        <input type="text" name="system.jump.vertical" value="{{verticalJumpDistance}}" readonly data-dtype="Number">
-    </div>
-    <div class="jump-item horizontal-jump rollable" data-jump-type="horizontal">
-        <img src="systems/stryder/assets/horizontal-jump-icon.svg" alt="Horizontal Jump" class="jump-icon" style="border:0px">
-        <span class="jump-label">{{localize "Horizontal"}}</span>
-        <input type="text" name="system.jump.horizontal" value="{{horizontalJumpDistance}}" readonly data-dtype="Number">
-    </div>
-</div>
-<br />
-<h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/talents.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Talents"}}</strong><span class="header-decoration right"></span></h2>
-<div class="skills-container">
-    <div class="skills-grid talents">
-        {{#each system.attributes.talent as |talent key|}}
-            <div class="skill">
-                <img src="systems/stryder/assets/{{key}}-icon.svg" alt="{{key}} icon" class="skill-icon" style='border:0px'>
-                <span class="skill-label rollable" data-roll="2d6+@attributes.talent.{{key}}.value" data-label="{{key}}">
-                    {{key}}
-                </span>
-                <input type="text" name="system.attributes.talent.{{key}}.value" value="{{talent.value}}" data-dtype="Number">
-            </div>
-        {{/each}}
-    </div><br />
-</div>
-
+{{!-- LORDLING TALENTS & MOVEMENT — dark JRPG style --}}
 <style>
-    .skills-container {
-        font-family: Signika;
-		font-size: 20px;
-    }
+.lrd-talent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.lrd-talent-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 8px;
+  background: rgba(8,14,40,0.55);
+  border: 1px solid rgba(40,65,160,0.18);
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+.lrd-talent-row:hover { background: rgba(16,28,80,0.7); }
+.lrd-talent-icon { width: 18px; height: 18px; opacity: 0.5; flex-shrink: 0; border: none; }
+.lrd-talent-name {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: .04em;
+  color: rgba(155,185,240,0.7);
+  flex: 1;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.lrd-talent-name:hover { color: rgba(200,220,255,0.9); text-decoration: underline; }
+.lrd-talent-val {
+  width: 30px;
+  text-align: center;
+  background: rgba(10,18,50,0.7);
+  border: 1px solid rgba(50,85,190,0.25);
+  border-radius: 3px;
+  color: rgba(210,230,255,0.9);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 2px 0;
+}
+.lrd-talent-val:focus { outline: none; border-color: rgba(80,130,240,0.5); }
 
-    .skills-container .skills-grid {
-		font-family: Modesto Condensed;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 10px;
-        padding: 20px;
-		background-image: url("systems/stryder/assets/parchment.jpg");
-        background-color: #f5f5f5;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .skills-container .skill {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .skills-container .skill-icon {
-        width: 30px;
-        height: 30px;
-    }
-
-    .skills-container .skill-label {
-        font-weight: bold;
-        margin-right: 5px;
-        cursor: pointer;
-    }
-
-    .skills-container .rollable:hover {
-        text-decoration: underline;
-    }
-
-    .skills-container .skills-grid input[type="text"] {
-        border: none;
-        background-color: #DABE77;
-        color: #333;
-        text-align: center;
-        border-radius: 4px;
-        padding: 5px;
-        width: 50px;
-    }
-
-    .skills-container .skills-grid input[type="text"]:focus {
-        outline: none;
-        box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-    }
-
-    .skills-container h2 {
-        color: #333;
-        font-size: 18px;
-    }
+.lrd-move-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.lrd-move-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  background: rgba(8,14,40,0.55);
+  border: 1px solid rgba(40,65,160,0.18);
+  border-radius: 4px;
+}
+.lrd-move-name {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: .04em;
+  color: rgba(130,165,225,0.6);
+  flex: 1;
+}
+.lrd-move-val {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(190,215,255,0.85);
+  width: 26px;
+  text-align: center;
+  background: rgba(10,18,50,0.7);
+  border: 1px solid rgba(50,85,190,0.2);
+  border-radius: 3px;
+  padding: 2px 0;
+}
+.lrd-move-val:focus { outline: none; border-color: rgba(80,130,240,0.5); }
+.lrd-expertise-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.lrd-expertise-dot.active { background: rgba(80,180,100,0.7); box-shadow: 0 0 4px rgba(80,180,100,0.4); }
+.lrd-expertise-dot.inactive { background: rgba(60,80,140,0.4); border: 1px solid rgba(60,80,140,0.3); }
 </style>
+
+<div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(100,130,200,0.4);margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid rgba(40,60,160,0.16);">
+  Physical Talents
+</div>
+
+<div class="lrd-talent-grid">
+  {{#each system.attributes.talent as |talent key|}}
+  <div class="lrd-talent-row">
+    <img class="lrd-talent-icon" src="systems/stryder/assets/{{key}}-icon.svg" alt="{{key}}" />
+    <span class="lrd-talent-name rollable" data-roll="2d6+@attributes.talent.{{key}}.value" data-label="{{key}}">{{key}}</span>
+    <input class="lrd-talent-val" type="text" name="system.attributes.talent.{{key}}.value" value="{{talent.value}}" data-dtype="Number" />
+  </div>
+  {{/each}}
+</div>
+
+<div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(100,130,200,0.4);margin:14px 0 7px;padding-bottom:4px;border-bottom:1px solid rgba(40,60,160,0.16);">
+  Movement
+</div>
+
+<div class="lrd-move-grid">
+  <div class="lrd-move-row">
+    <span class="lrd-move-name">Running</span>
+    <div class="lrd-expertise-dot {{#if system.attributes.move.running.expertise}}active{{else}}inactive{{/if}}" title="{{#if system.attributes.move.running.expertise}}Expertise active{{else}}No expertise{{/if}}"></div>
+    <input class="lrd-move-val" type="text" name="system.attributes.move.running.value" value="{{system.attributes.move.running.value}}" data-dtype="Number" readonly />
+  </div>
+  <div class="lrd-move-row">
+    <span class="lrd-move-name">Climbing</span>
+    <div class="lrd-expertise-dot {{#if system.attributes.move.climbing.expertise}}active{{else}}inactive{{/if}}"></div>
+    <input class="lrd-move-val" type="text" name="system.attributes.move.climbing.value" value="{{system.attributes.move.climbing.value}}" data-dtype="Number" readonly />
+  </div>
+  <div class="lrd-move-row">
+    <span class="lrd-move-name">Swimming</span>
+    <div class="lrd-expertise-dot {{#if system.attributes.move.swimming.expertise}}active{{else}}inactive{{/if}}"></div>
+    <input class="lrd-move-val" type="text" name="system.attributes.move.swimming.value" value="{{system.attributes.move.swimming.value}}" data-dtype="Number" readonly />
+  </div>
+  <div class="lrd-move-row">
+    <span class="lrd-move-name">Marching</span>
+    <div class="lrd-expertise-dot {{#if system.attributes.move.marching.expertise}}active{{else}}inactive{{/if}}"></div>
+    <input class="lrd-move-val" type="text" name="system.attributes.move.marching.value" value="{{system.attributes.move.marching.value}}" data-dtype="Number" readonly />
+  </div>
+</div>

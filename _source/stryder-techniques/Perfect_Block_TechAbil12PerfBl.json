@@ -1,0 +1,31 @@
+{
+  "folder": "Tech1XPFolder01",
+  "name": "Perfect Block",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You have learned the art of timing a Block to completely negate damage.</p><p><strong>Trigger:</strong> You are targeted by an attack.</p><p>Roll 2d6. If the result is higher than the oncoming attack roll, you are dealt no damage. If it is not, you take full damage.</p><p>You may immediately use the Block action against the same attack if your Perfect Block failed, but must also pay its cost.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": true,
+    "tag1": "reflex",
+    "tag2": "breach",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 1 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil12PerfBl",
+  "sort": 100000,
+  "_key": "!items!TechAbil12PerfBl"
+}

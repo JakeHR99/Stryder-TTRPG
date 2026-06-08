@@ -1,0 +1,33 @@
+{
+  "name": "Vigorous Heart",
+  "type": "component",
+  "img": "systems/stryder/assets/components/hearts_g2.png",
+  "system": {
+    "description": "<p>A large, dense heart that pulses faintly even in death. The concentrated life force stored within makes it a potent ingredient for powerful restoration compounds.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G2",
+    "sell_price": 80
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpHrtG2",
+  "sort": 1900000,
+  "_key": "!items!CmpHrtG2"
+}

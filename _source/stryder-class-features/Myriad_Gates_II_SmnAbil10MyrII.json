@@ -1,0 +1,31 @@
+{
+  "folder": "SmnClsFolder01",
+  "name": "Myriad Gates II",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 12.</em></p><p>You can now have up to three Spirit Beasts in combat at a time. If a fourth is summoned, the first is sent through its Gate.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SmnAbil10MyrII",
+  "sort": 100000,
+  "_key": "!items!SmnAbil10MyrII"
+}

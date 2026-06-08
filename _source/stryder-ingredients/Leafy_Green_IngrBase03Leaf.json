@@ -1,0 +1,19 @@
+{
+  "name": "Leafy Green",
+  "type": "ingredient",
+  "img": "icons/consumables/plants/leaf-green.webp",
+  "system": {
+    "description": "<p>Tender leafy vegetables such as spinach, wild greens, or cultivated cabbage. Light and nutritious, they complement heavier ingredients and add freshness to any dish.</p>",
+    "ingredient_type": "base",
+    "quality": "good",
+    "quality_modifier": 0,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 1
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrBase03Leaf",
+  "sort": 300000,
+  "_key": "!items!IngrBase03Leaf"
+}

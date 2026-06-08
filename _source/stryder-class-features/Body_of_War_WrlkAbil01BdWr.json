@@ -1,0 +1,31 @@
+{
+  "folder": "WrlkFeatFolder01",
+  "name": "Body of War",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 1.</em></p><p>Your Health starts at 8, and you gain 2 Health every time you gain a level.</p><p>Warlocks can utilize their Maximum Health as a resource through <strong>Bloodloss</strong>. Some abilities have Bloodloss as an activation cost; others offer it as an option for strengthened effects. Bloodloss is a payment made from Maximum Health. You regain any lost Maximum Health at the end of the engagement and heal for half that amount.</p><p>Warlocks can momentarily store vestiges of Mana within themselves as <strong>Manaburn</strong>. Warlocks gain 1 Manaburn per 1 Mana expended. All Manaburn is lost at the start of the following Phase.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "WrlkAbil01BdWr",
+  "sort": 100000,
+  "_key": "!items!WrlkAbil01BdWr"
+}

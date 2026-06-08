@@ -1,0 +1,33 @@
+{
+  "name": "Solid Bones",
+  "type": "component",
+  "img": "systems/stryder/assets/components/bones_g2.png",
+  "system": {
+    "description": "<p>Dense, resilient bones from a powerful creature. The marrow retains trace magical properties, making these useful in refined crafting processes.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G2",
+    "sell_price": 80
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpBoneG2",
+  "sort": 400000,
+  "_key": "!items!CmpBoneG2"
+}

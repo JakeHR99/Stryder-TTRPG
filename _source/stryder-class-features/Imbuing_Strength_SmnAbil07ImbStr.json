@@ -1,0 +1,31 @@
+{
+  "folder": "SmnClsFolder01",
+  "name": "Imbuing Strength",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 8. Twice per combat.</em></p><p>Recall an active Spirit Beast through its Gate as a Swift Action, removing it from combat and granting a benefit based on which Spirit was recalled:</p><ul><li><strong>Crimson:</strong> Your next Focused Attack deals 10 additional damage.</li><li><strong>Violet:</strong> You gain a Ward equal to the Health the Spirit Beast had when recalled.</li><li><strong>Azure:</strong> Your next Leap has double its vertical and horizontal distance and deals no falling damage.</li><li><strong>Sage:</strong> Until the end of the next Player Phase you become Hyper-Energized (Energized with double its benefit).</li></ul>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SmnAbil07ImbStr",
+  "sort": 100000,
+  "_key": "!items!SmnAbil07ImbStr"
+}

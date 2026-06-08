@@ -1,0 +1,33 @@
+{
+  "name": "Potent Heart",
+  "type": "component",
+  "img": "systems/stryder/assets/components/hearts_g1.png",
+  "system": {
+    "description": "<p>A massive, powerful heart radiating raw vitality. The energy within is immense \u2014 it warms the hand that holds it and takes days to fully cool after the creature's death.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G1",
+    "sell_price": 250
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpHrtG1",
+  "sort": 2000000,
+  "_key": "!items!CmpHrtG1"
+}

@@ -4,7 +4,7 @@
   "type": "racial",
   "img": "icons/svg/aura.svg",
   "system": {
-    "description": "<p>Range: 10 Spaces</p><p>You charge a surge of the Other between your horns. At the start of your next turn you select a target within range and fire an impossibly fast laser that deals damage equal to 2x your Arcana or Soul. This attack cannot be dodged.</p>",
+    "description": "<p>Range: 10 Spaces</p><p>You charge a surge of the Other between your horns. At the start of your next turn you select a target within range and fire an impossibly fast laser that deals damage equal to 2x your Soul. This attack cannot be dodged.</p>",
     "roll": {
       "diceBonus": 0,
       "diceNum": 2,

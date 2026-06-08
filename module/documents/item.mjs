@@ -53,6 +53,12 @@ export class StryderItem extends Item {
   prepareBaseData() {
     super.prepareBaseData();
     
+    // Auto-derive quality_modifier from quality string for ingredients
+    if (this.type === 'ingredient') {
+      const qualityMap = { rotten: -2, bad: -1, good: 0, great: 1, gourmet: 2 };
+      this.system.quality_modifier = qualityMap[this.system.quality] ?? 0;
+    }
+
     // Set default damage_type if not already set
     if (!this.system.damage_type) {
       if (this.type === 'armament') {
@@ -362,9 +368,6 @@ export class StryderItem extends Item {
 	let contentHTML = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 		${(tag1 || tag2 || tag3) ? `
@@ -406,9 +409,6 @@ export class StryderItem extends Item {
 	let contentHTMLhex = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 		${(tag1 || tag2 || tag3) ? `
@@ -458,9 +458,6 @@ export class StryderItem extends Item {
 	let contentHTMLracial = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 		${(tag1 || tag2 || tag3) ? `
@@ -508,9 +505,6 @@ export class StryderItem extends Item {
 	let contentHTMLstat = `
 	<div class="chat-message-card" style="text-align: center;">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1105,8 +1099,12 @@ export class StryderItem extends Item {
 		return;
 	  }
 	  
-	  // Update actor's bloodloss flag (the _calculateMaxHP function will handle the HP calculation)
+	  // Update actor's bloodloss flag AND max HP directly (automatic max-HP
+	  // derivation is disabled — manual HP editing — so the flag alone does nothing)
+	  const curHPVal = actor.system.health.value ?? 0;
 	  await actor.update({
+		'system.health.max': newMaxHP,
+		'system.health.value': Math.min(curHPVal, newMaxHP),
 		[`flags.${SYSTEM_ID}.bloodlossHealthReduction`]: newBloodlossReduction
 	  });
 	  
@@ -1155,9 +1153,6 @@ export class StryderItem extends Item {
 	let contentHTMLprofession = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1183,9 +1178,6 @@ export class StryderItem extends Item {
 	let contentHTMLbonds = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1212,9 +1204,6 @@ export class StryderItem extends Item {
 	let contentHTMLaction = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 		${(tag1 || tag2 || tag3) ? `
@@ -1246,9 +1235,6 @@ export class StryderItem extends Item {
 	let contentHTMLarmament = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1269,9 +1255,6 @@ export class StryderItem extends Item {
 	let contentHTMLgeneric = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 		${(tag1 || tag2 || tag3) ? `
@@ -1313,9 +1296,6 @@ export class StryderItem extends Item {
 	let contentHTMLpassive = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">Passive Ability</div>
 	  </div>
@@ -1329,9 +1309,6 @@ export class StryderItem extends Item {
 	let contentHTMLmiscellaneous = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1352,9 +1329,6 @@ export class StryderItem extends Item {
 	let contentHTMLclassandfolk = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1368,9 +1342,6 @@ export class StryderItem extends Item {
 	let contentHTMLloot = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1394,9 +1365,6 @@ export class StryderItem extends Item {
 	let contentHTMLcomponent = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1421,9 +1389,6 @@ export class StryderItem extends Item {
 	let contentHTMLconsumable = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1458,9 +1423,6 @@ export class StryderItem extends Item {
 	let contentHTMLgear = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1516,9 +1478,6 @@ export class StryderItem extends Item {
 	let contentHTMLaegiscore = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1543,9 +1502,6 @@ export class StryderItem extends Item {
 	let contentHTMLlegacies = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -1574,9 +1530,6 @@ export class StryderItem extends Item {
 	let contentHTMLequippable = `
 	<div class="chat-message-card">
 	  <div class="chat-message-header">
-		<div style="text-align: center; margin-bottom: 10px;">
-		  <img src="${item.img}" style="width: 50px; height: 50px; border: 2px solid #8b5a2b; border-radius: 50%; object-fit: cover; background: rgba(255, 248, 220, 0.8);">
-		</div>
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
@@ -2228,6 +2181,20 @@ export class StryderItem extends Item {
 		}
 		else if (item.type === "action") {
 
+		  // ── Warlock class feature routing ───────────────────────
+		  // Must run BEFORE Resilience routing — both have a "Sacrifice".
+		  // Warlock features are class items (no aspectName flag / isAspectAbility).
+		  {
+			const { WARLOCK_ABILITY_NAMES, handleWarlockAbility, isWarlock } = await import('../abilities/warlock-abilities.mjs');
+			const wActor = item.actor || game.actors.get(speaker.actor);
+			if (wActor && isWarlock(wActor)
+				&& WARLOCK_ABILITY_NAMES.includes(item.name)
+				&& !item.system.isAspectAbility
+				&& !item.flags?.stryder?.aspectName) {
+			  return await handleWarlockAbility(item, wActor, speaker, rollMode);
+			}
+		  }
+
 		  // ── Spirit Aspect routing ───────────────────────────────
 		  const SPIRIT_NAMES = ['Hallowed-Arsenal','Revitalize','Enhance Prowess','Rapid Repair',
 			'Life for a Life','Undeath','Ruin Mana','Healing Wave','Starwalker'];
@@ -2242,6 +2209,119 @@ export class StryderItem extends Item {
 		  if (RESILIENCE_NAMES.includes(item.name)) {
 			const { handleResilienceAbility } = await import('../abilities/resilience-abilities.mjs');
 			return await handleResilienceAbility(item, speaker, rollMode);
+		  }
+
+		  // ── Discipline Aspect routing ──────────────────────────
+		  const DISCIPLINE_NAMES = [
+			'Full-Body Assault', 'Flow',
+			'Light Breakdown', 'Grab Breakdown', 'Heavy Breakdown',
+			'Light Combo', 'Grab Combo', 'Heavy Combo',
+			'Light Counter: Intercepting Strike',
+			'Heavy Counter: Crushing Blow',
+			'Grab Counter: Redirecting Grab',
+			'Light Finishers', 'Heavy Finishers', 'Grab Finishers',
+		  ];
+		  if (item.system.isAspectAbility && DISCIPLINE_NAMES.includes(item.name)) {
+			const { handleDisciplineAbility } = await import('../abilities/discipline-abilities.mjs');
+			return await handleDisciplineAbility(item, speaker, rollMode);
+		  }
+
+		  // ── Ranger class feature routing ───────────────────────
+		  // Not gated on isClassFeature — auto-granted features lack the flag.
+		  {
+			const { RANGER_CLASS_FEATURE_NAMES, handleRangerClassFeature, isRangerClass } = await import('../abilities/ranger-abilities.mjs');
+			if (RANGER_CLASS_FEATURE_NAMES.includes(item.name)) {
+			  const actor = item.actor || game.actors.get(speaker.actor);
+			  if (isRangerClass(actor)) {
+				return await handleRangerClassFeature(item, actor, speaker, rollMode);
+			  }
+			}
+		  }
+
+		  // ── Ranger Technique routing ───────────────────────────
+		  if (item.flags?.stryder?.isClassFeature) {
+			const { RANGER_TECH_NAMES, handleRangerTechnique } = await import('../abilities/ranger-abilities.mjs');
+			if (RANGER_TECH_NAMES.includes(item.name)) {
+			  const actor = item.actor || game.actors.get(speaker.actor);
+			  return await handleRangerTechnique(item, actor, speaker, rollMode);
+			}
+		  }
+
+		  // ── Shaman ability & tactic routing ────────────────────
+		  if (item.flags?.stryder?.isClassFeature) {
+			const { SHAMAN_ABILITY_NAMES, handleShamanAbility } = await import('../abilities/shaman-abilities.mjs');
+			if (SHAMAN_ABILITY_NAMES.includes(item.name)) {
+			  const actor = item.actor || game.actors.get(speaker.actor);
+			  return await handleShamanAbility(item, actor, speaker, rollMode);
+			}
+		  }
+		  if (item.flags?.stryder?.isLordlyFeature) {
+			const { LORDLY_TACTIC_NAMES, handleLordlyFeature } = await import('../abilities/shaman-abilities.mjs');
+			if (LORDLY_TACTIC_NAMES.includes(item.name)) {
+			  const actor = item.actor || game.actors.get(speaker.actor);
+			  return await handleLordlyFeature(item, actor, speaker, rollMode);
+			}
+		  }
+
+		  // ── Brutality Aspect routing ───────────────────────────
+		  const { BRUTALITY_NAMES } = await import('../abilities/brutality-abilities.mjs');
+		  if (BRUTALITY_NAMES.includes(item.name) && ((item.flags?.stryder?.aspectName ?? '').includes('Brutality') || item.system.isAspectAbility)) {
+			const { handleBrutalityAbility } = await import('../abilities/brutality-abilities.mjs');
+			return await handleBrutalityAbility(item, speaker, rollMode);
+		  }
+
+		  // ── Aspect attack routing (any Aspect item with a roll + SA context) ────
+		  // Handles the full pipeline: method picker → roll → quality → damage.
+		  // Must come AFTER specialised handlers above so Discipline/Spirit/Resilience
+		  // keep their own logic, but BEFORE the generic action roll so all other
+		  // Aspect attacks (Heroism, Brutality, Vigilance, etc.) get SA context.
+		  {
+			const { isAspectAttack, resolveAspectAttack } = await import('../helpers/aspect-attack.mjs');
+			if (isAspectAttack(item)) {
+			  // Method picker (if this skill has variant options)
+			  let methodResult = null;
+			  {
+				const { pickActionMethod } = await import('../abilities/method-picker.mjs');
+				const picked = await pickActionMethod(item);
+				// If item has options and user cancelled, abort; if no options, proceed
+				if (picked === null) {
+				  const hasOptions = (item.system.description ?? '').match(/<li>|<strong>[^:<]{1,40}:<\/strong>/);
+				  if (hasOptions) return;
+				} else {
+				  methodResult = picked;
+				}
+			  }
+			  // Limit tracking
+			  const lmax = item.system.limit?.max || 0;
+			  if (lmax > 0) {
+				const lval = item.system.limit?.value || 0;
+				if (lval >= lmax) return ui.notifications.warn(`${item.name} has reached its limit of ${lmax} uses!`);
+				await item.update({ 'system.limit.value': lval + 1 });
+			  }
+			  const actor = item.actor || game.actors.get(speaker.actor);
+			  return await resolveAspectAttack(item, actor, { speaker, rollMode, methodResult });
+			}
+		  }
+
+		  // ── Generic multi-option method picker ───────────────────────────────────
+		  // Fires for any action whose description has ≥2 keyed option entries
+		  // (supports both <li> list and <p><strong>Key:</strong> body</p> formats).
+		  // pickActionMethod() returns null if no options found OR user cancelled.
+		  let methodResult = null;
+		  let buildMethodFlavor = null;
+		  {
+			const mod = await import('../abilities/method-picker.mjs');
+			buildMethodFlavor = mod.buildMethodFlavor;
+			const result = await mod.pickActionMethod(item);
+			// null means either no options exist (skip silently) or user hit Cancel (abort)
+			if (result === null) {
+			  // Distinguish: if the item has options, treat null as Cancel → abort
+			  const hasOptions = (item.system.description ?? '').match(/<li>|<strong>[^:<]{1,40}:<\/strong>/);
+			  if (hasOptions) return;
+			  // Otherwise no options → fall through to normal roll
+			} else {
+			  methodResult = result;
+			}
 		  }
 
 		  // Check limit
@@ -2264,12 +2344,12 @@ export class StryderItem extends Item {
 		  const shouldSkipRoll = !diceNum || diceNum === 0;
 
 		  if (shouldSkipRoll) {
-			const cleanedContent = contentHTMLaction.replace(/<br \/>$/, '');
-			
+			let chatHTML = contentHTMLaction.replace(/<br \/>$/, '');
+			if (methodResult && buildMethodFlavor) chatHTML = buildMethodFlavor(chatHTML, methodResult);
 			ChatMessage.create({
 			  speaker: speaker,
 			  rollMode: rollMode,
-			  content: cleanedContent + resourceButton + bloodlossButton,
+			  content: chatHTML + resourceButton + bloodlossButton,
 				flags: {
 					'stryder.itemId': item.id,
 					'stryder.rollType': 'utility'
@@ -2328,12 +2408,19 @@ export class StryderItem extends Item {
 		  }
 		  const totalActionBonus = diceBonus + reflexTagBonusAction;
 
-		  const formula = `${diceNum}d${diceSize}` + (totalActionBonus ? `+${totalActionBonus}` : '');
+		  const effectiveBonus = totalActionBonus + (methodResult?.attackMod ?? 0);
+		  let formula = `${diceNum}d${diceSize}`;
+		  if (effectiveBonus > 0) formula += `+${effectiveBonus}`;
+		  else if (effectiveBonus < 0) formula += `${effectiveBonus}`;
 		  const roll = new Roll(formula);
 		  await roll.evaluate({async: true});
+		  let rollFlavor = contentHTMLaction.replace(/<br \/>$/, '') + resourceButton + bloodlossButton;
+		  if (methodResult && buildMethodFlavor) {
+			rollFlavor = buildMethodFlavor(contentHTMLaction.replace(/<br \/>$/, ''), methodResult) + resourceButton + bloodlossButton;
+		  }
 		  roll.toMessage({
 			speaker: speaker,
-			flavor: contentHTMLaction.replace(/<br \/>$/, '') + resourceButton + bloodlossButton, // Remove last <br /> here too
+			flavor: rollFlavor,
 			rollMode: rollMode
 		  });
 
@@ -2355,8 +2442,10 @@ export class StryderItem extends Item {
 
 			const token = actor.token || canvas.tokens.get(speaker.token) || null;
 
-			// Construct the roll formula.
-			const formula = `${diceNum}d${diceSize}` + (diceBonus ? `+${diceBonus}` : '');
+			// ── Warrior augment: +1 to attack rolls ──
+			const augAttackBonus = actor.getFlag?.('stryder', 'augAttackBonus') ?? 0;
+			const formula = `${diceNum}d${diceSize}` + (diceBonus ? `+${diceBonus}` : '')
+			              + (augAttackBonus ? `+${augAttackBonus}` : '');
 
 			// Create the roll using the constructed formula.
 			const roll = new Roll(formula);
@@ -2373,13 +2462,20 @@ export class StryderItem extends Item {
 				}
 			});
 
+			// ── Warrior augment thresholds ──
+			const augExcellentRange1012 = actor.getFlag?.('stryder', 'augExcellentRange1012') ?? false;
+			const augPoorRangeOverride  = actor.getFlag?.('stryder', 'augPoorRangeOverride')  ?? null;
+			const augDoubleExcellent    = actor.getFlag?.('stryder', 'augDoubleExcellentDamage') ?? false;
+			const poorThreshold     = augPoorRangeOverride !== null ? augPoorRangeOverride : 4;
+			const excellentThreshold = augExcellentRange1012 ? 10 : 11;
+
 			// Determine the quality of the roll based on the total, unless alwaysRollsExcellent is true
 			let result = roll.total;
 			let quality;
 			let damageMultiplier;
 			if (item.system.armament.alwaysRollsExcellent) {
 				quality = "Excellent";
-				damageMultiplier = 1.5;
+				damageMultiplier = augDoubleExcellent ? 3.0 : 1.5;
 			} else {
 				// Check if actor is horrified first (horrified overrides everything)
 				if (isActorHorrified(actor)) {
@@ -2392,16 +2488,16 @@ export class StryderItem extends Item {
 					quality = panickedQuality.quality;
 					damageMultiplier = panickedQuality.damageMultiplier;
 				} else {
-					// Normal quality logic
-					if (result <= 4) {
+					// Normal quality logic (modified by Warrior augments)
+					if (result <= poorThreshold) {
 						quality = "Poor";
 						damageMultiplier = 0.5;
-					} else if (result >= 5 && result <= 10) {
+					} else if (result >= excellentThreshold) {
+						quality = "Excellent";
+						damageMultiplier = augDoubleExcellent ? 3.0 : 1.5;
+					} else {
 						quality = "Good";
 						damageMultiplier = 1.0;
-					} else if (result >= 11) {
-						quality = "Excellent";
-						damageMultiplier = 1.5;
 					}
 				}
 			}
@@ -2454,6 +2550,18 @@ export class StryderItem extends Item {
 			const actor = item.actor || game.actors.get(speaker.actor) || null;
 			if (!actor) {
 				console.error("No actor associated with this skill:", item);
+				return;
+			}
+
+			// Generic (monster ability) with isAttack = false → post description card only
+			if (item.type === "generic" && !item.system.isAttack) {
+				const resourceButton = createResourceSpendButton(item);
+				ChatMessage.create({
+					speaker,
+					rollMode,
+					content: contentHTMLgeneric + resourceButton,
+					flags: { 'stryder.itemId': item.id, 'stryder.rollType': 'utility' }
+				});
 				return;
 			}
 
@@ -2525,7 +2633,7 @@ export class StryderItem extends Item {
 			if (saTemper === 'keen') {
 				soulArmamentBonus += 1;
 			} else if (saTemper === 'heavy') {
-				const strength = actor.system.attributes?.talent?.Strength?.value ?? 0;
+				const strength = actor.system.attributes?.talent?.strength?.value ?? 0;
 				const heavyPenalty = Math.max(0, weaponWC - strength);
 				soulArmamentBonus -= heavyPenalty;
 			}
@@ -2647,28 +2755,11 @@ export class StryderItem extends Item {
 			const hasPierce = item.system.tag1 === 'pierce' || item.system.tag2 === 'pierce' || item.system.tag3 === 'pierce';
 			const damageButton = createDamageButton(totalDamage, item.system.damage_type || 'ahl', hasPierce);
 
-			// Twin Attack button — shown when Dual Wield is active and the skill is a Focused action
-			const actorActiveBattleForm = actor.getFlag('stryder', 'activeBattleForm');
-			const hasTwinAttack = actor.system.soul_armament?.form?.dual_wield
-				&& actorActiveBattleForm === 'dual_wield'
-				&& item.system.action_type === 'focused';
-			const twinDamage = Math.floor(totalDamage / 2);
-			const twinAttackButton = hasTwinAttack ? `
-			<button class="twin-attack-btn"
-				data-twin-damage="${twinDamage}"
-				data-damage-type="${item.system.damage_type || 'ahl'}"
-				data-actor-id="${actor.id}"
-				data-item-name="${item.name}"
-				style="margin-top:6px; width:100%; padding:5px 10px; background:#1a0e00; border:1px solid rgba(200,150,50,0.5); border-radius:4px; color:#e8c87a; font-size:11px; cursor:pointer; font-family:inherit;">
-				⚔ Twin Attack — 2 × ${twinDamage} ${item.system.damage_type ?? ''} damage
-			</button>` : '';
-
 			const qualityMessage = `
 			<div class="damage-quality ${quality.toLowerCase()}">
 			  ${statusPrefix}<strong>${quality} Attack!</strong> The attack did <strong>${totalDamage}</strong> damage.
 			</div>
 			${damageButton}
-			${twinAttackButton}
 			`;
 			ChatMessage.create({
 				speaker: speaker,
@@ -3152,26 +3243,15 @@ async function handleDamageUndo(event) {
 		<div style="background: url('systems/stryder/assets/parchment.jpg'); 
 					background-size: cover; 
 					padding: 15px; 
-					border: 1px solid #c9a66b; 
-					border-radius: 3px;">
-		  <h3 style="margin-top: 0; border-bottom: 1px solid #c9a66b; color: #28a745;"><strong>Damage Restored</strong></h3>
-		  <p style="margin-bottom: 0;">${restorationMessage}</p>
-		</div>
-	  `,
+					border: 1px solid #c9a66b;
+				border-radius: 3px;">
+		  <h3 style="margin-top:0;border-bottom:1px solid #c9a66b;"><strong>Damage Restored</strong></h3>
+		  <p>${restorationMessage}</p>
+		</div>`,
 	  type: CONST.CHAT_MESSAGE_TYPES.OTHER
 	});
-	
-	if (targetActors.length === 1) {
-	  ui.notifications.info(`Restored ${totalRestored} damage to ${targetActors[0].name}!`);
-	} else {
-	  ui.notifications.info(`Restored damage to ${targetActors.length} targets!`);
-	}
-	
+
   } catch (err) {
-	console.error("Error restoring damage:", err);
-	ui.notifications.error("Failed to restore damage!");
+    console.error("[Stryder] Damage undo error:", err);
   }
 }
-
-// Export the damage application and undo handlers
-export { handleDamageApply, handleDamageUndo };

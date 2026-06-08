@@ -1,4 +1,10 @@
 <ol class="combat-tracker plain">
+    {{#if @root.initiativePhase}}
+    <div class="stryder-initiative-phase">
+      <span class="initiative-phase-label">Rolling Initiative</span>
+      <span class="initiative-phase-hint">Players: use Battle! on your sheet &nbsp;|&nbsp; Enemies: click dice icon</span>
+    </div>
+    {{/if}}
     {{#if currentTurn}}
         <div class="current-turn" style="font-size: 25px; font-family: 'EB Garamond';">{{localize 'STRYDER.Combat.CurrentTurn'
                                             turn=(localize (concat 'STRYDER.Combat.CombatFaction' (capitalize
@@ -17,6 +23,11 @@
                         {{#if @root.user.isGM}}
                             <button type="button" class="inline-control combatant-control icon fa-solid fa-eye-slash {{#if this.hidden}}active{{/if}}" data-action="toggleHidden" data-tooltip="" aria-label="Toggle Visibility"></button>
                             <button type="button" class="inline-control combatant-control icon fa-solid fa-skull {{#if this.isDefeated}}active{{/if}}" data-action="toggleDefeated" data-tooltip="" aria-label="Mark Defeated"></button>
+                            {{#if (eq faction 'enemy')}}
+                                {{#unless this.initiative}}
+                                    <button type="button" class="inline-control combatant-control icon fa-solid fa-dice" data-action="rollEnemyInit" data-tooltip="Roll Initiative" aria-label="Roll Initiative"></button>
+                                {{/unless}}
+                            {{/if}}
                         {{/if}}
                         {{#if this.canPing}}
                             <button type="button" class="inline-control combatant-control icon fa-solid fa-bullseye-arrow" data-action="pingCombatant" data-tooltip="" aria-label="Ping Token"></button>

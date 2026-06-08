@@ -1,0 +1,31 @@
+{
+  "folder": "ShmClsFolder01",
+  "name": "Expanding Bond",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 4 / Level 8 / Level 12 — gained at each milestone.</em></p><p>Your telepathic bond range increases by 2 Spaces. Your Tactic Point total increases by 1. <em>(At Level 12, +1 TP. At Level 15, +3 TP.)</em></p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ShmAbil02ExpBnd",
+  "sort": 100000,
+  "_key": "!items!ShmAbil02ExpBnd"
+}

@@ -18,10 +18,17 @@
                 <i class="fa-solid fa-step-forward"></i>
             </button>
         {{else}}
-            <button type="button" class="combat-control combat-control-lg" data-action="startCombat">
-                <i class="fa-solid fa-swords" inert=""></i>
-                <span>{{localize 'COMBAT.Begin'}}</span>
-            </button>
+            {{#if initiativePhase}}
+                <button type="button" class="combat-control combat-control-lg stryder-begin-combat-btn" data-action="startCombat">
+                    <i class="fa-solid fa-swords" inert=""></i>
+                    <span>Begin Combat</span>
+                </button>
+            {{else}}
+                <button type="button" class="combat-control combat-control-lg" data-action="startCombat">
+                    <i class="fa-solid fa-shield-halved" inert=""></i>
+                    <span>Begin Encounter</span>
+                </button>
+            {{/if}}
         {{/if}}
     {{/if}}
 </nav>

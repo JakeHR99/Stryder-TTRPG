@@ -1,0 +1,31 @@
+{
+  "folder": "Tech1XPFolder01",
+  "name": "Stylistic Swapper",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You can choose to Re-Arm using 1 Mana instead of spending Stamina or doing so for free.</p><p>If you Re-Arm this way, until the end of the turn you Re-Arm on:</p><ul><li>Gain +4 Movement.</li><li>Your Excellent Range decreases by 2.</li><li>Excellent attack damage increases from 1.5× to 2×.</li></ul>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 1,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 1 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil18StlSw",
+  "sort": 100000,
+  "_key": "!items!TechAbil18StlSw"
+}

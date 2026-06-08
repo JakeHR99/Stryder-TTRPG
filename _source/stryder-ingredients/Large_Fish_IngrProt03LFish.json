@@ -1,0 +1,19 @@
+{
+  "name": "Large Fish",
+  "type": "ingredient",
+  "img": "icons/consumables/fish/fish-purple-orange.webp",
+  "system": {
+    "description": "<p>A powerful fish hauled ashore after a Mighty Reeling struggle. Yields more meat than a common catch and commands a higher price at market. Prized by camp cooks for its rich flavour.</p>",
+    "ingredient_type": "protein",
+    "quality": "great",
+    "quality_modifier": 1,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 3
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrProt03LFish",
+  "sort": 600000,
+  "_key": "!items!IngrProt03LFish"
+}

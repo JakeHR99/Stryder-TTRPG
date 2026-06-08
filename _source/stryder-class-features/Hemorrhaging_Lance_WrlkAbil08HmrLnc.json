@@ -1,0 +1,31 @@
+{
+  "folder": "WrlkFeatFolder01",
+  "name": "Hemorrhaging Lance",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Gained at Level 12.</em></p><p>Cost: 4 Bloodloss (Maximum Health). Requires both hands empty.</p><p>Pool blood between both hands and form it into a spiraling lance. This ability requires a connection to your target beyond Sight — roll Arcane Sense; the result determines the range. Select a target within range (even without LoS), then make an attack roll.</p><p>This attack can pierce through 1 Space of cover, dealing [3×Soul + Manaburn] damage to your target and any obstruction. If a creature is interrupting LoS against your target, that creature makes an Evasion Check against your Potency — on failure they also suffer the damage.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "WrlkAbil08HmrLnc",
+  "sort": 100000,
+  "_key": "!items!WrlkAbil08HmrLnc"
+}

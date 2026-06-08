@@ -1,0 +1,31 @@
+{
+  "folder": "SmnClsFolder01",
+  "name": "Chimeric Gate",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 12.</em></p><p>You can summon two Spirit Beasts through the same gate, causing them to share one physical form. Choose two Gates to combine. The resulting Chimera gains the Health and Speed of both Spirit Beasts plus an additional 15 Health, and can use both Spirit Beasts' abilities. Chimeras count as one Spirit Beast. Imbuing Strength cannot be used on a Chimera. You can only have one Chimera in combat at a time.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 2,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SmnAbil09ChimGt",
+  "sort": 100000,
+  "_key": "!items!SmnAbil09ChimGt"
+}

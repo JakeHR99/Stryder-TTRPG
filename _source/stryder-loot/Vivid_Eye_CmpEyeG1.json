@@ -1,0 +1,33 @@
+{
+  "name": "Vivid Eye",
+  "type": "component",
+  "img": "systems/stryder/assets/components/eyes_g1.png",
+  "system": {
+    "description": "<p>A pristine eye blazing with inner light. The compressed magical sight within can be extracted to enhance perception items or fuel powerful detection rituals.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G1",
+    "sell_price": 250
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpEyeG1",
+  "sort": 1000000,
+  "_key": "!items!CmpEyeG1"
+}

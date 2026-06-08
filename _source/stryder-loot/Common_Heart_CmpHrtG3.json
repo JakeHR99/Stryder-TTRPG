@@ -1,0 +1,33 @@
+{
+  "name": "Common Heart",
+  "type": "component",
+  "img": "systems/stryder/assets/components/hearts_g3.png",
+  "system": {
+    "description": "<p>A firm, intact heart that still carries traces of the creature's life force. A standard component in vitality and endurance-based recipes and compounds.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G3",
+    "sell_price": 25
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpHrtG3",
+  "sort": 1800000,
+  "_key": "!items!CmpHrtG3"
+}

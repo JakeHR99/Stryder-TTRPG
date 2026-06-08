@@ -1,0 +1,8 @@
+{
+  "name": "Warrior Class Features",
+  "sorting": "a", "folder": null, "type": "Item", "color": null, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "compendiumSource": null, "duplicateSource": null, "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null },
+  "_id": "WrrFeatFolder01",
+  "_key": "!folders!WrrFeatFolder01"
+}

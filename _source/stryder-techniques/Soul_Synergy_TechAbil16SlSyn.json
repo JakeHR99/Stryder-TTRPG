@@ -1,0 +1,31 @@
+{
+  "folder": "Tech1XPFolder01",
+  "name": "Soul Synergy",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>You and another party member combine strength to have your Soul Armaments amplify one another.</p><p>Choose a target and a willing Party member who also has the same target within range of their Armament. If both of you use your Focused Attack action on the selected target before using any other actions, you both receive a +2 to your attack rolls. If both attack rolls land, each attack deals 2× the damage it would have dealt otherwise.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 3,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "aid",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 1 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil16SlSyn",
+  "sort": 100000,
+  "_key": "!items!TechAbil16SlSyn"
+}

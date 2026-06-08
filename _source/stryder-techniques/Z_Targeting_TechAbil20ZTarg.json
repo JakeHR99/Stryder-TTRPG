@@ -1,0 +1,31 @@
+{
+  "folder": "Tech2XPFolder01",
+  "name": "Z Targeting",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>An act of pure focus, sacrificing peripheral awareness for total concentration on one target.</p><p>Choose a target you can see and Lock On to them as a Swift Action. This effect lasts until the end of the next Monster Phase.</p><p><strong>While Locked On:</strong></p><ul><li>You are considered Senseless to all other creatures except your target.</li><li>Against your target: +2 bonus to all Attack Rolls, Reflex Rolls, and Evasions.</li><li>If you Dodge an Attack from your target successfully, you may also move 2 spaces in any direction without expending Movement.</li></ul><p>Ending Lock On early costs 1 Stamina as you force your body to recalibrate.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 1,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 2 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil20ZTarg",
+  "sort": 100000,
+  "_key": "!items!TechAbil20ZTarg"
+}

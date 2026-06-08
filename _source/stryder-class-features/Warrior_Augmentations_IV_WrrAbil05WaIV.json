@@ -1,0 +1,31 @@
+{
+  "folder": "WrrFeatFolder01",
+  "name": "Warrior Augmentations IV",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Gained at Level 15. Choose one augment.</em></p><ol><li>When you make an Excellent Attack, double the damage dealt.</li><li>You have 5 damage reduction from all sources.</li><li>Your maximum Stamina increases by 2.</li></ol>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "WrrAbil05WaIV",
+  "sort": 100000,
+  "_key": "!items!WrrAbil05WaIV"
+}

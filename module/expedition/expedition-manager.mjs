@@ -438,4 +438,55 @@ async function drawExpeditionCard(scene, siteIndex, partyTokenDoc = null) {
     content: `<div class="chat-message-card">
       <div class="chat-message-header">
         <div class="chat-message-title" style="color:${eventColor};">📍 Site ${siteIndex} — ${eventName}</div>
-        <div class="chat-message-subtitle">${time === 'day' ? '☀ D
+        <div class="chat-message-subtitle">${time === 'day' ? '☀ Daytime' : '🌙 Nighttime'} Expedition Deck</div>
+      </div>
+      <div class="chat-message-content">
+        <p>The party arrives at <strong>Site ${siteIndex}</strong> and draws from the Expedition Deck.</p>
+        <p><strong>Result: ${eventName}</strong></p>
+        <p style="font-size:11px;opacity:0.7;">Party Points remaining: ${partyPoints}</p>
+      </div>
+    </div>`
+  });
+}
+
+function getEventColor(eventName) {
+  const name = eventName.toLowerCase();
+  if (name.includes('skirmish'))   return '#ff6666';
+  if (name.includes('dungeon'))    return '#d0a8ff';
+  if (name.includes('haunt'))      return '#44ffcc';
+  if (name.includes('treasure'))   return '#ffdd44';
+  if (name.includes('campsite'))   return '#88ff88';
+  if (name.includes('spring'))     return '#44ffaa';
+  if (name.includes('obstacle'))   return '#ff9944';
+  if (name.includes('peaceful'))   return '#aaddff';
+  return '#c8d8f0';
+}
+
+// ── Clear expedition from current scene ────────────────────
+export async function clearExpedition() {
+  const scene = canvas.scene;
+  if (!scene) return;
+
+  // Remove all expedition site tokens
+  const siteTokenIds = scene.tokens
+    .filter(t => t.getFlag(SYSTEM_ID, 'isExpeditionSite'))
+    .map(t => t.id);
+  if (siteTokenIds.length) await scene.deleteEmbeddedDocuments('Token', siteTokenIds);
+
+  // Remove expedition path drawings
+  const pathDrawingIds = scene.drawings
+    .filter(d => d.getFlag(SYSTEM_ID, 'isExpeditionPath'))
+    .map(d => d.id);
+  if (pathDrawingIds.length) await scene.deleteEmbeddedDocuments('Drawing', pathDrawingIds);
+
+  // Clear scene flags
+  await scene.unsetFlag(SYSTEM_ID, 'isExpeditionMap');
+  await scene.unsetFlag(SYSTEM_ID, 'expeditionTableId');
+  await scene.unsetFlag(SYSTEM_ID, 'expeditionTime');
+  await scene.unsetFlag(SYSTEM_ID, 'partyPoints');
+  await scene.unsetFlag(SYSTEM_ID, 'sitesVisited');
+  await scene.unsetFlag(SYSTEM_ID, 'hauntInsanity');
+  await scene.unsetFlag(SYSTEM_ID, 'dungeonActive');
+
+  ui.notifications.info("Expedition cleared from scene.");
+}

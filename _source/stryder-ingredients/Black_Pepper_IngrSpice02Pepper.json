@@ -1,0 +1,19 @@
+{
+  "name": "Black Pepper",
+  "type": "ingredient",
+  "img": "icons/commodities/materials/powder-black.webp",
+  "system": {
+    "description": "<p>Ground peppercorns that add warmth and mild heat to any dish. A common spice carried by travelling cooks. Traded widely across Alstoria and valued for its ability to mask the flavour of poorer ingredients.</p>",
+    "ingredient_type": "spice",
+    "quality": "good",
+    "quality_modifier": 0,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 1
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrSpice02Pepper",
+  "sort": 900000,
+  "_key": "!items!IngrSpice02Pepper"
+}

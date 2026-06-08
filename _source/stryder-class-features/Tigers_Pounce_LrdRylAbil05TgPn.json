@@ -1,27 +1,44 @@
 {
-  "folder": "LrdlyRylFolder01",
+  "folder": "LrdlyWldFolder01",
   "name": "Tigers Pounce",
   "type": "action",
   "img": "icons/svg/aura.svg",
   "system": {
     "description": "<p>With a burst of speed your Lordling pounces like a tiger. They leap forward up to 4 spaces and use the Attack Tactic at no cost, with a +4 to its Attack Roll.</p>",
     "action_type": "focused",
-    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
-    "limit": { "max": 0, "value": 0 },
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "limit": {
+      "max": 0,
+      "value": 0
+    },
     "stamina_cost": 1,
     "mana_cost": 0,
     "tactics_cost": 2,
     "other_restrictions": "Focused: 2 TP, 1 Stamina | Swift: 4 TP, 2 Stamina",
     "hasReflexTag": false,
-    "tag1": "", "tag2": "", "tag3": ""
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
   },
   "effects": [],
-  "ownership": { "default": 0 },
+  "ownership": {
+    "default": 0
+  },
   "flags": {},
   "_stats": {
-    "compendiumSource": null, "duplicateSource": null,
-    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
-    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
   },
   "_id": "LrdRylAbil05TgPn",
   "sort": 500000,

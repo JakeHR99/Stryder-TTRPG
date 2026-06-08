@@ -1,0 +1,33 @@
+{
+  "name": "Clouded Eye",
+  "type": "component",
+  "img": "systems/stryder/assets/components/eyes_g4.png",
+  "system": {
+    "description": "<p>A dull, milky eye harvested from a weak monster. The magical sight it once possessed has almost entirely faded, leaving only a dim residue of energy.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G4",
+    "sell_price": 5
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpEyeG4",
+  "sort": 700000,
+  "_key": "!items!CmpEyeG4"
+}

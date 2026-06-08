@@ -50,7 +50,8 @@ export class StryderCombat extends Combat {
             startOfRound: 'startOfRound',
             endOfRound: 'endOfRound',
             startOfTurn: 'startOfTurn',
-            endOfTurn: 'endOfTurn'
+            endOfTurn: 'endOfTurn',
+            phaseChange: 'phaseChange'
         };
     }
 
@@ -60,6 +61,23 @@ export class StryderCombat extends Combat {
 
     async rollInitiative(ids, options) {
         return this;
+    }
+
+    /**
+     * Roll initiative for a single enemy combatant (GM only).
+     * Called from the combat tracker roll button.
+     */
+    async rollEnemyInitiative(combatantId) {
+        if (!game.user.isGM) return;
+        const combatant = this.combatants.get(combatantId);
+        if (!combatant) return;
+        const roll = new Roll('2d6');
+        await roll.evaluate();
+        await this.setInitiative(combatantId, roll.total);
+        await roll.toMessage({
+            speaker: { alias: combatant.name },
+            flavor: `<strong>${combatant.name}</strong> — Enemy Initiative Roll (2d6): ${roll.total}`,
+        });
     }
 
     get combatant() {
@@ -98,59 +116,106 @@ export class StryderCombat extends Combat {
     }
 
     async startCombat() {
-        const factions = [{
-                value: ALLIED,
-                translation: 'Ally Phase'
-            },
-            {
-                value: ENEMY,
-                translation: 'Enemy Phase'
-            }
-        ];
+        // ── Phase 1: Enter rolling-initiative pre-phase ──────────────────────
+        // If the initiative-phase flag is not yet set, this is the first click
+        // ("Begin Encounter"). Set the flag, notify players to roll, and stop.
+        const inInitiativePhase = this.getFlag(SYSTEM_ID, 'initiativePhase') ?? false;
+        if (!inInitiativePhase) {
+            await this.setFlag(SYSTEM_ID, 'initiativePhase', true);
 
-        // Simple prompt approach
-        const templateContent = await foundry.applications.handlebars.renderTemplate('systems/stryder/templates/combat/dialog-first-turn.hbs', {
-            factions
-        });
-        
-        const firstTurnFaction = await new Promise((resolve) => {
-            const dialog = new Dialog({
-                title: game.i18n.localize('Selecting Starting Phase'),
-                content: templateContent,
-                buttons: {
-                    ok: {
-                        label: "OK",
-                        callback: (html) => {
-                            const selectedFaction = html.find('select[name=faction]').val();
-                            resolve(selectedFaction);
-                        }
-                    }
-                },
-                default: "ok",
-                close: () => resolve(null)
+            await ChatMessage.create({
+                user: game.user.id,
+                content: `<div class="chat-message-card">
+                    <div class="chat-message-header">
+                        <h3 class="chat-message-title">Rolling Initiative</h3>
+                    </div>
+                    <div class="chat-message-content">
+                        <p>An encounter is beginning — roll your initiative!</p>
+                        <p><strong>Players:</strong> Click <em>Battle!</em> on your character sheet.</p>
+                        <p><strong>World Master:</strong> Click the dice icon next to each enemy in the Combat Tracker.</p>
+                        <p>When all rolls are in, click <strong>Begin Combat</strong> in the tracker.</p>
+                    </div>
+                </div>`,
             });
-            dialog.render(true);
-        });
 
-        if (!firstTurnFaction) return this;
+            // Re-render tracker so the banner and "Begin Combat" button appear
+            ui.combat?.render();
+            return this;
+        }
 
-        await this.update({
-            round: 1
+        // ── Phase 2: All rolls done — compare and start ───────────────────────
+        const allied = this.combatants.filter(c => c.faction === ALLIED);
+        const enemy  = this.combatants.filter(c => c.faction === ENEMY);
+
+        // Get highest initiative for each faction (null = no rolls yet = 0)
+        const alliedMax = allied.length
+            ? Math.max(...allied.map(c => c.initiative ?? 0))
+            : 0;
+        const enemyMax = enemy.length
+            ? Math.max(...enemy.map(c => c.initiative ?? 0))
+            : 0;
+
+        // Find the top roller on each side
+        const alliedTop = allied.reduce((best, c) =>
+            (c.initiative ?? 0) > (best?.initiative ?? -1) ? c : best, null);
+        const enemyTop  = enemy.reduce((best, c) =>
+            (c.initiative ?? 0) > (best?.initiative ?? -1) ? c : best, null);
+
+        // Determine who goes first (tie → allied)
+        let firstTurnFaction;
+        let summaryHtml;
+        if (alliedMax >= enemyMax) {
+            firstTurnFaction = ALLIED;
+            summaryHtml = `
+                <p><strong>Allied team goes first!</strong></p>
+                <p>Highest Allied roll: <strong>${alliedTop?.name ?? '—'}</strong> (${alliedMax})</p>
+                <p>Highest Enemy roll: <strong>${enemyTop?.name ?? '—'}</strong> (${enemyMax})</p>
+            `;
+        } else {
+            firstTurnFaction = ENEMY;
+            summaryHtml = `
+                <p><strong>Enemy team goes first!</strong></p>
+                <p>Highest Enemy roll: <strong>${enemyTop?.name ?? '—'}</strong> (${enemyMax})</p>
+                <p>Highest Allied roll: <strong>${alliedTop?.name ?? '—'}</strong> (${alliedMax})</p>
+            `;
+        }
+
+        // Show summary and confirm before starting
+        const confirmed = await Dialog.confirm({
+            title: 'Encounter Begin',
+            content: summaryHtml,
+            yes: () => true,
+            no: () => false,
+            defaultYes: true,
         });
+        if (!confirmed) return this;
+
+        await this.update({ round: 1 });
         await this.setFirstTurn(firstTurnFaction);
         await this.setCurrentTurn(firstTurnFaction);
 
-        // Clear all turn states for the start of combat
+        // Clear all turn state
         await this.setFlag(SYSTEM_ID, STRYDER.flags.CombatantsTurnTaken, {});
         await this.setFlag(SYSTEM_ID, STRYDER.flags.StartedTurns, []);
         await this.setFlag(SYSTEM_ID, STRYDER.flags.ActiveTurns, []);
         await this.setCombatant(null);
 
-        // Don't automatically start turns - let the UI buttons handle it
-        // This ensures all actors start with "Start Turn" buttons and inactive turns
+        // Post initiative result to chat
+        await ChatMessage.create({
+            user: game.user.id,
+            content: `<div class="chat-message-card">
+                <div class="chat-message-header">
+                    <h3 class="chat-message-title">Encounter Begins</h3>
+                </div>
+                <div class="chat-message-content">${summaryHtml}</div>
+            </div>`,
+        });
 
         Hooks.callAll('stryderCombatEvent',
             new CombatEvent(StryderCombat.combatEvent.startOfCombat, this.round, this.combatants));
+
+        // Clear the initiative phase flag
+        await this.unsetFlag(SYSTEM_ID, 'initiativePhase');
 
         return super.startCombat();
     }
@@ -585,7 +650,14 @@ export class StryderCombat extends Combat {
 		if (!game.user.isGM) {
 			throw new Error("Only GMs can change the current turn");
 		}
-		return this.setFlag(SYSTEM_ID, STRYDER.flags.CurrentTurn, flag);
+		const prev = this.getCurrentTurn();
+		const result = await this.setFlag(SYSTEM_ID, STRYDER.flags.CurrentTurn, flag);
+		// A faction switch while combat is running = a new Phase beginning
+		if (this.started && prev && flag && prev !== flag) {
+			Hooks.callAll('stryderCombatEvent',
+				new CombatEvent(StryderCombat.combatEvent.phaseChange, this.round, this.combatants));
+		}
+		return result;
 	}
 
     async nextTurn() {

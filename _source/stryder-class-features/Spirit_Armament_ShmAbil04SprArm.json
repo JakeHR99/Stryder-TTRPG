@@ -1,0 +1,31 @@
+{
+  "folder": "ShmClsFolder01",
+  "name": "Spirit Armament",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Gained at Level 12. Once per day.</em></p><p>You absorb your Lordling into your Soul Armament and tap into its energy. You gain the following benefits for a number of Rounds equal to your Soul.</p><ul><li>Your Focused Attacks deal additional damage equal to your Lordling's Spirit.</li><li>You gain +2 to Movement and Running Speed.</li><li>You can use Tactics that normally require your Lordling on yourself instead. If the Tactic requires both of you to act together, it cannot be used this way.</li><li>You benefit from any Passive Tactics your Lordling knows.</li><li>While active, your Lordling cannot be targeted by Attacks, Abilities or Spells and cannot take damage.</li></ul>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ShmAbil04SprArm",
+  "sort": 100000,
+  "_key": "!items!ShmAbil04SprArm"
+}

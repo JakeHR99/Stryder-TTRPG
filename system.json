@@ -20,7 +20,7 @@
       "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
-  "version": "0.2.3",
+  "version": "0.2.4",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
@@ -232,17 +232,6 @@
       "system": "stryder"
     },
     {
-      "name": "stryder-class-features",
-      "label": "Class Features",
-      "path": "packs/stryder-class-features",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "system": "stryder"
-    },
-    {
       "name": "stryder-folk",
       "label": "Folk",
       "path": "packs/stryder-folk",
@@ -276,9 +265,20 @@
       "system": "stryder"
     },
     {
-      "name": "stryder-skills",
-      "label": "Skills",
-      "path": "packs/stryder-skills",
+      "name": "stryder-player-actions",
+      "label": "Player Actions",
+      "path": "packs/stryder-player-actions",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-class-features",
+      "label": "Class Features",
+      "path": "packs/stryder-class-features",
       "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
@@ -290,6 +290,17 @@
       "name": "stryder-techniques",
       "label": "Techniques",
       "path": "packs/stryder-techniques",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
+    },
+    {
+      "name": "stryder-skills",
+      "label": "Skills",
+      "path": "packs/stryder-skills",
       "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
@@ -373,6 +384,17 @@
         "ASSISTANT": "OWNER"
       },
       "system": "stryder"
+    },
+    {
+      "name": "stryder-ingredients",
+      "label": "Ingredients",
+      "path": "packs/stryder-ingredients",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "stryder"
     }
   ],
   "packFolders": [
@@ -390,14 +412,14 @@
       "color": "#276625",
       "packs": [
         "stryder-classes",
-        "stryder-class-features",
         "stryder-folk",
         "stryder-folk-abilities",
         "stryder-actions",
         "stryder-skills",
-        "stryder-techniques",
         "stryder-statperks",
-        "stryder-professions"
+        "stryder-professions",
+        "stryder-class-features",
+        "stryder-techniques"
       ]
     },
     {

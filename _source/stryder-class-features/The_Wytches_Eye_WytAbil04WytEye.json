@@ -1,0 +1,31 @@
+{
+  "folder": "WytFeatFolder01",
+  "name": "The Wytch's Eye",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Gained at Level 8. Limit: 1.</em></p><p>You pull energy from your Soul Armament to manifest it into an orb with the visage of your eye. You cast it 6 spaces into the air above you — it follows your space and lasts until the end of combat. It has 20 Durability. While your Eye is active, you do not need Line of Sight to target a creature with your Hexes, as long as the target is within reach of your Armament.</p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 1, "value": 1 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "WytAbil04WytEye",
+  "sort": 100000,
+  "_key": "!items!WytAbil04WytEye"
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Frayed Mana Vein",
+  "type": "component",
+  "img": "systems/stryder/assets/components/mana_veins_g4.png",
+  "system": {
+    "description": "<p>Collapsed and nearly empty mana channels harvested from a weak creature. The residual flow is unstable and barely measurable, but not entirely without use.</p>",
+    "size": 1,
+    "is_consumable": false,
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "grade": "G4",
+    "sell_price": 5
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.3",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  },
+  "_id": "CmpVeinG4",
+  "sort": 1200000,
+  "_key": "!items!CmpVeinG4"
+}

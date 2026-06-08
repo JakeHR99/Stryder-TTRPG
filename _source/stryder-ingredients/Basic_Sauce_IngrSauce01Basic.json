@@ -1,0 +1,19 @@
+{
+  "name": "Basic Sauce",
+  "type": "ingredient",
+  "img": "icons/consumables/drinks/bottle-sauce-red.webp",
+  "system": {
+    "description": "<p>A simple prepared sauce — a reduction of stock, fat, and basic flavourings. Not required for cooking but adds a consistent bonus to the final dish. Most camp cooks keep a bottle in their pack at all times.</p><p><em>Sauce Bonus:</em> Adds its Quality modifier to the final cooking roll as a flat bonus.</p>",
+    "ingredient_type": "sauce",
+    "quality": "good",
+    "quality_modifier": 0,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 2
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrSauce01Basic",
+  "sort": 1100000,
+  "_key": "!items!IngrSauce01Basic"
+}

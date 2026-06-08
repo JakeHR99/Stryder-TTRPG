@@ -3,18 +3,62 @@
   "type": "spirit-beast",
   "img": "icons/svg/aura.svg",
   "system": {
-    "health": { "value": 4, "min": 0, "max": { "value": 4, "mod": 0 } },
-    "mana": { "value": 0, "min": 0, "max": { "value": 0, "mod": 0 } },
-    "stamina": { "value": 0, "min": 0, "max": { "value": 0, "mod": 0 } },
-    "ward": { "value": 0, "min": 0 },
-    "resource1": { "value": 0, "min": 0, "max": 0 },
-    "resource2": { "value": 0, "min": 0, "max": 0 },
-    "initiative": { "bonus": 0 },
-    "dodge": { "bonus": 0 },
-    "evade": { "bonus": 0 },
-    "reflex_tag": { "bonus": 4 },
-    "leap_bonus": { "bonus": 0 },
-    "elixir_sickness": { "value": 0 },
+    "health": {
+      "value": 4,
+      "min": 0,
+      "max": {
+        "value": 4,
+        "mod": 0
+      }
+    },
+    "mana": {
+      "value": 0,
+      "min": 0,
+      "max": {
+        "value": 0,
+        "mod": 0
+      }
+    },
+    "stamina": {
+      "value": 0,
+      "min": 0,
+      "max": {
+        "value": 0,
+        "mod": 0
+      }
+    },
+    "ward": {
+      "value": 0,
+      "min": 0
+    },
+    "resource1": {
+      "value": 0,
+      "min": 0,
+      "max": 0
+    },
+    "resource2": {
+      "value": 0,
+      "min": 0,
+      "max": 0
+    },
+    "initiative": {
+      "bonus": 0
+    },
+    "dodge": {
+      "bonus": 0
+    },
+    "evade": {
+      "bonus": 0
+    },
+    "reflex_tag": {
+      "bonus": 4
+    },
+    "leap_bonus": {
+      "bonus": 0
+    },
+    "elixir_sickness": {
+      "value": 0
+    },
     "physical_reduction": 0,
     "magykal_reduction": 0,
     "physical_resist_mod": 0,
@@ -25,20 +69,38 @@
     "attributes": {
       "creature_size": "0.5",
       "move": {
-        "running": { "value": 0, "expertise": false },
-        "flying": { "value": 10, "expertise": false }
+        "running": {
+          "value": 0,
+          "expertise": false
+        },
+        "flying": {
+          "value": 10,
+          "expertise": false
+        }
       }
     },
-    "abilities": { "primary": "", "defense": "" }
+    "abilities": {
+      "primary": "<p>If the Spirit is within 10 spaces of an ally that must make an Evasion roll, it swoops in and tries to fly them out of the affected area. The ally must still make an Evasion Roll but does not need to expend movement to do so.</p><p><strong>Primary II:</strong> You can evoke Hexes from this Spirit's location. You can also make Sense or Perception Checks from this Spirit's location; you gain a +2 when you do this.</p>",
+      "defense": "<p>This Spirit can use Dodge and Evasion. Its Dodge is equal to <strong>[1d6 + 4]</strong>.</p>"
+    },
+    "description": "<p><strong>Azure Gate — Beast of Freedom</strong></p><p>Small size | 4 Health | 10 Flying Speed</p><p><strong>Primary:</strong> If the Spirit is within 10 spaces of an ally when they make an Evasion roll, it swoops in and flies them clear. The ally still rolls Evasion but does not need to expend Movement to do so.</p><p><strong>Primary II:</strong> You can make Sense or Perception Checks from this Spirit's location. You gain a +2 when doing so.</p><p><strong>Defense:</strong> This Spirit can Dodge and Evade. Its Dodge is equal to [1d6 + 4].</p>"
   },
   "items": [],
   "effects": [],
-  "ownership": { "default": 0 },
+  "ownership": {
+    "default": 0
+  },
   "flags": {},
   "_stats": {
-    "compendiumSource": null, "duplicateSource": null,
-    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
-    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
   },
   "_id": "SprBstAzur03",
   "sort": 300000,

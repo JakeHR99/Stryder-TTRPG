@@ -6,8 +6,13 @@
         <div>
           <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
         </div>
-        <div class="item-type-label">
-          <span>Generic Attack</span>
+        <div class="item-type-label" style="display:flex; align-items:center; gap:8px;">
+          <span>Monster Ability</span>
+          <label style="display:flex; align-items:center; gap:4px; font-size:12px; cursor:pointer; margin:0;">
+            <input type="checkbox" name="system.isAttack" {{checked system.isAttack}} data-dtype="Boolean"
+              style="width:14px; height:14px; cursor:pointer;" />
+            Attack
+          </label>
         </div>
         <div class="resource" style="margin-top: 5px; padding: 0 10px;">
           <label class="resource-label secondary-input">Parent Ability</label>

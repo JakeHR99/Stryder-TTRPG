@@ -1,0 +1,31 @@
+{
+  "folder": "SmnClsFolder01",
+  "name": "The Binding Gates",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 1.</em></p><p>You possess four Gates, each summoning a different Spirit Beast. Summon a Spirit Beast into an unoccupied space within 3 spaces as a 2 Stamina Swift Action, or sacrifice a Rank 4 component to ignore the Stamina cost. All Spirit Beast Abilities are Swift Actions costing you 1 Stamina. The first time a Spirit uses its Primary or Defense Ability it has no Stamina cost. You may only have one Spirit in combat at a time — summoning a second sends the first back through its Gate.</p><p>Spirit Beasts use your Resistances and gain +3 when rolling to Resist [Magykal] abilities.</p><ul><li><strong>Crimson Gate</strong> — Beast of Destruction</li><li><strong>Violet Gate</strong> — Beast of Protection</li><li><strong>Azure Gate</strong> — Beast of Freedom</li><li><strong>Sage Gate</strong> — Beast of Solace</li></ul>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "SmnAbil02BndGt",
+  "sort": 100000,
+  "_key": "!items!SmnAbil02BndGt"
+}

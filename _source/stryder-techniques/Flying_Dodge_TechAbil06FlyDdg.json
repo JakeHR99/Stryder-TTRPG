@@ -1,0 +1,31 @@
+{
+  "folder": "Tech1XPFolder01",
+  "name": "Flying Dodge",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>With consistent practice, you have turned a simple dodge into a method of repositioning.</p><p><strong>Trigger:</strong> You use the Dodge action.</p><p>If your Dodge is successful, you may perform the Leap action at no cost as part of this dodge.</p>",
+    "action_type": "trigger",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 1, "value": 1 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "1× Per Phase",
+    "hasReflexTag": true,
+    "tag1": "reflex",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 1 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil06FlyDdg",
+  "sort": 100000,
+  "_key": "!items!TechAbil06FlyDdg"
+}

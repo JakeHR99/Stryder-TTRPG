@@ -1,0 +1,31 @@
+{
+  "folder": "RngrClsFolder01",
+  "name": "Create Weakness",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p>Choose one of the following effects. If your next Focused attack inflicts a Wound, the target is afflicted with the chosen effect. The effect's strength is based on the attack's quality and lasts until the end of the next Challenger Phase.</p><p><strong>Cripple</strong> — Poor: 0 | Good: -2 Max Movement | Excellent: -5 Max Movement</p><p><strong>Weaken</strong> — Poor: 0 | Good: -1 Attack Roll | Excellent: -2 Attack Roll</p><p><strong>Drain</strong> — Poor: 0 | Good: -1 Stamina | Excellent: -1 Stamina</p><p><strong>Dispatch</strong> — Poor: 0 | Good: +3 additional damage | Excellent: +5 additional damage</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "targeted",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RngrCls01CrWk",
+  "sort": 100000,
+  "_key": "!items!RngrCls01CrWk"
+}

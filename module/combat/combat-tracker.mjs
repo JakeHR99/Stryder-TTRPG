@@ -26,10 +26,20 @@ export class StryderCombatTracker extends foundry.applications.sidebar.tabs.Comb
   };
 
   /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const combat = this.viewed;
+    context.initiativePhase = combat
+      ? (combat.getFlag(SYSTEM_ID, 'initiativePhase') ?? false)
+      : false;
+    return context;
+  }
+
+  /** @override */
   async _prepareTrackerContext(context, options) {
     const combat = this.viewed;
     if (!combat) return;
-    
+
     await super._prepareTrackerContext(context, options);
 
     // Add our faction-based data
@@ -122,6 +132,11 @@ export class StryderCombatTracker extends foundry.applications.sidebar.tabs.Comb
     switch (target.dataset.action) {
       case 'toggleDefeated': {
         combatant.toggleDefeated();
+        break;
+      }
+      case 'rollEnemyInit': {
+        if (!game.user.isGM) break;
+        this.viewed.rollEnemyInitiative(combatant.id);
         break;
       }
     }

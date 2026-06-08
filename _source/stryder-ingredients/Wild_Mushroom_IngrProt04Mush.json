@@ -1,0 +1,19 @@
+{
+  "name": "Wild Mushroom",
+  "type": "ingredient",
+  "img": "icons/consumables/plants/mushroom-spotted-tan.webp",
+  "system": {
+    "description": "<p>Mushrooms foraged from forest floors or cave systems. Earthy, umami-rich, and versatile — equally at home as a base or protein substitute. Must be properly identified before use.</p>",
+    "ingredient_type": "protein",
+    "quality": "good",
+    "quality_modifier": 0,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 2
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrProt04Mush",
+  "sort": 700000,
+  "_key": "!items!IngrProt04Mush"
+}

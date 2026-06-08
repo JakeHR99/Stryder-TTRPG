@@ -1,0 +1,31 @@
+{
+  "folder": "Tech1XPFolder01",
+  "name": "Trust the Plan",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><strong>⚠️ This Technique's description is incomplete in the v3.5 rulebook PDF.</strong></p><p>You've come to thrive not in the heat of battle, but in the stillness of your mind.</p><p>Select a target and choose a Health percentage: 75%, 50%, or 25%. Then choose any one of your Party members.</p><p><em>[Remainder of effect missing from source — requires manual completion from the game designer.]</em></p>",
+    "action_type": "focused",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 2,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": { "stryder": { "xpCost": 1 } },
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "TechAbil19TrstPl",
+  "sort": 100000,
+  "_key": "!items!TechAbil19TrstPl"
+}

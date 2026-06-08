@@ -1,27 +1,44 @@
 {
-  "folder": "LrdlyRylFolder01",
+  "folder": "LrdlyWldFolder01",
   "name": "Monkey Paw",
   "type": "action",
   "img": "icons/svg/aura.svg",
   "system": {
     "description": "<p>Your Lordling launches themselves forward up to 3 spaces, with incredible momentum as they spin around and slam a creature with a fierce strike. They deal 2x Spirit and knock them back 3 squares.</p>",
     "action_type": "focused",
-    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
-    "limit": { "max": 0, "value": 0 },
+    "roll": {
+      "diceBonus": 0,
+      "diceNum": 2,
+      "diceSize": 6
+    },
+    "limit": {
+      "max": 0,
+      "value": 0
+    },
     "stamina_cost": 1,
     "mana_cost": 0,
     "tactics_cost": 2,
     "other_restrictions": "Focused: 2 TP, 1 Stamina | Swift: 4 TP, 2 Stamina",
     "hasReflexTag": false,
-    "tag1": "", "tag2": "", "tag3": ""
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
   },
   "effects": [],
-  "ownership": { "default": 0 },
+  "ownership": {
+    "default": 0
+  },
   "flags": {},
   "_stats": {
-    "compendiumSource": null, "duplicateSource": null,
-    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
-    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "stryder",
+    "systemVersion": "0.2.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "exportSource": null
   },
   "_id": "LrdRylAbil03MnPw",
   "sort": 300000,

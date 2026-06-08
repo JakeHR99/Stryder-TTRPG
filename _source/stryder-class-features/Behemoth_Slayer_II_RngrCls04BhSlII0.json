@@ -1,0 +1,31 @@
+{
+  "folder": "RngrClsFolder01",
+  "name": "Behemoth Slayer II",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Gained at Level 12.</em></p><p>Behemoth Slayer gains two new Wound amounts that grant you corresponding benefits:</p><ul><li><strong>15 Wounds:</strong> Whenever you inflict a Wound, inflict one additional Wound.</li><li><strong>21 Wounds:</strong> All Wounds you inflict are Deep Wounds, and all existing Wounds the monster had become Deep Wounds.</li></ul>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "persistent",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "RngrCls04BhSlII0",
+  "sort": 100000,
+  "_key": "!items!RngrCls04BhSlII0"
+}

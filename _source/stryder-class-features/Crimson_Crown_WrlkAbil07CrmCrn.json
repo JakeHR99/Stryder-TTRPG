@@ -1,0 +1,31 @@
+{
+  "folder": "WrlkFeatFolder01",
+  "name": "Crimson Crown",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Gained at Level 8.</em></p><p>Cost: 3 Bloodloss (Maximum Health)</p><p>You manifest a crown above your head. It lasts for 5 Rounds or until the end of the engagement. While active, for every 1 Mana you expend, the crown gains one charge (a bloody gemstone). You can expend gemstones in one of three ways:</p><ul><li>Before making an attack roll: +1 per gemstone to the roll.</li><li>Dealing damage: +3 per gemstone to any source of damage you inflict.</li><li>Before an ability that requires the target to roll against your Potency: raise your Potency by 1 per gemstone (max +3).</li></ul><p>The crown vanishes early if you enter Last Breaths.</p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "WrlkAbil07CrmCrn",
+  "sort": 100000,
+  "_key": "!items!WrlkAbil07CrmCrn"
+}

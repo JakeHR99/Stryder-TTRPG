@@ -1,0 +1,19 @@
+{
+  "name": "Meat",
+  "type": "ingredient",
+  "img": "icons/consumables/meat/steak-raw-beef-red.webp",
+  "system": {
+    "description": "<p>Raw cuts of animal meat — game, livestock, or fowl. A hearty protein that forms the centrepiece of many camp meals. Quality depends on the freshness of the cut and the skill of the hunter who procured it.</p>",
+    "ingredient_type": "protein",
+    "quality": "good",
+    "quality_modifier": 0,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 2
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrProt01Meat",
+  "sort": 400000,
+  "_key": "!items!IngrProt01Meat"
+}

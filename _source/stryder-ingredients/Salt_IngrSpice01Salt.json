@@ -1,0 +1,19 @@
+{
+  "name": "Salt",
+  "type": "ingredient",
+  "img": "icons/commodities/materials/salt-white.webp",
+  "system": {
+    "description": "<p>A mineral seasoning essential to any cook's pack. Enhances the natural flavour of all other ingredients and acts as a preservative. Sourced from salt flats, mines, or coastal trade.</p>",
+    "ingredient_type": "spice",
+    "quality": "good",
+    "quality_modifier": 0,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 1
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrSpice01Salt",
+  "sort": 800000,
+  "_key": "!items!IngrSpice01Salt"
+}

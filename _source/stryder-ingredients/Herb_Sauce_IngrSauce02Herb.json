@@ -1,0 +1,19 @@
+{
+  "name": "Herb Sauce",
+  "type": "ingredient",
+  "img": "icons/consumables/drinks/bottle-sauce-green.webp",
+  "system": {
+    "description": "<p>A fragrant sauce infused with fresh or dried herbs. More complex than a basic sauce and commands a higher price, but rewards skilled cooks with a superior bonus to the final dish quality.</p><p><em>Sauce Bonus:</em> Adds its Quality modifier to the final cooking roll as a flat bonus.</p>",
+    "ingredient_type": "sauce",
+    "quality": "good",
+    "quality_modifier": 0,
+    "is_enchanted": false,
+    "enchant_type": "",
+    "sell_price": 3
+  },
+  "effects": [], "ownership": { "default": 0 }, "flags": {},
+  "_stats": { "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.1", "createdTime": null, "modifiedTime": null, "lastModifiedBy": null },
+  "_id": "IngrSauce02Herb",
+  "sort": 1200000,
+  "_key": "!items!IngrSauce02Herb"
+}

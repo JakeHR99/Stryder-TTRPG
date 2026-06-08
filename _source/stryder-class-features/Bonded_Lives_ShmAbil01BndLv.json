@@ -1,0 +1,31 @@
+{
+  "folder": "ShmClsFolder01",
+  "name": "Bonded Lives",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 1.</em></p><p>Your Health starts at 6, and you gain 2 Health every time you gain a level.</p><p>Your Lordling's maximum Health is equivalent to yours (unaffected by items or Abilities; Techniques and Stats do increase Lordling max Health). Your Lordling starts with 10 Stat Points across Spirit, Agility, Grit, and Will (max 5 each). Spirit determines damage, Agility improves Dodge/Evasion, Grit raises Physical Resistance, Will raises Magykal Resistance.</p><p>Lordlings have 5 Talent Points in Physical Talents. Social Talent and Sense rolls use the Shaman's own values. Your Lordling has Movement equal to yours. Lordlings cannot benefit from Elixirs. Your telepathic bond has a range of 6 Spaces. You determine your Lordling's appearance and personality.</p>",
+    "action_type": "passive",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 0,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "ShmAbil01BndLv",
+  "sort": 100000,
+  "_key": "!items!ShmAbil01BndLv"
+}

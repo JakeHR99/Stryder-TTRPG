@@ -115,6 +115,21 @@ export class StryderActor extends Actor {
     this._prepareNpcData(actorData);
     this._prepareFamiliarData(actorData);
     this._preparePetData(actorData);
+    this._prepareSpiritBeastData(actorData);
+  }
+
+  /**
+   * Prepare Spirit Beast type specific data.
+   * Flattens health.max from the template's {value, mod} object into a
+   * plain number (like characters get after derivation) so the sheet's
+   * numeric bindings and progress bar work.
+   */
+  _prepareSpiritBeastData(actorData) {
+    if (actorData.type !== 'spirit-beast') return;
+    const health = actorData.system.health;
+    if (health && typeof health.max === 'object' && health.max !== null) {
+      health.max = Number(health.max.value ?? 0) + Number(health.max.mod ?? 0);
+    }
   }
 
   /**
@@ -395,6 +410,11 @@ export class StryderActor extends Actor {
 		}
 	  }
 	  
+	  // Add Warrior Augmentation IV DR bonus (stored as a flag)
+	  const augDR = this.getFlag('stryder', 'augDamageReduction') ?? 0;
+	  physicalReductionBonus += augDR;
+	  magykalReductionBonus  += augDR;
+
 	  // Update the actor's reduction values
 	  system.physical_reduction = physicalReductionBonus;
 	  system.magykal_reduction = magykalReductionBonus;
@@ -566,8 +586,5 @@ export class StryderActor extends Actor {
    */
   _getFamiliarRollData(data) {
     if (this.type !== 'familiar') return;
-
-    // Process additional familiar data here.
-    // For now, familiars don't need special roll data processing beyond what's in the base system
   }
 }

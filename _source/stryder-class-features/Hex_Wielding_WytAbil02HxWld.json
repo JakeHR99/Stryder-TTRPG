@@ -1,0 +1,31 @@
+{
+  "folder": "WytFeatFolder01",
+  "name": "Hex Wielding",
+  "type": "action",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "description": "<p><em>Level 1. Once per Player Phase.</em></p><p>Select a target; they roll Magykal Resistance. On failure they suffer the chosen Hex's effect until the start of the next Player Phase.</p><p><strong>Starting Hexes (Level 1):</strong> Sicken, Bind, Deny</p><p><strong>Level 4 Hexes:</strong> Mutilate, Enrage, Panic</p><p><strong>Level 8 Hexes:</strong> Surge, Rise, Give</p><p><strong>Level 12 Hexes:</strong> Addle, Suffer, Delude</p><p><em>See Wytch Hexes compendium folder for individual Hex entries.</em></p>",
+    "action_type": "swift",
+    "roll": { "diceBonus": 0, "diceNum": 2, "diceSize": 6 },
+    "limit": { "max": 0, "value": 0 },
+    "stamina_cost": 2,
+    "mana_cost": 0,
+    "tactics_cost": 0,
+    "other_restrictions": "",
+    "hasReflexTag": false,
+    "tag1": "",
+    "tag2": "",
+    "tag3": ""
+  },
+  "effects": [],
+  "ownership": { "default": 0 },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null, "duplicateSource": null,
+    "coreVersion": "13.351", "systemId": "stryder", "systemVersion": "0.2.0",
+    "createdTime": null, "modifiedTime": null, "lastModifiedBy": null, "exportSource": null
+  },
+  "_id": "WytAbil02HxWld",
+  "sort": 100000,
+  "_key": "!items!WytAbil02HxWld"
+}
