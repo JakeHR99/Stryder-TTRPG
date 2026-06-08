@@ -2753,6 +2753,7 @@ Hooks.on('ready', () => {
 
   // ── Open World: detect party token moving to a new hex ──
   Hooks.on('updateToken', async (tokenDoc, changes, options, userId) => {
+    if (!game.user.isGM) return; // only process once, on the GM's client
     if (!('x' in changes) && !('y' in changes)) return;
     const scene = tokenDoc.parent;
     if (!scene?.getFlag('stryder', 'isOpenWorld')) return;
