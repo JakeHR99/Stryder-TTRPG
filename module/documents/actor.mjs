@@ -91,6 +91,18 @@ export class StryderActor extends Actor {
 		  }
 		}, data);
 	  }
+	  // Party actor — always defaults to the animated idle pawn
+	  if (data.type === 'party') {
+		data = foundry.utils.mergeObject({
+		  prototypeToken: {
+			actorLink: true,
+			texture: { src: 'systems/stryder/assets/tokens/pawn-idle.webm' },
+			width: 1,
+			height: 1,
+			disposition: CONST.TOKEN_DISPOSITIONS.NEUTRAL
+		  }
+		}, data);
+	  }
 	  
 	  return super.create(data, options);
 	}
@@ -227,7 +239,7 @@ export class StryderActor extends Actor {
 	  const baseHP = system.class?.base_hp || 0;
 	  const hpPerLevel = system.class?.hp_per_level || 0;
 	  const gritValue = system.abilities?.Grit?.value || 0;
-	  const hpMod = system.health?.max?.mod || 0;
+	  const hpMod = system.health?.bonus || 0;
 	  
 	  // Get burning and bloodloss health reduction from flags
 	  const burningReduction = actorData.flags[SYSTEM_ID]?.burningHealthReduction || 0;
@@ -474,7 +486,7 @@ export class StryderActor extends Actor {
   _calculateFamiliarMaxHP(actorData) {
     const system = actorData.system;
     const baseHP = system.familiar?.base_hp || 0;
-    const hpMod = system.health?.max?.mod || 0;
+    const hpMod = system.health?.bonus || 0;
     
     // Get burning and bloodloss health reduction from flags
     const burningReduction = actorData.flags[SYSTEM_ID]?.burningHealthReduction || 0;

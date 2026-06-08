@@ -1828,6 +1828,7 @@ export class StryderActorSheet extends ActorSheet {
       context.gritHpBonus          = grit * gritMilestones;
       context.gritMilestonesReached = gritMilestones;
 
+
       // Aspect active flags for template conditionals
       const _activeAspect = actorData.flags?.stryder?.activeAspect ?? '';
       context.isBrutalityActive = _activeAspect.includes('Brutality');
@@ -2141,7 +2142,8 @@ export class StryderActorSheet extends ActorSheet {
     const augHealthBonus  = actorData.flags?.stryder?.augHealthBonus  ?? 0;
     const augStaminaBonus = actorData.flags?.stryder?.augStaminaBonus ?? 0;
 
-    const maxHealth  = baseHp + (hpPerLevel * (clamped - 1)) + gritHpBonus + augHealthBonus;
+    const healthBonus = actorData.system.health?.bonus ?? 0;
+    const maxHealth  = baseHp + (hpPerLevel * (clamped - 1)) + gritHpBonus + augHealthBonus + healthBonus;
     const maxStamina = (STRYDER_STAMINA_BY_LEVEL[clamped] ?? 3) + augStaminaBonus;
     const maxMana    = STRYDER_MANA_BY_LEVEL[clamped]    ?? 4;
 
@@ -4057,9 +4059,9 @@ export class StryderActorSheet extends ActorSheet {
 			}
 
 		  case 'resetHpMax': {
-			await this._syncComputedStats();
-			ui.notifications.info(`${this.actor.name}: HP/MP/Stamina maximums reset to calculated values.`);
-			return; // skip shared update/message block
+			await this.actor.update({ 'system.health.bonus': 0 });
+			ui.notifications.info(`${this.actor.name}: Bonus HP removed.`);
+			return;
 		  }
 
 		  case 'trustIncrease': {

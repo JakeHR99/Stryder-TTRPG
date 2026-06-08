@@ -279,8 +279,11 @@
 								<div class="jrpg-res-compact-inputs">
 									<input type="number" name="system.health.value" value="{{system.health.value}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
 									<span class="jrpg-char-divider">/</span>
-									<input type="number" name="system.health.max" value="{{system.health.max}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
-									<button type="button" class="jrpg-reset-btn resource-button" data-action="resetHpMax" title="Reset HP Max to class formula">↺</button>
+									<span class="jrpg-res-max-display hp-label" title="Base max HP (class + grit)">{{system.health.max}}</span>
+									<span class="jrpg-res-bonus-sep">+</span>
+									<input type="number" name="system.health.bonus" value="{{system.health.bonus}}" data-dtype="Number"
+										class="jrpg-char-input jrpg-res-bonus-input" placeholder="0" title="Bonus max HP" min="0" />
+									<button type="button" class="jrpg-reset-btn resource-button" data-action="resetHpMax" title="Remove bonus HP">↺</button>
 								</div>
 								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar hp-fill" style="width:{{system.health.value}}%"></div></div>
 							</div>

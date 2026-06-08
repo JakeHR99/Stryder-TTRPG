@@ -9,7 +9,8 @@
           "max": {
             "value": 8,
             "mod": 0
-          }
+          },
+          "bonus": 0
         },
         "mana": {
           "value": 3,

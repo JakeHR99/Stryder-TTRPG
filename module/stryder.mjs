@@ -2912,6 +2912,31 @@ Hooks.once('ready', function() {
 });
 
 /* -------------------------------------------- */
+/*  Party Actor — Auto-assign animated token    */
+/* -------------------------------------------- */
+
+Hooks.once('ready', async () => {
+  if (!game.user.isGM) return;
+  const DEFAULT = 'systems/stryder/assets/tokens/pawn-idle.webm';
+  const SYSTEM_TOKEN_PATH = 'systems/stryder/assets/tokens/';
+
+  for (const actor of game.actors) {
+    if (actor.type !== 'party') continue;
+    const src = actor.prototypeToken?.texture?.src ?? '';
+    if (src.includes(SYSTEM_TOKEN_PATH)) continue; // already using system token
+    await actor.update({ 'prototypeToken.texture.src': DEFAULT });
+    // Also update any placed token for this actor that's using a non-system image
+    for (const scene of game.scenes) {
+      for (const tokenDoc of scene.tokens) {
+        if (tokenDoc.actorId !== actor.id) continue;
+        if (tokenDoc.texture?.src?.includes(SYSTEM_TOKEN_PATH)) continue;
+        await tokenDoc.update({ 'texture.src': DEFAULT });
+      }
+    }
+  }
+});
+
+/* -------------------------------------------- */
 /*  Monster Loot — Token HUD Button             */
 /* -------------------------------------------- */
 
