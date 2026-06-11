@@ -1011,7 +1011,8 @@ export class StryderActorSheet extends ActorSheet {
         if (a.tag !== b.tag) return a.tag === 'Mortal' ? -1 : 1;
         return a.name.localeCompare(b.name);
       });
-      const cfById = Object.fromEntries(cfDocs.map(d => [d._id, d]));
+      const cfById   = Object.fromEntries(cfDocs.map(d => [d._id, d]));
+      const cfByName = Object.fromEntries(cfDocs.map(d => [d.name, d]));
       // Ranger Techniques — identified by known IDs, folder name, or explicit flag.
       // Checking folder?.name alone is unreliable for compendium docs in v13 (folder may be a string ID).
       const RANGER_TECH_IDS = new Set([
@@ -1126,7 +1127,7 @@ export class StryderActorSheet extends ActorSheet {
               inner = `<div class="gw-aug-choices" data-flag-key="${flagKey}" data-feat-id="${feat.id}">${opts}<button class="gw-btn gw-btn--confirm" data-feat-id="${feat.id}" data-flag-key="${flagKey}">Confirm Augment</button></div>`;
             } else {
               // Fallback: parse <li> from compendium item description
-              const doc  = feat.id ? cfById[feat.id] : null;
+              const doc  = (feat.id ? cfById[feat.id] : null) ?? cfByName[feat.name] ?? null;
               const desc = doc?.system?.description ?? '';
               const opts = [...desc.matchAll(/<li>(.*?)<\/li>/gs)].map((m, i) =>
                 `<div class="gw-aug-opt" data-opt="${i}"><span class="gw-aug-dot"></span><span class="gw-aug-text">${m[1].replace(/<[^>]+>/g,'')}</span></div>`
@@ -1259,7 +1260,7 @@ export class StryderActorSheet extends ActorSheet {
         }
 
         // Standard feature — class path features are automatically granted at level.
-        const doc       = feat.id ? (cfById[feat.id] ?? null) : null;
+        const doc       = (feat.id ? cfById[feat.id] : null) ?? cfByName[feat.name] ?? null;
         const granted   = level >= milestoneLevel;
         const cls       = granted ? 'gw-feat--owned' : 'gw-feat--locked';
         const pip       = granted
@@ -1553,7 +1554,9 @@ export class StryderActorSheet extends ActorSheet {
           const slotBlock = btn.closest('.gw-lordly-slot');
           const checked = slotBlock?.querySelector(`input[name="lordly-pick-${slotIdx}"]:checked`);
           if (!checked?.value) { ui.notifications.warn('Select a Lordly Aspect Feature first.'); return; }
-          const doc = cfById[checked.value];
+          const selectedId = checked.value;
+          const selectedLaf = Object.values(LORDLY_ASPECT_FEATURES).flat().find(f => f.id === selectedId);
+          const doc = cfById[selectedId] ?? (selectedLaf ? cfByName[selectedLaf.name] : null);
           if (!doc) { ui.notifications.warn('Feature not found in compendium.'); return; }
           await actor.setFlag('stryder', `lordlyFeature_${slotIdx}`, doc.name);
           const itemData = doc.toObject();

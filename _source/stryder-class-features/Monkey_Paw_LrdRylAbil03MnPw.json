@@ -4,7 +4,7 @@
   "type": "action",
   "img": "icons/svg/aura.svg",
   "system": {
-    "description": "<p>Your Lordling launches themselves forward up to 3 spaces, with incredible momentum as they spin around and slam a creature with a fierce strike. They deal 2x Spirit and knock them back 3 squares.</p>",
+    "description": "<p>Your Lordling grabs a creature within 1 Space and hurls them a number of spaces equal to the Lordling's Strength, dealing damage equal to <strong>2× Spirit</strong> and knocking them back <strong>3 squares</strong>. The target must pass an <strong>Agility Check</strong> or become <strong>Shocked</strong>.</p>",
     "action_type": "focused",
     "roll": {
       "diceBonus": 0,
