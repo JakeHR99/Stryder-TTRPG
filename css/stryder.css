@@ -6569,7 +6569,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 
 /* ============================================================
-   JRPG SHEET — GRANBLUE FANTASY CLONE THEME
+   CHARACTER SHEET — definitive (Phase 1B)
    ============================================================ */
 
 /* Sheet window reset */
@@ -6584,18 +6584,10 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: #e8f4ff;
 }
 
-/* Sky background — Granblue blue */
+/* Sky background — position and stacking context */
 .jrpg-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,
-    #1a4a8a 0%,
-    #2a6ab8 20%,
-    #4a90d9 50%,
-    #7ab8f0 75%,
-    #b8d8f8 90%,
-    #deeefa 100%
-  );
   z-index: 0;
 }
 
@@ -6980,18 +6972,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
    JRPG POLISH PASS 2 — sky, portrait, parchment overrides
    ============================================================ */
 
-/* Brighter Granblue-style daytime sky */
-.jrpg-bg {
-  background: linear-gradient(180deg,
-    #3a7abf 0%,
-    #5a9fd4 20%,
-    #80bcde 45%,
-    #aad4ee 68%,
-    #cce4f4 84%,
-    #e8f4fc 100%
-  ) !important;
-}
-
 /* More transparent panels so sky breathes through */
 .jrpg-sidebar {
   background: rgba(6, 12, 30, 0.70) !important;
@@ -6999,21 +6979,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 .jrpg-content {
   background: rgba(6, 12, 30, 0.65) !important;
-  padding-left: 260px !important;
-}
-
-/* Portrait: centered between panels, large, flush to bottom */
-.jrpg-portrait-zone {
-  left: 195px !important;
-  width: 340px !important;
-  height: 100% !important;
-  bottom: 0 !important;
-  z-index: 20 !important;
-}
-
-.jrpg-portrait-frame {
-  width: 320px !important;
-  height: 520px !important;
 }
 
 .jrpg-portrait-frame img.profile-img {
@@ -8083,21 +8048,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
    ANIMATED TWILIGHT BACKGROUND
    ============================================================ */
 
-/* Twilight sky — deep violet -> purple -> rose -> amber -> gold */
 .jrpg-bg {
-  background: linear-gradient(180deg,
-    #0d0325  0%,
-    #1a0535  6%,
-    #2d0d5a  16%,
-    #5c1a7a  29%,
-    #8b2575  41%,
-    #c04060  53%,
-    #e06840  64%,
-    #f0952a  73%,
-    #f5c840  83%,
-    #fae090  91%,
-    #fef5c8  100%
-  ) !important;
   overflow: hidden;
   animation: skyBreath 18s ease-in-out infinite alternate;
 }
@@ -8219,29 +8170,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   100% { transform: translateY(-60px) scale(0.5); opacity: 0;   }
 }
 
-/* Sub-screen dark background — twilight palette instead of flat blue */
-.jrpg-sub-screen {
-  background: linear-gradient(180deg, #0d0520 0%, #0d1530 100%) !important;
-}
-
-/* Night sky top — darken the upper gradient stops */
-.jrpg-bg {
-  background: linear-gradient(180deg,
-    #000005  0%,
-    #050010  5%,
-    #0a0022  13%,
-    #180840  23%,
-    #3d1265  34%,
-    #7a2080  44%,
-    #b83868  54%,
-    #e06840  64%,
-    #f0952a  73%,
-    #f5c840  83%,
-    #fae090  91%,
-    #fef5c8  100%
-  ) !important;
-}
-
 /* ============================================================
    FLOATING CHEVRON NAV — remove sidebar panel, fix alignment
    ============================================================ */
@@ -8282,61 +8210,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   gap: 5px !important;
 }
 
-/* All menu buttons: reset stagger, apply chevron shape */
-.jrpg-menu-btn {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 10px 32px 10px 14px !important;
-  box-sizing: border-box !important;
-  border: none !important;
-  outline: none !important;
-  cursor: pointer !important;
-  position: relative !important;
-  text-align: left !important;
-
-  /* Chevron arrow pointing right */
-  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 50%, calc(100% - 22px) 100%, 0 100%) !important;
-
-  /* Dark twilight fill — lighter strip at top simulates bevel */
-  background: linear-gradient(180deg,
-    rgba(60, 20, 80, 0.72) 0%,
-    rgba(20,  8, 45, 0.78) 18%,
-    rgba(12,  4, 30, 0.82) 100%
-  ) !important;
-
-  /* Typography */
-  color: rgba(210, 185, 255, 0.88) !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  letter-spacing: 1.5px !important;
-  text-transform: uppercase !important;
-
-  transition: background 0.15s ease, color 0.15s ease !important;
-}
-
-.jrpg-menu-btn:hover {
-  background: linear-gradient(180deg,
-    rgba(140, 70, 180, 0.70) 0%,
-    rgba( 80, 30, 130, 0.78) 18%,
-    rgba( 50, 15,  90, 0.85) 100%
-  ) !important;
-  color: #ffffff !important;
-}
-
-.jrpg-menu-btn .jrpg-nav-icon-box {
-  border-color: rgba(180, 150, 255, 0.35) !important;
-  background: rgba(255, 255, 255, 0.07) !important;
-  flex-shrink: 0 !important;
-}
-
-.jrpg-menu-btn:hover .jrpg-nav-icon-box {
-  border-color: rgba(220, 190, 255, 0.6) !important;
-  background: rgba(255, 255, 255, 0.14) !important;
-}
-
 /* Resource section and identity strip — also transparent */
 .jrpg-resources {
   background: transparent !important;
@@ -8345,139 +8218,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 .jrpg-identity {
   border-top: 1px solid rgba(200, 160, 255, 0.12) !important;
-}
-
-/* Chevron nav — silver/grey transparent style */
-.jrpg-menu-btn {
-  background: linear-gradient(180deg,
-    rgba(180, 180, 200, 0.12) 0%,
-    rgba(120, 120, 150, 0.10) 50%,
-    rgba( 80,  80, 110, 0.13) 100%
-  ) !important;
-  color: rgba(210, 215, 230, 0.80) !important;
-  text-shadow:
-    0 0 8px rgba(200, 210, 255, 0.30),
-    0 0 20px rgba(180, 190, 255, 0.15) !important;
-}
-
-.jrpg-menu-btn:hover {
-  background: linear-gradient(180deg,
-    rgba(200, 200, 220, 0.22) 0%,
-    rgba(150, 150, 180, 0.18) 50%,
-    rgba(100, 100, 140, 0.22) 100%
-  ) !important;
-  color: rgba(240, 242, 255, 0.95) !important;
-  text-shadow:
-    0 0 10px rgba(210, 220, 255, 0.50),
-    0 0 28px rgba(180, 195, 255, 0.25) !important;
-}
-
-.jrpg-menu-btn .jrpg-nav-icon-box {
-  border-color: rgba(200, 210, 240, 0.25) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-}
-
-.jrpg-menu-btn:hover .jrpg-nav-icon-box {
-  border-color: rgba(210, 220, 255, 0.45) !important;
-  background: rgba(255, 255, 255, 0.10) !important;
-}
-
-/* Chevron nav — darker fill, brighter text */
-.jrpg-menu-btn {
-  background: linear-gradient(180deg,
-    rgba(30, 20, 50, 0.65) 0%,
-    rgba(20, 12, 38, 0.72) 50%,
-    rgba(12,  6, 28, 0.78) 100%
-  ) !important;
-  color: rgba(230, 232, 248, 0.95) !important;
-  text-shadow:
-    0 0 10px rgba(210, 220, 255, 0.50),
-    0 0 24px rgba(180, 195, 255, 0.25) !important;
-}
-
-.jrpg-menu-btn:hover {
-  background: linear-gradient(180deg,
-    rgba(70, 40, 110, 0.75) 0%,
-    rgba(45, 22,  80, 0.82) 50%,
-    rgba(28, 10,  55, 0.88) 100%
-  ) !important;
-  color: #ffffff !important;
-  text-shadow:
-    0 0 10px rgba(220, 228, 255, 0.70),
-    0 0 30px rgba(190, 205, 255, 0.40) !important;
-}
-
-/* ============================================================
-   CHEVRON DIRECTION FIX — point left, fade right, no stagger
-   ============================================================ */
-
-/* Reset any stagger from previous rules */
-.jrpg-nav .jrpg-menu-btn {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  width: 100% !important;
-}
-
-/* Redefine button — chevron points LEFT, fades on right */
-.jrpg-menu-btn {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  width: 100% !important;
-  margin: 0 !important;
-  /* Left padding pushes content past the point; right padding lets fade breathe */
-  padding: 11px 24px 11px 28px !important;
-  box-sizing: border-box !important;
-  border: none !important;
-  outline: none !important;
-  cursor: pointer !important;
-  position: relative !important;
-  text-align: left !important;
-
-  /* Point on the LEFT, square on the right */
-  clip-path: polygon(22px 0%, 100% 0%, 100% 100%, 22px 100%, 0% 50%) !important;
-
-  /* Solid at the point, fades to transparent on the right */
-  background: linear-gradient(90deg,
-    rgba(28, 10, 58, 0.92)  0%,
-    rgba(28, 10, 58, 0.88) 35%,
-    rgba(28, 10, 58, 0.60) 65%,
-    rgba(28, 10, 58, 0.18) 88%,
-    transparent            100%
-  ) !important;
-
-  color: rgba(215, 190, 255, 0.90) !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  letter-spacing: 1.5px !important;
-  text-transform: uppercase !important;
-  transition: background 0.15s ease, color 0.15s ease !important;
-}
-
-.jrpg-menu-btn:hover {
-  background: linear-gradient(90deg,
-    rgba(110, 45, 160, 0.92)  0%,
-    rgba(110, 45, 160, 0.80) 35%,
-    rgba(110, 45, 160, 0.45) 65%,
-    rgba(110, 45, 160, 0.12) 88%,
-    transparent              100%
-  ) !important;
-  color: #ffffff !important;
-}
-
-/* Icon box — fixed width so text always starts at the same x */
-.jrpg-menu-btn .jrpg-nav-icon-box {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  border-color: rgba(180, 150, 255, 0.38) !important;
-  background: rgba(255, 255, 255, 0.07) !important;
-  flex-shrink: 0 !important;
-}
-
-.jrpg-menu-btn:hover .jrpg-nav-icon-box {
-  border-color: rgba(220, 190, 255, 0.65) !important;
-  background: rgba(255, 255, 255, 0.14) !important;
 }
 
 /* ============================================================
