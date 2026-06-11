@@ -1814,6 +1814,19 @@ export class StryderActorSheet extends ActorSheet {
         }
       }
 
+      // H3 migration: stamp isLordlyFeature on embedded items that match pack names
+      // but were created before the flag-stamping code existed in the Growth panel.
+      {
+        const { LORDLY_TACTIC_NAMES } = await import('../abilities/shaman-abilities.mjs');
+        const unstamped = this.actor.items.filter(i =>
+          i.type === 'action' && LORDLY_TACTIC_NAMES.includes(i.name)
+          && !i.flags?.stryder?.isLordlyFeature
+        );
+        for (const it of unstamped) {
+          it.setFlag('stryder', 'isLordlyFeature', true).catch(() => {});
+        }
+      }
+
       context.tpPct = _pct(actorData.system.tactics?.value, actorData.system.tactics?.max);
       context.linkedCharacterName = linkedId ? (game.actors.get(linkedId)?.name ?? '') : '';
       context.characters = game.actors.filter(a => a.type === 'character').map(a => ({ id: a.id, name: a.name }));

@@ -2222,7 +2222,17 @@ export class StryderItem extends Item {
 		  if (item.flags?.stryder?.isLordlyFeature) {
 			const { LORDLY_TACTIC_NAMES, handleLordlyFeature } = await import('../abilities/shaman-abilities.mjs');
 			if (LORDLY_TACTIC_NAMES.includes(item.name)) {
-			  const actor = item.actor || game.actors.get(speaker.actor);
+			  let actor = item.actor || game.actors.get(speaker.actor);
+			  // When invoked from the Lordling sheet, cost helpers expect the linked Shaman.
+			  if (actor?.type === 'lordling') {
+				const shaman = actor.system.linkedCharacterId
+				  ? game.actors.get(actor.system.linkedCharacterId) : null;
+				if (!shaman) {
+				  ui.notifications.warn('No linked Shaman found — cannot resolve Tactic costs.');
+				  return;
+				}
+				actor = shaman;
+			  }
 			  return await handleLordlyFeature(item, actor, speaker, rollMode);
 			}
 		  }
