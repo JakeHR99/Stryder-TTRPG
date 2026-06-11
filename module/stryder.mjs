@@ -117,16 +117,20 @@ Hooks.once('init', async function () {
   // Challenges are now launched from the Party Sheet — no sidebar injection needed.
 
 	Hooks.on('updateActor', async (actor, updateData, options, userId) => {
+	  // Only the active GM runs this — Actor.updateDocuments requires GM permissions
+	  // and running it on every client causes permission errors for non-owners.
+	  if (game.user.id !== game.users.activeGM?.id) return;
+
 	  // Check if this is a character whose health.max was updated
-	  if (actor.type === 'character' && 
-		  (updateData.system?.health?.max !== undefined || 
+	  if (actor.type === 'character' &&
+		  (updateData.system?.health?.max !== undefined ||
 		   updateData.system?.attributes?.mastery !== undefined)) {
 		// Find all lordlings linked to this character
-		const lordlings = game.actors.filter(a => 
-		  a.type === 'lordling' && 
+		const lordlings = game.actors.filter(a =>
+		  a.type === 'lordling' &&
 		  a.system?.linkedCharacterId === actor.id
 		);
-		
+
 		// Prepare updates
 		const updates = lordlings.map(lordling => {
 		  const update = {

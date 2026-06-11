@@ -16,8 +16,8 @@ const STRYDER_STAMINA_BY_LEVEL = {
 
 const STRYDER_MANA_BY_LEVEL = {
   1:4,  2:4,  3:5,  4:5,  5:6,
-  6:6,  7:7,  8:7,  9:8,  10:8,
-  11:9, 12:9, 13:10, 14:11, 15:12
+  6:6,  7:7,  8:8,  9:8,  10:9,
+  11:10, 12:11, 13:11, 14:12, 15:12
 };
 
 const STRYDER_CLASS_DATA = {
@@ -203,7 +203,7 @@ const CLASS_AUG_OPTIONS = {
   WrrAbil05WaIV: [
     {
       label: 'Double damage on Excellent Attacks',
-      sublabel: 'Focused attacks only',
+      sublabel: 'All attacks',
       apply: async (actor) => {
         await actor.setFlag('stryder', 'augDoubleExcellentDamage', true);
         ui.notifications.info(`${actor.name}: Excellent Attacks now deal double damage.`);
@@ -2140,8 +2140,19 @@ export class StryderActorSheet extends ActorSheet {
     const augHealthBonus  = actorData.flags?.stryder?.augHealthBonus  ?? 0;
     const augStaminaBonus = actorData.flags?.stryder?.augStaminaBonus ?? 0;
 
+    // Warlock/burning max-HP reductions — flags are the single source of truth.
+    // warlock-abilities.mjs writes these flags AND health.max directly for immediate
+    // feedback; _syncComputedStats re-validates here on every render so the two paths
+    // stay consistent and neither silently refunds a paid cost.
+    const bloodlossReduction = actorData.flags?.stryder?.bloodlossHealthReduction ?? 0;
+    const sacrificeReduction = actorData.flags?.stryder?.sacrificeHealthReduction ?? 0;
+    const burningReduction   = actorData.flags?.stryder?.burningHealthReduction   ?? 0;
+
     const healthBonus = actorData.system.health?.bonus ?? 0;
-    const maxHealth  = baseHp + (hpPerLevel * (clamped - 1)) + gritHpBonus + augHealthBonus + healthBonus;
+    const maxHealth  = Math.max(1,
+      baseHp + (hpPerLevel * (clamped - 1)) + gritHpBonus + augHealthBonus + healthBonus
+      - bloodlossReduction - sacrificeReduction - burningReduction
+    );
     const maxStamina = (STRYDER_STAMINA_BY_LEVEL[clamped] ?? 3) + augStaminaBonus;
     const maxMana    = STRYDER_MANA_BY_LEVEL[clamped]    ?? 4;
 
@@ -4085,12 +4096,14 @@ export class StryderActorSheet extends ActorSheet {
 
 			const newLevel = currentLevel + 1;
 
-			// Build a lightweight stand-in to feed _calcMaxStats at the new level
+			// Build a lightweight stand-in to feed _calcMaxStats at the new level.
+			// Include flags so Warlock bloodloss/sacrifice/burning reductions are preserved.
 			const fakeActorData = {
 			  system: {
 			    ...sys,
 			    attributes: { ...sys.attributes, level: { value: newLevel } }
-			  }
+			  },
+			  flags: this.actor.flags,
 			};
 			const computed = this._calcMaxStats(fakeActorData);
 
@@ -4478,7 +4491,7 @@ export class StryderActorSheet extends ActorSheet {
 
 	  const level = this.actor.system.attributes.level.value ?? 1;
 	  const clamped = Math.min(15, Math.max(1, level));
-	  const newMaxHealth = classData.base_hp + (classData.hp_per_level * clamped);
+	  const newMaxHealth = classData.base_hp + (classData.hp_per_level * (clamped - 1));
 
 	  await this.actor.update({
 	    'system.class.name':         className,
