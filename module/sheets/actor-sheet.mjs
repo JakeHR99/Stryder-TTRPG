@@ -1821,6 +1821,13 @@ export class StryderActorSheet extends ActorSheet {
       context.warlockBloodloss = actorData.flags?.stryder?.bloodlossHealthReduction ?? 0;
       context.warlockManaburn  = actorData.flags?.stryder?.manaburn ?? 0;
 
+      // Wytch resource panel (Hex count / Eye durability)
+      context.isWytchClass        = (actorData.system.class?.name ?? '') === 'Wytch'
+        || this.actor.items.some(i => i.type === 'class' && i.name === 'Wytch');
+      context.wytchHexCount       = actorData.flags?.stryder?.hexCountThisPhase   ?? 0;
+      context.wytchEyeDurability  = actorData.flags?.stryder?.wytchEyeDurability  ?? null;
+      context.wytchEyeActive      = !!(actorData.flags?.stryder?.wytchEyeUsed);
+
       // Stat point pool for the Stats stepper UI
       const augStatBonus         = this.actor.getFlag('stryder', 'augExtraStatPoints') ?? 0;
       context.statPointTotal     = 9 + augStatBonus;
@@ -2128,14 +2135,15 @@ export class StryderActorSheet extends ActorSheet {
     // warlock-abilities.mjs writes these flags AND health.max directly for immediate
     // feedback; _syncComputedStats re-validates here on every render so the two paths
     // stay consistent and neither silently refunds a paid cost.
-    const bloodlossReduction = actorData.flags?.stryder?.bloodlossHealthReduction ?? 0;
-    const sacrificeReduction = actorData.flags?.stryder?.sacrificeHealthReduction ?? 0;
-    const burningReduction   = actorData.flags?.stryder?.burningHealthReduction   ?? 0;
+    const bloodlossReduction   = actorData.flags?.stryder?.bloodlossHealthReduction   ?? 0;
+    const sacrificeReduction   = actorData.flags?.stryder?.sacrificeHealthReduction   ?? 0;
+    const burningReduction     = actorData.flags?.stryder?.burningHealthReduction     ?? 0;
+    const wytchRiseReduction   = actorData.flags?.stryder?.wytchRiseHealthReduction   ?? 0;
 
     const healthBonus = actorData.system.health?.bonus ?? 0;
     const maxHealth  = Math.max(1,
       baseHp + (hpPerLevel * (clamped - 1)) + gritHpBonus + augHealthBonus + healthBonus
-      - bloodlossReduction - sacrificeReduction - burningReduction
+      - bloodlossReduction - sacrificeReduction - burningReduction - wytchRiseReduction
     );
     const maxStamina = (STRYDER_STAMINA_BY_LEVEL[clamped] ?? 3) + augStaminaBonus;
     const maxMana    = STRYDER_MANA_BY_LEVEL[clamped]    ?? 4;
@@ -3939,10 +3947,11 @@ export class StryderActorSheet extends ActorSheet {
 			case 'springOfLife': {
 			  // 1. Calculate health restoration (incl. Warlock Sacrifice — only a
 			  //    Spring of Life can restore Maximum Health paid to Sacrifice)
-			  const burningReduction = this.actor.getFlag(SYSTEM_ID, "burningHealthReduction") || 0;
+			  const burningReduction   = this.actor.getFlag(SYSTEM_ID, "burningHealthReduction")   || 0;
 			  const bloodlossReduction = this.actor.getFlag(SYSTEM_ID, "bloodlossHealthReduction") || 0;
 			  const sacrificeReduction = this.actor.getFlag(SYSTEM_ID, "sacrificeHealthReduction") || 0;
-			  const totalReduction = burningReduction + bloodlossReduction + sacrificeReduction;
+			  const wytchRiseReduction = this.actor.getFlag(SYSTEM_ID, "wytchRiseHealthReduction") || 0;
+			  const totalReduction = burningReduction + bloodlossReduction + sacrificeReduction + wytchRiseReduction;
 			  const newMax = this.actor.system.health.max + totalReduction;
 
 			  // 2. Restore max HP directly (automatic max-HP derivation is disabled),
@@ -3955,6 +3964,7 @@ export class StryderActorSheet extends ActorSheet {
 				[`flags.${SYSTEM_ID}.burningHealthReduction`]: null,
 				[`flags.${SYSTEM_ID}.bloodlossHealthReduction`]: null,
 				[`flags.${SYSTEM_ID}.sacrificeHealthReduction`]: null,
+				[`flags.${SYSTEM_ID}.wytchRiseHealthReduction`]: null,
 			  });
 
 			  // 3. Remove all active effects (conditions), preserving permanent ones
@@ -3979,9 +3989,10 @@ export class StryderActorSheet extends ActorSheet {
 			  let springMessage = `${this.actor.name} has used Spring of Life, restoring all Health and Mana, and clearing all conditions. Stamina cannot be restored until the next Rest.`;
 			  if (totalReduction > 0) {
 				const parts = [];
-				if (burningReduction > 0) parts.push(`${burningReduction} from burns`);
+				if (burningReduction > 0)   parts.push(`${burningReduction} from burns`);
 				if (bloodlossReduction > 0) parts.push(`${bloodlossReduction} from bloodloss`);
 				if (sacrificeReduction > 0) parts.push(`${sacrificeReduction} from Sacrifice`);
+				if (wytchRiseReduction > 0) parts.push(`${wytchRiseReduction} from Wytch Rise hex`);
 				springMessage += ` Max Health restored by ${totalReduction} (${parts.join(', ')}).`;
 			  }
 			  await ChatMessage.create({
@@ -4808,6 +4819,15 @@ export class StryderActorSheet extends ActorSheet {
    */
   async _onUseConsumable(item) {
     const actor = this.actor;
+
+    // Hex: Deny blocks Health recovery
+    if (actor.getFlag(SYSTEM_ID, 'hexDenied')) {
+      const healTypes = ['heal_hp', 'heal_hp_flat', 'heal_hp_pct'];
+      if (healTypes.includes(item.system.effect_type)) {
+        return ui.notifications.warn(`${actor.name} is under Hex: Deny and cannot regain Health until the start of the next Player Phase.`);
+      }
+    }
+
     const { effect_type, effect_value, is_elixir, elixir_sickness_amount } = item.system;
     const pct = (effect_value ?? 0) / 100;
     const updates = {};
@@ -5292,11 +5312,20 @@ export class StryderActorSheet extends ActorSheet {
     for (let s = 0; s < 8; s++) u[`flags.${S}.lordlyFeature_${s}`] = null;
     u[`flags.${S}.mysticBlessingsSense`] = null;
 
-    // Warlock health-reduction flags
-    u[`flags.${S}.bloodlossHealthReduction`] = null;
-    u[`flags.${S}.sacrificeHealthReduction`] = null;
-    u[`flags.${S}.burningHealthReduction`]   = null;
-    u[`flags.${S}.springOfLifeActive`]       = null;
+    // Warlock/Wytch health-reduction flags
+    u[`flags.${S}.bloodlossHealthReduction`]  = null;
+    u[`flags.${S}.sacrificeHealthReduction`]  = null;
+    u[`flags.${S}.burningHealthReduction`]    = null;
+    u[`flags.${S}.wytchRiseHealthReduction`]  = null;
+    u[`flags.${S}.springOfLifeActive`]        = null;
+    // Wytch transient flags
+    u[`flags.${S}.hexCountThisPhase`]   = null;
+    u[`flags.${S}.wytchEyeDurability`]  = null;
+    u[`flags.${S}.wytchEyeUsed`]        = null;
+    u[`flags.${S}.focusEyes`]           = null;
+    u[`flags.${S}.focusBones`]          = null;
+    u[`flags.${S}.focusManaVeins`]      = null;
+    u[`flags.${S}.magykalPotencyBonus`] = null;
 
     // Revert Warrior Aug IV DR direct-write if applicable
     const augDR = actor.getFlag(S, 'augDamageReduction') ?? 0;

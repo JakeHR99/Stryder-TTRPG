@@ -1235,6 +1235,18 @@ Hooks.on('stryderCombatEvent', async (event) => {
     }
   }
 
+  // ── Wytch: hex flags clear at start of each new Player Phase ──
+  // Wytch combatants are only present in the Player Phase list, so this
+  // naturally fires only when Player Phase starts.
+  if (event.type === 'phaseChange') {
+    const { isWytchClass, clearHexForPhase } = await import('./abilities/wytch-abilities.mjs');
+    for (const combatant of event.combatants) {
+      if (combatant.actor && isWytchClass(combatant.actor)) {
+        await clearHexForPhase(combatant.actor);
+      }
+    }
+  }
+
   // ── Warlock: Crimson Crown duration ticks down each round ──
   if (event.type === 'endOfRound') {
     const { isWarlock, warlockEndOfRound } = await import('./abilities/warlock-abilities.mjs');
@@ -1250,6 +1262,13 @@ Hooks.on('stryderCombatEvent', async (event) => {
     // Summoner: spirits exit through their Gates, flags reset
     const { handleSummonerCombatEnd } = await import('./abilities/summoner-abilities.mjs');
     await handleSummonerCombatEnd();
+    // Wytch: clear Eye, Focus & Remains, cast counters, and target hex flags
+    const { isWytchClass, clearHexForCombatEnd } = await import('./abilities/wytch-abilities.mjs');
+    for (const combatant of event.combatants) {
+      if (combatant.actor && isWytchClass(combatant.actor)) {
+        await clearHexForCombatEnd(combatant.actor);
+      }
+    }
   }
 });
 
@@ -1350,6 +1369,20 @@ Hooks.once('ready', async function () {
         }
       }
     }
+  });
+
+  // ── Wytch hex chat buttons ───────────────────────────────────
+  $(document).on("click", ".hex-apply-button", async function(event) {
+    const { handleHexApplyClick } = await import('./abilities/wytch-abilities.mjs');
+    await handleHexApplyClick(event);
+  });
+  $(document).on("click", ".hex-resisted-button", async function(event) {
+    const { handleHexResistedClick } = await import('./abilities/wytch-abilities.mjs');
+    await handleHexResistedClick(event);
+  });
+  $(document).on("click", ".eye-damage-button", async function(event) {
+    const { handleEyeDamageClick } = await import('./abilities/wytch-abilities.mjs');
+    await handleEyeDamageClick(event);
   });
 
   // ── Ranger Create Weakness chat buttons ─────────────────────

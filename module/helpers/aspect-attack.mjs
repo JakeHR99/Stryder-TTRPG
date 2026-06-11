@@ -58,8 +58,10 @@ function getSAContext(actor) {
 
 // ── Shared: build total attack bonus ────────────────────────
 function getAttackBonus(actor, { saTemper, weaponWC, methodAtkMod = 0 } = {}) {
-  const mastery    = actor.system.attributes?.mastery ?? 0;
-  const augAtkBonus= actor.getFlag?.('stryder', 'augAttackBonus') ?? 0;
+  const mastery       = actor.system.attributes?.mastery ?? 0;
+  const augAtkBonus   = actor.getFlag?.('stryder', 'augAttackBonus') ?? 0;
+  // Wytch Hex: Suffer — −3 to this actor's attack rolls until next Player Phase
+  const sufferPenalty = actor.getFlag?.('stryder', 'sufferPenalty') ?? 0;
 
   let temperBonus = 0;
   if (saTemper === 'keen') {
@@ -69,8 +71,8 @@ function getAttackBonus(actor, { saTemper, weaponWC, methodAtkMod = 0 } = {}) {
     temperBonus = -Math.max(0, weaponWC - str);
   }
 
-  return { mastery, augAtkBonus, temperBonus, methodAtkMod,
-           total: mastery + augAtkBonus + temperBonus + methodAtkMod };
+  return { mastery, augAtkBonus, temperBonus, methodAtkMod, sufferPenalty,
+           total: mastery + augAtkBonus + temperBonus + methodAtkMod - sufferPenalty };
 }
 
 // ── Shared: build roll formula ───────────────────────────────

@@ -2146,6 +2146,18 @@ export class StryderItem extends Item {
 			}
 		  }
 
+		  // ── Wytch class feature routing ────────────────────────
+		  {
+			const { WYTCH_ABILITY_NAMES, handleWytchAbility, isWytchClass } = await import('../abilities/wytch-abilities.mjs');
+			const wActor = item.actor || game.actors.get(speaker.actor);
+			if (wActor && isWytchClass(wActor)
+				&& WYTCH_ABILITY_NAMES.includes(item.name)
+				&& !item.system.isAspectAbility
+				&& !item.flags?.stryder?.aspectName) {
+			  return await handleWytchAbility(item, wActor, speaker, rollMode);
+			}
+		  }
+
 		  // ── Spirit Aspect routing ───────────────────────────────
 		  const SPIRIT_NAMES = ['Hallowed-Arsenal','Revitalize','Enhance Prowess','Rapid Repair',
 			'Life for a Life','Undeath','Ruin Mana','Healing Wave','Starwalker'];
