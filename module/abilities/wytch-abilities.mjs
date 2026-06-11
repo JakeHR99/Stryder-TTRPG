@@ -138,8 +138,32 @@ export const WYTCH_ABILITY_NAMES = [
   ...HEX_NAMES,
 ];
 
-// ── Component item names (Focus & Remains) ─────────────────────
-const COMPONENT_NAMES = ['Eyes', 'Bones', 'Mana-veins', 'Hearts'];
+// ── Component type helpers (Focus & Remains) ───────────────────
+const COMPONENT_TYPE_LABELS = {
+  bones:      'Bones',
+  eyes:       'Eyes',
+  mana_veins: 'Mana Veins',
+  heart:      'Heart',
+};
+
+// Infer component_type from item name for legacy (pre-migration) items.
+function _inferComponentType(item) {
+  if (item.system?.component_type) return item.system.component_type;
+  const n = (item.name ?? '').toLowerCase();
+  if (n.includes('bone'))                          return 'bones';
+  if (n.includes('eye') || n.includes('eyes'))     return 'eyes';
+  if (n.includes('vein') || n.includes('mana'))    return 'mana_veins';
+  if (n.includes('heart') || n.includes('hearts')) return 'heart';
+  return null;
+}
+
+function _componentLabel(item) {
+  const ct = _inferComponentType(item);
+  const rank = item.system?.rank;
+  const base = COMPONENT_TYPE_LABELS[ct] ?? item.name;
+  if (rank && rank !== '') return `${base} (Rank ${rank === 'mythic' ? 'Mythic' : rank})`;
+  return base;
+}
 
 // ── Main dispatcher ────────────────────────────────────────────
 export async function handleWytchAbility(item, actor, speaker, rollMode) {
@@ -256,17 +280,17 @@ export async function handleHexWielding(item, actor, speaker, rollMode) {
 
 // ── Focus and Remains ──────────────────────────────────────────
 async function handleFocusAndRemains(item, actor, speaker, rollMode) {
-  // Find owned component items
-  const owned = COMPONENT_NAMES.filter(n => actor.items.some(i => i.name === n));
-  if (!owned.length) {
-    return ui.notifications.warn(`${actor.name} has no Remains components (Eyes, Bones, Mana-veins, Hearts).`);
+  // Detect owned component items (any rank, by item type; legacy name-based items also work)
+  const ownedComponents = actor.items.filter(i => i.type === 'component' && _inferComponentType(i));
+  if (!ownedComponents.length) {
+    return ui.notifications.warn(`${actor.name} has no components (Bones, Eyes, Mana Veins, Heart).`);
   }
 
-  const chosenComp = await new Promise(resolve => {
+  const chosenItem = await new Promise(resolve => {
     const buttons = {};
-    for (const comp of owned) {
-      const key = comp.replace(/\W/g, '').toLowerCase();
-      buttons[key] = { label: comp, callback: () => resolve(comp) };
+    for (const comp of ownedComponents) {
+      const key = comp.id;
+      buttons[key] = { label: _componentLabel(comp), callback: () => resolve(comp) };
     }
     buttons.cancel = { label: 'Cancel', callback: () => resolve(null) };
     new Dialog({
@@ -277,7 +301,8 @@ async function handleFocusAndRemains(item, actor, speaker, rollMode) {
     }, { width: 320, classes: ['dialog', 'stryder-stat-popup'] }).render(true);
   });
 
-  if (!chosenComp) return;
+  if (!chosenItem) return;
+  const chosenType = _inferComponentType(chosenItem);
 
   // True Focus Over Remains (L15): d6 5–6 = component not consumed
   let consumed = true;
@@ -292,26 +317,23 @@ async function handleFocusAndRemains(item, actor, speaker, rollMode) {
     });
   }
 
-  if (consumed) {
-    const compItem = actor.items.find(i => i.name === chosenComp);
-    if (compItem) await compItem.delete();
-  }
+  if (consumed) await chosenItem.delete();
 
   let effectBody = '';
-  switch (chosenComp) {
-    case 'Eyes': {
+  switch (chosenType) {
+    case 'eyes': {
       await actor.setFlag(SYSTEM_ID, 'focusEyes', true);
       effectBody = `${actor.name} gains <strong>sight through solid obstructions</strong> and ignores invisibility until the end of the Player Phase.`;
       break;
     }
-    case 'Bones': {
+    case 'bones': {
       const cur = actor.getFlag(SYSTEM_ID, 'magykalPotencyBonus') ?? 0;
       await actor.setFlag(SYSTEM_ID, 'magykalPotencyBonus', cur + 1);
       await actor.setFlag(SYSTEM_ID, 'focusBones', true);
       effectBody = `${actor.name}'s <strong>Magykal Potency +1</strong> until the end of the Player Phase.`;
       break;
     }
-    case 'Mana-veins': {
+    case 'mana_veins': {
       const sta    = actor.system.stamina?.value ?? 0;
       const staMax = actor.system.stamina?.max   ?? 0;
       await actor.update({ 'system.stamina.value': Math.min(staMax, sta + 2) });
@@ -319,21 +341,20 @@ async function handleFocusAndRemains(item, actor, speaker, rollMode) {
       effectBody = `${actor.name} gains <strong>2 Stamina</strong>.`;
       break;
     }
-    case 'Hearts': {
-      // Hearts: choose any 2 other effects
-      const others = ['Eyes', 'Bones', 'Mana-veins'];
+    case 'heart': {
+      // Heart: choose any 2 other effects
+      const otherTypes = ['eyes', 'bones', 'mana_veins'];
       const picks = [];
       for (let i = 0; i < 2; i++) {
-        const remaining = others.filter(o => !picks.includes(o));
+        const remaining = otherTypes.filter(o => !picks.includes(o));
         if (!remaining.length) break;
         const pick = await new Promise(resolve => {
           const btns = {};
           for (const o of remaining) {
-            const k = o.replace(/\W/g, '').toLowerCase();
-            btns[k] = { label: o, callback: () => resolve(o) };
+            btns[o] = { label: COMPONENT_TYPE_LABELS[o], callback: () => resolve(o) };
           }
           new Dialog({
-            title: `Hearts — Choose Effect ${i + 1} of 2`,
+            title: `Heart — Choose Effect ${i + 1} of 2`,
             content: `<div class="dlg-rajdhani-pad"><p>Choose a component effect:</p></div>`,
             buttons: btns,
             default: Object.keys(btns)[0],
@@ -345,19 +366,19 @@ async function handleFocusAndRemains(item, actor, speaker, rollMode) {
       const lines = [];
       for (const p of picks) {
         switch (p) {
-          case 'Eyes': {
+          case 'eyes': {
             await actor.setFlag(SYSTEM_ID, 'focusEyes', true);
             lines.push('sight through obstructions / ignores invisibility');
             break;
           }
-          case 'Bones': {
+          case 'bones': {
             const cur = actor.getFlag(SYSTEM_ID, 'magykalPotencyBonus') ?? 0;
             await actor.setFlag(SYSTEM_ID, 'magykalPotencyBonus', cur + 1);
             await actor.setFlag(SYSTEM_ID, 'focusBones', true);
             lines.push('Magykal Potency +1');
             break;
           }
-          case 'Mana-veins': {
+          case 'mana_veins': {
             const sta    = actor.system.stamina?.value ?? 0;
             const staMax = actor.system.stamina?.max   ?? 0;
             await actor.update({ 'system.stamina.value': Math.min(staMax, sta + 2) });
@@ -370,15 +391,18 @@ async function handleFocusAndRemains(item, actor, speaker, rollMode) {
       effectBody = `${actor.name} expends a Heart and gains: <strong>${lines.join(' &amp; ')}</strong>.`;
       break;
     }
+    default:
+      return ui.notifications.warn(`Unknown component type: ${chosenType}`);
   }
 
   const keptLine = !consumed
     ? `<p class="chat-footnote chat-gold-note">True Focus: component not consumed (rolled 5–6).</p>`
     : '';
 
+  const compDisplayName = _componentLabel(chosenItem);
   await ChatMessage.create({ speaker, rollMode, content: wytchCard(
     'Focus & Remains',
-    `Swift — ${chosenComp} expended${consumed ? '' : ' (kept)'}`,
+    `Swift — ${compDisplayName} expended${consumed ? '' : ' (kept)'}`,
     `${effectBody}${keptLine}`
   )});
 }

@@ -71,7 +71,9 @@ export async function openSummonDialog(actor) {
   const token = actor.getActiveTokens()[0];
   if (!token) return ui.notifications.warn(`${actor.name} has no token on the current scene — place one first.`);
 
-  const components = actor.items.filter(i => i.type === 'component' && (i.system?.grade ?? '') === 'G4');
+  const components = actor.items.filter(i =>
+    i.type === 'component' && (i.system?.rank === '4' || (!i.system?.rank && i.system?.grade === 'G4'))
+  );
   const componentOptions = components.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
   const gateButtons = Object.entries(GATES).map(([key, g]) => `
