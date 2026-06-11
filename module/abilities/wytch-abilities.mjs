@@ -160,7 +160,7 @@ export async function handleWytchAbility(item, actor, speaker, rollMode) {
 }
 
 // ── Hex Wielding ───────────────────────────────────────────────
-async function handleHexWielding(item, actor, speaker, rollMode) {
+export async function handleHexWielding(item, actor, speaker, rollMode) {
   // Mute gate
   const { isActorMuted } = await import('../conditions/mute.mjs');
   if (isActorMuted(actor)) {

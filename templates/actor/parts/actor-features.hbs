@@ -93,6 +93,25 @@
   </div>
   {{/if}}
 
+  {{!-- Wytch resource panels — Hex count and optional Eye Durability --}}
+  {{#if isWytchClass}}
+  <div class="jrpg-hud-side-panel jrpg-hex-panel" title="Hexes cast this Player Phase — cleared at Phase start (Hex Mastery lifts the one-cast limit)">
+    <span class="jrpg-side-panel-label hex-label">Hexes Cast</span>
+    <div class="jrpg-ichor-stepper">
+      <span class="jrpg-side-panel-val jrpg-hex-count-val">{{wytchHexCount}}</span>
+    </div>
+    <button type="button" class="resource-button jrpg-hex-cast-btn" data-action="castHex">Cast Hex</button>
+  </div>
+  {{#if wytchEyeActive}}
+  <div class="jrpg-hud-side-panel jrpg-eye-panel" title="The Wytch's Eye — Durability remaining; 0 destroys it">
+    <span class="jrpg-side-panel-label eye-label">Eye Dur.</span>
+    <div class="jrpg-ichor-stepper">
+      <span class="jrpg-side-panel-val jrpg-eye-dur-val">{{wytchEyeDurability}}</span>
+    </div>
+  </div>
+  {{/if}}
+  {{/if}}
+
   <div class="jrpg-battle-turn-btns">
     <span class="resource-button jrpg-battle-action-row" data-action="turnStart">Turn Start</span>
     <span class="resource-button jrpg-battle-action-row" data-action="combatEnd">Combat End</span>

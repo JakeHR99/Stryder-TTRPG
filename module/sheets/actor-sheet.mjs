@@ -335,8 +335,8 @@ const STRYDER_CLASS_FEATURES = {
   ],
   Wytch: [
     { level: 1,  feats: [
-      { id: 'WytAbil01MgFcs', name: 'Magykal Focus' },
-      { id: 'WytAbil02HxWld', name: 'Hex Wielding' },
+      { id: 'WytAbil01MgFcs', name: 'Magykal Focus', noEmbed: true },
+      { id: 'WytAbil02HxWld', name: 'Hex Wielding',  noEmbed: true },
       { id: 'WytHex01Sck',    name: 'Hex: Sicken' },
       { id: 'WytHex02Bnd',    name: 'Hex: Bind' },
       { id: 'WytHex03Dny',    name: 'Hex: Deny' },
@@ -3834,6 +3834,14 @@ export class StryderActorSheet extends ActorSheet {
 			  return;
 			}
 
+			case 'castHex': {
+			  const actor = this.actor;
+			  const speaker = ChatMessage.getSpeaker({ actor });
+			  const rollMode = game.settings.get('core', 'rollMode');
+			  const { handleHexWielding } = await import('../abilities/wytch-abilities.mjs');
+			  return await handleHexWielding(null, actor, speaker, rollMode);
+			}
+
 			case 'focusedAttack': {
 			  const actor = this.actor;
 			  const speaker = ChatMessage.getSpeaker({ actor });
@@ -5199,6 +5207,18 @@ export class StryderActorSheet extends ActorSheet {
         console.log(`[Stryder] Wytch dedupe: removed ${dupIds.length} duplicate feature item(s) from ${actor.name}.`);
         ui.notifications.info(`${actor.name}: removed ${dupIds.length} duplicate Wytch feature(s).`);
       }
+
+      // noEmbed migration: delete any previously-granted 'Magykal Focus' / 'Hex Wielding' items.
+      // These are now passive rules and must not exist as sheet items.
+      const noEmbedNames = new Set(
+        (STRYDER_CLASS_FEATURES.Wytch ?? []).flatMap(ms => ms.feats.filter(f => f.noEmbed).map(f => f.name))
+      );
+      const noEmbedIds = actor.items.filter(i => noEmbedNames.has(i.name)).map(i => i.id);
+      if (noEmbedIds.length) {
+        await actor.deleteEmbeddedDocuments('Item', noEmbedIds);
+        console.log(`[Stryder] Wytch noEmbed migration: removed ${noEmbedIds.length} item(s) from ${actor.name}.`);
+        ui.notifications.info(`${actor.name}: removed ${noEmbedIds.length} Wytch passive rule item(s) (now shown in the Battle panel).`);
+      }
     }
 
     const cfById   = Object.fromEntries(cfDocs.map(d => [d._id, d]));
@@ -5213,6 +5233,8 @@ export class StryderActorSheet extends ActorSheet {
       for (const feat of ms.feats) {
         // milestone = version bump on an existing item (Expanding Bond II/III), not a grant
         if (feat.milestone) continue;
+        // noEmbed = passive rule (no sheet item); handled by class panel on the Battle page
+        if (feat.noEmbed) continue;
 
         if (feat.isChoice || feat.isTechChoice || feat.isLordlyChoice ||
             feat.isMysticBlessing || feat.isMasteryGrant) {
