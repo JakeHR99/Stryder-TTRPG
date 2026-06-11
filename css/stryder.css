@@ -2402,7 +2402,7 @@ ol#chat-log > li,
   background: rgba(8, 18, 40, 0.7) !important;
   border: 1px solid rgba(42, 112, 224, 0.2) !important;
   border-radius: 2px !important;
-  color: #6090c0 !important;
+  color: var(--sty-text-2) !important;
   font-family: var(--sty-font-ui) !important;
   font-size: 11px !important;
   font-weight: 600 !important;
@@ -2451,12 +2451,12 @@ ol#chat-log > li,
   padding: 6px 8px !important;
   font-family: var(--sty-font-ui) !important;
   font-size: 11px !important;
-  color: #6090c0 !important;
+  color: var(--sty-text-2) !important;
 }
 
 .dice-roll .dice-tooltip .part-header {
   border-bottom: 1px solid rgba(42, 112, 224, 0.2) !important;
-  color: #5a86b8 !important;
+  color: var(--sty-text-2) !important;
   font-size: 10px !important;
   font-weight: 600 !important;
   text-transform: uppercase !important;
@@ -2625,16 +2625,16 @@ ol#chat-log > li,
 }
 
 .dialog .dialog-buttons .dialog-button.default {
-  background: linear-gradient(135deg, #0e3a28 0%, #091f16 100%) !important;
-  border-color: #20a060 !important;
-  color: #80e0b0 !important;
+  background: var(--sty-gold-grad) !important; /* core-override */
+  border-color: rgba(255,220,80,.75) !important; /* core-override */
+  color: #1a1205 !important; /* core-override */
 }
 
 .dialog .dialog-buttons .dialog-button.default:hover {
-  background: linear-gradient(135deg, #155035 0%, #0d2820 100%) !important;
-  border-color: #40c080 !important;
-  color: #b0f0d0 !important;
-  box-shadow: 0 0 10px rgba(30, 160, 90, 0.35) !important;
+  background: var(--sty-gold-grad) !important; /* core-override */
+  border-color: rgba(255,220,80,.85) !important;
+  color: #1a1205 !important;
+  box-shadow: 0 0 10px rgba(244,192,48,.35) !important;
 }
 
 .chat-message-title {
@@ -2650,7 +2650,7 @@ ol#chat-log > li,
 .chat-message-subtitle {
   font-family: var(--sty-font-ui);
   font-size: 12px;
-  color: #5a86b8;
+  color: var(--sty-text-2);
   font-style: italic;
   margin-bottom: 8px;
   letter-spacing: 0.2px;
@@ -2694,7 +2694,7 @@ ol#chat-log > li,
 
 .chat-message-detail-label {
   font-weight: 600;
-  color: #5a86b8;
+  color: var(--sty-text-2);
   font-family: var(--sty-font-ui);
   font-size: 11px;
   text-transform: uppercase;
@@ -3157,7 +3157,7 @@ ol#chat-log > li,
     gap: 8px;
     font-family: 'Segoe UI', system-ui, sans-serif;
     font-size: 12px;
-    color: #5a86b8;
+    color: var(--sty-text-2);
 }
 
 .stamina-cost-jump img {
@@ -5805,7 +5805,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   font-family: var(--sty-font-ui);
   font-size: 9px;
   font-weight: 600;
-  color: #6090c0;
+  color: var(--sty-text-2);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -6672,9 +6672,9 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   flex-shrink: 0;
 }
 
-.hp-label  { color: #7fe880; }
-.mp-label  { color: #60b8ff; }
-.sp-label  { color: #ffaa50; }
+.hp-label  { color: var(--sty-hp); }
+.mp-label  { color: var(--sty-mp); }
+.sp-label  { color: var(--sty-sta); }
 .ward-label { color: #cc99ff; font-size: 9px; }
 
 .jrpg-bar-track {
@@ -6691,9 +6691,9 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   width: 100%;
 }
 
-.hp-fill { background: linear-gradient(90deg, #2a8a3e, #4fd464); }
-.mp-fill { background: linear-gradient(90deg, #1a60c0, #40a0f0); }
-.sp-fill { background: linear-gradient(90deg, #b05010, #e09030); }
+.hp-fill { background: var(--sty-hp-grad); }
+.mp-fill { background: var(--sty-mp-grad); }
+.sp-fill { background: var(--sty-sta-grad); }
 
 .jrpg-res-values {
   display: flex;
@@ -6849,7 +6849,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-level-input {
   background: transparent !important;
   border: none !important;
-  color: #ffd700 !important;
+  color: var(--sty-gold) !important;
   font-size: 22px !important;
   font-weight: 700 !important;
   width: 44px !important;
@@ -6950,7 +6950,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .jrpg-content .fantasy-ability-input {
-  color: #ffd700 !important;
+  color: var(--sty-gold) !important;
   font-size: 20px !important;
   font-weight: 700 !important;
   background: transparent !important;
@@ -7204,7 +7204,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-home-level-input {
   background: transparent !important;
   border: none !important;
-  color: #ffd700 !important;
+  color: var(--sty-gold) !important;
   font-size: 26px !important;
   font-weight: 700 !important;
   width: 50px !important;
@@ -7681,9 +7681,9 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   width: 100%;
 }
 
-.hp-pfill { background: linear-gradient(90deg, #2a8a3e, #4fd464); }
-.mp-pfill { background: linear-gradient(90deg, #1a60c0, #40a0f0); }
-.sp-pfill { background: linear-gradient(90deg, #b05010, #e09030); }
+.hp-pfill { background: var(--sty-hp-grad); }
+.mp-pfill { background: var(--sty-mp-grad); }
+.sp-pfill { background: var(--sty-sta-grad); }
 
 .jrpg-pstat-values {
   font-family: 'Rajdhani', sans-serif;
@@ -7707,7 +7707,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .jrpg-player-level {
-  color: #ffd700;
+  color: var(--sty-gold);
   font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
   font-size: 11px;
@@ -8641,19 +8641,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
    ============================================================ */
 
 .jrpg-bg {
-  background: linear-gradient(180deg,
-    #000008  0%,
-    #04010e  8%,
-    #08031e  18%,
-    #0d062e  30%,
-    #100a40  43%,
-    #0e1050  55%,
-    #0b1560  67%,
-    #0d1c72  78%,
-    #0f2280  88%,
-    #142890  95%,
-    #1a2e9a  100%
-  ) !important;
+  background: var(--sty-sky) !important; /* core-override */
 }
 
 /* Re-tint cloud layers to cool night blues/indigos */
@@ -8680,7 +8668,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* Re-tint sub-screen to match deep night */
 .jrpg-sub-screen {
-  background: linear-gradient(180deg, #04010e 0%, #0a0830 100%) !important;
+  background: var(--sty-sky) !important; /* core-override */
 }
 
 /* ============================================================
@@ -10244,7 +10232,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   align-items: center !important;
   justify-content: center !important;
   gap: 6px !important;
-  background: linear-gradient(135deg, #c8960a 0%, #e8b822 40%, #a87008 100%) !important;
+  background: var(--sty-gold-grad) !important;
   border: 1px solid rgba(255, 220, 80, 0.75) !important;
   border-radius: 5px !important;
   color: #1a0e00 !important;
@@ -10593,7 +10581,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: rgba(96, 168, 255, 0.7) !important;
 }
 .jrpg-flow-val {
-  color: #90c8ff !important;
+  color: var(--sty-cyan-bright) !important;
   text-shadow: 0 0 8px rgba(42, 112, 224, 0.6) !important;
 }
 
@@ -11336,6 +11324,21 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border-color: rgba(210, 170, 255, 0.70) !important;
   box-shadow: 0 0 20px rgba(190, 150, 255, 0.50), inset 0 0 18px rgba(170, 120, 255, 0.10) !important;
   animation: none !important;
+}
+
+/* ============ PHASE 1B — kit-aligned controls ============ */
+
+/* Stats sub-page section title: suppress default margin/border */
+.jrpg-char-section-title.csheet-stats-title {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+/* Thin hairline separator below stats title */
+.csheet-stats-hairline {
+  height: 1px;
+  background: var(--sty-line-blue);
+  margin-bottom: 14px;
 }
 
 /* ============================================================
@@ -13256,26 +13259,26 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* ── Spring of Life / Rest Recovery Buttons ───────────── */
 .jrpg-recovery-buttons {
-  display: flex !important;
+  display: flex !important; /* core-override */
   flex-direction: row !important;
   gap: 6px !important;
   justify-content: center !important;
   align-items: center !important;
   width: 100% !important;
+  margin-top: 4px;
 }
 
 .jrpg-recovery-btn {
-  display: inline-flex !important;
+  display: inline-flex !important; /* core-override */
   flex: 0 0 auto !important;
   width: auto !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(90, 55, 120, 0.85) !important;
-  border: 1px solid rgba(180, 130, 210, 0.50) !important;
+  background: var(--sty-panel-nav) !important; /* core-override */
+  border: 1px solid var(--sty-line-blue-strong) !important; /* core-override */
   border-radius: 3px !important;
-  color: rgba(240, 232, 255, 0.85) !important;
-  text-shadow: 0 0 6px rgba(255, 240, 255, 0.20) !important;
-  font-family: 'Cinzel', serif !important;
+  color: var(--sty-text) !important; /* core-override */
+  font-family: var(--sty-font-display) !important; /* core-override */
   font-size: 9px !important;
   letter-spacing: 0.10em !important;
   text-transform: uppercase !important;
@@ -13290,11 +13293,10 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .jrpg-recovery-btn:hover {
-  background: rgba(120, 75, 160, 0.90) !important;
-  border-color: rgba(210, 170, 240, 0.75) !important;
-  color: #fff8ff !important;
-  text-shadow: 0 0 10px rgba(255, 220, 255, 0.50) !important;
-  box-shadow: 0 0 8px rgba(180, 120, 255, 0.28) !important;
+  background: var(--sty-select-fill) !important; /* core-override */
+  border-color: var(--sty-cyan) !important;
+  color: var(--sty-cyan-bright) !important;
+  box-shadow: 0 0 8px var(--sty-cyan-glow) !important;
 }
 
 /* ═══════════════════════════════ GROWTH MENU ════════════════════════════ */

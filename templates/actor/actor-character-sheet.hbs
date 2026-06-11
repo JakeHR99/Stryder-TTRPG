@@ -183,9 +183,9 @@
 						</div>
 					</div>
 				</div>
-				<div style="display:flex;flex-direction:row;gap:6px;justify-content:center;margin-top:4px;pointer-events:auto;">
-					<button type="button" class="jrpg-recovery-btn" data-action="springOfLife" style="display:inline-flex;align-items:center;justify-content:center;width:auto;flex:0 0 auto;background:rgba(100,55,130,0.88);border:1px solid rgba(190,140,220,0.55);border-radius:3px;color:rgba(245,235,255,0.88);font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.10em;text-transform:uppercase;padding:4px 18px;line-height:1;cursor:pointer;pointer-events:auto;">Spring of Life</button>
-					<button type="button" class="jrpg-recovery-btn" data-action="resting" style="display:inline-flex;align-items:center;justify-content:center;width:auto;flex:0 0 auto;background:rgba(100,55,130,0.88);border:1px solid rgba(190,140,220,0.55);border-radius:3px;color:rgba(245,235,255,0.88);font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.10em;text-transform:uppercase;padding:4px 18px;line-height:1;cursor:pointer;pointer-events:auto;">Rest</button>
+				<div class="jrpg-recovery-buttons">
+					<button type="button" class="jrpg-recovery-btn" data-action="springOfLife">Spring of Life</button>
+					<button type="button" class="jrpg-recovery-btn" data-action="resting">Rest</button>
 				</div>
 			</div>
 		</div>
@@ -317,7 +317,7 @@
 						<!-- ── Stats (right, stepper) ── -->
 						<div class="jrpg-char-col-stats">
 							<div class="jrpg-stat-section-header">
-								<h3 class="jrpg-char-section-title" style="margin-bottom:0 !important; border-bottom:none !important;">Stats</h3>
+								<h3 class="jrpg-char-section-title csheet-stats-title">Stats</h3>
 								<span class="jrpg-stat-pool-counter">
 									<span class="jrpg-stat-pool-remaining">{{statPointRemaining}}</span>
 									<span class="jrpg-stat-pool-sep">/</span>
@@ -325,7 +325,7 @@
 									<span class="jrpg-stat-pool-label">&nbsp;pts</span>
 								</span>
 							</div>
-							<div style="height:1px; background:rgba(100,160,220,0.2); margin-bottom:14px;"></div>
+							<div class="csheet-stats-hairline"></div>
 
 							<div class="jrpg-stat-row">
 								<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Soul.value" data-label="Soul Check">Soul</label>
@@ -573,15 +573,15 @@
       </div><!-- .sa-screen -->
 			</div>
 			<div class="jrpg-page" data-page="growth">
-  <div class="jrpg-growth-wrap" style="display:flex;flex-direction:column;height:100%;">
-    <div class="jrpg-growth-exp-bar" style="display:flex;align-items:center;gap:12px;padding:8px 16px;flex-shrink:0;background:rgba(6,10,26,0.92);border-bottom:1px solid rgba(50,90,180,0.2);">
-      <div class="jrpg-growth-exp-gem" style="width:9px;height:9px;border-radius:50%;background:#60c8a0;flex-shrink:0;"></div>
+  <div class="jrpg-growth-wrap">
+    <div class="jrpg-growth-exp-bar">
+      <div class="jrpg-growth-exp-gem"></div>
       <div>
         <span class="jrpg-growth-exp-label">Experience Points</span>
         <span class="jrpg-growth-exp-num">{{system.attributes.xp.value}}</span>
         <span class="jrpg-growth-exp-sub">available to spend</span>
       </div>
-      <div class="jrpg-growth-class-info" style="margin-left:auto;">{{system.class.name}} &middot; Level {{system.attributes.level.value}}</div>
+      <div class="jrpg-growth-class-info">{{system.class.name}} &middot; Level {{system.attributes.level.value}}</div>
     </div>
     <div class="jrpg-growth-body">
       <div class="jrpg-growth-panel" id="jrpg-growth-class-panel">
