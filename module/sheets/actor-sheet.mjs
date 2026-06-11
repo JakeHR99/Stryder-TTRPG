@@ -4227,6 +4227,17 @@ export class StryderActorSheet extends ActorSheet {
 		}
 	});
 
+	// ── Lordling TP tracker +/− buttons ───────────────────────────────────────
+	html.on('click', '.lrd-tp-adj', async (ev) => {
+	  ev.preventDefault();
+	  const delta = parseInt(ev.currentTarget.dataset.delta, 10);
+	  if (!delta) return;
+	  const cur  = this.actor.system.tactics?.value ?? 0;
+	  const max  = this.actor.system.tactics?.max   ?? 6;
+	  const next = Math.min(max, Math.max(0, cur + delta));
+	  if (next !== cur) await this.actor.update({ 'system.tactics.value': next });
+	});
+
 	// ── Lordling quick tactic buttons ─────────────────────────────────────────
 	html.on('click', '.lrd-tactic-quick', async (ev) => {
 	  ev.preventDefault();
