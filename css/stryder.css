@@ -277,7 +277,7 @@
   color: #5c2b0a;
   background: rgba(255, 248, 220, 0.6);
   border: 1px solid rgba(139, 90, 43, 0.4);
-  border-radius: 4px;
+  border-radius: 3px;
   transition: all 0.2s ease;
 }
 
@@ -407,7 +407,7 @@
   padding: 4px 6px;
   margin: 2px 0;
   border-bottom: 1px solid rgba(139, 90, 43, 0.2);
-  border-radius: 4px;
+  border-radius: 3px;
   background: rgba(255, 248, 220, 0.2);
   transition: all 0.3s ease;
 }
@@ -529,7 +529,7 @@
     rgba(192, 160, 112, 0.2) 50%,
     rgba(139, 90, 43, 0.15) 100%);
   border: 1px solid rgba(139, 90, 43, 0.4);
-  border-radius: 4px;
+  border-radius: 3px;
   font-weight: bold;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
@@ -624,19 +624,19 @@ progress {
 .hp-progress-bar progress, .mp-progress-bar progress, .stamina-progress-bar progress, .aegis-progress-bar progress, .resource1-progress-bar progress, .resource2-progress-bar progress, .tactics-progress-bar progress {
   height: 18px;
   border: 1px solid black;
-  border-radius: 7px;
+  border-radius: 6px;
 }
 progress.hp-bar::-webkit-progress-bar, progress.hp-bar::-webkit-progress-value {
-  border-radius: 5px;
+  border-radius: 6px;
 }
 progress.mp-bar::-webkit-progress-bar, progress.mp-bar::-webkit-progress-value {
-  border-radius: 5px;
+  border-radius: 6px;
 }
 progress.stamina-bar::-webkit-progress-bar, progress.stamina-bar::-webkit-progress-value {
-  border-radius: 5px;
+  border-radius: 6px;
 }
 progress.tactics-bar::-webkit-progress-bar, progress.tactics-bar::-webkit-progress-value {
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
 /* 3D and Sheen Effects for Progress Bars */
@@ -672,13 +672,13 @@ progress.tactics-bar::-webkit-progress-bar {
     0 2px 4px rgba(0, 0, 0, 0.3);
 }
 progress.aegis-bar::-webkit-progress-bar, progress.aegis-bar::-webkit-progress-value {
-  border-radius: 5px;
+  border-radius: 6px;
 }
 progress.resource1-bar::-webkit-progress-bar, progress.resource1-bar::-webkit-progress-value {
-  border-radius: 5px;
+  border-radius: 6px;
 }
 progress.resource2-bar::-webkit-progress-bar, progress.resource2-bar::-webkit-progress-value {
-  border-radius: 5px;
+  border-radius: 6px;
 }
 progress.hp-bar::-webkit-progress-value {
   background: linear-gradient(to bottom, 
@@ -780,7 +780,7 @@ progress.tactics-bar::-moz-progress-bar {
 .hp-progress-bar, .mp-progress-bar, .stamina-progress-bar, .tactics-progress-bar {
   position: relative;
   overflow: hidden;
-  border-radius: 7px;
+  border-radius: 6px;
 }
 
 /* Sheen wrappers that clip to progress bar fill */
@@ -790,7 +790,7 @@ progress.tactics-bar::-moz-progress-bar {
   left: 0;
   height: 18px;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 6px;
   pointer-events: none;
   z-index: 2;
 }
@@ -803,7 +803,7 @@ progress.tactics-bar::-moz-progress-bar {
   width: 100%;
   height: 18px;
   animation: sheen-sweep 2.5s ease-in-out infinite;
-  border-radius: 5px;
+  border-radius: 6px;
   pointer-events: none;
 }
 
@@ -937,7 +937,7 @@ progress.resource2-bar::-moz-progress-bar {
     font-size: 28px;
 	font-weight: bold;
     color: #331a00;
-    border-radius: 5px;
+    border-radius: 6px;
 	border: 1px solid rgba(255, 0, 0, 0);
     position: relative;
     top: 15px;
@@ -951,7 +951,7 @@ progress.resource2-bar::-moz-progress-bar {
     font-size: 28px;
 	font-weight: bold;
     color: #331a00;
-    border-radius: 5px;
+    border-radius: 6px;
 	border: 1px solid rgba(255, 0, 0, 0);
     position: relative;
     height: 40px;
@@ -1053,7 +1053,7 @@ progress.resource2-bar::-moz-progress-bar {
 .editor-wrapper {
   height: 250px;
   border: 1px solid var(--color-border-light-tertiary);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 4px;
   background: var(--color-bg-light-2);
   overflow: hidden;
@@ -1329,7 +1329,7 @@ progress.resource2-bar::-moz-progress-bar {
 .parchment-editor {
   background: url('../assets/parchment.jpg') repeat;
   padding: 15px;
-  border-radius: 5px;
+  border-radius: 6px;
   border: 1px solid #c0a672;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   position: relative;
@@ -1387,14 +1387,14 @@ progress.resource2-bar::-moz-progress-bar {
     align-items: center;
     padding: 5px;
     background: linear-gradient(to right, rgba(139, 90, 43, 0.3), transparent);
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
 .flexrow.flex-group-center-buttons {
     margin-bottom: 5px;
     align-items: center;
     padding: 5px;
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
 .flexrow.flex-group-center img {
@@ -1417,7 +1417,7 @@ progress.resource2-bar::-moz-progress-bar {
     margin-bottom: 10px;
     background: rgba(255, 248, 220, 0.9);
     border: 0px solid #8b5a2b;
-    border-radius: 4px;
+    border-radius: 3px;
     font-size: 16px;
     color: #3a2a1a;
     text-align: center;
@@ -1555,7 +1555,7 @@ progress.resource2-bar::-moz-progress-bar {
   padding: 10px;
   background: rgba(0, 0, 0, 0.05);
   border: 2px groove #eeede0;
-  border-radius: 5px;
+  border-radius: 6px;
   justify-content: space-around;
 }
 
@@ -1571,7 +1571,7 @@ progress.resource2-bar::-moz-progress-bar {
   background: url('../assets/parchment.jpg') repeat;
   background-color: rgba(250, 240, 220, 0.8);
   border: 1px solid #c0a878;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -1614,7 +1614,7 @@ progress.resource2-bar::-moz-progress-bar {
   color: white;
   font-family: "Roboto", sans-serif;
   font-size: 12px;
-  border-radius: 4px;
+  border-radius: 3px;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
@@ -1719,7 +1719,7 @@ progress.resource2-bar::-moz-progress-bar {
   height: 500px;
   background: rgba(0, 0, 0, 0.8);
   border: 3px solid #c0a070;
-  border-radius: 5px;
+  border-radius: 6px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
   z-index: 1000;
   pointer-events: none;
@@ -1757,7 +1757,7 @@ progress.resource2-bar::-moz-progress-bar {
 
 .editor-container {
   border: 1px solid #8b5a2b;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 10px;
   flex: 1;
   display: flex;
@@ -2427,7 +2427,7 @@ ol#chat-log > li,
   overflow: hidden;
   background: rgba(75, 0, 130, 0.15);
   border: 1px solid #4b0082;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 8px 12px;
   margin-bottom: 5px;
   text-align: center;
@@ -2475,7 +2475,7 @@ ol#chat-log > li,
 .life-skill {
   background: rgba(255, 248, 220, 0.7);
   border: 1px solid #c0a070;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 10px;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -2655,7 +2655,7 @@ ol#chat-log > li,
 
 .jump-item:hover {
     background-color: rgba(218, 190, 119, 0.3);
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
 .jump-icon {
@@ -2674,7 +2674,7 @@ ol#chat-log > li,
     background-color: #DABE77;
     color: #333;
     text-align: center;
-    border-radius: 4px;
+    border-radius: 3px;
     padding: 5px;
     width: 40px;
     cursor: pointer;
@@ -3102,12 +3102,12 @@ ol#chat-log > li,
 
 .combat-tracker::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
 .combat-tracker::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, #555 0%, #777 100%);
-    border-radius: 4px;
+    border-radius: 3px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -3207,7 +3207,7 @@ ol#chat-log > li,
 .combatant-control {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+    border-radius: 3px;
     padding: 4px 6px;
     color: var(--sty-text);
     transition: all 0.3s ease;
@@ -3250,7 +3250,7 @@ ol#chat-log > li,
 /* Token Resource Styling */
 .token-resource {
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
+    border-radius: 3px;
     padding: 4px 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -3306,7 +3306,7 @@ ol#chat-log > li,
 .inline-control {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+    border-radius: 3px;
     padding: 6px 8px;
     color: var(--sty-text);
     transition: all 0.3s ease;
@@ -3360,7 +3360,7 @@ ol#chat-log > li,
 .combat-control {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+    border-radius: 3px;
     padding: 6px 8px;
     color: var(--sty-text);
     transition: all 0.3s ease;
@@ -3456,7 +3456,7 @@ ol#chat-log > li,
     background: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 15px 30px;
-    border-radius: 5px;
+    border-radius: 6px;
     font-family: "Modesto Condensed", "Palatino Linotype", serif;
     font-size: 24px;
     text-align: center;
@@ -3640,7 +3640,7 @@ ol#chat-log > li,
 	color: #331a00;
 	background: rgba(255, 248, 220, 0.9);
 	border: 1px solid #8b5a2b;
-	border-radius: 4px;
+	border-radius: 3px;
 	padding: 5px 25px 5px 5px;
 	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 }
@@ -3759,7 +3759,7 @@ ol#chat-log > li,
 	padding: 8px;
 	background: rgba(255, 248, 220, 0.5);
 	border: 1px solid #c0a070;
-	border-radius: 4px;
+	border-radius: 3px;
 	max-height: 110px;
 	overflow: hidden;
 }
@@ -3834,7 +3834,7 @@ ol#chat-log > li,
     -webkit-appearance: none;
     background: rgba(255, 248, 220, 0.9);
     border: 2px solid #8b5a2b;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     position: relative;
     transition: all 0.2s ease;
@@ -4060,7 +4060,7 @@ ol#chat-log > li,
 .fantasy-ability-input {
   background: rgba(255, 248, 220, 0.8);
   border: 1px solid rgba(139, 90, 43, 0.4);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 4px 8px;
   font-family: var(--sty-font-number);
   font-size: 16px;
@@ -4321,7 +4321,7 @@ ol#chat-log > li,
   font-family: 'Varela Round', sans-serif;
   font-size: 14px;
   border: 1px solid rgba(139, 90, 43, 0.5);
-  border-radius: 4px;
+  border-radius: 3px;
   background: rgba(255, 248, 220, 0.6);
   color: #5c2b0a;
 }
@@ -4666,7 +4666,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: #5c2b0a;
   background: rgba(255, 248, 220, 0.7);
   border: 1px solid rgba(139, 90, 43, 0.5);
-  border-radius: 4px;
+  border-radius: 3px;
   margin-top: 2px;
 }
 
@@ -4857,7 +4857,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   bottom: -1px;
   background: linear-gradient(135deg, 
     #c8aa78, #f0dcc6, #dcc2a0, #c8aa78);
-  border-radius: 9px;
+  border-radius: 10px;
   z-index: -1;
 }
 
@@ -5016,7 +5016,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .flexcol-stats.scroll-wrapper .item {
   background: rgba(255, 248, 220, 0.6);
   border: 1px solid rgba(139, 90, 43, 0.2);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 6px 8px;
   margin: 4px 0;
   display: flex;
@@ -5697,7 +5697,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: white !important;
   border: none !important;
   padding: 10px 20px !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   font-weight: bold !important;
   min-width: 80px !important;
 }
@@ -5711,7 +5711,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: white !important;
   border: none !important;
   padding: 10px 20px !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   font-weight: bold !important;
   min-width: 80px !important;
 }
@@ -6118,7 +6118,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   flex: 1;
   padding: 5px 8px;
   border: 1px solid #8b7355;
-  border-radius: 4px;
+  border-radius: 3px;
   background: rgba(232, 220, 200, 0.5);
   font-family: "Roboto", sans-serif;
   font-size: 1em;
@@ -6383,7 +6383,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   width: 28px;
   height: 28px;
   border: 1px solid rgba(150, 200, 255, 0.35);
-  border-radius: 4px;
+  border-radius: 3px;
   background: rgba(255,255,255,0.06);
   display: flex;
   align-items: center;
@@ -6564,7 +6564,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(100,160,220,0.3);
   color: #c8e4ff;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .jrpg-content .fantasy-action-button:hover,
@@ -6646,7 +6646,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-sheet li.item.flexrow.items-header {
   background: rgba(80,140,210,0.22) !important;
   border: none !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   color: #90c8f0 !important;
   margin-bottom: 2px !important;
 }
@@ -6969,7 +6969,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-back-to-tempering-btn {
   background: rgba(100,160,220,0.15) !important;
   border: 1px solid rgba(100,160,220,0.35) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   color: #c8e4ff !important;
   font-size: 13px !important;
   font-weight: 600 !important;
@@ -7325,11 +7325,11 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 /* Thicker bars */
 .jrpg-pstat-bar-track {
   height: 7px !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
 }
 
 .jrpg-pstat-bar {
-  border-radius: 4px !important;
+  border-radius: 3px !important;
 }
 
 /* Larger value numbers */
@@ -7384,7 +7384,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-char-input {
   background: rgba(255, 255, 255, 0.06) !important;
   border: 1px solid rgba(100, 160, 220, 0.3) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   color: #e8f4ff !important;
   font-family: 'Rajdhani', sans-serif !important;
   font-size: 16px !important;
@@ -8029,7 +8029,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-sub-screen .fantasy-ability {
   background: rgba(28, 10, 58, 0.88) !important;
   border: 1px solid rgba(150, 120, 220, 0.30) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
 }
 
 .jrpg-sub-screen .ability-input-container {
@@ -8068,7 +8068,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-sub-screen .fantasy-abilities-section {
   background: rgba(6, 3, 20, 0.75) !important;
   border: 1px solid rgba(90, 70, 160, 0.30) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   overflow: hidden !important;
   margin-bottom: 10px !important;
 }
@@ -8265,7 +8265,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   flex: 1;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(100, 160, 220, 0.3);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 6px 10px;
   min-height: 36px;
   min-width: 200px;
@@ -8334,7 +8334,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   padding: 0 !important;
   background: rgba(6, 3, 20, 0.75) !important;
   border: 1px solid rgba(90, 70, 160, 0.30) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   overflow: hidden !important;
 }
 
@@ -8639,7 +8639,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-explore-col {
   background: rgba(6, 3, 20, 0.75) !important;
   border: 1px solid rgba(90, 70, 160, 0.30) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   overflow: hidden !important;
 }
 
@@ -8823,7 +8823,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   width: 18px !important;
   height: 18px !important;
   border: 2px solid rgba(200, 160, 80, 0.35) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   transform: rotate(45deg) !important;
   background: rgba(20, 8, 45, 0.85) !important;
   cursor: pointer !important;
@@ -8859,7 +8859,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   gap: 7px !important;
   cursor: pointer !important;
   padding: 5px 12px !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   border: 1px solid rgba(180, 130, 40, 0.25) !important;
   background: rgba(20, 10, 40, 0.6) !important;
   transition: all 0.2s ease !important;
@@ -9170,7 +9170,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   gap: 5px !important;
   background: linear-gradient(135deg, rgba(60, 30, 100, 0.80), rgba(30, 15, 60, 0.90)) !important;
   border: 1px solid rgba(140, 100, 220, 0.50) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   color: #c8b8f0 !important;
   font-family: 'Cinzel', serif !important;
   font-size: 11px !important;
@@ -9199,7 +9199,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   gap: 5px;
   background: rgba(20, 10, 50, 0.60);
   border: 1px solid rgba(140, 100, 220, 0.35);
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 5px 12px;
 }
 .jrpg-potency-label {
@@ -9432,7 +9432,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   padding: 6px 4px !important;
   cursor: pointer !important;
   border: 1px solid rgba(100, 80, 180, 0.20) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   background: rgba(15, 6, 38, 0.40) !important;
   transition: color 0.15s ease, text-shadow 0.15s ease, background 0.15s ease !important;
 }
@@ -9504,7 +9504,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   justify-content: center !important;
   padding: 4px 10px !important;
   border: 1px solid rgba(100, 80, 180, 0.35) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   background: rgba(15, 6, 38, 0.50) !important;
   font-size: 10px !important;
   letter-spacing: 0.08em !important;
@@ -9534,7 +9534,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   white-space: nowrap !important;
   padding: 5px 12px !important;
   border: 1px solid rgba(140, 100, 220, 0.35) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   font-family: 'Cinzel', serif !important;
   font-size: 10px !important;
   letter-spacing: 0.08em !important;
@@ -9558,7 +9558,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   gap: 6px !important;
   background: var(--sty-gold-grad) !important;
   border: 1px solid rgba(255, 220, 80, 0.75) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   color: #1a0e00 !important;
   font-family: 'Cinzel', serif !important;
   font-size: 13px !important;
@@ -9590,7 +9590,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   margin-top: 6px;
   background: rgba(139, 90, 43, 0.12);
   border: 1px solid rgba(139, 90, 43, 0.3);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .sa-heavy-wc-label {
@@ -9670,7 +9670,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   height: 10px !important;
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(100, 80, 180, 0.30) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   overflow: hidden !important;
 }
 
@@ -9678,7 +9678,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   height: 100% !important;
   width: 0% !important;
   background: linear-gradient(90deg, rgba(80, 50, 180, 0.9), rgba(160, 100, 255, 0.9)) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   box-shadow: 0 0 8px rgba(140, 80, 255, 0.60) !important;
   transition: width 0.4s ease !important;
 }
@@ -9725,7 +9725,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: rgba(255, 210, 80, 0.90) !important;
   background: rgba(40, 20, 0, 0.60) !important;
   border: 1px solid rgba(255, 180, 50, 0.40) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   padding: 8px 28px !important;
   cursor: pointer !important;
   transition: color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
@@ -10594,7 +10594,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   justify-content: space-between !important;
   align-items: center !important;
   padding: 5px 8px !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   cursor: pointer !important;
   border: 1px solid transparent !important;
   transition: background 0.15s, border-color 0.15s !important;
@@ -10941,7 +10941,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .jrpg-char-select {
   background: rgba(8, 8, 20, 0.80) !important;
   border: 1px solid rgba(185, 145, 55, 0.28) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   color: rgba(240, 225, 185, 0.88) !important;
   font-size: 12px !important;
   padding: 3px 6px !important;
@@ -11119,7 +11119,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .folk-popup .window-app {
   background: #0f0c1e !important;
   border: 1px solid rgba(150,115,35,0.65) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   box-shadow: 0 0 24px rgba(0,0,0,0.85) !important;
 }
 .folk-popup .window-header {
@@ -11200,7 +11200,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   background-color: rgba(8,14,35,0.95) !important;
   color: #c8d8f0 !important;
   border: 1px solid rgba(60,90,160,0.5) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   padding: 3px 6px !important;
   font-family: 'Rajdhani', sans-serif !important;
   font-size: 13px !important;
@@ -11342,7 +11342,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 /* Base slot */
 .inv-slot {
   aspect-ratio: 1 / 1 !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -11415,7 +11415,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   align-self: flex-start !important;
   background: transparent !important;
   border: 1px solid rgba(60, 90, 160, 0.35) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   color: rgba(140, 170, 220, 0.7) !important;
   font-size: 11px !important;
   font-family: "Rajdhani", sans-serif !important;
@@ -11719,7 +11719,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   align-items: center !important;
   justify-content: center !important;
   overflow: hidden !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
 }
 
 .jrpg-page[data-page="inventory"] .inv-slot.inv-empty {
@@ -11745,12 +11745,12 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 .jrpg-page[data-page="inventory"] .inv-slot.inv-solo {
   border: 1px solid rgba(55, 138, 221, 0.5) !important;
-  border-radius: 7px !important;
+  border-radius: 6px !important;
 }
 
 .jrpg-page[data-page="inventory"] .inv-slot.inv-start {
   border-left: 1px solid rgba(55, 138, 221, 0.5) !important;
-  border-radius: 7px 0 0 7px !important;
+  border-radius: 6px 0 0 7px !important;
 }
 
 .jrpg-page[data-page="inventory"] .inv-slot.inv-mid {
@@ -11782,7 +11782,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   align-self: flex-start !important;
   background: transparent !important;
   border: 1px solid rgba(60, 90, 160, 0.35) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   color: rgba(140, 170, 220, 0.7) !important;
   font-size: 11px !important;
   padding: 4px 10px !important;
@@ -11849,7 +11849,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   content: '' !important;
   position: absolute !important;
   inset: 0 !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   background: linear-gradient(
     110deg,
     transparent 30%,
@@ -12051,7 +12051,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   flex: 1 !important;
   background: rgba(10, 16, 40, 0.8) !important;
   border: 1px solid rgba(55, 90, 180, 0.3) !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
   color: rgba(200, 220, 255, 0.9) !important;
   font-size: 12px !important;
   padding: 4px 8px !important;
@@ -12079,7 +12079,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   justify-content: center !important;
   background: rgba(10, 18, 45, 0.7) !important;
   border: 1px solid rgba(55, 90, 160, 0.2) !important;
-  border-radius: 5px !important;
+  border-radius: 6px !important;
   cursor: pointer !important;
   transition: background 0.12s ease, border-color 0.12s ease, transform 0.1s ease !important;
   overflow: hidden !important;
@@ -12193,7 +12193,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .party .item-list .item-image {
   width: 28px;
   height: 28px;
-  border-radius: 4px;
+  border-radius: 3px;
   object-fit: cover;
 }
 
@@ -12495,7 +12495,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   text-align: center;
   background: #0d0600;
   border: 1px solid #5a3e1b;
-  border-radius: 4px;
+  border-radius: 3px;
   color: #e8c87a;
   padding: 6px;
   font-size: 20px;
@@ -12614,7 +12614,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   position: relative;
   width: 82px;
   height: 82px;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -12775,7 +12775,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   overflow-y: auto;
   background: #0a0600;
   border: 1px solid #3a2810;
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -12850,7 +12850,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: #c8a85a;
   background: #0d0600;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 3px;
   border: 1px solid #3a2810;
 }
 
@@ -12872,7 +12872,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .close-fishing-btn {
   flex: 1;
   padding: 9px 12px;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   font-family: inherit;
   font-size: 13px;
@@ -13423,7 +13423,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   padding: 8px 32px;
   background: linear-gradient(135deg, rgba(20,80,130,0.85), rgba(10,50,100,0.9));
   border: 1px solid rgba(70,160,220,0.45);
-  border-radius: 5px;
+  border-radius: 6px;
   color: #b8dff8;
   font-family: var(--sty-font-ui);
   font-size: 13px;
@@ -13543,7 +13543,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 /* ── Individual cells ── */
 .fsc-cell {
   position: relative;
-  border-radius: 5px;
+  border-radius: 6px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -13701,7 +13701,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   max-height: 80px;
   overflow-y: auto;
   background: rgba(0,0,0,0.4);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 6px 8px;
   margin-top: 4px;
   scrollbar-width: thin;
@@ -13719,7 +13719,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .f-again-btn, .f-done-btn {
   flex: 1;
   padding: 8px 12px;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   font-family: 'Palatino Linotype', Georgia, serif;
   font-size: 13px;
@@ -13785,7 +13785,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .fsc-level-manual label { font-size: 12px; color: #6a94a8; }
 .fsc-level-manual input {
   width: 60px; background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(60,120,160,0.4); border-radius: 4px;
+  border: 1px solid rgba(60,120,160,0.4); border-radius: 3px;
   color: var(--sty-cyan-bright); padding: 4px; font-size: 14px; text-align: center;
 }
 
@@ -13947,7 +13947,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .fsc-complete-area .fsc-log {
   max-height: 80px; overflow-y: auto; flex-shrink: 0;
   background: rgba(4,16,30,0.55);
-  border: 1px solid rgba(40,90,130,0.2); border-radius: 4px;
+  border: 1px solid rgba(40,90,130,0.2); border-radius: 3px;
   padding: 6px 8px;
   scrollbar-width: thin; scrollbar-color: rgba(60,120,180,0.3) transparent;
 }
@@ -13972,7 +13972,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
 }
 .f-reward-btn {
-  padding: 9px 22px; border-radius: 5px; cursor: pointer;
+  padding: 9px 22px; border-radius: 6px; cursor: pointer;
   font-family: var(--sty-font-ui); font-size: 13px;
   background: linear-gradient(135deg, rgba(20,90,130,0.85), rgba(10,55,95,0.85));
   border: 1px solid rgba(80,170,220,0.5); color: #c8e8f8;
@@ -14417,7 +14417,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .ps-interior-hint { font-size: 12px; color: rgba(160,200,255,0.5); font-style: italic; margin-bottom: 14px; }
 
 .ps-item-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
-.ps-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(80,120,220,0.15); border-radius: 5px; transition: background 0.15s; }
+.ps-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(80,120,220,0.15); border-radius: 6px; transition: background 0.15s; }
 .ps-item:hover { background: rgba(255,255,255,0.09); }
 .ps-item-img { width: 28px; height: 28px; object-fit: cover; border-radius: 3px; flex-shrink: 0; border: 1px solid rgba(80,120,220,0.15); }
 .ps-item-name { flex: 1; font-size: 13px; color: #d8eeff; }
@@ -15359,7 +15359,7 @@ form.monster-sheet {
   height: 34px;
   background: rgba(217,72,79,.7) !important; /* core-override */
   border: 1px solid var(--sty-crimson-line) !important; /* core-override */
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   color: #fff;
   font-size: 14px;
@@ -15508,7 +15508,7 @@ form.spirit-beast textarea,
 form.spirit-beast select.secondary-input {
   background: rgba(6,12,30,0.65) !important;
   border: 1px solid rgba(100,80,180,0.35) !important;
-  border-radius: 5px;
+  border-radius: 6px;
   color: var(--sty-text) !important;
 }
 form.spirit-beast select.secondary-input option { background: #141c30; color: var(--sty-text); }
@@ -16120,7 +16120,7 @@ li.chat-message.sty-grp-end {
 .fantasy-item-sheet select {
   background: rgba(0, 0, 0, 0.30);
   border: 1px solid var(--sty-line-blue);
-  border-radius: 4px;
+  border-radius: 3px;
   color: var(--sty-text);
   font-family: var(--sty-font-ui);
   font-size: 13px;
@@ -16299,7 +16299,7 @@ li.chat-message.sty-grp-end {
 .fantasy-item-sheet .tertiary-input {
   background: rgba(0, 0, 0, 0.30);
   border: 1px solid var(--sty-line-blue);
-  border-radius: 4px;
+  border-radius: 3px;
   color: var(--sty-text);
   font-size: 13px;
   padding: 3px 6px;
@@ -16469,7 +16469,7 @@ li.chat-message.sty-grp-end {
   width: 22px;
   height: 24px;
   border: 1px solid var(--sty-line-gold);
-  border-radius: 4px;
+  border-radius: 3px;
   background: rgba(0, 0, 0, 0.35);
   color: var(--sty-gold);
   font-weight: bold;
@@ -16485,7 +16485,7 @@ li.chat-message.sty-grp-end {
   width: 40px;
   text-align: center;
   border: 1px solid var(--sty-line-blue);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 4px;
   background: rgba(0, 0, 0, 0.30);
   color: var(--sty-text);
@@ -17017,7 +17017,7 @@ li.chat-message.sty-grp-end {
   min-width: 0;
   background: rgba(10,18,45,.7);
   border: 1px solid rgba(55,90,160,.2);
-  border-radius: 5px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17132,7 +17132,7 @@ li.chat-message.sty-grp-end {
   margin-top: 15px;
   padding: 8px;
   background: rgba(139, 90, 43, 0.1);
-  border-radius: 4px;
+  border-radius: 3px;
   text-align: center;
   font-family: 'MedievalSharp', cursive;
   font-size: 14px;
@@ -17224,7 +17224,7 @@ li.chat-message.sty-grp-end {
   align-items: flex-start;
   gap: 8px;
   padding: 5px 8px;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   background: rgba(12, 20, 48, 0.55);
   margin-bottom: 3px;
@@ -17244,7 +17244,7 @@ li.chat-message.sty-grp-end {
 .cw-dispatch-button {
   background: linear-gradient(to bottom, #3d2e0e, #2a1f08);
   border: 1px solid rgba(232, 200, 122, 0.4);
-  border-radius: 4px;
+  border-radius: 3px;
   color: #e8c87a;
   padding: 4px 12px;
   cursor: pointer;
@@ -17254,7 +17254,7 @@ li.chat-message.sty-grp-end {
 .cw-apply-button {
   background: linear-gradient(to bottom, #3d2e0e, #2a1f08);
   border: 1px solid rgba(232, 200, 122, 0.4);
-  border-radius: 4px;
+  border-radius: 3px;
   color: #e8c87a;
   padding: 4px 12px;
   cursor: pointer;
@@ -17264,7 +17264,7 @@ li.chat-message.sty-grp-end {
 .cw-grave-button {
   background: linear-gradient(to bottom, #3d0e0e, #2a0808);
   border: 1px solid rgba(220, 53, 69, 0.5);
-  border-radius: 4px;
+  border-radius: 3px;
   color: #ff8a8a;
   padding: 4px 12px;
   cursor: pointer;
