@@ -256,6 +256,7 @@
           "mod": 0
         }
       },
+      "gloryToken": false,
       "soul_armament": {
         "name": "",
         "description": "",

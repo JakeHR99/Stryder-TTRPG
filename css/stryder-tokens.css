@@ -1,0 +1,377 @@
+/* ============ STRYDER TOKENS — Phase 0 Foundation ============ */
+
+/* ===== (a) @font-face — self-hosted ===== */
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/cinzel-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/cinzel-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Cinzel Decorative";
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/cinzel-decorative-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Arsenal";
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/arsenal-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Arsenal";
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/arsenal-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Rajdhani";
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/rajdhani-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Rajdhani";
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/rajdhani-700.woff2') format('woff2');
+}
+
+/* ===== (b) Design tokens ===== */
+
+:root {
+  /* ===== Backgrounds ===== */
+  --sty-sky: linear-gradient(180deg, #12153a 0%, #0d1830 35%, #080f20 70%, #050a18 100%);
+  --sty-bg-deep: #050a18;
+  --sty-panel: rgba(10, 18, 50, 0.75);
+  --sty-panel-deep: rgba(4, 10, 32, 0.93);
+  --sty-panel-nav: rgba(5, 8, 22, 0.92);
+  --sty-row: rgba(255, 255, 255, 0.05);
+  --sty-scene-dim: rgba(2, 6, 12, 0.55);
+  /* ===== Hairlines & frames ===== */
+  --sty-line-blue: rgba(80, 120, 220, 0.20);
+  --sty-line-blue-strong: rgba(80, 130, 220, 0.35);
+  --sty-line-gold: rgba(200, 160, 40, 0.25);
+  --sty-line-gold-strong: rgba(200, 155, 30, 0.45);
+  /* ===== Gold (display / emphasis) ===== */
+  --sty-gold: #f0c040;
+  --sty-gold-bright: #f4c030;
+  --sty-gold-muted: rgba(210, 170, 40, 0.55);
+  --sty-gold-grad: linear-gradient(135deg, #c8960a, #e8b822, #a87008);
+  --sty-gold-glow: 0 0 14px rgba(244,192,48,1), 0 0 30px rgba(244,192,48,.55), 0 0 50px rgba(244,192,48,.22);
+  /* ===== Cyan (interactive / selection / focus) ===== */
+  --sty-cyan: #6fd6f5;
+  --sty-cyan-soft: #7ab4cc;
+  --sty-cyan-bright: #c8e8ff;
+  --sty-cyan-glow: rgba(95, 217, 242, 0.55);
+  --sty-select-fill: rgba(120, 200, 255, 0.14);
+  /* ===== Text ===== */
+  --sty-text: #ddeeff;
+  --sty-text-2: rgba(140, 200, 255, 0.65);
+  --sty-text-dim: rgba(221, 238, 255, 0.40);
+  /* ===== Resources ===== */
+  --sty-hp: #6ec96e;       --sty-hp-grad: linear-gradient(90deg, #38a038, #68d868);
+  --sty-mp: #6ab4ff;       --sty-mp-grad: linear-gradient(90deg, #3878c0, #68aaff);
+  --sty-sta: #ffaa40;      --sty-sta-grad: linear-gradient(90deg, #c06820, #ffaa40);
+  --sty-track: rgba(0, 0, 0, 0.45);
+  --sty-danger: #ff6868;   --sty-danger-line: rgba(220, 80, 80, 0.45);
+  /* ===== Monster / enemy dialect ===== */
+  --sty-crimson: #d9484f;
+  --sty-crimson-glow: rgba(217, 72, 79, 0.50);
+  --sty-crimson-line: rgba(200, 70, 80, 0.35);
+  --sty-stagger: #f0a830;
+  /* ===== Rarity & component grades ===== */
+  --sty-rarity-common: #9fb0c0;
+  --sty-rarity-uncommon: #5ec9a0;
+  --sty-rarity-rare: #5fa8f0;
+  --sty-rarity-legendary: #e9b54d;
+  --sty-rarity-unique: #c878e8;
+  /* ===== Geometry ===== */
+  --sty-r-bar: 3px;
+  --sty-r-card: 6px;
+  --sty-r-panel: 10px;
+  --sty-clip-corner: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  /* ===== Type ===== */
+  --sty-font-display: "Cinzel", serif;
+  --sty-font-ui: "Arsenal", "Segoe UI", sans-serif;
+  --sty-font-number: "Rajdhani", "Arsenal", sans-serif;
+  --sty-font-ornate: "Cinzel Decorative", "Cinzel", serif;
+}
+
+/* ============ STYLE KIT — components (Brand Kit §3) ============ */
+
+.sty-panel {
+  background: var(--sty-panel);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-panel);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  color: var(--sty-text);
+}
+
+.sty-panel--deep {
+  background: var(--sty-panel-deep);
+  backdrop-filter: blur(6px);
+}
+
+.sty-header {
+  font-family: var(--sty-font-display);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--sty-gold);
+  border-bottom: 1px solid var(--sty-line-gold);
+  padding-bottom: 6px;
+}
+
+.sty-header--title {
+  letter-spacing: 3px;
+  text-shadow: var(--sty-gold-glow);
+}
+
+.sty-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--sty-row);
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid var(--sty-line-blue);
+  padding: 8px 12px;
+  color: var(--sty-text);
+  cursor: pointer;
+}
+
+.sty-row:hover {
+  background: rgba(255,255,255,.09);
+}
+
+.sty-row::after {
+  content: "▸";
+  color: var(--sty-text-2);
+  margin-left: auto;
+}
+
+.sty-row--selected {
+  background: var(--sty-select-fill);
+  border-left-color: var(--sty-cyan);
+  box-shadow: 0 0 8px var(--sty-cyan-glow), inset 0 0 14px rgba(95,217,242,.10);
+}
+
+.sty-row--selected::after {
+  color: var(--sty-cyan-bright);
+}
+
+.sty-gauge {
+  height: 6px;
+  background: var(--sty-track);
+  border-radius: var(--sty-r-bar);
+  overflow: hidden;
+}
+
+.sty-gauge__fill {
+  height: 100%;
+  border-radius: var(--sty-r-bar);
+  transition: width .3s ease-out;
+}
+
+.sty-gauge--hp .sty-gauge__fill {
+  background: var(--sty-hp-grad);
+}
+
+.sty-gauge--mp .sty-gauge__fill {
+  background: var(--sty-mp-grad);
+}
+
+.sty-gauge--sta .sty-gauge__fill {
+  background: var(--sty-sta-grad);
+}
+
+.sty-readout {
+  display: flex;
+  flex-direction: column;
+}
+
+.sty-readout__label {
+  font-variant: small-caps;
+  letter-spacing: 1.5px;
+  font-size: 11px;
+  color: var(--sty-text-2);
+}
+
+.sty-readout__value {
+  font-family: var(--sty-font-number);
+  color: #fff;
+}
+
+.sty-readout__max {
+  font-size: .75em;
+  color: var(--sty-text-2);
+}
+
+.sty-button {
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-line-blue-strong);
+  border-radius: var(--sty-r-card);
+  color: var(--sty-text);
+  font-family: var(--sty-font-display);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.sty-button:hover {
+  border-color: var(--sty-cyan);
+  box-shadow: 0 0 8px var(--sty-cyan-glow);
+}
+
+.sty-button--primary {
+  background: var(--sty-gold-grad);
+  border-color: rgba(255,220,80,.75);
+  color: #1a1205;
+  font-weight: 700;
+}
+
+.sty-button--danger {
+  border-color: var(--sty-danger-line);
+  color: var(--sty-danger);
+}
+
+.sty-card {
+  background: linear-gradient(135deg, #0d1628, #080e1c, #060a16);
+  border: 1px solid var(--sty-line-blue-strong);
+  border-left: 3px solid var(--sty-cyan);
+  clip-path: var(--sty-clip-corner);
+  border-radius: 0;
+  padding: 10px 12px;
+  color: var(--sty-text);
+  font-family: var(--sty-font-ui);
+}
+
+.sty-dialog {
+  background: var(--sty-panel);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-panel);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  color: var(--sty-text);
+  padding: 14px;
+}
+
+.sty-tabs {
+  display: flex;
+  flex-direction: row;
+}
+
+.sty-tab {
+  font-family: var(--sty-font-display);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--sty-text-2);
+  padding: 6px 12px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.sty-tab--active {
+  color: #fff;
+  border-bottom-color: var(--sty-cyan);
+}
+
+.sty-tooltip {
+  background: rgba(8,13,22,.96);
+  border: 1px solid rgba(95,217,242,.3);
+  border-radius: var(--sty-r-card);
+  color: var(--sty-text);
+  padding: 8px 10px;
+  font-family: var(--sty-font-ui);
+  font-size: 12px;
+}
+
+.sty-ornate {
+  position: relative;
+  background: var(--sty-panel);
+  backdrop-filter: blur(8px);
+  border: 2px solid var(--sty-line-gold-strong);
+  border-radius: var(--sty-r-panel);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  color: var(--sty-text);
+  outline: 1px solid #1a140c;
+  box-shadow: inset 0 0 0 1px rgba(244,192,48,.18);
+}
+
+.sty-ornate::before {
+  content: "◆◆◆";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--sty-gold-muted);
+  font-size: 11px;
+  letter-spacing: 6px;
+}
+
+.sty-ornate__ribbon {
+  height: 3px;
+  border-radius: 2px;
+}
+
+.sty-ornate__ribbon.sty-rarity-common    { background: var(--sty-rarity-common); }
+.sty-ornate__ribbon.sty-rarity-uncommon  { background: var(--sty-rarity-uncommon); }
+.sty-ornate__ribbon.sty-rarity-rare      { background: var(--sty-rarity-rare); }
+.sty-ornate__ribbon.sty-rarity-legendary { background: var(--sty-rarity-legendary); }
+.sty-ornate__ribbon.sty-rarity-unique    { background: var(--sty-rarity-unique); }
+
+.sty-rarity-text--common    { color: var(--sty-rarity-common); }
+.sty-rarity-text--uncommon  { color: var(--sty-rarity-uncommon); }
+.sty-rarity-text--rare      { color: var(--sty-rarity-rare); }
+.sty-rarity-text--legendary { color: var(--sty-rarity-legendary); }
+.sty-rarity-text--unique    { color: var(--sty-rarity-unique); }
+
+.sty-enemy .sty-header,
+.sty-header--enemy {
+  color: var(--sty-crimson);
+  border-bottom-color: var(--sty-crimson-line);
+  text-shadow: 0 0 10px var(--sty-crimson-glow);
+}
+
+.sty-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--sty-crimson-line);
+  display: inline-block;
+}
+
+.sty-pip--wound {
+  background: var(--sty-crimson);
+  border: none;
+}
+
+.sty-pip--grave {
+  background: var(--sty-stagger);
+  border: none;
+  box-shadow: 0 0 6px rgba(240,168,48,.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sty-button,
+  .sty-gauge__fill,
+  .sty-tab {
+    transition: none;
+  }
+}

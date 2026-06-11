@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Eagle+Lake&family=Metal+Mania&family=Lavishly+Yours&family=Yatra+One&family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Felipa&family=Varela+Round&family=Luxurious+Roman&family=MedievalSharp&family=EB+Garamond:wght@400;500&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Eagle+Lake&family=Metal+Mania&family=Lavishly+Yours&family=Yatra+One&family=Felipa&family=Varela+Round&family=Luxurious+Roman&family=MedievalSharp&family=EB+Garamond:wght@400;500&display=swap');
 /* Global styles */
 .window-app {
   font-family: "Roboto", sans-serif;
@@ -2340,15 +2340,15 @@ ol#chat-log > li,
 /* Wrap the whole message content when it contains a dice roll */
 .message-content:has(.dice-roll) {
   background: linear-gradient(135deg, #0d1628 0%, #080e1c 60%, #060a16 100%) !important;
-  border: 1px solid #1e4fa0 !important;
-  border-left: 3px solid #2a70e0 !important;
+  border: 1px solid var(--sty-line-blue-strong) !important;
+  border-left: 3px solid var(--sty-cyan) !important;
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%) !important;
   box-shadow: 0 0 14px rgba(20, 80, 200, 0.2), inset 0 1px 0 rgba(80, 140, 255, 0.08) !important;
   padding: 10px 12px !important;
   position: relative !important;
   overflow: hidden !important;
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
-  color: #a8c8e8 !important;
+  font-family: var(--sty-font-ui) !important;
+  color: var(--sty-text) !important;
 }
 
 .message-content:has(.dice-roll)::before {
@@ -2356,7 +2356,7 @@ ol#chat-log > li,
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(to right, #2a70e0, #60a8ff, transparent);
+  background: linear-gradient(to right, var(--sty-cyan), var(--sty-cyan-bright), transparent);
   opacity: 0.65;
   pointer-events: none;
 }
@@ -2367,10 +2367,10 @@ ol#chat-log > li,
 .message-header .flavor-text,
 .message-content .flavor-text,
 .dice-roll .dice-flavor {
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-family: var(--sty-font-ui) !important;
   font-size: 12px !important;
   font-weight: 600 !important;
-  color: #e8f0ff !important;
+  color: var(--sty-text) !important;
   text-shadow: 0 0 8px rgba(42, 112, 224, 0.35) !important;
   border-bottom: 1px solid rgba(42, 112, 224, 0.2) !important;
   padding-bottom: 5px !important;
@@ -2381,7 +2381,7 @@ ol#chat-log > li,
 /* Ensure all text inside roll cards inherits light color */
 .message-content:has(.dice-roll),
 .message-content:has(.dice-roll) * {
-  color: #e8f0ff !important;
+  color: var(--sty-text) !important;
 }
 
 /* Outer roll card — now just handles inner layout, card shell is on message-content */
@@ -2391,8 +2391,8 @@ ol#chat-log > li,
   box-shadow: none !important;
   padding: 0 !important;
   position: relative !important;
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
-  color: #a8c8e8 !important;
+  font-family: var(--sty-font-ui) !important;
+  color: var(--sty-text) !important;
   border-radius: 0 !important;
 }
 
@@ -2403,7 +2403,7 @@ ol#chat-log > li,
   border: 1px solid rgba(42, 112, 224, 0.2) !important;
   border-radius: 2px !important;
   color: #6090c0 !important;
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-family: var(--sty-font-ui) !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   text-align: center !important;
@@ -2417,8 +2417,8 @@ ol#chat-log > li,
   background: rgba(42, 112, 224, 0.1) !important;
   border: 1px solid rgba(42, 112, 224, 0.35) !important;
   border-radius: 2px !important;
-  color: #e8f0ff !important;
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  color: var(--sty-text) !important;
+  font-family: var(--sty-font-ui) !important;
   font-size: 22px !important;
   font-weight: 700 !important;
   text-align: center !important;
@@ -2430,14 +2430,14 @@ ol#chat-log > li,
 
 /* Critical / fumble overrides */
 .dice-roll .dice-total.critical {
-  color: #60e8a0 !important;
+  color: var(--sty-hp) !important;
   border-color: rgba(40, 200, 100, 0.5) !important;
   text-shadow: 0 0 12px rgba(40, 200, 100, 0.6) !important;
   background: rgba(30, 140, 70, 0.1) !important;
 }
 
 .dice-roll .dice-total.fumble {
-  color: #e06060 !important;
+  color: var(--sty-danger) !important;
   border-color: rgba(200, 50, 50, 0.5) !important;
   text-shadow: 0 0 12px rgba(200, 50, 50, 0.5) !important;
   background: rgba(140, 30, 30, 0.1) !important;
@@ -2449,7 +2449,7 @@ ol#chat-log > li,
   border: 1px solid rgba(42, 112, 224, 0.15) !important;
   border-radius: 0 !important;
   padding: 6px 8px !important;
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-family: var(--sty-font-ui) !important;
   font-size: 11px !important;
   color: #6090c0 !important;
 }
@@ -2468,32 +2468,32 @@ ol#chat-log > li,
   background: rgba(42, 112, 224, 0.08) !important;
   border: 1px solid rgba(42, 112, 224, 0.2) !important;
   border-radius: 2px !important;
-  color: #a8c8e8 !important;
+  color: var(--sty-text) !important;
   font-weight: 600 !important;
 }
 
 .dice-roll .dice-tooltip .dice-rolls .roll.max {
   background: rgba(30, 140, 70, 0.15) !important;
   border-color: rgba(40, 200, 100, 0.4) !important;
-  color: #60e8a0 !important;
+  color: var(--sty-hp) !important;
 }
 
 .dice-roll .dice-tooltip .dice-rolls .roll.min {
   background: rgba(140, 30, 30, 0.15) !important;
   border-color: rgba(200, 50, 50, 0.4) !important;
-  color: #e06060 !important;
+  color: var(--sty-danger) !important;
 }
 
 /* ── FF7R-style Chat Cards ─────────────────────────────── */
 .chat-message-card {
   background: linear-gradient(135deg, #0d1628 0%, #080e1c 60%, #060a16 100%);
-  border: 1px solid #1e4fa0;
-  border-left: 3px solid #2a70e0;
+  border: 1px solid var(--sty-line-blue-strong);
+  border-left: 3px solid var(--sty-cyan);
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
   padding: 12px 14px 12px 14px;
   box-shadow: 0 0 16px rgba(20, 80, 200, 0.25), inset 0 1px 0 rgba(80, 140, 255, 0.1);
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  color: #a8c8e8;
+  font-family: var(--sty-font-ui);
+  color: var(--sty-text);
   position: relative;
   overflow: hidden;
   margin: 2px 0;
@@ -2507,7 +2507,7 @@ ol#chat-log > li,
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, #2a70e0, #60a8ff, transparent);
+  background: linear-gradient(to right, var(--sty-cyan), var(--sty-cyan-bright), transparent);
   opacity: 0.7;
 }
 
@@ -2519,7 +2519,7 @@ ol#chat-log > li,
   right: 4px;
   width: 12px;
   height: 1px;
-  background: #2a70e0;
+  background: var(--sty-cyan);
   opacity: 0.5;
 }
 
@@ -2545,11 +2545,11 @@ ol#chat-log > li,
 
 .resource-spend-button {
   background: linear-gradient(135deg, #162e68 0%, #0d1e48 100%) !important;
-  color: #a8c8e8 !important;
-  border: 1px solid #2a70e0 !important;
+  color: var(--sty-text) !important;
+  border: 1px solid var(--sty-line-blue-strong) !important;
   border-radius: 2px !important;
   padding: 6px 16px !important;
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-family: var(--sty-font-ui) !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   letter-spacing: 0.6px !important;
@@ -2564,8 +2564,8 @@ ol#chat-log > li,
 
 .resource-spend-button:hover {
   background: linear-gradient(135deg, #1e3e88 0%, #122860 100%) !important;
-  color: #e8f0ff !important;
-  border-color: #60a8ff !important;
+  color: var(--sty-text) !important;
+  border-color: var(--sty-cyan-bright) !important;
   box-shadow: 0 0 12px rgba(42, 112, 224, 0.4) !important;
   transform: translateY(-1px);
 }
@@ -2576,7 +2576,7 @@ ol#chat-log > li,
   border: 1px solid #a02020 !important;
   border-radius: 2px !important;
   padding: 6px 16px !important;
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-family: var(--sty-font-ui) !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   letter-spacing: 0.6px !important;
@@ -2598,13 +2598,14 @@ ol#chat-log > li,
 }
 
 /* Dialog Button Styling - FF7R style */
+/* core-override */
 .dialog .dialog-buttons .dialog-button {
-  background: linear-gradient(135deg, #162e68 0%, #0d1e48 100%) !important;
-  color: #a8c8e8 !important;
-  border: 1px solid #2a70e0 !important;
+  background: linear-gradient(180deg, rgba(22,40,90,.95), rgba(8,16,40,.95)) !important;
+  color: var(--sty-text) !important;
+  border: 1px solid var(--sty-line-blue-strong) !important;
   border-radius: 2px !important;
   padding: 6px 14px !important;
-  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  font-family: var(--sty-font-display) !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   letter-spacing: 0.5px !important;
@@ -2617,9 +2618,9 @@ ol#chat-log > li,
 
 .dialog .dialog-buttons .dialog-button:hover {
   background: linear-gradient(135deg, #1e3e88 0%, #122860 100%) !important;
-  color: #e8f0ff !important;
-  border-color: #60a8ff !important;
-  box-shadow: 0 0 10px rgba(42, 112, 224, 0.35) !important;
+  color: var(--sty-text) !important;
+  border-color: var(--sty-cyan) !important;
+  box-shadow: 0 0 8px var(--sty-cyan-glow) !important;
   transform: translateY(-1px);
 }
 
@@ -2637,17 +2638,17 @@ ol#chat-log > li,
 }
 
 .chat-message-title {
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
   font-size: 17px;
   font-weight: 700;
-  color: #e8f0ff;
+  color: var(--sty-text);
   text-shadow: 0 0 10px rgba(42, 112, 224, 0.45);
   margin: 4px 0 6px 0;
   letter-spacing: 0.5px;
 }
 
 .chat-message-subtitle {
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
   font-size: 12px;
   color: #5a86b8;
   font-style: italic;
@@ -2668,10 +2669,10 @@ ol#chat-log > li,
   border: 1px solid rgba(42, 112, 224, 0.35);
   border-radius: 2px;
   padding: 1px 7px;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
   font-size: 10px;
   font-weight: 600;
-  color: #60a8ff;
+  color: var(--sty-cyan-bright);
   text-transform: uppercase;
   letter-spacing: 0.8px;
 }
@@ -2694,7 +2695,7 @@ ol#chat-log > li,
 .chat-message-detail-label {
   font-weight: 600;
   color: #5a86b8;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -2703,7 +2704,7 @@ ol#chat-log > li,
 .chat-message-content {
   line-height: 1.6;
   font-size: 13px;
-  color: #a8c8e8;
+  color: var(--sty-text);
 }
 
 /* ── Chat Card Collapse ──────────────────────────────────────────────── */
@@ -2760,11 +2761,11 @@ ol#chat-log > li,
 
 .chat-message-resource-button {
   background: linear-gradient(135deg, #162e68 0%, #0d1e48 100%);
-  color: #a8c8e8;
-  border: 1px solid #2a70e0;
+  color: var(--sty-text);
+  border: 1px solid var(--sty-line-blue-strong);
   border-radius: 2px;
   padding: 6px 16px;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.6px;
@@ -2779,14 +2780,14 @@ ol#chat-log > li,
 
 .chat-message-resource-button:hover {
   background: linear-gradient(135deg, #1e3e88 0%, #122860 100%);
-  color: #e8f0ff;
-  border-color: #60a8ff;
+  color: var(--sty-text);
+  border-color: var(--sty-cyan-bright);
   box-shadow: 0 0 12px rgba(42, 112, 224, 0.4);
   transform: translateY(-1px);
 }
 
 .damage-quality {
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
   font-size: 14px;
   font-weight: 700;
   text-align: center;
@@ -2800,19 +2801,19 @@ ol#chat-log > li,
 .damage-quality.poor {
   background-color: rgba(160, 30, 30, 0.15);
   border: 1px solid rgba(200, 50, 50, 0.35);
-  color: #e06060;
+  color: var(--sty-danger);
 }
 
 .damage-quality.good {
   background-color: rgba(30, 140, 70, 0.15);
   border: 1px solid rgba(40, 180, 90, 0.35);
-  color: #50d080;
+  color: var(--sty-hp);
 }
 
 .damage-quality.excellent {
   background-color: rgba(42, 112, 224, 0.15);
   border: 1px solid rgba(42, 112, 224, 0.35);
-  color: #60a8ff;
+  color: var(--sty-cyan-bright);
   text-shadow: 0 0 8px rgba(42, 112, 224, 0.5);
 }
 
@@ -3271,13 +3272,13 @@ ol#chat-log > li,
 
 /* Faction-specific colors */
 #combat-tracker .combatant.started-turn.allied {
-    border-left-color: #4caf50;
+    border-left-color: var(--sty-line-gold-strong);
     box-shadow: inset 0 0 8px rgba(76, 175, 80, 0.3), 0 0 6px rgba(76, 175, 80, 0.2);
     animation-name: pulseGlowAllied;
 }
 
 #combat-tracker .combatant.started-turn.enemy {
-    border-left-color: #f44336;
+    border-left-color: var(--sty-crimson-line);
     box-shadow: inset 0 0 8px rgba(244, 67, 54, 0.3), 0 0 6px rgba(244, 67, 54, 0.2);
     animation-name: pulseGlowEnemy;
 }
@@ -3397,15 +3398,15 @@ ol#chat-log > li,
     text-align: center;
     margin: 15px 0 5px 0;
     padding: 12px 20px;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    border: 2px solid #3498db;
+    background: var(--sty-select-fill);
+    border: 2px solid var(--sty-cyan);
     border-radius: 8px;
-    color: #ecf0f1;
-    font-family: 'Cinzel Decorative', serif;
+    color: var(--sty-text);
+    font-family: var(--sty-font-display);
     font-weight: 700;
     font-size: 24px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 8px var(--sty-cyan-glow);
     position: relative;
     overflow: hidden;
 }
@@ -3432,7 +3433,7 @@ ol#chat-log > li,
     margin: 8px 0 10px 0;
     padding: 10px 15px;
     border-radius: 6px;
-    font-family: 'Cinzel Decorative', serif;
+    font-family: var(--sty-font-display);
     font-weight: 700;
     font-size: 18px;
     text-transform: uppercase;
@@ -3443,9 +3444,9 @@ ol#chat-log > li,
 
 /* Ally Phase Header */
 .faction:first-of-type {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-    color: #ffffff;
-    border: 2px solid #27ae60;
+    background: transparent;
+    color: var(--sty-gold);
+    border: 2px solid var(--sty-line-gold-strong);
     box-shadow: 0 3px 6px rgba(39, 174, 96, 0.3);
 }
 
@@ -3457,9 +3458,9 @@ ol#chat-log > li,
 
 /* Enemy Phase Header */
 .faction:last-of-type {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    color: #ffffff;
-    border: 2px solid #e74c3c;
+    background: transparent;
+    color: var(--sty-crimson);
+    border: 2px solid var(--sty-crimson-line);
     box-shadow: 0 3px 6px rgba(231, 76, 60, 0.3);
 }
 
@@ -3471,7 +3472,7 @@ ol#chat-log > li,
 
 /* Combat Tracker Container */
 .combat-tracker {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    background: linear-gradient(135deg, var(--sty-bg-deep) 0%, rgba(10,18,50,0.5) 100%);
     border-radius: 8px;
     padding: 15px;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -3574,10 +3575,10 @@ ol#chat-log > li,
 }
 
 .token-name .name {
-    font-family: 'Cinzel Decorative', serif;
+    font-family: var(--sty-font-display);
     font-weight: 600;
     font-size: 16px;
-    color: #ecf0f1;
+    color: var(--sty-text);
     margin: 0;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
@@ -3594,7 +3595,7 @@ ol#chat-log > li,
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     padding: 4px 6px;
-    color: #ecf0f1;
+    color: var(--sty-text);
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -3612,11 +3613,11 @@ ol#chat-log > li,
 
 /* Turn Control Buttons */
 .turn-control {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    border: 2px solid #3498db;
+    background: linear-gradient(135deg, var(--sty-cyan) 0%, #2980b9 100%);
+    border: 2px solid var(--sty-cyan);
     border-radius: 6px;
     padding: 8px 12px;
-    color: white;
+    color: var(--sty-text);
     font-weight: bold;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -3641,7 +3642,7 @@ ol#chat-log > li,
 }
 
 .token-resource .resource {
-    font-family: 'Cinzel Decorative', serif;
+    font-family: var(--sty-font-display);
     font-weight: 600;
     color: #f39c12;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
@@ -3676,7 +3677,7 @@ ol#chat-log > li,
 
 /* Combat Tracker Header Styling */
 .combat-tracker-header {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    background: linear-gradient(135deg, var(--sty-bg-deep) 0%, rgba(10,18,50,0.5) 100%);
     border-bottom: 2px solid #444;
     padding: 10px 15px;
 }
@@ -3693,7 +3694,7 @@ ol#chat-log > li,
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     padding: 6px 8px;
-    color: #ecf0f1;
+    color: var(--sty-text);
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -3705,8 +3706,8 @@ ol#chat-log > li,
 }
 
 .inline-control.active {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    border-color: #3498db;
+    background: linear-gradient(135deg, var(--sty-cyan) 0%, #2980b9 100%);
+    border-color: var(--sty-cyan);
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -3722,10 +3723,10 @@ ol#chat-log > li,
 }
 
 .encounter-title {
-    font-family: 'Cinzel Decorative', serif;
+    font-family: var(--sty-font-display);
     font-weight: 700;
     font-size: 20px;
-    color: #ecf0f1;
+    color: var(--sty-text);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     margin: 0;
     text-align: center;
@@ -3747,7 +3748,7 @@ ol#chat-log > li,
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     padding: 6px 8px;
-    color: #ecf0f1;
+    color: var(--sty-text);
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -3801,15 +3802,15 @@ ol#chat-log > li,
   margin: 4px 0 8px;
   background: rgba(42, 112, 224, 0.1);
   border: 1px solid rgba(42, 112, 224, 0.3);
-  border-left: 3px solid #2a70e0;
+  border-left: 3px solid var(--sty-cyan);
   gap: 3px;
 }
 
 .initiative-phase-label {
-  font-family: 'Cinzel', serif;
+  font-family: var(--sty-font-display);
   font-size: 11px;
   font-weight: 600;
-  color: #60a8ff;
+  color: var(--sty-cyan-bright);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -3817,7 +3818,7 @@ ol#chat-log > li,
 .initiative-phase-hint {
   font-size: 10px;
   color: rgba(168, 200, 232, 0.6);
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
 }
 
 /* "Begin Combat" button — glows blue to signal it's ready to fire */
@@ -5701,16 +5702,16 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 /* Status Conditions Chat Message Styling */
 .status-conditions-message {
   background: linear-gradient(135deg, #0d1628 0%, #080e1c 60%, #060a16 100%);
-  border: 1px solid #1e4fa0;
-  border-left: 3px solid #2a70e0;
+  border: 1px solid var(--sty-line-blue-strong);
+  border-left: 3px solid var(--sty-cyan);
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
   padding: 12px 14px;
   margin: 10px 0;
   position: relative;
   box-shadow: 0 0 16px rgba(20, 80, 200, 0.25), inset 0 1px 0 rgba(80, 140, 255, 0.1);
   overflow: hidden;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  color: #a8c8e8;
+  font-family: var(--sty-font-ui);
+  color: var(--sty-text);
 }
 
 .status-conditions-message::before {
@@ -5720,7 +5721,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, #2a70e0, #60a8ff, transparent);
+  background: linear-gradient(to right, var(--sty-cyan), var(--sty-cyan-bright), transparent);
   opacity: 0.7;
 }
 
@@ -5733,10 +5734,10 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .status-conditions-message .chat-message-title {
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
   font-size: 17px;
   font-weight: 700;
-  color: #e8f0ff;
+  color: var(--sty-text);
   text-shadow: 0 0 10px rgba(42, 112, 224, 0.45);
   margin: 0;
   letter-spacing: 0.5px;
@@ -5747,7 +5748,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .status-conditions-message .chat-message-title i {
-  color: #60a8ff;
+  color: var(--sty-cyan-bright);
   font-size: 16px;
   text-shadow: 0 0 8px rgba(42, 112, 224, 0.5);
 }
@@ -5755,7 +5756,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .status-conditions-message .chat-message-content {
   line-height: 1.6;
   font-size: 13px;
-  color: #a8c8e8;
+  color: var(--sty-text);
 }
 
 .status-conditions-grid {
@@ -5801,7 +5802,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .status-condition-label {
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--sty-font-ui);
   font-size: 9px;
   font-weight: 600;
   color: #6090c0;
@@ -9532,6 +9533,68 @@ details.stryder-section:not([open]) .stryder-section-chevron {
     0 0 28px rgba(255, 120, 0, 0.25) !important;
 }
 
+/* ---- GLORY TOKEN ---- */
+.jrpg-glory-row {
+  display: flex !important;
+  align-items: center !important;
+  padding: 6px 12px 10px !important;
+  gap: 10px !important;
+}
+
+.jrpg-glory-toggle {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  cursor: pointer !important;
+  padding: 5px 12px !important;
+  border-radius: 5px !important;
+  border: 1px solid rgba(180, 130, 40, 0.25) !important;
+  background: rgba(20, 10, 40, 0.6) !important;
+  transition: all 0.2s ease !important;
+  user-select: none !important;
+}
+
+.jrpg-glory-toggle:hover {
+  border-color: rgba(255, 200, 60, 0.45) !important;
+  background: rgba(40, 20, 60, 0.75) !important;
+}
+
+.jrpg-glory-coin {
+  font-size: 18px !important;
+  color: rgba(160, 120, 40, 0.55) !important;
+  transition: all 0.2s ease !important;
+  line-height: 1 !important;
+}
+
+.jrpg-glory-label-text {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  color: rgba(160, 140, 100, 0.65) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Active state — token held */
+.jrpg-glory-active.jrpg-glory-toggle {
+  border-color: rgba(255, 210, 60, 0.7) !important;
+  background: rgba(60, 35, 5, 0.85) !important;
+  box-shadow:
+    0 0 8px rgba(255, 195, 40, 0.35),
+    0 0 20px rgba(255, 140, 0, 0.15) !important;
+}
+
+.jrpg-glory-active .jrpg-glory-coin {
+  color: #ffd040 !important;
+  text-shadow:
+    0 0 6px rgba(255, 210, 50, 0.9),
+    0 0 14px rgba(255, 160, 0, 0.55) !important;
+}
+
+.jrpg-glory-active .jrpg-glory-label-text {
+  color: #f5d070 !important;
+}
+
 /* ---- CHALLENGES ---- */
 .jrpg-challenges-section {
   width: 100% !important;
@@ -12011,6 +12074,8 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   height: 72% !important;
   object-fit: contain !important;
   border-radius: 3px !important;
+  -webkit-user-drag: none !important;
+  pointer-events: none !important;
 }
 
 .inv-item-icon {
@@ -15077,7 +15142,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   left: -10%;
   width: 120%;
   height: 120%;
-  background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/537051/smoke-min.png')
+  background: url('../assets/ui/smoke-min.png')
               center center no-repeat;
   background-size: cover;
   mix-blend-mode: screen;
@@ -15435,6 +15500,18 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .ps-item-controls a { cursor: pointer; color: rgba(140,190,255,0.4); font-size: 12px; transition: color 0.15s; }
 .ps-item-controls a:hover { color: #fff; }
 .ps-item-empty { font-size: 12px; color: rgba(140,190,255,0.35); font-style: italic; padding: 14px; text-align: center; }
+
+/* Drag-over highlight for item drops */
+.ps-item-list.ps-drop-active {
+  outline: 2px dashed rgba(100, 180, 255, 0.55) !important;
+  outline-offset: 4px !important;
+  border-radius: 6px !important;
+  background: rgba(30, 60, 120, 0.18) !important;
+}
+
+/* Inventory grid item drag cursor */
+.inv-slot.inv-item[draggable="true"] { cursor: grab !important; }
+.inv-slot.inv-item[draggable="true"]:active { cursor: grabbing !important; }
 
 .ps-interior-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 50px 24px; background: rgba(10,18,50,0.75); backdrop-filter: blur(8px); margin: 10px 14px 8px; border-radius: 10px; border: 1px solid rgba(80,120,220,0.2); }
 .ps-ph-icon { font-size: 50px; opacity: 0.45; }
@@ -16529,3 +16606,45 @@ form.spirit-beast .skill img {
 }
 form.spirit-beast .skill span { color: #c8b8f0; }
 form.spirit-beast .header-decoration { opacity: 0.4; }
+
+
+/* ============ CHAT FLOW GROUPING (Phase 1A.2) ============ */
+
+/* Burst start: breathe a little before the first message in a group */
+li.chat-message.sty-grp-start {
+  margin-top: 6px;
+}
+
+/* Burst follower: hide the native Foundry message header, tuck up */
+li.chat-message.sty-grp-follow {
+  margin-top: 2px !important; /* core-override: collapse Foundry's li margin */
+  position: relative;
+}
+
+li.chat-message.sty-grp-follow .message-header {
+  display: none;
+}
+
+/* Floating hover chip: shows relative timestamp stored in data-sty-meta */
+li.chat-message.sty-grp-follow:hover::before {
+  content: attr(data-sty-meta);
+  position: absolute;
+  right: 36px;
+  top: 6px;
+  font-family: var(--sty-font-ui);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--sty-text-2);
+  background: var(--sty-panel-deep);
+  border: 1px solid var(--sty-line-blue-strong);
+  border-radius: var(--sty-r-bar);
+  padding: 2px 6px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Burst end: soft cyan glow on the closing edge */
+li.chat-message.sty-grp-end {
+  border-bottom: 1px solid var(--sty-cyan-glow);
+  box-shadow: 0 3px 10px -6px var(--sty-cyan-glow);
+}

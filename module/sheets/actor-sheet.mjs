@@ -4383,6 +4383,21 @@ export class StryderActorSheet extends ActorSheet {
         li.setAttribute('draggable', true);
         li.addEventListener('dragstart', handler, false);
       });
+
+      // Inventory grid items — make draggable so players can drop them onto the party sheet.
+      // We set drag data directly rather than delegating to _onDragStart because these are
+      // divs (not li.item) and child img elements grab the native image drag otherwise.
+      html.find('.inv-slot.inv-item[data-item-id]').each((i, el) => {
+        el.setAttribute('draggable', true);
+        // Stop child images from hijacking the drag with browser-native image drag
+        el.querySelectorAll('img').forEach(img => img.setAttribute('draggable', 'false'));
+        el.addEventListener('dragstart', (ev) => {
+          const itemId = el.dataset.itemId;
+          const item = this.actor.items.get(itemId);
+          if (!item) { ev.preventDefault(); return; }
+          ev.dataTransfer.setData('text/plain', JSON.stringify(item.toDragData()));
+        }, false);
+      });
     }
 
 	// Folk select — confirm then wipe old bonuses, open fresh popup
@@ -5664,9 +5679,9 @@ export class StryderActorSheet extends ActorSheet {
       const src = foundry.utils.getProperty(actor.toObject(false), 'system.attributes.talent') ?? {};
       const changes = StryderActorSheet.TALENT_KEYS.map(talent => ({
         key: `system.attributes.talent.${talent}.value`,
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE, // 4 — only applies if higher
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE, // 5 — always wins; lets players set any value
         value: String(talentUpdates[talent] ?? Number(src[talent]?.value ?? 0)),
-        priority: 100
+        priority: 200
       }));
       await actor.createEmbeddedDocuments("ActiveEffect", [{
         name: "Player Talents",
@@ -5677,13 +5692,18 @@ export class StryderActorSheet extends ActorSheet {
         flags: { stryder: { isPlayerTalents: true } }
       }]);
     } else {
-      // Update only the changed keys; leave the rest as-is.
+      // Update only the changed keys; also migrate mode/priority to OVERRIDE/200 if needed.
       const changes = existing.changes.map(change => {
         const m = change.key.match(/^system\.attributes\.talent\.(\w+)\.value$/);
-        if (m && talentUpdates[m[1]] !== undefined) {
-          return { ...change, value: String(talentUpdates[m[1]]) };
-        }
-        return change;
+        const updatedValue = m && talentUpdates[m[1]] !== undefined
+          ? { value: String(talentUpdates[m[1]]) }
+          : {};
+        return {
+          ...change,
+          ...updatedValue,
+          mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE, // 5 — always wins
+          priority: 200
+        };
       });
       await existing.update({ changes });
     }

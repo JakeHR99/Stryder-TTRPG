@@ -30,6 +30,16 @@
 					<input type="checkbox" class="jrpg-spark" name="system.sparks.spark5" {{checked system.sparks.spark5}}>
 				</div>
 			</div>
+			<div class="jrpg-glory-row">
+				<span class="jrpg-sparks-label">Glory Token</span>
+				<label class="jrpg-glory-toggle {{#if system.gloryToken}}jrpg-glory-active{{/if}}" title="Double 6's — spend to add 1d6 to a Talent or Sense Check">
+					<input type="checkbox" name="system.gloryToken" {{checked system.gloryToken}} style="display:none;">
+					<span class="jrpg-glory-coin">
+						<i class="fas fa-coins"></i>
+					</span>
+					<span class="jrpg-glory-label-text">{{#if system.gloryToken}}Token Ready{{else}}No Token{{/if}}</span>
+				</label>
+			</div>
 		</div>
 
 	</div>

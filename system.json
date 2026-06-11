@@ -20,7 +20,7 @@
       "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
-  "version": "0.2.7",
+  "version": "0.2.8",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
@@ -30,6 +30,7 @@
     "module/stryder.mjs"
   ],
   "styles": [
+    "css/stryder-tokens.css",
     "css/stryder.css"
   ],
   "languages": [

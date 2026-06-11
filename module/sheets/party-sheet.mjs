@@ -74,6 +74,21 @@ export class StryderPartySheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
+    // Drag-over highlight for item drops onto the inventory list
+    const sheet = html[0] ?? html;
+    sheet.addEventListener('dragover', (ev) => {
+      ev.preventDefault();
+      html.find('.ps-item-list').addClass('ps-drop-active');
+    }, false);
+    sheet.addEventListener('dragleave', (ev) => {
+      if (!sheet.contains(ev.relatedTarget)) {
+        html.find('.ps-item-list').removeClass('ps-drop-active');
+      }
+    }, false);
+    sheet.addEventListener('drop', () => {
+      html.find('.ps-item-list').removeClass('ps-drop-active');
+    }, false);
+
     // ── JRPG custom page navigation ───────────────────────────────────────
     // Use class toggling (not jQuery show/hide) so CSS flex layout works correctly
     const _showPSPage = (target) => {
@@ -297,6 +312,48 @@ export class StryderPartySheet extends ActorSheet {
       return;
     }
 
+    if (data.type === 'Item') {
+      return this._onDropItem(event, data);
+    }
+
     return super._onDrop(event);
+  }
+
+  // ── Item drop — move item from source actor to party inventory ────────────
+  async _onDropItem(event, data) {
+    const item = await Item.fromDropData(data);
+    if (!item) return;
+
+    // Copy item to party actor
+    const itemData = item.toObject();
+    const [created] = await this.actor.createEmbeddedDocuments('Item', [itemData]);
+    if (!created) return;
+
+    // Delete from source actor if it came from another actor (not a compendium/world item)
+    if (item.parent && item.parent.id !== this.actor.id) {
+      await item.delete();
+      ui.notifications.info(`${item.name} moved to party inventory.`);
+    }
+
+    // Switch to inventory page so the player sees the result
+    const invPage = this.element?.find('.ps-page[data-page="inventory"]');
+    if (invPage?.length) {
+      this.element.find('.ps-page').removeClass('ps-page-visible');
+      invPage.addClass('ps-page-visible');
+      this.element.find('.ps-nav-btn').removeClass('ps-nav-active');
+      this.element.find('.ps-nav-btn[data-target="inventory"]').addClass('ps-nav-active');
+      this._psPage = 'inventory';
+    }
+  }
+
+  // ── Drag-over highlight on the inventory page ─────────────────────────────
+  _onDragOver(event) {
+    super._onDragOver?.(event);
+    // Highlight the inventory list as a drop target
+    this.element?.find('.ps-item-list').addClass('ps-drop-active');
+  }
+
+  _onDragLeave(event) {
+    this.element?.find('.ps-item-list').removeClass('ps-drop-active');
   }
 }

@@ -40,6 +40,8 @@ import { openExpeditionSetup, triggerSiteEvent, clearExpedition } from './expedi
 import { handleOpenWorldMove, openOpenWorldSetup, designateHexPrompt, resetOpenWorldTable, clearOpenWorld } from './expedition/open-world-manager.mjs';
 // Import mini-games.
 import { FishingMinigame } from './apps/fishing-minigame.mjs';
+// Import chat grouping.
+import { registerChatGrouping } from './chat/chat-grouping.mjs';
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -1843,6 +1845,8 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 
 });
 
+registerChatGrouping();
+
 /* -------------------------------------------- */
 /*  Aura System - Body of Influence            */
 /* -------------------------------------------- */
@@ -2719,6 +2723,7 @@ Hooks.on('ready', () => {
 
   // ── Expedition: detect party token entering a Site ──────
   Hooks.on('updateToken', async (tokenDoc, changes, options, userId) => {
+    if (userId !== game.user.id) return; // only the client that moved the token
     if (!('x' in changes) && !('y' in changes)) return;
     const scene = tokenDoc.parent;
     const isMap = scene?.getFlag('stryder', 'isExpeditionMap');
@@ -2753,7 +2758,7 @@ Hooks.on('ready', () => {
 
   // ── Open World: detect party token moving to a new hex ──
   Hooks.on('updateToken', async (tokenDoc, changes, options, userId) => {
-    if (!game.user.isGM) return; // only process once, on the GM's client
+    if (userId !== game.user.id) return; // only the client that moved the token
     if (!('x' in changes) && !('y' in changes)) return;
     const scene = tokenDoc.parent;
     if (!scene?.getFlag('stryder', 'isOpenWorld')) return;

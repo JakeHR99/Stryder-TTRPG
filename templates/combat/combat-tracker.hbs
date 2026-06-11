@@ -6,7 +6,7 @@
     </div>
     {{/if}}
     {{#if currentTurn}}
-        <div class="current-turn" style="font-size: 25px; font-family: 'EB Garamond';">{{localize 'STRYDER.Combat.CurrentTurn'
+        <div class="current-turn">{{localize 'STRYDER.Combat.CurrentTurn'
                                             turn=(localize (concat 'STRYDER.Combat.CombatFaction' (capitalize
                                              currentTurn)))}}</div>
     {{else if combat}}
