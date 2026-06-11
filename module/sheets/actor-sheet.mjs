@@ -1056,25 +1056,9 @@ export class StryderActorSheet extends ActorSheet {
       }
 
       // Auto-grant non-choice class features at or below the actor's current level.
-      // Looks up by ID first, falls back to name so stale pack IDs never block grants.
-      if (className && cfDocs.length) {
-        const cfByName = Object.fromEntries(cfDocs.map(d => [d.name, d]));
-        const classMilestonesForGrant = STRYDER_CLASS_FEATURES[className] ?? [];
-        const toGrant = [];
-        for (const ms of classMilestonesForGrant) {
-          if (ms.level > level) break;
-          for (const feat of ms.feats) {
-            if (feat.isChoice || feat.isTechChoice || feat.milestone) continue;
-            if (ownedNames.has(feat.name)) continue;
-            const doc = (feat.id && cfById[feat.id]) || cfByName[feat.name];
-            if (doc) toGrant.push(doc);
-          }
-        }
-        if (toGrant.length) {
-          await actor.createEmbeddedDocuments('Item', toGrant.map(d => d.toObject()));
-          toGrant.forEach(d => ownedNames.add(d.name));
-        }
-      }
+      await this._grantClassFeatures(actor);
+      // Refresh ownedNames so the CLASS PATH PANEL below reflects any new grants.
+      actor.items.forEach(i => ownedNames.add(i.name));
 
       // ── CLASS PATH PANEL ────────────────────────────────────────────────────
       const classMilestones = STRYDER_CLASS_FEATURES[className] ?? [];
@@ -4123,9 +4107,21 @@ export class StryderActorSheet extends ActorSheet {
 			};
 
 			await this.actor.update(lvlUpdates);
-			ui.notifications.info(
-			  `${this.actor.name} advanced to Level ${newLevel}! Gained 1 XP.`
-			);
+
+			// Auto-grant class features unlocked at the new level, then notify.
+			const { granted, hasWaitingChoice } = await this._grantClassFeatures(this.actor);
+			const className = this.actor.system.class?.name ?? '';
+			let notifyParts = [`<strong>${this.actor.name}</strong> advanced to <strong>Level ${newLevel}</strong>! Gained 1 XP.`];
+			if (granted.length) {
+			  notifyParts.push(`Gained: <em>${granted.join(', ')}</em>.`);
+			}
+			if (hasWaitingChoice) {
+			  notifyParts.push(`<span class="sty-dlg-warn">You have a Class Path choice waiting — open Growth to claim it.</span>`);
+			}
+			await ChatMessage.create({
+			  speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+			  content: `<div class="chat-message-card"><div class="chat-message-header"><h3 class="chat-message-title">Level Up${className ? ` — ${className}` : ''}</h3></div><div class="chat-message-content">${notifyParts.join('<br>')}</div></div>`,
+			});
 			break;
 		  }
 		  }
@@ -4489,6 +4485,18 @@ export class StryderActorSheet extends ActorSheet {
 	  const classData = STRYDER_CLASS_DATA[className];
 	  if (!classData) return;
 
+	  // ── Class swap: confirm + strip old features ──────────────────────────
+	  const oldClassName = this.actor.system.class?.name ?? '';
+	  if (oldClassName && oldClassName !== className) {
+	    const ok = await Dialog.confirm({
+	      title:   'Switch Class',
+	      content: `<div class="sty-dlg-body"><p>Switching <strong>${oldClassName}</strong> → <strong>${className}</strong> will remove all ${oldClassName} class features and class-choice flags.</p><p class="sty-dlg-warn">XP-purchased Aspects and Techniques are kept. Some stat changes (Movement, DR) may need manual review.</p></div>`,
+	      options: { classes: ['dialog', 'stryder-stat-popup'], width: 400 },
+	    });
+	    if (!ok) { this.render(false); return; }
+	    await this._stripOldClassFeatures(this.actor, oldClassName);
+	  }
+
 	  const level = this.actor.system.attributes.level.value ?? 1;
 	  const clamped = Math.min(15, Math.max(1, level));
 	  const newMaxHealth = classData.base_hp + (classData.hp_per_level * (clamped - 1));
@@ -4510,6 +4518,9 @@ export class StryderActorSheet extends ActorSheet {
 	      await this._promptLordlingLink();
 	    }
 	  }
+
+	  // ── Auto-grant class features for the new class ───────────────────────
+	  await this._grantClassFeatures(this.actor);
 	});
 
 	// Re-sync whenever Grit changes so the Grit HP bonus is recalculated immediately.
@@ -5121,6 +5132,159 @@ export class StryderActorSheet extends ActorSheet {
    * ActiveEffect (ADD mode, priority 50).  Replaces any previous folk effect.
    */
   /**
+   * Auto-grant non-choice class features the actor has not yet received.
+   * Skips milestones, choices, and technique/lordly picks — those are player-driven
+   * in the Growth panel.  Loads from the class-features pack (pack is cached by
+   * Foundry so repeated calls within a session are cheap).
+   *
+   * @param {StryderActor} actor
+   * @returns {Promise<{granted: string[], hasWaitingChoice: boolean}>}
+   */
+  async _grantClassFeatures(actor) {
+    const className = actor.system.class?.name ?? '';
+    const level     = actor.system.attributes?.level?.value ?? 1;
+    if (!className) return { granted: [], hasWaitingChoice: false };
+
+    const cfPack = game.packs.get('stryder.stryder-class-features');
+    if (!cfPack) return { granted: [], hasWaitingChoice: false };
+    const cfDocs = await cfPack.getDocuments();
+
+    const cfById   = Object.fromEntries(cfDocs.map(d => [d._id, d]));
+    const cfByName = Object.fromEntries(cfDocs.map(d => [d.name,  d]));
+    const ownedNames = new Set(actor.items.map(i => i.name));
+    const milestones = STRYDER_CLASS_FEATURES[className] ?? [];
+    const toGrant = [];
+    let hasWaitingChoice = false;
+
+    for (const ms of milestones) {
+      if (ms.level > level) break;
+      for (const feat of ms.feats) {
+        // milestone = version bump on an existing item (Expanding Bond II/III), not a grant
+        if (feat.milestone) continue;
+
+        if (feat.isChoice || feat.isTechChoice || feat.isLordlyChoice ||
+            feat.isMysticBlessing || feat.isMasteryGrant) {
+          // Detect unclaimed choice at or below current level
+          let claimed = true;
+          if (feat.isChoice) {
+            const v = actor.getFlag('stryder', `augChoice_${feat.id}`);
+            claimed = (v !== undefined && v !== null);
+          } else if (feat.isTechChoice) {
+            const v = actor.getFlag('stryder', `techChoice_lv${ms.level}`);
+            claimed = (v !== undefined && v !== null);
+          } else if (feat.isLordlyChoice) {
+            const { count = 1, startIdx = 0 } = feat;
+            claimed = true;
+            for (let s = startIdx; s < startIdx + count; s++) {
+              if (!actor.getFlag('stryder', `lordlyFeature_${s}`)) { claimed = false; break; }
+            }
+          } else if (feat.isMysticBlessing) {
+            claimed = !!actor.getFlag('stryder', 'mysticBlessingsSense');
+          }
+          if (!claimed) hasWaitingChoice = true;
+          continue;
+        }
+
+        if (ownedNames.has(feat.name)) continue;
+        const doc = (feat.id && cfById[feat.id]) || cfByName[feat.name];
+        if (doc) toGrant.push(doc);
+      }
+    }
+
+    if (toGrant.length) {
+      await actor.createEmbeddedDocuments('Item', toGrant.map(d => d.toObject()));
+    }
+
+    return { granted: toGrant.map(d => d.name), hasWaitingChoice };
+  }
+
+  /**
+   * Strip all items and flags associated with oldClassName from actor.
+   * Called before granting a new class so stale features never accumulate.
+   * Does NOT touch XP-purchased items (identified by aspectName or isTechnique flags).
+   *
+   * @param {StryderActor} actor
+   * @param {string} oldClassName
+   */
+  async _stripOldClassFeatures(actor, oldClassName) {
+    const milestones = STRYDER_CLASS_FEATURES[oldClassName] ?? [];
+    const featureNamesToStrip = new Set();
+
+    for (const ms of milestones) {
+      for (const feat of ms.feats) {
+        if (feat.name && !feat.milestone) featureNamesToStrip.add(feat.name);
+      }
+    }
+
+    // Include Ranger technique names chosen via Growth
+    if (oldClassName === 'Ranger') {
+      for (const ms of milestones) {
+        const chosen = actor.getFlag('stryder', `techChoice_lv${ms.level}`);
+        if (chosen) featureNamesToStrip.add(chosen);
+      }
+    }
+    // Include Shaman lordly feature names chosen via Growth
+    if (oldClassName === 'Shaman') {
+      for (let s = 0; s < 8; s++) {
+        const lf = actor.getFlag('stryder', `lordlyFeature_${s}`);
+        if (lf) featureNamesToStrip.add(lf);
+      }
+    }
+
+    // Delete embedded items that match (skip XP-purchased aspects/techniques)
+    const idsToRemove = actor.items
+      .filter(i =>
+        featureNamesToStrip.has(i.name) &&
+        !i.flags?.stryder?.aspectName &&
+        !i.flags?.stryder?.isTechnique &&
+        i.flags?.stryder?.xpCost === undefined
+      )
+      .map(i => i.id);
+
+    if (idsToRemove.length) {
+      await actor.deleteEmbeddedDocuments('Item', idsToRemove);
+    }
+
+    // Build flag-clear update: null every class-specific flag family
+    const u = {};
+    const S = 'stryder';
+
+    // Warrior aug choice + aug stat flags
+    for (const feat of [
+      'WrrAbil02WaI', 'WrrAbil03WaII', 'WrrAbil04WaIII', 'WrrAbil05WaIV',
+    ]) u[`flags.${S}.augChoice_${feat}`] = null;
+    for (const f of [
+      'augExcellentRange1012', 'augAttackBonus', 'augHealthBonus', 'augStaminaBonus',
+      'augExtraStatPoints', 'augPoorRangeOverride', 'augDailyRerollAvailable',
+      'augDoubleExcellentDamage', 'augDamageReduction',
+    ]) u[`flags.${S}.${f}`] = null;
+
+    // Ranger tech-choice flags
+    for (const ms of STRYDER_CLASS_FEATURES.Ranger ?? []) {
+      u[`flags.${S}.techChoice_lv${ms.level}`] = null;
+    }
+
+    // Shaman lordly + blessing flags
+    for (let s = 0; s < 8; s++) u[`flags.${S}.lordlyFeature_${s}`] = null;
+    u[`flags.${S}.mysticBlessingsSense`] = null;
+
+    // Warlock health-reduction flags
+    u[`flags.${S}.bloodlossHealthReduction`] = null;
+    u[`flags.${S}.sacrificeHealthReduction`] = null;
+    u[`flags.${S}.burningHealthReduction`]   = null;
+    u[`flags.${S}.springOfLifeActive`]       = null;
+
+    // Revert Warrior Aug IV DR direct-write if applicable
+    const augDR = actor.getFlag(S, 'augDamageReduction') ?? 0;
+    if (augDR > 0) {
+      u['system.physical_reduction'] = Math.max(0, (actor.system.physical_reduction ?? 0) - augDR);
+      u['system.magykal_reduction']  = Math.max(0, (actor.system.magykal_reduction  ?? 0) - augDR);
+    }
+
+    await actor.update(u);
+  }
+
+  /**
    * Called when Shaman is selected as a class. Shows a dialog to link an
    * existing Lordling actor or create a new one.
    */
@@ -5706,6 +5870,49 @@ export class StryderActorSheet extends ActorSheet {
 
     // Prevent re-embedding an item that already belongs to this actor
     if (item.parent?.id === this.actor.id) return false;
+
+    // ── Class item drop: route through the same selection path as the dropdown ──
+    if (item.type === 'class') {
+      const className = item.name;
+      const classData = STRYDER_CLASS_DATA[className];
+      if (!classData) {
+        ui.notifications.warn(`Unknown class "${className}" — embedding as a plain item.`);
+      } else {
+        const oldClassName = this.actor.system.class?.name ?? '';
+        if (oldClassName && oldClassName !== className) {
+          const ok = await Dialog.confirm({
+            title:   'Switch Class',
+            content: `<div class="sty-dlg-body"><p>Dropping <strong>${className}</strong> will replace <strong>${oldClassName}</strong> and remove its class features and choice flags.</p><p class="sty-dlg-warn">XP-purchased Aspects and Techniques are kept.</p></div>`,
+            options: { classes: ['dialog', 'stryder-stat-popup'], width: 400 },
+          });
+          if (!ok) return false;
+          await this._stripOldClassFeatures(this.actor, oldClassName);
+        }
+
+        const level   = this.actor.system.attributes.level.value ?? 1;
+        const clamped = Math.min(15, Math.max(1, level));
+        const newMax  = classData.base_hp + (classData.hp_per_level * (clamped - 1));
+        await this.actor.update({
+          'system.class.name':         className,
+          'system.class.base_hp':      classData.base_hp,
+          'system.class.hp_per_level': classData.hp_per_level,
+          'system.health.max':         newMax,
+          'system.health.value':       newMax,
+        });
+
+        if (className === 'Shaman') {
+          const alreadyLinked = game.actors.find(a => a.type === 'lordling' && a.system.linkedCharacterId === this.actor.id);
+          if (!alreadyLinked) await this._promptLordlingLink();
+        }
+
+        await this._grantClassFeatures(this.actor);
+        ui.notifications.info(`Class set to ${className} via item drop. Max Health updated to ${newMax}.`);
+
+        // Embed the class item as the visible record of the chosen class
+        const itemData = item.toObject();
+        return this.actor.createEmbeddedDocuments('Item', [itemData]);
+      }
+    }
 
     const itemData = item.toObject();
 

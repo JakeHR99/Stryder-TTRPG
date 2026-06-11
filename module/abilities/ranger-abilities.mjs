@@ -104,7 +104,6 @@ async function handleGuidingStrike(item, actor, speaker, rollMode) {
   const target = [...(game.user?.targets ?? [])][0];
   const targetName = target?.name ?? 'the target';
 
-  await actor.setFlag(SYSTEM_ID, 'guidingStrikeActive', true);
   await ChatMessage.create({ speaker, rollMode, content: rangerCard(
     'Guiding Strike',
     `${actor.name} strengthens their next Focused Attack, leaving an opening for an ally.<br>
@@ -160,7 +159,6 @@ async function handleTrailingShot(item, actor, speaker, rollMode) {
   const target = [...(game.user?.targets ?? [])][0];
   const targetName = target?.name ?? 'a creature';
 
-  await actor.setFlag(SYSTEM_ID, 'trailingShotTarget', targetName);
   await ChatMessage.create({ speaker, rollMode, content: rangerCard(
     'Trailing Shot',
     `${actor.name} has declared a reactive strike against <strong>${targetName}</strong>.<br>
