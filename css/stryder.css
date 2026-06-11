@@ -5491,6 +5491,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .attribute-icon {
+  border: none;
   filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
 }
 
@@ -12146,386 +12147,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   opacity: 1 !important;
 }
 
-/* ==========================================================================
-   MONSTER SHEET — Standalone layout
-   ========================================================================== */
-
-/* ── Window & form setup ─────────────────────────────────────────────────── */
-
-/* The actor sheet window: parchment background, no overflow on the form */
-.stryder.sheet.actor.monster-sheet {
-  background: #f0e8cc !important;
-  overflow: hidden !important;
-  padding: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-/* Main two-column wrapper fills the form */
-.monster-sheet .monster-sheet-wrapper {
-  display: flex !important;
-  flex-direction: row !important;
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  padding: 14px 14px 10px 14px;
-  box-sizing: border-box;
-  gap: 14px;
-  height: 100%;
-}
-
-/* ── LEFT PANEL ─────────────────────────────────────────────────────────── */
-.monster-sheet .monster-left-panel {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 0 0 42%;
-  gap: 8px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-/* Name + Threat Level header row */
-.monster-sheet .monster-header-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  gap: 12px;
-}
-
-.monster-sheet .monster-name-block {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.monster-sheet .monster-threat-block {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.monster-sheet .monster-field-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #2a1a00;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.monster-sheet .monster-name-input {
-  width: 100%;
-  font-size: 17px;
-  font-weight: 500;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid #333;
-  border-radius: 0;
-  padding: 2px 0;
-  color: #111;
-  box-shadow: none;
-}
-
-.monster-sheet .monster-threat-input {
-  width: 54px;
-  font-size: 20px;
-  font-weight: 700;
-  text-align: center;
-  background: transparent;
-  border: 2.5px solid #222;
-  padding: 4px;
-  color: #111;
-  box-shadow: none;
-}
-
-/* ── STAT BOXES ─────────────────────────────────────────────────────────── */
-.monster-sheet .monster-stat-row {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 6px;
-  align-items: flex-start;
-}
-
-.monster-sheet .monster-stat-row.four-col .monster-stat-box { flex: 1; }
-.monster-sheet .monster-stat-row.three-col .monster-stat-box { flex: 1; }
-
-.monster-sheet .monster-stat-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-/* The big bordered box */
-.monster-sheet .monster-stat-square {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border: 3px solid #111;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  padding: 4px;
-  box-sizing: border-box;
-}
-
-/* Health / Stamina: value / max side by side */
-.monster-sheet .monster-stat-dual {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-  width: 100%;
-}
-
-.monster-sheet .monster-stat-dual input {
-  width: 38%;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-  background: transparent;
-  border: none;
-  color: #111;
-  padding: 0;
-  box-shadow: none;
-  height: auto;
-  line-height: 1;
-}
-
-.monster-sheet .monster-stat-sep {
-  font-size: 13px;
-  font-weight: 700;
-  color: #444;
-  line-height: 1;
-}
-
-/* Single-value input inside a stat square */
-.monster-sheet .monster-stat-square > input {
-  width: 80%;
-  font-size: 22px;
-  font-weight: 700;
-  text-align: center;
-  background: transparent;
-  border: none;
-  color: #111;
-  padding: 0;
-  box-shadow: none;
-  height: auto;
-}
-
-.monster-sheet .monster-stat-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #222;
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* ── CORRUPTION TRAITS ──────────────────────────────────────────────────── */
-.monster-sheet .monster-corruption-row {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 2px;
-}
-
-.monster-sheet .monster-corruption-select,
-.monster-sheet .monster-size-select {
-  width: 100%;
-  font-size: 13px;
-  background: rgba(255,255,255,0.3);
-  border: 1px solid #666;
-  padding: 3px 6px;
-  color: #111;
-  cursor: pointer;
-}
-
-/* ── LOWER ROW (Senses / Talents / Body) ────────────────────────────────── */
-.monster-sheet .monster-lower-row {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 10px;
-  margin-top: 4px;
-  flex: 1;
-}
-
-.monster-sheet .monster-sub-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.monster-sheet .monster-sub-header {
-  font-size: 13px;
-  font-weight: 700;
-  color: #111;
-  margin-bottom: 5px;
-  display: block;
-  border-bottom: 1px solid #888;
-  padding-bottom: 2px;
-}
-
-.monster-sheet .monster-sub-field {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  gap: 3px;
-  margin-bottom: 1px;
-}
-
-.monster-sheet .monster-sub-label {
-  font-size: 11px;
-  color: #333;
-  white-space: nowrap;
-  min-width: 58px;
-}
-
-.monster-sheet .monster-sub-field input,
-.monster-sheet .monster-sub-field select {
-  flex: 1;
-  font-size: 11px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #aaa;
-  color: #111;
-  padding: 0 2px;
-  min-width: 0;
-  height: auto;
-  box-shadow: none;
-}
-
-/* ── RIGHT PANEL ────────────────────────────────────────────────────────── */
-.monster-sheet .monster-right-panel {
-  flex: 1;
-  display: flex !important;
-  flex-direction: column !important;
-  border: 2px solid #333;
-  overflow: hidden;
-  min-width: 0;
-}
-
-/* Top row: Offensive + Defensive side by side */
-.monster-sheet .monster-abilities-top {
-  display: flex !important;
-  flex-direction: row !important;
-  flex: 1 1 60%;
-  min-height: 0;
-  border-bottom: 2px solid #333;
-}
-
-.monster-sheet .monster-abilities-top .monster-ability-panel:first-child {
-  border-right: 2px solid #333;
-}
-
-/* Individual ability panel */
-.monster-sheet .monster-ability-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* Utility panel — bottom third */
-.monster-sheet .monster-utility-panel {
-  flex: 0 0 38%;
-  min-height: 0;
-}
-
-/* Panel header */
-.monster-sheet .monster-ability-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  border-bottom: 2px solid #333;
-  font-size: 12px;
-  font-weight: 700;
-  color: #111;
-  background: rgba(0,0,0,0.05);
-  flex-shrink: 0;
-}
-
-.monster-sheet .monster-add-btn {
-  font-size: 10px;
-  color: #444;
-  cursor: pointer;
-  padding: 1px 5px;
-  border: 1px solid #888;
-  border-radius: 3px;
-  background: rgba(255,255,255,0.45);
-  line-height: 1.4;
-  text-decoration: none;
-}
-
-.monster-sheet .monster-add-btn:hover {
-  background: rgba(255,255,255,0.75);
-  color: #000;
-}
-
-/* Ability item lists */
-.monster-sheet .monster-ability-list {
-  list-style: none;
-  margin: 0;
-  padding: 2px 0;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.monster-sheet .monster-ability-item {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 7px;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-}
-
-.monster-sheet .monster-ability-item:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-.monster-sheet .monster-ability-item:hover .monster-item-controls {
-  display: flex !important;
-}
-
-.monster-sheet .monster-ability-img img {
-  border: none;
-  display: block;
-}
-
-.monster-sheet .monster-ability-name {
-  flex: 1;
-  font-size: 12px;
-  color: #111;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.monster-sheet .monster-item-controls {
-  display: none;
-  flex-direction: row;
-  gap: 4px;
-}
-
-.monster-sheet .monster-item-controls a {
-  font-size: 10px;
-  color: #555;
-  cursor: pointer;
-  padding: 1px 3px;
-  text-decoration: none;
-}
-
-.monster-sheet .monster-item-controls a:hover {
-  color: #000;
-}
 
 /* ── Party Sheet ──────────────────────────────────── */
 .party .party-members-grid {
@@ -15074,6 +14695,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .app.sheet.actor.stryder .window-content:has(> form.monster-sheet) {
   position: relative !important;
   overflow: hidden !important;
+  background: var(--sty-sky) !important; /* core-override */
 }
 form.monster-sheet {
   position: relative;
@@ -15372,21 +14994,22 @@ form.monster-sheet {
 .lrd-v2 .lrd-inline-btn:hover { filter: brightness(1.2); }
 
 /* ============================================================
-   MONSTER FIELD GUIDE SHEET
+   MONSTER SHEET — Enemy Intel (Phase 3B)
    ============================================================ */
 .monster-sheet {
-  background: #fdf5e8;
+  background: var(--sty-bg-deep);
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  font-family: 'Rajdhani', sans-serif;
-  color: #2a1a0e;
+  font-family: var(--sty-font-ui);
+  color: var(--sty-text);
 }
 
 /* Header */
 .ms-header {
-  background: #2a1a0e;
+  background: var(--sty-bg-deep);
+  border-bottom: 1px solid var(--sty-crimson-line);
   padding: 12px 16px;
   display: flex;
   justify-content: space-between;
@@ -15397,20 +15020,22 @@ form.monster-sheet {
 .ms-name-input {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(240,208,144,0.4);
-  color: #f0d090;
+  border-bottom: 1px solid rgba(255,255,255,.15);
+  color: var(--sty-text);
   font-size: 20px;
-  font-weight: 500;
-  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-family: var(--sty-font-display);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   padding: 0 0 2px;
   width: 100%;
   box-shadow: none;
 }
-.ms-name-input:focus { outline: none; border-bottom-color: #f0d090; }
+.ms-name-input:focus { outline: none; border-bottom-color: var(--sty-crimson); }
 .ms-subtype-input {
   background: transparent;
   border: none;
-  color: #a08060;
+  color: var(--sty-text-2);
   font-size: 11px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -15419,10 +15044,10 @@ form.monster-sheet {
   box-shadow: none;
 }
 .ms-subtype-input:focus { outline: none; }
-.ms-subtype-input::placeholder { color: rgba(160,128,96,0.5); }
+.ms-subtype-input::placeholder { color: rgba(140,200,255,.25); }
 .ms-rank-badge {
-  background: #5c2010;
-  border: 1px solid #a05030;
+  background: rgba(217,72,79,.18);
+  border: 1px solid var(--sty-crimson-line);
   border-radius: 6px;
   padding: 5px 14px;
   text-align: center;
@@ -15431,22 +15056,24 @@ form.monster-sheet {
 }
 .ms-rank-label {
   font-size: 9px;
-  color: #d0a060;
+  color: var(--sty-text-2);
   letter-spacing: 1.5px;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: var(--sty-font-ui);
+  text-transform: uppercase;
 }
 .ms-rank-input {
   background: transparent;
   border: none;
-  color: #f0d090;
+  color: #ff9a9a;
   font-size: 22px;
-  font-weight: 500;
+  font-weight: 700;
   text-align: center;
   width: 40px;
   padding: 0;
   box-shadow: none;
   line-height: 1.1;
-  font-family: 'Cinzel', serif;
+  font-family: var(--sty-font-number);
 }
 .ms-rank-input:focus { outline: none; }
 
@@ -15462,8 +15089,8 @@ form.monster-sheet {
 .ms-left {
   width: 210px;
   flex-shrink: 0;
-  border-right: 1.5px solid #c9a66b;
-  background: #f5ead8;
+  border-right: 1px solid var(--sty-crimson-line);
+  background: var(--sty-panel);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -15473,11 +15100,11 @@ form.monster-sheet {
   height: 180px;
   flex-shrink: 0;
   overflow: hidden;
-  border-bottom: 1px solid #c9a66b;
+  border-bottom: 1px solid var(--sty-line-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ede0c4;
+  background: rgba(0,0,0,.3);
   cursor: pointer;
 }
 .ms-art-img {
@@ -15489,13 +15116,14 @@ form.monster-sheet {
 }
 .ms-stat-block {
   padding: 12px 14px;
-  border-bottom: 0.5px solid #c9a66b;
+  border-bottom: 1px solid var(--sty-line-blue);
 }
 .ms-stat-label {
   font-size: 10px;
   letter-spacing: 1.5px;
-  color: #8b6040;
-  font-weight: 500;
+  color: var(--sty-text-2);
+  font-weight: 600;
+  text-transform: uppercase;
   margin-bottom: 8px;
 }
 
@@ -15507,65 +15135,66 @@ form.monster-sheet {
   margin-bottom: 6px;
 }
 .ms-wound-pip {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  border: 1.5px solid #c9a66b;
+  border: 1px solid var(--sty-crimson-line);
   background: transparent;
   cursor: pointer;
   transition: background 0.1s, border-color 0.1s;
   flex-shrink: 0;
 }
-.ms-wound-pip:hover { border-color: #8b2010; }
+.ms-wound-pip:hover { border-color: var(--sty-crimson); }
 .ms-wound-pip.ms-wound-filled {
-  background: #8b2010;
-  border-color: #6b1800;
+  background: var(--sty-crimson);
+  border: none;
 }
 .ms-wound-pip.ms-wound-grave {
-  background: #1a0404;
-  border-color: #8b2010;
-  box-shadow: inset 0 0 0 3px #4a0808;
+  background: var(--sty-stagger);
+  border: none;
+  box-shadow: 0 0 6px rgba(240,168,48,.7);
 }
-.ms-wound-pip.ms-wound-grave:hover { border-color: #c03020; }
+.ms-wound-pip.ms-wound-grave:hover { box-shadow: 0 0 8px rgba(240,168,48,.9); }
 .ms-wounds-inputs {
   display: flex;
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #8b6040;
+  color: var(--sty-text-2);
 }
 .ms-wounds-val,
 .ms-wounds-max {
   width: 32px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   text-align: center;
-  background: rgba(255,255,255,0.4);
-  border: 0.5px solid #c9a66b;
+  background: rgba(0,0,0,.3);
+  border: 1px solid var(--sty-line-blue);
   border-radius: 3px;
-  color: #2a1a0e;
+  color: var(--sty-text);
   padding: 1px 2px;
   box-shadow: none;
+  font-family: var(--sty-font-number);
 }
-.ms-wounds-sep { color: #8b6040; }
+.ms-wounds-sep { color: var(--sty-text-2); }
 
 /* Guard */
 .ms-guard-input {
   font-size: 26px;
-  font-weight: 500;
-  color: #2a1a0e;
+  font-weight: 700;
+  color: var(--sty-text);
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(200,160,96,0.4);
+  border-bottom: 1px solid var(--sty-line-blue);
   width: 60px;
   padding: 0 0 2px;
   box-shadow: none;
-  font-family: 'Cinzel', serif;
+  font-family: var(--sty-font-number);
 }
-.ms-guard-input:focus { outline: none; border-bottom-color: #8b6040; }
+.ms-guard-input:focus { outline: none; border-bottom-color: var(--sty-crimson); }
 .ms-guard-thresholds {
   font-size: 12px;
-  color: #8b6040;
+  color: var(--sty-text-2);
   margin-top: 6px;
   line-height: 1.6;
   letter-spacing: 0.3px;
@@ -15577,19 +15206,20 @@ form.monster-sheet {
   border-collapse: collapse;
   font-size: 13px;
 }
-.ms-move-name { color: #6b5040; padding: 3px 0; }
+.ms-move-name { color: var(--sty-text-2); padding: 3px 0; font-size: 11px; letter-spacing: .5px; text-transform: uppercase; }
 .ms-move-input {
   width: 42px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   text-align: right;
   background: transparent;
   border: none;
-  color: #2a1a0e;
+  color: var(--sty-text);
   padding: 0;
   box-shadow: none;
+  font-family: var(--sty-font-number);
 }
-.ms-move-table td:last-child { text-align: right; color: #2a1a0e; font-weight: 600; font-size: 14px; }
+.ms-move-table td:last-child { text-align: right; color: var(--sty-text); font-weight: 700; font-size: 14px; font-family: var(--sty-font-number); }
 
 /* Right panel — abilities */
 .ms-right {
@@ -15612,27 +15242,27 @@ form.monster-sheet {
   align-items: center;
   justify-content: space-between;
   padding: 5px 10px;
-  background: rgba(201,166,107,0.15);
-  border-bottom: 0.5px solid #c9a66b;
+  background: rgba(217,72,79,.08);
+  border-bottom: 1px solid var(--sty-crimson-line);
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  color: #5c3010;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--sty-crimson);
   text-transform: uppercase;
   flex-shrink: 0;
 }
 .ms-ability-header a {
   font-size: 11px;
-  color: #8b6040;
+  color: var(--sty-text-2);
   cursor: pointer;
   padding: 1px 5px;
-  border: 0.5px solid #c9a66b;
+  border: 1px solid var(--sty-line-blue);
   border-radius: 3px;
-  background: rgba(255,255,255,0.4);
+  background: rgba(0,0,0,.2);
   text-decoration: none;
   line-height: 1.4;
 }
-.ms-ability-header a:hover { background: rgba(201,166,107,0.3); }
+.ms-ability-header a:hover { background: rgba(80,120,220,.15); color: var(--sty-text); }
 .ms-ability-list {
   list-style: none;
   margin: 0;
@@ -15645,74 +15275,76 @@ form.monster-sheet {
   align-items: center;
   gap: 6px;
   padding: 3px 10px;
-  border-bottom: 0.5px solid rgba(201,166,107,0.3);
+  border-bottom: 1px solid var(--sty-row);
   cursor: pointer;
 }
-.ms-ability-item:hover { background: rgba(201,166,107,0.15); }
+.ms-ability-item:hover { background: var(--sty-row); }
 .ms-ability-item img { border: none; flex-shrink: 0; border-radius: 2px; }
-.ms-ability-name { flex: 1; font-size: 12px; color: #2a1a0e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ms-ability-name { flex: 1; font-size: 12px; color: var(--sty-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ms-atk-toggle {
   font-size: 10px;
   cursor: pointer;
-  color: #776050;
-  background: rgba(201,166,107,0.25);
-  border: 1px solid rgba(201,166,107,0.5);
+  color: var(--sty-text-2);
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--sty-line-blue);
   padding: 1px 6px;
   border-radius: 3px;
   flex-shrink: 0;
   white-space: nowrap;
   transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
-.ms-atk-toggle:hover { background: rgba(201,166,107,0.45); color: #4a2010; }
+.ms-atk-toggle:hover { background: rgba(255,255,255,.10); color: var(--sty-text); }
 .ms-atk-toggle.is-attack {
-  color: #8b2010;
-  background: rgba(139,32,16,0.12);
-  border-color: rgba(139,32,16,0.45);
+  color: #ff9a9a;
+  background: rgba(217,72,79,.15);
+  border-color: var(--sty-crimson-line);
 }
-.ms-atk-toggle.is-attack:hover { background: rgba(139,32,16,0.25); }
+.ms-atk-toggle.is-attack:hover { background: rgba(217,72,79,.28); }
 .ms-ability-controls { display: none; gap: 4px; }
 .ms-ability-item:hover .ms-ability-controls { display: flex; }
-.ms-ability-controls a { font-size: 10px; color: #8b6040; cursor: pointer; text-decoration: none; }
-.ms-ability-controls a:hover { color: #5c2010; }
+.ms-ability-controls a { font-size: 10px; color: var(--sty-text-2); cursor: pointer; text-decoration: none; }
+.ms-ability-controls a:hover { color: var(--sty-crimson); }
 
 /* Tab strip */
 .ms-tabs {
   display: flex;
-  border-top: 1.5px solid #c9a66b;
-  background: #ede0c8;
+  border-top: 1px solid var(--sty-crimson-line);
+  background: var(--sty-bg-deep);
   flex-shrink: 0;
 }
 .ms-tab {
   border: none;
-  border-right: 1px solid #c9a66b;
+  border-right: 1px solid var(--sty-line-blue);
   padding: 8px 20px;
-  font-size: 13px;
+  font-size: 12px;
   cursor: pointer;
-  font-family: Georgia, serif;
-  font-style: italic;
+  font-family: var(--sty-font-ui);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   background: transparent;
-  color: #8b6040;
+  color: var(--sty-text-2);
   transition: background 0.1s, color 0.1s;
 }
-.ms-tab:hover { background: rgba(255,245,232,0.6); color: #2a1a0e; }
+.ms-tab:hover { background: rgba(255,255,255,.04); color: var(--sty-text); }
 .ms-tab.active {
-  background: #fdf5e8;
-  color: #2a1a0e;
+  background: rgba(217,72,79,.08);
+  color: #ff9a9a;
   position: relative;
 }
 .ms-tab.active::after {
   content: '';
   position: absolute;
-  bottom: -1.5px;
+  bottom: -1px;
   left: 0; right: 0;
-  height: 1.5px;
-  background: #fdf5e8;
+  height: 1px;
+  background: var(--sty-bg-deep);
 }
 .ms-tabs-fill { flex: 1; }
 
 /* Tab pages — collapsed by default, slides up on .is-open */
 .ms-tab-pages {
-  background: #fdf5e8;
+  background: var(--sty-panel);
   flex-shrink: 0;
   max-height: 0;
   overflow: hidden;
@@ -15726,7 +15358,7 @@ form.monster-sheet {
 .ms-page { padding: 12px 16px; }
 
 /* Biography */
-.ms-bio-content .editor { font-family: Georgia, serif; font-size: 13px; color: #3c2010; line-height: 1.7; }
+.ms-bio-content .editor { font-family: var(--sty-font-ui); font-size: 13px; color: var(--sty-text); line-height: 1.7; }
 .ms-bio-content .editor-content { min-height: 60px; }
 
 /* Loot */
@@ -15736,15 +15368,15 @@ form.monster-sheet {
   justify-content: space-between;
   margin-bottom: 8px;
 }
-.ms-loot-title { font-size: 11px; letter-spacing: 1px; color: #8b6040; font-weight: 500; text-transform: uppercase; }
+.ms-loot-title { font-size: 11px; letter-spacing: 1px; color: var(--sty-text-2); font-weight: 600; text-transform: uppercase; }
 .ms-loot-add {
   font-size: 11px;
-  color: #8b6040;
+  color: var(--sty-text-2);
   cursor: pointer;
   padding: 2px 8px;
-  border: 0.5px solid #c9a66b;
+  border: 1px solid var(--sty-line-blue);
   border-radius: 3px;
-  background: rgba(255,255,255,0.4);
+  background: rgba(0,0,0,.2);
   text-decoration: none;
 }
 .ms-loot-list { list-style: none; margin: 0; padding: 0; }
@@ -15753,34 +15385,111 @@ form.monster-sheet {
   align-items: center;
   gap: 8px;
   padding: 4px 0;
-  border-bottom: 0.5px solid #d8c8a8;
+  border-bottom: 1px solid var(--sty-line-blue);
   font-size: 13px;
-  color: #2a1a0e;
+  color: var(--sty-text);
 }
 .ms-loot-item img { border: none; border-radius: 2px; flex-shrink: 0; }
 .ms-loot-name { flex: 1; }
 .ms-loot-controls { display: none; gap: 4px; }
 .ms-loot-item:hover .ms-loot-controls { display: flex; }
-.ms-loot-controls a { font-size: 10px; color: #8b6040; cursor: pointer; text-decoration: none; }
-.ms-loot-empty { font-family: Georgia, serif; font-style: italic; font-size: 12px; color: #8b6040; margin: 0; }
+.ms-loot-controls a { font-size: 10px; color: var(--sty-text-2); cursor: pointer; text-decoration: none; }
+.ms-loot-empty { font-family: var(--sty-font-ui); font-style: italic; font-size: 12px; color: var(--sty-text-2); margin: 0; }
 
 /* Token HUD loot button */
 .stryder-loot-btn {
-  display: flex !important;
+  display: flex !important; /* core-override */
   align-items: center;
   justify-content: center;
   width: 34px;
   height: 34px;
-  background: rgba(180,130,60,0.85) !important;
-  border: 1px solid rgba(201,166,107,0.8) !important;
+  background: rgba(217,72,79,.7) !important; /* core-override */
+  border: 1px solid var(--sty-crimson-line) !important; /* core-override */
   border-radius: 4px;
   cursor: pointer;
   color: #fff;
   font-size: 14px;
 }
 .stryder-loot-btn:hover {
-  background: rgba(210,160,50,0.95) !important;
-  border-color: #c9a66b !important;
+  background: rgba(217,72,79,.9) !important; /* core-override */
+  border-color: var(--sty-crimson) !important; /* core-override */
+}
+
+/* Senses / Talents grids (monster-battle partial) */
+form.monster-sheet .section-header {
+  color: var(--sty-crimson);
+  border-bottom: 1px solid var(--sty-crimson-line);
+  text-shadow: 0 0 10px var(--sty-crimson-glow);
+  font-family: var(--sty-font-display);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+form.monster-sheet .header-decoration {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--sty-crimson-line), transparent);
+}
+form.monster-sheet .section-header img {
+  border: none;
+  position: relative;
+  left: -10px;
+}
+form.monster-sheet .skills-container {
+  font-family: var(--sty-font-ui);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+form.monster-sheet .skills-container .skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  padding: 12px;
+  background: var(--sty-panel);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: 6px;
+}
+form.monster-sheet .skills-container .skill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+form.monster-sheet .skills-container .skill-icon {
+  width: 28px;
+  height: 28px;
+  border: none;
+  flex-shrink: 0;
+}
+form.monster-sheet .skills-container .skill-label {
+  flex: 1;
+  font-weight: 600;
+  color: var(--sty-text-2);
+  font-size: 11px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+form.monster-sheet .skills-container .rollable:hover {
+  color: var(--sty-text);
+  text-decoration: underline;
+}
+form.monster-sheet .skills-container .skills-grid input[type="text"] {
+  border: 1px solid var(--sty-line-blue);
+  background: rgba(0,0,0,.3);
+  color: var(--sty-text);
+  text-align: center;
+  border-radius: 3px;
+  padding: 3px;
+  width: 44px;
+  font-family: var(--sty-font-number);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: none;
+}
+form.monster-sheet .skills-container .skills-grid input[type="text"]:focus {
+  outline: none;
+  border-color: var(--sty-crimson);
 }
 
 /* ====================================================================
