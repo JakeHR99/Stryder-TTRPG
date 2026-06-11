@@ -11070,14 +11070,14 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* Stats sub-page section title: suppress default margin/border */
 .jrpg-char-section-title.csheet-stats-title {
-  margin-bottom: 0;
-  border-bottom: none;
+  margin-bottom: 0 !important;
+  border-bottom: none !important;
 }
 
 /* Thin hairline separator below stats title */
 .csheet-stats-hairline {
   height: 1px;
-  background: var(--sty-line-blue);
+  background: rgba(100,160,220,0.2);
   margin-bottom: 14px;
 }
 

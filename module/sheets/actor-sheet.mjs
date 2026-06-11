@@ -6208,7 +6208,7 @@ function _openPokemonBattleWindow(actorRef) {
       const tag   = showTag && item.system.action_type ? `<span class="spb-item-tag">${item.system.action_type}</span>` : '';
       const limit = limitMax > 0 ? `<span class="spb-item-limit">${limitVal}/${limitMax}</span>` : '';
       return `
-        <div class="spb-item" data-item-id="${item.id}" data-action="spb-roll-item">
+        <div class="spb-item" data-item-id="${item.id}">
           <img src="${item.img}" alt="${item.name}" />
           <span class="spb-item-name">${item.name}</span>
           ${tag}${limit}
@@ -6230,5 +6230,109 @@ function _openPokemonBattleWindow(actorRef) {
       </button>` : ''}
     </div>`;
 
-  return _renderDefense();
+  // Build window element
+  const initiative = game.combat?.combatants.find(
+    c => c.actorId === actor.id
+  )?.initiative ?? '—';
+
+  const win = document.createElement('div');
+  win.id = 'stryder-pokemon-battle';
+  win.innerHTML = `
+    <div class="spb-header">
+      <span class="spb-actor-name">${actor.name}</span>
+      <span class="spb-initiative-badge">Init ${initiative}</span>
+      <div class="spb-header-controls">
+        <button class="spb-minimize-btn" title="Minimise">−</button>
+        <button class="spb-close-btn" title="Close">✕</button>
+      </div>
+    </div>
+    <div class="spb-body">
+      <div class="spb-main-grid">
+        <button class="spb-big-btn skills" data-panel="skills">⚔ Skills</button>
+        <button class="spb-big-btn defend" data-panel="defend">🛡 Defend</button>
+        <button class="spb-big-btn items"  data-panel="items">🧪 Items</button>
+        <button class="spb-big-btn actions" data-panel="actions">✦ Actions</button>
+      </div>
+      <div class="spb-panel skills">
+        <div class="spb-panel-header">
+          <button class="spb-back-btn">◀ Back</button>
+          <span class="spb-panel-title">Skills</span>
+        </div>
+        <div class="spb-panel-list">${_renderItems(skills, true)}</div>
+      </div>
+      <div class="spb-panel defend">
+        <div class="spb-panel-header">
+          <button class="spb-back-btn">◀ Back</button>
+          <span class="spb-panel-title">Defend</span>
+        </div>
+        ${_renderDefense()}
+      </div>
+      <div class="spb-panel items">
+        <div class="spb-panel-header">
+          <button class="spb-back-btn">◀ Back</button>
+          <span class="spb-panel-title">Items</span>
+        </div>
+        <div class="spb-panel-list">${_renderItems(items)}</div>
+      </div>
+      <div class="spb-panel actions">
+        <div class="spb-panel-header">
+          <button class="spb-back-btn">◀ Back</button>
+          <span class="spb-panel-title">Actions</span>
+        </div>
+        <div class="spb-panel-list">${_renderItems(playerActions, true)}</div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(win);
+
+  // Big buttons → show sub-panel
+  win.querySelectorAll('.spb-big-btn[data-panel]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      win.querySelector('.spb-main-grid').style.display = 'none';
+      win.querySelectorAll('.spb-panel').forEach(p => p.classList.remove('active'));
+      win.querySelector(`.spb-panel.${btn.dataset.panel}`).classList.add('active');
+    });
+  });
+
+  // Back → return to main grid
+  win.querySelectorAll('.spb-back-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      win.querySelectorAll('.spb-panel').forEach(p => p.classList.remove('active'));
+      win.querySelector('.spb-main-grid').style.display = '';
+    });
+  });
+
+  // Minimize / close
+  win.querySelector('.spb-minimize-btn').addEventListener('click', () => win.classList.toggle('minimized'));
+  win.querySelector('.spb-close-btn').addEventListener('click', () => win.remove());
+
+  // Item / skill / action rolls
+  win.querySelectorAll('.spb-item[data-item-id]').forEach(el => {
+    el.addEventListener('click', () => {
+      const item = actor.items.get(el.dataset.itemId);
+      if (item) item.roll();
+    });
+  });
+
+  // Defense rolls
+  win.querySelectorAll('.spb-def-row[data-roll]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const roll = new Roll(btn.dataset.roll, actor.getRollData());
+      await roll.evaluate();
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        flavor: `<strong>${actor.name}</strong> — ${btn.dataset.label}`,
+      });
+    });
+  });
+
+  // Block (dual wield)
+  win.querySelectorAll('.spb-def-row[data-block-reduction]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: `<strong>${actor.name}</strong> blocks — damage reduced by <strong>${btn.dataset.blockReduction}</strong>.`,
+      });
+    });
+  });
 }
