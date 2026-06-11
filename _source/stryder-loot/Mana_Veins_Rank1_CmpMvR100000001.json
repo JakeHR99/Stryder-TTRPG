@@ -1,9 +1,9 @@
 {
-  "name": "Pulsing Mana Vein",
+  "name": "Mana Veins (Rank 1)",
   "type": "component",
   "img": "systems/stryder/assets/components/mana_veins_g1.png",
   "system": {
-    "description": "<p>Veins that crackle with barely-contained magical energy even after death. Handling requires care \u2014 the current can arc unexpectedly and scorch careless hands.</p>",
+    "description": "<p>Fully charged mana channels from a powerful creature, surging with pure magical energy.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -12,6 +12,8 @@
       "diceSize": 6
     },
     "grade": "G1",
+    "component_type": "mana_veins",
+    "rank": "1",
     "sell_price": 250
   },
   "effects": [],
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpVeinG1",
-  "sort": 1500000,
-  "_key": "!items!CmpVeinG1"
+  "_id": "CmpMvR1000000001",
+  "sort": 1400000,
+  "_key": "!items!CmpMvR1000000001"
 }

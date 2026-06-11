@@ -1,9 +1,9 @@
 {
-  "name": "Common Heart",
+  "name": "Eyes (Mythic)",
   "type": "component",
-  "img": "systems/stryder/assets/components/hearts_g3.png",
+  "img": "systems/stryder/assets/components/eyes_mythic.png",
   "system": {
-    "description": "<p>A firm, intact heart that still carries traces of the creature's life force. A standard component in vitality and endurance-based recipes and compounds.</p>",
+    "description": "<p>An eye glowing with mythic clarity — said to see across veil and void. Extraordinarily rare.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G3",
-    "sell_price": 25
+    "grade": "Mythic",
+    "component_type": "eyes",
+    "rank": "mythic",
+    "sell_price": 1000
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpHrtG3",
-  "sort": 1800000,
-  "_key": "!items!CmpHrtG3"
+  "_id": "CmpEyRm000000001",
+  "sort": 1000000,
+  "_key": "!items!CmpEyRm000000001"
 }

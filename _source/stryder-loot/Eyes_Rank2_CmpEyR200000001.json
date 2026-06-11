@@ -1,9 +1,9 @@
 {
-  "name": "Brittle Bones",
+  "name": "Eyes (Rank 2)",
   "type": "component",
-  "img": "systems/stryder/assets/components/bones_g4.png",
+  "img": "systems/stryder/assets/components/eyes_g2.png",
   "system": {
-    "description": "<p>Fragile, bleached bones harvested from a weak monster. Little structural integrity remains \u2014 useful only for the most basic alchemical work or as low-grade filler material.</p>",
+    "description": "<p>A sharp eye from a strong monster, still crackling with keen magical sight.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G4",
-    "sell_price": 5
+    "grade": "G2",
+    "component_type": "eyes",
+    "rank": "2",
+    "sell_price": 100
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpBoneG4",
-  "sort": 200000,
-  "_key": "!items!CmpBoneG4"
+  "_id": "CmpEyR2000000001",
+  "sort": 800000,
+  "_key": "!items!CmpEyR2000000001"
 }

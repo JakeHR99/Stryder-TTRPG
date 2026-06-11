@@ -1,9 +1,9 @@
 {
-  "name": "Clouded Eye",
+  "name": "Mana Veins (Rank 3)",
   "type": "component",
-  "img": "systems/stryder/assets/components/eyes_g4.png",
+  "img": "systems/stryder/assets/components/mana_veins_g3.png",
   "system": {
-    "description": "<p>A dull, milky eye harvested from a weak monster. The magical sight it once possessed has almost entirely faded, leaving only a dim residue of energy.</p>",
+    "description": "<p>Mana channels from an average creature, carrying a steady if modest flow of magical energy.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G4",
-    "sell_price": 5
+    "grade": "G3",
+    "component_type": "mana_veins",
+    "rank": "3",
+    "sell_price": 25
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpEyeG4",
-  "sort": 700000,
-  "_key": "!items!CmpEyeG4"
+  "_id": "CmpMvR3000000001",
+  "sort": 1200000,
+  "_key": "!items!CmpMvR3000000001"
 }

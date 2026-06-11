@@ -1,9 +1,9 @@
 {
-  "name": "Withered Heart",
+  "name": "Heart (Rank 3)",
   "type": "component",
-  "img": "systems/stryder/assets/components/hearts_g4.png",
+  "img": "systems/stryder/assets/components/hearts_g3.png",
   "system": {
-    "description": "<p>A shrunken, tough heart from a weak monster. Little of the creature's vitality persists within, though its rugged tissue has modest uses in basic crafting.</p>",
+    "description": "<p>A heart from an average monster, retaining a moderate store of vital essence.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G4",
-    "sell_price": 5
+    "grade": "G3",
+    "component_type": "heart",
+    "rank": "3",
+    "sell_price": 25
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpHrtG4",
+  "_id": "CmpHtR3000000001",
   "sort": 1700000,
-  "_key": "!items!CmpHrtG4"
+  "_key": "!items!CmpHtR3000000001"
 }

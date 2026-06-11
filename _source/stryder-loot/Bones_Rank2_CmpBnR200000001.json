@@ -1,9 +1,9 @@
 {
-  "name": "Mythic Bones",
+  "name": "Bones (Rank 2)",
   "type": "component",
-  "img": "systems/stryder/assets/components/bones_mythic.png",
+  "img": "systems/stryder/assets/components/bones_g2.png",
   "system": {
-    "description": "<p>Bones suffused with ancient power \u2014 nearly indestructible and radiating a faint otherworldly energy. Only the most skilled artisans dare work with material of this calibre.</p>",
+    "description": "<p>Dense bones from a strong monster, charged with significant elemental energy.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "Mythic",
-    "sell_price": 1000
+    "grade": "G2",
+    "component_type": "bones",
+    "rank": "2",
+    "sell_price": 100
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpBoneMythic",
-  "sort": 600000,
-  "_key": "!items!CmpBoneMythic"
+  "_id": "CmpBnR2000000001",
+  "sort": 300000,
+  "_key": "!items!CmpBnR2000000001"
 }

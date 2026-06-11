@@ -1,9 +1,9 @@
 {
-  "name": "Vigorous Heart",
+  "name": "Mana Veins (Mythic)",
   "type": "component",
-  "img": "systems/stryder/assets/components/hearts_g2.png",
+  "img": "systems/stryder/assets/components/mana_veins_mythic.png",
   "system": {
-    "description": "<p>A large, dense heart that pulses faintly even in death. The concentrated life force stored within makes it a potent ingredient for powerful restoration compounds.</p>",
+    "description": "<p>Mana veins of mythic calibre — near-boundless magical current, extremely difficult to harvest intact.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G2",
-    "sell_price": 80
+    "grade": "Mythic",
+    "component_type": "mana_veins",
+    "rank": "mythic",
+    "sell_price": 1000
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpHrtG2",
-  "sort": 1900000,
-  "_key": "!items!CmpHrtG2"
+  "_id": "CmpMvRm000000001",
+  "sort": 1500000,
+  "_key": "!items!CmpMvRm000000001"
 }

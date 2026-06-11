@@ -1,9 +1,9 @@
 {
-  "name": "Common Bones",
+  "name": "Eyes (Rank 3)",
   "type": "component",
-  "img": "systems/stryder/assets/components/bones_g3.png",
+  "img": "systems/stryder/assets/components/eyes_g3.png",
   "system": {
-    "description": "<p>Standard monster bones with decent density. Commonly traded by hunters and alchemists alike. A reliable material for mid-tier crafting.</p>",
+    "description": "<p>An eye harvested from an average monster, with a steady but modest residue of magical perception.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -12,6 +12,8 @@
       "diceSize": 6
     },
     "grade": "G3",
+    "component_type": "eyes",
+    "rank": "3",
     "sell_price": 25
   },
   "effects": [],
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpBoneG3",
-  "sort": 300000,
-  "_key": "!items!CmpBoneG3"
+  "_id": "CmpEyR3000000001",
+  "sort": 700000,
+  "_key": "!items!CmpEyR3000000001"
 }

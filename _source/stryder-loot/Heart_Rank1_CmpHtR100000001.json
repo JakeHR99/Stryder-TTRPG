@@ -1,9 +1,9 @@
 {
-  "name": "Frayed Mana Vein",
+  "name": "Heart (Rank 1)",
   "type": "component",
-  "img": "systems/stryder/assets/components/mana_veins_g4.png",
+  "img": "systems/stryder/assets/components/hearts_g1.png",
   "system": {
-    "description": "<p>Collapsed and nearly empty mana channels harvested from a weak creature. The residual flow is unstable and barely measurable, but not entirely without use.</p>",
+    "description": "<p>A powerful heart, saturated with elemental life force and prized for advanced ritual use.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G4",
-    "sell_price": 5
+    "grade": "G1",
+    "component_type": "heart",
+    "rank": "1",
+    "sell_price": 250
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpVeinG4",
-  "sort": 1200000,
-  "_key": "!items!CmpVeinG4"
+  "_id": "CmpHtR1000000001",
+  "sort": 1900000,
+  "_key": "!items!CmpHtR1000000001"
 }

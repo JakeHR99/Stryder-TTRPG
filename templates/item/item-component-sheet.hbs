@@ -2,21 +2,34 @@
   <div class="oi-frame sty-ornate">
     {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Component Item"}}
 
-    {{!-- Extra header: Grade, Sell Price --}}
+    {{!-- Extra header: Type, Rank, Sell Price --}}
     <div class="oi-extra-header">
       <div class="grid grid-2col">
         <div class="dropdown-field">
-          <label class="resource-label secondary-input">Grade</label>
-          <select class="secondary-input" name="system.grade">
-            {{#select system.grade}}
-            <option value="G4">Rank 4</option>
-            <option value="G3">Rank 3</option>
-            <option value="G2">Rank 2</option>
-            <option value="G1">Rank 1</option>
-            <option value="G0">Mythic</option>
+          <label class="resource-label secondary-input">Component Type</label>
+          <select class="secondary-input" name="system.component_type">
+            {{#select system.component_type}}
+            <option value="bones">Bones</option>
+            <option value="eyes">Eyes</option>
+            <option value="mana_veins">Mana Veins</option>
+            <option value="heart">Heart</option>
             {{/select}}
           </select>
         </div>
+        <div class="dropdown-field">
+          <label class="resource-label secondary-input">Rank</label>
+          <select class="secondary-input" name="system.rank">
+            {{#select system.rank}}
+            <option value="4">Rank 4</option>
+            <option value="3">Rank 3</option>
+            <option value="2">Rank 2</option>
+            <option value="1">Rank 1</option>
+            <option value="mythic">Mythic</option>
+            {{/select}}
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-2col" style="margin-top:4px;">
         <div class="dropdown-field">
           <label class="resource-label secondary-input">Sell Price (Grail)</label>
           <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number" />

@@ -1,9 +1,9 @@
 {
-  "name": "Mythic Heart",
+  "name": "Heart (Mythic)",
   "type": "component",
   "img": "systems/stryder/assets/components/hearts_mythic.png",
   "system": {
-    "description": "<p>A heart that refuses to stop beating. The creature's life force has condensed into something beyond mortality. This is the very essence of existence, crystallised into flesh.</p>",
+    "description": "<p>A heart of mythic vitality — said to beat long after harvest. Extraordinarily rare.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -12,6 +12,8 @@
       "diceSize": 6
     },
     "grade": "Mythic",
+    "component_type": "heart",
+    "rank": "mythic",
     "sell_price": 1000
   },
   "effects": [],
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpHrtMythic",
-  "sort": 2100000,
-  "_key": "!items!CmpHrtMythic"
+  "_id": "CmpHtRm000000001",
+  "sort": 2000000,
+  "_key": "!items!CmpHtRm000000001"
 }

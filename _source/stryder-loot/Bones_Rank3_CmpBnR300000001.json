@@ -1,9 +1,9 @@
 {
-  "name": "Potent Heart",
+  "name": "Bones (Rank 3)",
   "type": "component",
-  "img": "systems/stryder/assets/components/hearts_g1.png",
+  "img": "systems/stryder/assets/components/bones_g3.png",
   "system": {
-    "description": "<p>A massive, powerful heart radiating raw vitality. The energy within is immense \u2014 it warms the hand that holds it and takes days to fully cool after the creature's death.</p>",
+    "description": "<p>Bones from an average monster, bearing a moderate concentration of latent elemental force.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G1",
-    "sell_price": 250
+    "grade": "G3",
+    "component_type": "bones",
+    "rank": "3",
+    "sell_price": 25
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpHrtG1",
-  "sort": 2000000,
-  "_key": "!items!CmpHrtG1"
+  "_id": "CmpBnR3000000001",
+  "sort": 200000,
+  "_key": "!items!CmpBnR3000000001"
 }

@@ -834,6 +834,8 @@
     "component": {
       "templates": ["base"],
       "grade": "G4",
+      "component_type": "",
+      "rank": "4",
       "sell_price": 0
     },
     "ingredient": {

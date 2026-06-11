@@ -1,9 +1,9 @@
 {
-  "name": "Prime Bones",
+  "name": "Mana Veins (Rank 2)",
   "type": "component",
-  "img": "systems/stryder/assets/components/bones_g1.png",
+  "img": "systems/stryder/assets/components/mana_veins_g2.png",
   "system": {
-    "description": "<p>Immaculate bones from a formidable beast. The material is unnaturally hard and hums faintly with residual vitality. Sought by master craftsmen across Alstoria.</p>",
+    "description": "<p>Intact mana channels from a strong creature, pulsing with reliable magical current.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G1",
-    "sell_price": 250
+    "grade": "G2",
+    "component_type": "mana_veins",
+    "rank": "2",
+    "sell_price": 100
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpBoneG1",
-  "sort": 500000,
-  "_key": "!items!CmpBoneG1"
+  "_id": "CmpMvR2000000001",
+  "sort": 1300000,
+  "_key": "!items!CmpMvR2000000001"
 }

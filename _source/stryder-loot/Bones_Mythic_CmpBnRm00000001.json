@@ -1,9 +1,9 @@
 {
-  "name": "Mythic Eye",
+  "name": "Bones (Mythic)",
   "type": "component",
-  "img": "systems/stryder/assets/components/eyes_mythic.png",
+  "img": "systems/stryder/assets/components/bones_mythic.png",
   "system": {
-    "description": "<p>An eye that seems to still see \u2014 ancient, infinite, and deeply unsettling. Its gaze feels purposeful even in death. Extraordinary material for legendary artefacts.</p>",
+    "description": "<p>Bones infused with mythic power — nearly indestructible and radiating a faint otherworldly energy. Reserved for the rarest crafting work.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -12,6 +12,8 @@
       "diceSize": 6
     },
     "grade": "Mythic",
+    "component_type": "bones",
+    "rank": "mythic",
     "sell_price": 1000
   },
   "effects": [],
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpEyeMythic",
-  "sort": 1100000,
-  "_key": "!items!CmpEyeMythic"
+  "_id": "CmpBnRm000000001",
+  "sort": 500000,
+  "_key": "!items!CmpBnRm000000001"
 }

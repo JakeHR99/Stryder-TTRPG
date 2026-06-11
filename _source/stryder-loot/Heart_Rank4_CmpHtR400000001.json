@@ -1,9 +1,9 @@
 {
-  "name": "Common Mana Vein",
+  "name": "Heart (Rank 4)",
   "type": "component",
-  "img": "systems/stryder/assets/components/mana_veins_g3.png",
+  "img": "systems/stryder/assets/components/hearts_g4.png",
   "system": {
-    "description": "<p>Intact mana conduit tissue with a steady, if modest, flow of residual energy. A standard material for mana-based crafting and enchantment work.</p>",
+    "description": "<p>A small, desiccated heart from a weak monster. Little of the creature's vitality persists within.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G3",
-    "sell_price": 25
+    "grade": "G4",
+    "component_type": "heart",
+    "rank": "4",
+    "sell_price": 5
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpVeinG3",
-  "sort": 1300000,
-  "_key": "!items!CmpVeinG3"
+  "_id": "CmpHtR4000000001",
+  "sort": 1600000,
+  "_key": "!items!CmpHtR4000000001"
 }

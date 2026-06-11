@@ -1,9 +1,9 @@
 {
-  "name": "Solid Bones",
+  "name": "Eyes (Rank 4)",
   "type": "component",
-  "img": "systems/stryder/assets/components/bones_g2.png",
+  "img": "systems/stryder/assets/components/eyes_g4.png",
   "system": {
-    "description": "<p>Dense, resilient bones from a powerful creature. The marrow retains trace magical properties, making these useful in refined crafting processes.</p>",
+    "description": "<p>A dim eye harvested from a weak monster. The magical sight it once possessed has almost entirely faded.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G2",
-    "sell_price": 80
+    "grade": "G4",
+    "component_type": "eyes",
+    "rank": "4",
+    "sell_price": 5
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpBoneG2",
-  "sort": 400000,
-  "_key": "!items!CmpBoneG2"
+  "_id": "CmpEyR4000000001",
+  "sort": 600000,
+  "_key": "!items!CmpEyR4000000001"
 }

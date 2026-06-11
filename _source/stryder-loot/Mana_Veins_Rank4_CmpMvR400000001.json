@@ -1,9 +1,9 @@
 {
-  "name": "Keen Eye",
+  "name": "Mana Veins (Rank 4)",
   "type": "component",
-  "img": "systems/stryder/assets/components/eyes_g2.png",
+  "img": "systems/stryder/assets/components/mana_veins_g4.png",
   "system": {
-    "description": "<p>A sharp, clear eye that glimmers with residual awareness. The focused energy within makes it valuable for enhancing sight-based enchantments.</p>",
+    "description": "<p>Collapsed mana channels from a weak creature. The residual flow is unstable and barely measurable.</p>",
     "size": 1,
     "is_consumable": false,
     "roll": {
@@ -11,8 +11,10 @@
       "diceNum": 2,
       "diceSize": 6
     },
-    "grade": "G2",
-    "sell_price": 80
+    "grade": "G4",
+    "component_type": "mana_veins",
+    "rank": "4",
+    "sell_price": 5
   },
   "effects": [],
   "ownership": {
@@ -27,7 +29,7 @@
     "modifiedTime": null,
     "lastModifiedBy": null
   },
-  "_id": "CmpEyeG2",
-  "sort": 900000,
-  "_key": "!items!CmpEyeG2"
+  "_id": "CmpMvR4000000001",
+  "sort": 1100000,
+  "_key": "!items!CmpMvR4000000001"
 }
