@@ -315,9 +315,9 @@ export async function designateHexPrompt() {
           <label style="min-width:120px;font-size:12px;">Designation:</label>
           <select id="desig-type" style="flex:1;">${desigOptions}</select>
         </div>
-        <div style="margin-top:8px;">
+        <div class="dlg-mt-8">
           <label style="font-size:12px;">Custom label (optional):</label>
-          <input id="desig-label" type="text" style="width:100%;margin-top:4px;" placeholder="e.g. Ancient Ruins" />
+          <input id="desig-label" type="text" class="dlg-input-full" placeholder="e.g. Ancient Ruins" />
         </div>
       `,
       buttons: {
