@@ -14126,14 +14126,14 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .ch-play-btn.ch-soon { background: #0a0600; border-color: #2a1a08; color: #2a1a08; cursor: default; }
 
 /* ── Challenges Hub v2 — sleek redesign ── */
-.challenges-hub-app .window-content { background: #04090f !important; padding: 0 !important; }
+.challenges-hub-app .window-content { background: var(--sty-bg-deep) !important; padding: 0 !important; }
 
 .ch2-wrap {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 14px;
-  background: #04090f;
+  background: var(--sty-bg-deep);
 }
 
 /* Active card */
@@ -14145,7 +14145,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   gap: 10px;
   padding: 24px 16px 20px;
   background: linear-gradient(160deg, rgba(8,35,60,0.95) 0%, rgba(4,16,32,0.98) 100%);
-  border: 1px solid rgba(60,140,200,0.2);
+  border: 1px solid var(--sty-line-blue-strong);
   border-radius: 10px;
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -14179,7 +14179,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .ch2-title {
-  font-family: Georgia, serif;
+  font-family: var(--sty-font-ui);
   font-size: 22px;
   font-weight: bold;
   letter-spacing: 3px;
@@ -14536,7 +14536,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 /* ── v2 Overrides: relaxing blue palette + new layout ── */
 
 /* Window chrome */
-.fishing-scene-app .window-content { background: #040e18 !important; }
+.fishing-scene-app .window-content { background: var(--sty-bg-deep) !important; }
 
 /* Video fill */
 .fsc-video-bg {
@@ -14553,7 +14553,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   display: flex; flex-direction: column;
   flex: 1; padding: 12px; gap: 10px;
   color: #b8d8e8;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: var(--sty-font-ui);
 }
 
 /* Header */
@@ -14565,9 +14565,9 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border-radius: 6px;
   flex-shrink: 0;
 }
-.fsc-actor-name  { font-size: 15px; color: #c8e0ee; }
+.fsc-actor-name  { font-size: 15px; color: var(--sty-cyan-bright); }
 .fsc-level-badge {
-  font-size: 12px; color: #7ab4cc;
+  font-size: 12px; color: var(--sty-cyan-soft);
   background: rgba(0,0,0,0.55);
   border: 1px solid rgba(60,120,160,0.35);
   border-radius: 12px; padding: 3px 12px;
@@ -14577,7 +14577,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .fsc-level-manual input {
   width: 60px; background: rgba(0,0,0,0.6);
   border: 1px solid rgba(60,120,160,0.4); border-radius: 4px;
-  color: #c8e0ee; padding: 4px; font-size: 14px; text-align: center;
+  color: var(--sty-cyan-bright); padding: 4px; font-size: 14px; text-align: center;
 }
 
 /* Status label (casts remaining etc.) */
@@ -14600,7 +14600,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   transition: color 0.2s, text-shadow 0.2s;
 }
 .fsc-roulette-sub  { font-size: 13px; color: #6a94a8; text-transform: uppercase; letter-spacing: 2px; }
-.fsc-roulette-label { font-size: 14px; color: #7ab4cc; letter-spacing: 1px; }
+.fsc-roulette-label { font-size: 14px; color: var(--sty-cyan-soft); letter-spacing: 1px; }
 
 /* ── Game row: grid + optional fish panel ── */
 .fsc-game-row {
@@ -14731,7 +14731,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* Two-phase roulette label */
 .fsc-roulette-unit {
-  font-size: 14px; color: #7ab4cc; letter-spacing: 1px;
+  font-size: 14px; color: var(--sty-cyan-soft); letter-spacing: 1px;
 }
 
 /* Complete log */
@@ -14751,9 +14751,9 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   background: rgba(0,0,0,0.55) !important;
   flex-shrink: 0;
 }
-.fsc-flavor { color: #7ab4cc !important; }
+.fsc-flavor { color: var(--sty-cyan-soft) !important; }
 .fsc-cnum   { color: #e0f0ff !important; }
-.fsc-msg    { color: #7ab4cc !important; }
+.fsc-msg    { color: var(--sty-cyan-soft) !important; }
 .fsc-cast-hud {
   display: flex; align-items: center; gap: 20px; justify-content: center; flex-wrap: wrap;
 }
@@ -14786,7 +14786,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 .f-again-btn {
   background: rgba(8,35,60,0.7) !important; border-color: rgba(50,110,150,0.35) !important;
-  color: #7ab4cc !important;
+  color: var(--sty-cyan-soft) !important;
 }
 .f-done-btn {
   background: rgba(5,20,38,0.7) !important; border-color: rgba(35,75,105,0.3) !important;
@@ -14977,7 +14977,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border-radius: 50%;
   border: 1px solid rgba(80,140,200,0.35);
   background: rgba(6,14,30,0.75);
-  color: #7ab4cc;
+  color: var(--sty-cyan-soft);
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
@@ -14990,7 +14990,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .ps-arrow:hover {
   background: rgba(15,40,75,0.9);
   border-color: rgba(100,180,240,0.6);
-  color: #c8e8ff;
+  color: var(--sty-cyan-bright);
 }
 .ps-arrow-left  { left:  6px; }
 .ps-arrow-right { right: 6px; }
@@ -15464,7 +15464,7 @@ form.monster-sheet {
 
 /* Base form background */
 .lrd-v2.jrpg-sheet {
-  background: #06101e;
+  background: var(--sty-bg-deep);
 }
 
 /* ── Override main-screen to stack vertically ── */
@@ -16161,11 +16161,11 @@ form.monster-sheet {
    ==================================================================== */
 
 .app.sheet.actor.stryder .window-content:has(> form.spirit-beast) {
-  background: linear-gradient(180deg, #0a0e1f 0%, #0d1426 55%, #101a30 100%) !important;
+  background: var(--sty-sky) !important;
 }
 
 form.spirit-beast {
-  background: linear-gradient(180deg, #0a0e1f 0%, #0d1426 55%, #101a30 100%);
+  background: var(--sty-sky);
   color: #dfe6f5;
   padding: 0 14px 14px 14px;
 }
@@ -16202,7 +16202,7 @@ form.spirit-beast .fantasy-input input:focus {
 /* Labels */
 form.spirit-beast .resource-label,
 form.spirit-beast .resource-label-info {
-  color: #c8b8f0;
+  color: var(--sty-cyan-soft);
   font-family: 'Cinzel', serif;
   font-size: 11px;
   font-weight: 700;
@@ -16236,7 +16236,7 @@ form.spirit-beast .sheet-tabs {
   margin: 10px 0 0 0;
 }
 form.spirit-beast .sheet-tabs .item {
-  color: #c8b8f0;
+  color: var(--sty-cyan-soft);
   font-family: 'Cinzel', serif;
   font-size: 11px;
   font-weight: 700;
@@ -16247,15 +16247,15 @@ form.spirit-beast .sheet-tabs .item {
 }
 form.spirit-beast .sheet-tabs .item:hover { color: #f0e6c8; background: rgba(255,255,255,0.05); }
 form.spirit-beast .sheet-tabs .item.active {
-  color: #e8c060;
+  color: var(--sty-gold);
   text-shadow: 0 0 8px rgba(232,192,96,0.45);
   border-bottom: 2px solid rgba(232,192,96,0.75);
 }
 
 /* Body */
 form.spirit-beast .sheet-body { background: transparent; }
-form.spirit-beast .section-header { color: #e8c060; }
-form.spirit-beast .section-header strong { color: #e8c060; }
+form.spirit-beast .section-header { color: var(--sty-gold); }
+form.spirit-beast .section-header strong { color: var(--sty-gold); }
 
 /* Dark panels (ability blocks, notes) */
 form.spirit-beast .sb-panel {
@@ -16271,14 +16271,14 @@ form.spirit-beast .sb-panel-header {
   padding-bottom: 4px; margin-bottom: 6px;
 }
 form.spirit-beast .sb-panel-header strong {
-  color: #e8c060;
+  color: var(--sty-gold);
   font-family: 'Cinzel', serif;
   font-size: 11px;
   letter-spacing: 0.10em;
   text-transform: uppercase;
 }
 form.spirit-beast .sb-panel-header a {
-  color: #c8b8f0;
+  color: var(--sty-cyan-soft);
   font-size: 11px;
   cursor: pointer;
   text-decoration: none;
@@ -16288,18 +16288,18 @@ form.spirit-beast .sb-panel-header a:hover { color: #ffe9a8; text-shadow: 0 0 6p
 form.spirit-beast .ability-description-display { color: #dfe6f5; font-size: 13px; line-height: 1.5; }
 form.spirit-beast .ability-description-display strong { color: #f0e6c8; }
 form.spirit-beast .sb-note { font-style: italic; font-size: 12px; color: #b8aede; }
-form.spirit-beast .sb-note strong { color: #e8c060; }
+form.spirit-beast .sb-note strong { color: var(--sty-gold); }
 
 /* Items list (extra abilities) */
 form.spirit-beast .items-list .items-header {
   background: rgba(6,12,30,0.60);
   border: 1px solid rgba(100,80,180,0.30);
-  color: #c8b8f0;
+  color: var(--sty-cyan-soft);
 }
 form.spirit-beast .items-list .item-name h4 { color: #eef2ff; }
 form.spirit-beast .items-list .item { border-bottom: 1px solid rgba(100,80,180,0.18); }
 form.spirit-beast .items-list .item-prop { color: #b8aede; }
-form.spirit-beast .items-list .item-controls a { color: #c8b8f0; }
+form.spirit-beast .items-list .item-controls a { color: var(--sty-cyan-soft); }
 form.spirit-beast .items-list .item-controls a:hover { color: #ffe9a8; }
 
 /* Editor / notes tab */
@@ -16310,7 +16310,7 @@ form.spirit-beast .editor, form.spirit-beast .editor-content {
   min-height: 120px;
 }
 form.spirit-beast .editor-content { padding: 8px; }
-form.spirit-beast .editor-edit { color: #c8b8f0; background: rgba(6,12,30,0.8); }
+form.spirit-beast .editor-edit { color: var(--sty-cyan-soft); background: rgba(6,12,30,0.8); }
 
 /* HP bar keeps its fill but gets a dark track */
 form.spirit-beast progress.hp-bar { background: rgba(6,12,30,0.8); border: 1px solid rgba(100,80,180,0.35); border-radius: 6px; }
@@ -16323,7 +16323,7 @@ form.spirit-beast .skill img {
   filter: invert(80%) sepia(20%) saturate(200%) hue-rotate(180deg);
   opacity: 0.85;
 }
-form.spirit-beast .skill span { color: #c8b8f0; }
+form.spirit-beast .skill span { color: var(--sty-cyan-soft); }
 form.spirit-beast .header-decoration { opacity: 0.4; }
 
 
