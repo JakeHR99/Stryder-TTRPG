@@ -7017,31 +7017,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border: none !important;
 }
 
-.jrpg-menu-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 16px 9px 12px;
-  color: rgba(200, 230, 255, 0.75);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
-  width: 100%;
-  box-sizing: border-box;
-  background: transparent;
-  border: none;
-  text-align: left;
-  transition: color 0.15s, background 0.15s;
-  border-bottom: 1px solid rgba(100,160,220,0.08);
-}
-
-.jrpg-menu-btn:hover {
-  background: rgba(100,160,240,0.18);
-  color: #ffffff;
-  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%);
-}
-
 /* Portrait — moderate zoom on contain, no hard cropping */
 .jrpg-center .jrpg-portrait-frame img.profile-img {
   object-fit: contain !important;
@@ -13638,7 +13613,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* Revealed states */
 .fsc-cell.revealed-fish  { background: #0a2030; animation: fscReveal 0.4s ease-out; }
-.fsc-cell.revealed-empty { background: #040e18; opacity: 0.65; }
+.fsc-cell.revealed-empty { background: var(--sty-bg-deep); opacity: 0.65; }
 .fsc-cell.missed-fish    { background: #180808; opacity: 0.5; }
 .fsc-cell.has-pearl      { box-shadow: 0 0 16px rgba(160,120,255,0.5) inset; }
 
@@ -13721,24 +13696,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   max-width: 260px;
 }
 
-/* ── Results ── */
-.fsc-results {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-  text-align: center;
-}
-
-.fsc-res-main {
-  font-size: 15px;
-  color: #e8c87a;
-}
-
-.fsc-res-pearls {
-  font-size: 13px;
-  color: #c8a0ff;
-}
 
 .fsc-log {
   max-height: 80px;
@@ -14009,8 +13966,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .fsc-cast-hud {
   display: flex; align-items: center; gap: 20px; justify-content: center; flex-wrap: wrap;
 }
-.fsc-res-main   { color: #b8d8e8 !important; }
-.fsc-res-pearls { color: #c0a0ff !important; }
 
 /* Complete buttons */
 .fsc-complete-btns {
@@ -14597,7 +14552,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .app.sheet.actor.stryder .window-content {
   padding: 0 !important;
   background: transparent !important;
-  overflow: hidden !important;
 }
 
 /* Character sheet header — blends with night sky (#061520) */
@@ -14637,10 +14591,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: #ff7070 !important;
 }
 
-/* ── Restore resize handle — remove overflow:hidden from window-content ── */
-.app.sheet.actor.stryder .window-content {
-  overflow: visible !important;
-}
 
 /* Clip happens at the inner form level instead */
 .app.sheet.actor.stryder .ps-form,
@@ -14775,7 +14725,7 @@ form.monster-sheet {
   max-width: 100% !important;
   object-fit: contain !important;
   object-position: bottom center !important;
-  filter: drop-shadow(0 10px 28px rgba(20,60,160,0.55));
+  filter: drop-shadow(0 10px 28px var(--sty-cyan-glow));
   cursor: pointer;
   border: none !important;
   background: transparent !important;
@@ -14795,7 +14745,7 @@ form.monster-sheet {
 .lrd-v2 .lrd-name-input {
   background: transparent !important;
   border: none !important;
-  border-bottom: 1px solid rgba(100,140,220,0.22) !important;
+  border-bottom: 1px solid var(--sty-line-blue) !important;
   color: rgba(230,240,255,0.95) !important;
   font-family: 'Cinzel', serif !important;
   font-size: 15px !important;
@@ -15506,7 +15456,7 @@ form.monster-sheet .skills-container .skills-grid input[type="text"]:focus {
 
 form.spirit-beast {
   background: var(--sty-sky);
-  color: #dfe6f5;
+  color: var(--sty-text);
   padding: 0 14px 14px 14px;
 }
 
@@ -15559,9 +15509,9 @@ form.spirit-beast select.secondary-input {
   background: rgba(6,12,30,0.65) !important;
   border: 1px solid rgba(100,80,180,0.35) !important;
   border-radius: 5px;
-  color: #eef2ff !important;
+  color: var(--sty-text) !important;
 }
-form.spirit-beast select.secondary-input option { background: #141c30; color: #eef2ff; }
+form.spirit-beast select.secondary-input option { background: #141c30; color: var(--sty-text); }
 form.spirit-beast input:focus, form.spirit-beast textarea:focus, form.spirit-beast select:focus {
   border-color: rgba(232,192,96,0.60) !important;
   box-shadow: 0 0 6px rgba(232,192,96,0.25);
@@ -15625,7 +15575,7 @@ form.spirit-beast .sb-panel-header a {
   transition: color 0.12s, text-shadow 0.12s;
 }
 form.spirit-beast .sb-panel-header a:hover { color: #ffe9a8; text-shadow: 0 0 6px rgba(232,192,96,0.5); }
-form.spirit-beast .ability-description-display { color: #dfe6f5; font-size: 13px; line-height: 1.5; }
+form.spirit-beast .ability-description-display { color: var(--sty-text); font-size: 13px; line-height: 1.5; }
 form.spirit-beast .ability-description-display strong { color: #f0e6c8; }
 form.spirit-beast .sb-note { font-style: italic; font-size: 12px; color: #b8aede; }
 form.spirit-beast .sb-note strong { color: var(--sty-gold); }
@@ -15636,7 +15586,7 @@ form.spirit-beast .items-list .items-header {
   border: 1px solid rgba(100,80,180,0.30);
   color: var(--sty-cyan-soft);
 }
-form.spirit-beast .items-list .item-name h4 { color: #eef2ff; }
+form.spirit-beast .items-list .item-name h4 { color: var(--sty-text); }
 form.spirit-beast .items-list .item { border-bottom: 1px solid rgba(100,80,180,0.18); }
 form.spirit-beast .items-list .item-prop { color: #b8aede; }
 form.spirit-beast .items-list .item-controls a { color: var(--sty-cyan-soft); }
@@ -15646,7 +15596,7 @@ form.spirit-beast .items-list .item-controls a:hover { color: #ffe9a8; }
 form.spirit-beast .editor, form.spirit-beast .editor-content {
   background: rgba(20,28,48,0.70);
   border-radius: 6px;
-  color: #dfe6f5;
+  color: var(--sty-text);
   min-height: 120px;
 }
 form.spirit-beast .editor-content { padding: 8px; }
