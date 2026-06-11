@@ -933,29 +933,6 @@ progress.resource2-bar::-moz-progress-bar {
     text-align: center;
 }
 
-.fantasy-npc-input {
-    font-family: EB Garamond;
-    background-size: cover;
-    padding: 5px;
-    border-radius: 10px;
-    text-align: center;
-    width: 120%;
-}
-
-.fantasy-npc-input input[type="text"] {
-    font-size: 28px;
-	font-weight: bold;
-    color: #331a00;
-    border-radius: 5px;
-	border: 1px solid rgba(255, 0, 0, 0);
-    position: relative;
-    top: 0px;
-    left: -85px;
-    width: 100%;
-    height: 40px;
-    box-sizing: border-box;
-    outline: none;
-}
 
 .fantasy-input input[type="text"] {
     font-size: 28px;
@@ -16389,4 +16366,265 @@ li.chat-message.sty-grp-follow:hover::before {
 li.chat-message.sty-grp-end {
   border-bottom: 1px solid var(--sty-cyan-glow);
   box-shadow: 0 3px 10px -6px var(--sty-cyan-glow);
+}
+
+/* ============ LITE ACTOR SHEETS — npc/familiar/pet (Phase 2) ============ */
+
+/* ----- Shared: sheet background & base type ----- */
+.sheet.actor.npc,
+.sheet.actor.familiar,
+.sheet.actor.pet {
+  background: var(--sty-sky);
+  color: var(--sty-text);
+  font-family: var(--sty-font-ui);
+}
+
+/* ----- Shared: inputs ----- */
+.sheet.actor.npc input[type="text"],
+.sheet.actor.npc input[type="number"],
+.sheet.actor.familiar input[type="text"],
+.sheet.actor.familiar input[type="number"],
+.sheet.actor.pet input[type="text"],
+.sheet.actor.pet input[type="number"] {
+  background: rgba(4, 10, 32, 0.75);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-text);
+  padding: 2px 6px;
+}
+.sheet.actor.npc input[type="text"]:focus,
+.sheet.actor.npc input[type="number"]:focus,
+.sheet.actor.familiar input[type="text"]:focus,
+.sheet.actor.familiar input[type="number"]:focus,
+.sheet.actor.pet input[type="text"]:focus,
+.sheet.actor.pet input[type="number"]:focus {
+  border-color: var(--sty-cyan);
+  box-shadow: 0 0 6px var(--sty-cyan-glow);
+  outline: none;
+}
+
+/* ----- Shared: selects ----- */
+.sheet.actor.npc select,
+.sheet.actor.familiar select,
+.sheet.actor.pet select {
+  background: rgba(4, 10, 32, 0.75);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-text);
+  font-family: var(--sty-font-ui);
+  font-size: 14px;
+  width: 100%;
+}
+
+/* ----- Shared: section headers → kit gold ----- */
+.sheet.actor.npc .section-header,
+.sheet.actor.familiar .section-header,
+.sheet.actor.pet .section-header {
+  font-family: var(--sty-font-display);
+  color: var(--sty-gold);
+  border-bottom: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.sheet.actor.npc .section-header img,
+.sheet.actor.familiar .section-header img,
+.sheet.actor.pet .section-header img {
+  border: 0;
+  position: relative;
+  top: 0;
+  left: -10px;
+}
+
+/* ----- Kit title bar (replaces unique-logo-container) ----- */
+.lite-actor-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sty-panel-nav);
+  border-bottom: 1px solid var(--sty-line-gold);
+  padding: 8px 16px;
+  font-family: var(--sty-font-display);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--sty-gold-muted);
+}
+.lite-actor-titlebar::before,
+.lite-actor-titlebar::after {
+  content: "◆";
+  color: var(--sty-gold-muted);
+  font-size: 9px;
+  margin: 0 8px;
+}
+
+/* ----- NPC: name input ----- */
+.sheet.actor.npc .charname {
+  margin: 0;
+}
+.sheet.actor.npc .charname input[type="text"] {
+  font-family: var(--sty-font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--sty-gold);
+  background: transparent;
+  border-color: var(--sty-line-gold);
+  letter-spacing: 1px;
+  text-align: center;
+  width: 100%;
+  height: 40px;
+}
+
+/* ----- NPC: header resource group (health + aegis side-by-side) ----- */
+.sheet.actor.npc .header-fields .resource.flex-group-center {
+  display: flex;
+  gap: 20px;
+}
+.sheet.actor.npc .header-fields .resource.flex-group-center > div {
+  flex: 1;
+}
+
+/* ----- NPC: biography tab layout ----- */
+.sheet.actor.npc .character-details-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.sheet.actor.npc .backstory-container,
+.sheet.actor.npc .personality-container {
+  flex: 1;
+}
+.sheet.actor.npc .backstory-container .editor-container,
+.sheet.actor.npc .personality-container .editor-container {
+  height: 200px;
+}
+.sheet.actor.npc .additional-details-container .editor-container {
+  height: 300px;
+}
+
+/* ----- Familiar/Pet: name input container ----- */
+.sheet.actor.familiar .fantasy-input,
+.sheet.actor.pet .fantasy-input {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.sheet.actor.familiar .fantasy-input > input[type="text"],
+.sheet.actor.pet .fantasy-input > input[type="text"] {
+  flex: 1;
+  font-family: var(--sty-font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--sty-gold);
+  background: transparent;
+  border-color: var(--sty-line-gold);
+  letter-spacing: 1px;
+  text-align: center;
+  position: static;
+  top: auto;
+  left: auto;
+  height: auto;
+  width: auto;
+}
+
+/* Trust EXP widget inside familiar name bar */
+.sheet.actor.familiar .fantasy-input .resource.flex-group-center {
+  margin: 0;
+  padding: 0;
+}
+.sheet.actor.familiar .resource-content-level .resource-label {
+  margin-top: -10px;
+  margin-bottom: -15px;
+  color: var(--sty-text-2);
+}
+.sheet.actor.familiar #trust-exp-input {
+  width: 60px;
+}
+
+/* ----- Familiar/Pet: character-details-secondary margin ----- */
+.sheet.actor.familiar .character-details-secondary,
+.sheet.actor.pet .character-details-secondary {
+  margin-bottom: 8px;
+}
+
+/* ----- Resource label icons ----- */
+.sheet.actor.familiar .resource-label img[src*="health-symbol"],
+.sheet.actor.pet .resource-label img[src*="health-symbol"] {
+  width: 15px;
+  height: 15px;
+  border: 0;
+  position: relative;
+  top: 15px;
+  left: -5px;
+  margin-left: 15px;
+}
+.sheet.actor.familiar .resource-label img[src*="stamina-symbol"] {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  position: relative;
+  top: 10px;
+  margin-bottom: -6px;
+  left: 0;
+  margin-left: 15px;
+}
+.sheet.actor.pet .resource-label img[src*="movement-speeds"] {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  position: relative;
+  top: 10px;
+  left: -5px;
+  margin-left: 15px;
+}
+
+/* ----- Pet: details tab layout ----- */
+.sheet.actor.pet .tab.details > .grid.grid-2col {
+  margin-top: 20px;
+}
+.sheet.actor.pet .tab.details > .resource-section {
+  margin-top: 20px;
+}
+.sheet.actor.pet .tab.details .items-list {
+  margin-top: 8px;
+}
+.sheet.actor.pet .detail-field .trust-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.sheet.actor.pet .resource-button {
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.sheet.actor.pet input[name="system.trust.points"] {
+  text-align: center;
+  width: 55px;
+}
+.sheet.actor.pet .trust-level-display {
+  text-align: center;
+  margin-top: 6px;
+  font-family: var(--sty-font-display);
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--sty-gold);
+}
+.sheet.actor.pet .tab.description .section-header {
+  border-bottom: none;
+}
+
+/* ----- Familiar: battle tab layout ----- */
+.sheet.actor.familiar .tab.battle .section-header {
+  border-bottom: none;
+}
+.sheet.actor.familiar .base-movement-section img[src*="run"] {
+  border: 0;
+  margin-right: -20px;
+  margin-left: -10px;
 }

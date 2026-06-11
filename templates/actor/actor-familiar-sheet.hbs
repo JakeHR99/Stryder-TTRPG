@@ -83,30 +83,28 @@
 	}, 2000);
 </script>
 
-<div class="unique-logo-container">
-    <img class="logo" src="systems/stryder/assets/stryderfvtt_title.png" width="125" height="125">
-</div>
+<div class="lite-actor-titlebar"><span>{{actor.type}}</span></div>
   {{!-- Sheet Header --}}
   <header class="sheet-header">
     <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
     <div class="header-fields">
-		<div class="fantasy-input" style="width: 450px; display: flex; align-items: center; gap: 20px;">
-				<input name="name" type="text" value="{{actor.name}}" placeholder="Name" style="flex: 1;"/>
-			<div class="resource flex-group-center" style="margin: 0; padding: 0;">
+		<div class="fantasy-input">
+				<input name="name" type="text" value="{{actor.name}}" placeholder="Name"/>
+			<div class="resource flex-group-center">
 				<div class="resource-content-level flex-column flex-center">
-					<label for="trust-exp-input" class="resource-label" style="margin-top: -10px; margin-bottom: -15px; color: #000000; !important">{{localize "Trust EXP"}}</label>
-					<input type="text" id="trust-exp-input" name="system.attributes.trust_exp.value" value="{{system.attributes.trust_exp.value}}" data-dtype="Number" style="width: 60px;"/>
+					<label for="trust-exp-input" class="resource-label">{{localize "Trust EXP"}}</label>
+					<input type="text" id="trust-exp-input" name="system.attributes.trust_exp.value" value="{{system.attributes.trust_exp.value}}" data-dtype="Number"/>
 				</div>
 			</div>
 		</div><br />
       {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
       use both the "grid" and "grid-Ncol" class where "N" can be any number
       from 1 to 12 and will create that number of columns.  --}}
-        <div class="character-details-secondary textalign-center flexrow" style="margin-bottom: 8px;">
+        <div class="character-details-secondary textalign-center flexrow">
           <div class="character-familiar-type">
             <label for="{{actor._id}}familiar_type" class="resource-label-info">{{localize "Familiar Type"}}</label>
 			<div class="dropdown-field">
-				<select class="secondary-input" name="system.attributes.familiar_type" style="width: 100%; font-size: 16px; font-weight: normal;">
+				<select class="secondary-input" name="system.attributes.familiar_type">
 				  {{#select system.attributes.familiar_type}}
 				  <option value="Pet">{{localize "Pet"}}</option>
 				  <option value="Companion">{{localize "Companion"}}</option>
@@ -117,7 +115,7 @@
           <div class="character-trust-level">
             <label for="{{actor._id}}trust_level" class="resource-label-info">{{localize "Trust Level"}}</label>
 			<div class="dropdown-field">
-				<select class="secondary-input" name="system.attributes.trust_level" style="width: 100%; font-size: 16px; font-weight: normal;">
+				<select class="secondary-input" name="system.attributes.trust_level">
 				  {{#select system.attributes.trust_level}}
 				  <option value="Stranger">{{localize "Stranger"}}</option>
 				  <option value="Friend">{{localize "Friend"}}</option>
@@ -130,7 +128,7 @@
           <div class="character-weightclass">
             <label for="{{actor._id}}creature_size" class="resource-label-info">{{localize "Creature Size"}}</label>
 			<div class="dropdown-field">
-				<select class="secondary-input" name="system.attributes.creature_size" style="width: 100%; font-size: 16px; font-weight: normal;">
+				<select class="secondary-input" name="system.attributes.creature_size">
 				  {{#select system.attributes.creature_size}}
 				  <option value="0.25">{{localize "Mini"}}</option>
 				  <option value="0.5">{{localize "Small"}}</option>
@@ -151,7 +149,7 @@
         center all of its child elements content and text. --}}
 
         <div class="resource flex-group-center">
-          <label for="system.health.value" class="resource-label"><img style="width: 15px; height: 15px; border: 0px; position: relative; top: 15px; left: -5px; margin-left: 15px;" src="systems/stryder/assets/health-symbol.svg">{{localize "Health"}}</label>
+          <label for="system.health.value" class="resource-label"><img src="systems/stryder/assets/health-symbol.svg">{{localize "Health"}}</label>
 		  <div class="hpbar">
 			<div class="hp-progress-bar">
 			  <progress class="hp-bar grid-span-3" value="{{system.health.value}}" max="{{system.health.max}}"></progress>
@@ -168,7 +166,7 @@
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.stamina.value" class="resource-label"><img style="width: 20px; height: 20px; border: 0px; position: relative; top: 10px; margin-bottom: -6px; left: 0px; margin-left: 15px;" src="systems/stryder/assets/stamina-symbol.svg">{{localize "Stamina"}} </label>
+          <label for="system.stamina.value" class="resource-label"><img src="systems/stryder/assets/stamina-symbol.svg">{{localize "Stamina"}} </label>
 		  <div class="staminabar">
 			<div class="stamina-progress-bar">
 			  <progress class="stamina-bar grid-span-3" value="{{system.stamina.value}}" max="{{system.stamina.max}}"></progress>
@@ -335,9 +333,9 @@
 <!-- Battle Tab -->
 
 <div class="tab battle" data-group="primary" data-tab="battle">
-    <h2 class="section-header" style="border-bottom: 0px;">
+    <h2 class="section-header">
         <span class="header-decoration left"></span>
-        <img src="systems/stryder/assets/movement-speeds.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;">
+        <img src="systems/stryder/assets/movement-speeds.svg" width="25px" height="25px">
         <strong>{{localize "Movement Speeds"}}</strong>
         <span class="header-decoration right"></span>
     </h2>
@@ -346,7 +344,7 @@
         <!-- Base Movement Speed -->
         <div class="base-movement-section">
             <div class="flexrow flex-group-center-speed">
-                <img src="systems/stryder/assets/run.svg" width="30px" height="30px" style="border:0px; margin-right: -20px; margin-left: -10px;">
+                <img src="systems/stryder/assets/run.svg" width="30px" height="30px">
                 <label><b>{{localize "Current Movement"}}</b></label>
             </div>
             <div class="speed-input-container">

@@ -44,18 +44,16 @@
 	}, 2000);
 </script>
 
-<div class="unique-logo-container">
-	<img class="logo" src="systems/stryder/assets/stryderfvtt_title_m.png" width="125" height="125">
-</div>
+<div class="lite-actor-titlebar"><span>{{actor.type}}</span></div>
 
 {{!-- Sheet Header --}}
 <header class="sheet-header">
 	<img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
 	<div class="header-fields">
-		<div class="fantasy-input" style="width: 450px; display: flex; align-items: center; gap: 20px;">
-			<input name="name" type="text" value="{{actor.name}}" placeholder="Pet Name" style="flex: 1;"/>
+		<div class="fantasy-input">
+			<input name="name" type="text" value="{{actor.name}}" placeholder="Pet Name"/>
 		</div><br />
-		<div class="character-details-secondary textalign-center flexrow" style="margin-bottom: 8px;">
+		<div class="character-details-secondary textalign-center flexrow">
 			<div class="character-species">
 				<label for="{{actor._id}}species" class="resource-label-info">{{localize "Species"}}</label>
 				<input id="{{actor._id}}species" type="text" name="system.species" value="{{system.species}}" placeholder="Species Name" data-dtype="String"/>
@@ -63,7 +61,7 @@
 			<div class="character-size">
 				<label for="{{actor._id}}creature_size" class="resource-label-info">{{localize "Size"}}</label>
 				<div class="dropdown-field">
-					<select class="secondary-input" name="system.attributes.creature_size" style="width: 100%; font-size: 16px; font-weight: normal;">
+					<select class="secondary-input" name="system.attributes.creature_size">
 						{{#select system.attributes.creature_size}}
 						<option value="0.25">Mini</option>
 						<option value="0.5">Small</option>
@@ -81,7 +79,7 @@
 
 		<div class="resources grid grid-2col">
 			<div class="resource flex-group-center">
-				<label for="system.health.value" class="resource-label"><img style="width: 15px; height: 15px; border: 0px; position: relative; top: 15px; left: -5px; margin-left: 15px;" src="systems/stryder/assets/health-symbol.svg">{{localize "Health"}}</label>
+				<label for="system.health.value" class="resource-label"><img src="systems/stryder/assets/health-symbol.svg">{{localize "Health"}}</label>
 				<div class="hpbar">
 					<div class="hp-progress-bar">
 						<progress class="hp-bar grid-span-3" value="{{system.health.value}}" max="{{system.health.max}}"></progress>
@@ -98,7 +96,7 @@
 			</div>
 
 			<div class="resource flex-group-center">
-				<label for="system.attributes.movement.value" class="resource-label"><img style="width: 20px; height: 20px; border: 0px; position: relative; top: 10px; left: -5px; margin-left: 15px;" src="systems/stryder/assets/movement-speeds.svg">{{localize "Movement"}}</label>
+				<label for="system.attributes.movement.value" class="resource-label"><img src="systems/stryder/assets/movement-speeds.svg">{{localize "Movement"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
 					<input type="text" name="system.attributes.movement.value" value="{{system.attributes.movement.value}}" data-dtype="Number"/>
 				</div>
@@ -120,7 +118,7 @@
 	<div class="tab details" data-group="primary" data-tab="details">
 
 		{{!-- Top row: Pet Stats | Trust Level --}}
-		<div class="grid grid-2col" style="margin-top: 20px;">
+		<div class="grid grid-2col">
 			<div class="resource-section">
 				<h3 class="fantasy-section-title">
 					<span class="title-decoration left"></span>
@@ -164,12 +162,12 @@
 				</h3>
 				<div class="detail-field">
 					<label>{{localize "Trust Points"}}</label>
-					<div class="flexrow" style="align-items: center; justify-content: center; gap: 6px; margin-top: 4px;">
-						<button type="button" class="resource-button" data-action="trustDecrease" style="width: 28px; height: 28px; font-size: 18px; line-height: 1; cursor: pointer;">−</button>
-						<input type="text" name="system.trust.points" value="{{system.trust.points}}" data-dtype="Number" style="text-align: center; width: 55px;"/>
-						<button type="button" class="resource-button" data-action="trustIncrease" style="width: 28px; height: 28px; font-size: 18px; line-height: 1; cursor: pointer;">+</button>
+					<div class="flexrow trust-row">
+						<button type="button" class="resource-button" data-action="trustDecrease">−</button>
+						<input type="text" name="system.trust.points" value="{{system.trust.points}}" data-dtype="Number"/>
+						<button type="button" class="resource-button" data-action="trustIncrease">+</button>
 					</div>
-					<div style="text-align: center; margin-top: 6px; font-family: 'Eagle Lake', sans-serif; font-size: 15px; font-weight: bold;">
+					<div class="trust-level-display">
 						{{system.trust.level}}
 					</div>
 				</div>
@@ -177,7 +175,7 @@
 		</div>
 
 		{{!-- Diet section --}}
-		<div class="resource-section" style="margin-top: 20px;">
+		<div class="resource-section">
 			<h3 class="fantasy-section-title">
 				<span class="title-decoration left"></span>
 				<span class="title-text">Diet</span>
@@ -196,12 +194,12 @@
 		</div>
 
 		{{!-- Senses & Talents --}}
-		<div class="resource-section" style="margin-top: 20px;">
+		<div class="resource-section">
 			{{> "systems/stryder/templates/actor/parts/actor-battle.hbs"}}
 		</div>
 
 		{{!-- Abilities & Commands --}}
-		<div class="resource-section" style="margin-top: 20px;">
+		<div class="resource-section">
 			<h3 class="fantasy-section-title">
 				<span class="title-decoration left"></span>
 				<span class="title-text">Abilities & Commands</span>
@@ -210,7 +208,7 @@
 		</div>
 
 		{{!-- Pet Abilities --}}
-		<ol class="items-list" style="margin-top: 8px;">
+		<ol class="items-list">
 			<li class="item flexrow items-header">
 				<div class="item-name">{{localize "Pet Abilities"}}&nbsp;<i class="toggle-icon fas fa-chevron-down"></i></div>
 				<div class="item-controls">
@@ -300,7 +298,7 @@
 
 	{{!-- Information Tab --}}
 	<div class="tab description" data-group="primary" data-tab="description">
-		<h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><strong>{{localize "Description"}}</strong><span class="header-decoration right"></span></h2>
+		<h2 class="section-header"><span class="header-decoration left"></span><strong>{{localize "Description"}}</strong><span class="header-decoration right"></span></h2>
 		<div class="editor-container biography">
 			{{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
 		</div>

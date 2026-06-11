@@ -4,9 +4,7 @@
   <header class="sheet-header">
     <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
     <div class="header-fields">
-		<div class="fantasy-npc-input">
-			<h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
-		</div>
+		<h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
       {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
       use both the "grid" and "grid-Ncol" class where "N" can be any number
       from 1 to 12 and will create that number of columns.  --}}
@@ -15,9 +13,9 @@
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. --}}
 
-		<div class="resource flex-group-center" style="display: flex; gap: 20px;">
+		<div class="resource flex-group-center">
 		  <!-- Health Section -->
-		  <div style="flex: 1;">
+		  <div>
 			<label for="system.health.value" class="resource-label">Health</label>
 			<div class="hpbar">
 			  <div class="hp-progress-bar">
@@ -32,7 +30,7 @@
 		  </div>
 
 		  <!-- Aegis Section -->
-		  <div style="flex: 1;">
+		  <div>
 			<label for="system.aegis.value" class="resource-label">Aegis</label>
 			<div class="aegisbar">
 			  <div class="aegis-progress-bar">
@@ -112,20 +110,20 @@
       </div>
 
       {{!-- Character Details Row --}}
-      <div class="character-details-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+      <div class="character-details-row">
 
         {{!-- Backstory Section --}}
-        <div class="backstory-container" style="flex: 1;">
-          <h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/legend.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Biography"}}</strong><span class="header-decoration right"></span></h2>
-          <div class="editor-container" style="height: 200px;">
+        <div class="backstory-container">
+          <h2 class="section-header"><span class="header-decoration left"></span><img src="systems/stryder/assets/legend.svg" width="25px" height="25px"><strong>{{localize "Biography"}}</strong><span class="header-decoration right"></span></h2>
+          <div class="editor-container">
             {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
           </div>
         </div>
 
         {{!-- Personality Section --}}
-        <div class="personality-container" style="flex: 1;">
-          <h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/personality.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Personality"}}</strong><span class="header-decoration right"></span></h2>
-          <div class="editor-container" style="height: 200px;">
+        <div class="personality-container">
+          <h2 class="section-header"><span class="header-decoration left"></span><img src="systems/stryder/assets/personality.svg" width="25px" height="25px"><strong>{{localize "Personality"}}</strong><span class="header-decoration right"></span></h2>
+          <div class="editor-container">
             {{editor system.personality target="system.personality" rollData=rollData button=true owner=owner editable=editable}}
           </div>
         </div>
@@ -133,8 +131,8 @@
 
       {{!-- Additional Details Section --}}
       <div class="additional-details-container">
-        <h2 class="section-header" style="border-bottom: 0px;"><span class="header-decoration left"></span><img src="systems/stryder/assets/details.svg" width="25px" height="25px" style="border:0px; position: relative; top: 0px; left: -10px;"><strong>{{localize "Additional Details"}}</strong><span class="header-decoration right"></span></h2>
-        <div class="editor-container" style="height: 300px;">
+        <h2 class="section-header"><span class="header-decoration left"></span><img src="systems/stryder/assets/details.svg" width="25px" height="25px"><strong>{{localize "Additional Details"}}</strong><span class="header-decoration right"></span></h2>
+        <div class="editor-container">
           {{editor system.npcdetails target="system.npcdetails" rollData=rollData button=true owner=owner editable=editable}}
         </div>
       </div>
