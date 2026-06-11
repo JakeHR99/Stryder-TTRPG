@@ -80,6 +80,7 @@ export const SHAMAN_ABILITY_NAMES = [
   'Tactic: Attack', 'Tactic: Heal', 'Tactic: Dodge/Evasion',
   'Tactic: Return', 'Tactic: Metamorph', 'Tactic: Retreat', 'Tactic: Transfer Talent',
   'Desperate Strength', 'Spirit Armament', 'Approximate Ascension', 'Bonded Lives',
+  "Spirit's Wrath", "Spirit's Compassion",
 ];
 
 export function isShamanClass(actor) {
@@ -112,6 +113,8 @@ export async function handleShamanAbility(item, actor, speaker, rollMode) {
     case 'Desperate Strength':       return handleDesperateStrength(actor, speaker, rollMode);
     case 'Spirit Armament':          return handleSpiritArmament(actor, speaker, rollMode);
     case 'Approximate Ascension':    return handleApproximateAscension(actor, speaker, rollMode);
+    case "Spirit's Wrath":           return handleSpiritsWrath(actor, speaker, rollMode);
+    case "Spirit's Compassion":      return handleSpiritsCompassion(actor, speaker, rollMode);
     case 'Bonded Lives':
       return ChatMessage.create({ speaker, rollMode, content: shamanCard(
         'Bonded Lives', 'Your Health starts at <strong>6</strong> and you gain <strong>2 Health</strong> every level. You are bonded to your Lordling through soul and spirit.', 'Passive'
@@ -189,12 +192,12 @@ async function tacticAttack(actor, speaker, rollMode) {
 
 async function tacticHeal(actor, speaker, rollMode) {
   const lordling = getLinkedLordling(actor);
-  // Focused: 1 TP, 1× per engagement. Swift: 8 TP.
+  // Focused: 1 TP, 1× per engagement. Swift: 3 TP.
   const engagementKey = 'tacticHealUsedThisEngagement';
   const usedFocused   = actor.getFlag(SYSTEM_ID, engagementKey) ?? false;
   const choice = await tacticDialog('Heal',
     { tp: 1, label: usedFocused ? 'Focused (1 TP — ALREADY USED)' : 'Focused (1 TP · 1×/engagement)' },
-    { tp: 8 }
+    { tp: 3 }
   );
   if (!choice) return;
   if (choice.mode === 'Focused' && usedFocused) {
@@ -281,6 +284,7 @@ async function tacticRetreat(actor, speaker, rollMode) {
 
 async function tacticTransferTalent(actor, speaker, rollMode) {
   const lordling = getLinkedLordling(actor);
+  if (!lordling) return ui.notifications.warn('No linked Lordling found.');
   const choice = await tacticDialog('Transfer Talent', { tp: 1 }, { tp: 2 });
   if (!choice) return;
   const ok = await spendTP(actor, choice.tpCost);
@@ -292,24 +296,51 @@ async function tacticTransferTalent(actor, speaker, rollMode) {
     new Dialog({
       title: 'Transfer Talent',
       content: `<div class="chat-hint-p">
-        <p>Transfer a Physical Talent between ${actor.name} and ${lordling?.name ?? 'Lordling'} for 1 minute (max 5).</p>
+        <p>Transfer a Physical Talent between ${actor.name} and ${lordling.name} for 1 minute (max 5).</p>
         <select id="xfer-talent" style="width:100%;background:#0a0e1a;color:#88acd8;border:1px solid rgba(50,90,170,0.4);border-radius:3px;padding:4px;">
           ${talentOpts}
         </select>
         <p style="margin-top:8px;">Direction:</p>
       </div>`,
       buttons: {
-        toSelf:     { label: `← To ${actor.name}`,          callback: (html) => resolve({ talent: html.find('#xfer-talent').val(), dir: 'toLordling' }) },
-        toLordling: { label: `→ To ${lordling?.name ?? 'Lordling'}`, callback: (html) => resolve({ talent: html.find('#xfer-talent').val(), dir: 'fromLordling' }) },
+        fromLordling: { label: `← To ${actor.name}`,   callback: (html) => resolve({ talent: html.find('#xfer-talent').val(), dir: 'fromLordling' }) },
+        toLordling:   { label: `→ To ${lordling.name}`, callback: (html) => resolve({ talent: html.find('#xfer-talent').val(), dir: 'toLordling' }) },
         cancel: { label: 'Cancel', callback: () => resolve(null) },
       },
-      default: 'toSelf',
+      default: 'fromLordling',
     }, { width: 320, classes: ['dialog','stryder-stat-popup'] }).render(true);
   });
   if (!result) return;
+
+  const key = result.talent.toLowerCase();
+  const shamOld = actor.system.attributes?.talent?.[key]?.value ?? 0;
+  const lordOld = lordling.system.attributes?.talent?.[key]?.value ?? 0;
+  let shamNew, lordNew;
+  if (result.dir === 'fromLordling') {
+    // Lordling gives talent to Shaman
+    shamNew = Math.min(5, shamOld + lordOld);
+    lordNew = 0;
+  } else {
+    // Shaman gives talent to Lordling
+    shamNew = 0;
+    lordNew = Math.min(5, lordOld + shamOld);
+  }
+
+  // Store originals for combat-end safety revert
+  await actor.setFlag(SYSTEM_ID, 'transferTalentOriginals', {
+    talent: key, shamValue: shamOld, lordValue: lordOld,
+    dir: result.dir, lordlingId: lordling.id,
+  });
+  await actor.update({ [`system.attributes.talent.${key}.value`]: shamNew });
+  await lordling.update({ [`system.attributes.talent.${key}.value`]: lordNew });
+
+  const fromName = result.dir === 'fromLordling' ? lordling.name : actor.name;
+  const toName   = result.dir === 'fromLordling' ? actor.name : lordling.name;
   await ChatMessage.create({ speaker, rollMode, content: shamanCard(
-    'Tactic — Transfer Talent',
-    `<strong>${result.talent}</strong> Talent transferred ${result.dir === 'fromLordling' ? `from ${lordling?.name ?? 'Lordling'} to ${actor.name}` : `from ${actor.name} to ${lordling?.name ?? 'Lordling'}`} for 1 minute. The source creature's ${result.talent} becomes <strong>0</strong> for the duration.`,
+    'Tactic: Transfer Talent',
+    `<strong>${result.talent}</strong> Talent moved from ${fromName} → ${toName} for 1 minute (reverts at end of engagement).<br>
+     ${fromName}: ${result.dir === 'fromLordling' ? lordOld : shamOld} → <strong>0</strong>&emsp;
+     ${toName}: → <strong>${result.dir === 'fromLordling' ? shamNew : lordNew}</strong>`,
     `${choice.mode} · ${choice.tpCost} TP`
   )});
 }
@@ -346,7 +377,7 @@ async function handleDesperateStrength(actor, speaker, rollMode) {
 
 async function handleSpiritArmament(actor, speaker, rollMode) {
   const usedToday = actor.getFlag(SYSTEM_ID, 'spiritArmamentUsedToday') ?? false;
-  if (usedToday) return ui.notifications.warn('Spirit Armament can only be used once per day.');
+  if (usedToday) return ui.notifications.warn('Spirit Armament can only be used once per rest.');
 
   const lordling = getLinkedLordling(actor);
   if (!lordling) return ui.notifications.warn('No linked Lordling found.');
@@ -354,7 +385,10 @@ async function handleSpiritArmament(actor, speaker, rollMode) {
   const soulRounds = actor.system.abilities?.Soul?.value ?? 0;
   const lordSpirit = lordling.system.abilities?.Soul?.value ?? 0;
 
-  await actor.setFlag(SYSTEM_ID, 'spiritArmamentActive', { spiritVal: lordSpirit, roundsLeft: soulRounds });
+  // Apply +2 Movement, storing the original for revert
+  const origMove = actor.system.attributes?.move?.running?.value ?? 0;
+  await actor.update({ 'system.attributes.move.running.value': origMove + 2 });
+  await actor.setFlag(SYSTEM_ID, 'spiritArmamentActive', { spiritVal: lordSpirit, roundsLeft: soulRounds, origMove });
   await actor.setFlag(SYSTEM_ID, 'spiritArmamentUsedToday', true);
 
   await ChatMessage.create({ speaker, rollMode, content: shamanCard(
@@ -362,7 +396,7 @@ async function handleSpiritArmament(actor, speaker, rollMode) {
     `${actor.name} absorbs ${lordling.name} into their Soul Armament for <strong>${soulRounds} Rounds</strong> (Soul value).<br><br>
      <strong>Active Benefits:</strong><br>
      ⚔ Focused Attacks deal <strong>+${lordSpirit} damage</strong> (${lordling.name}'s Spirit)<br>
-     💨 Movement <strong>+2</strong><br>
+     💨 Movement <strong>+2</strong> (${origMove} → ${origMove + 2})<br>
      🛡 Can use ${lordling.name}'s Tactics on yourself<br>
      ✦ Access to ${lordling.name}'s Passive Tactic benefits<br><br>
      <span style="color:rgba(180,150,255,0.7);font-size:11px;">${lordling.name} cannot be targeted by Attacks, Abilities, or Spells while absorbed.</span>`,
@@ -371,55 +405,178 @@ async function handleSpiritArmament(actor, speaker, rollMode) {
 }
 
 async function handleApproximateAscension(actor, speaker, rollMode) {
+  if (actor.getFlag(SYSTEM_ID, 'approximateAscensionRounds') > 0) {
+    return ui.notifications.warn('Approximate Ascension is already active.');
+  }
   const ok = await spendMana(actor, 3);
   if (!ok) return;
 
   const lordling = getLinkedLordling(actor);
   if (!lordling) return ui.notifications.warn('No linked Lordling found.');
 
-  // Stat sharing: each raises the other to match their own
+  // Read originals before modifying
   const shamSoul   = actor.system.abilities?.Soul?.value   ?? 0;
   const shamReflex = actor.system.abilities?.Reflex?.value ?? 0;
   const shamGrit   = actor.system.abilities?.Grit?.value   ?? 0;
   const shamWill   = actor.system.abilities?.Will?.value   ?? 0;
-  const lordSpirit = lordling.system.abilities?.Soul?.value    ?? 0;
-  const lordAgil   = lordling.system.abilities?.Reflex?.value  ?? 0;
-  const lordGrit   = lordling.system.abilities?.Grit?.value    ?? 0;
-  const lordWill   = lordling.system.abilities?.Will?.value    ?? 0;
+  const lordSoul   = lordling.system.abilities?.Soul?.value   ?? 0;
+  const lordReflex = lordling.system.abilities?.Reflex?.value ?? 0;
+  const lordGrit   = lordling.system.abilities?.Grit?.value   ?? 0;
+  const lordWill   = lordling.system.abilities?.Will?.value   ?? 0;
+  const tpMaxBase  = lordling.system.tactics?.max ?? 6;
 
-  // Shaman raises each stat to max of their own and Lordling's
+  // Store originals for revert
+  await actor.setFlag(SYSTEM_ID, 'approximateAscensionOriginals', {
+    lordlingId: lordling.id,
+    shaman:   { Soul: shamSoul,  Reflex: shamReflex,  Grit: shamGrit,  Will: shamWill  },
+    lordling: { Soul: lordSoul,  Reflex: lordReflex,  Grit: lordGrit,  Will: lordWill  },
+    tpMaxBase,
+  });
+
+  // Additive boost: each creature's stat += the other creature's same stat
   await actor.update({
-    'system.abilities.Soul.value':   Math.max(shamSoul,   lordSpirit),
-    'system.abilities.Reflex.value': Math.max(shamReflex, lordAgil),
-    'system.abilities.Grit.value':   Math.max(shamGrit,   lordGrit),
-    'system.abilities.Will.value':   Math.max(shamWill,   lordWill),
+    'system.abilities.Soul.value':   shamSoul   + lordSoul,
+    'system.abilities.Reflex.value': shamReflex + lordReflex,
+    'system.abilities.Grit.value':   shamGrit   + lordGrit,
+    'system.abilities.Will.value':   shamWill   + lordWill,
   });
-  // Lordling raises each stat to match Shaman's
   await lordling.update({
-    'system.abilities.Soul.value':   Math.max(lordSpirit, shamSoul),
-    'system.abilities.Reflex.value': Math.max(lordAgil,   shamReflex),
-    'system.abilities.Grit.value':   Math.max(lordGrit,   shamGrit),
-    'system.abilities.Will.value':   Math.max(lordWill,   shamWill),
+    'system.abilities.Soul.value':   lordSoul   + shamSoul,
+    'system.abilities.Reflex.value': lordReflex + shamReflex,
+    'system.abilities.Grit.value':   lordGrit   + shamGrit,
+    'system.abilities.Will.value':   lordWill   + shamWill,
   });
 
-  // Double Tactic Points max (don't refill)
-  const curMax = lordling.system.tactics?.max ?? 6;
-  await lordling.update({ 'system.tactics.max': curMax * 2 });
+  // Double Tactic Points max (don't refill current)
+  await lordling.update({ 'system.tactics.max': tpMaxBase * 2 });
 
-  // Set a 3-round countdown flag
+  // Set 3-round countdown
   await actor.setFlag(SYSTEM_ID, 'approximateAscensionRounds', 3);
 
   await ChatMessage.create({ speaker, rollMode, content: shamanCard(
     'Approximate Ascension',
     `${actor.name} and ${lordling.name} reach the upper echelon of their bond for <strong>3 Rounds</strong>:<br><br>
      🔶 ${lordling.name} becomes <strong>Massive</strong> size<br>
-     ⚡ Both raise each other's stats to match their own (surpassing normal limits)<br>
+     ⚡ Each creature's stats raised by the other's own stats (surpassing limits)<br>
+     &emsp;${actor.name}: Soul ${shamSoul}→${shamSoul+lordSoul} / Reflex ${shamReflex}→${shamReflex+lordReflex} / Grit ${shamGrit}→${shamGrit+lordGrit} / Will ${shamWill}→${shamWill+lordWill}<br>
+     &emsp;${lordling.name}: Soul ${lordSoul}→${lordSoul+shamSoul} / Reflex ${lordReflex}→${lordReflex+shamReflex} / Grit ${lordGrit}→${lordGrit+shamGrit} / Will ${lordWill}→${lordWill+shamWill}<br>
      🌀 ${lordling.name} can use <strong>ALL Lordly Aspects</strong> without changing forms<br>
-     ♾ Tactic Points max <strong>doubled</strong> (previously unspent TP not refreshed)<br>
+     ♾ Tactic Points max <strong>doubled</strong> (${tpMaxBase} → ${tpMaxBase * 2}; unspent TP not restored)<br>
      ✦ Access to <strong>Spirit's Wrath</strong> and <strong>Spirit's Compassion</strong> Tactics<br><br>
-     <span style="color:rgba(200,180,255,0.6);font-size:11px;">Expires at the end of Round 3. Stats and Tactic max revert.</span>`,
+     <span style="color:rgba(200,180,255,0.6);font-size:11px;">Expires at the end of Round 3. Stats and Tactic max revert automatically.</span>`,
     'Focused · 3 Mana · 3 Rounds'
   )});
+}
+
+export async function revertApproximateAscension(actor) {
+  const originals = actor.getFlag(SYSTEM_ID, 'approximateAscensionOriginals');
+  if (!originals) return;
+  const lordling = game.actors.get(originals.lordlingId);
+  await actor.update({
+    'system.abilities.Soul.value':   originals.shaman.Soul,
+    'system.abilities.Reflex.value': originals.shaman.Reflex,
+    'system.abilities.Grit.value':   originals.shaman.Grit,
+    'system.abilities.Will.value':   originals.shaman.Will,
+  });
+  if (lordling) {
+    await lordling.update({
+      'system.abilities.Soul.value':   originals.lordling.Soul,
+      'system.abilities.Reflex.value': originals.lordling.Reflex,
+      'system.abilities.Grit.value':   originals.lordling.Grit,
+      'system.abilities.Will.value':   originals.lordling.Will,
+      'system.tactics.max':             originals.tpMaxBase,
+    });
+  }
+  await actor.unsetFlag(SYSTEM_ID, 'approximateAscensionRounds');
+  await actor.unsetFlag(SYSTEM_ID, 'approximateAscensionOriginals');
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: shamanCard('Approximate Ascension', `${actor.name}'s Approximate Ascension has expired. Stats and Tactic Points max reverted.`, 'Expired'),
+  });
+}
+
+async function handleSpiritsWrath(actor, speaker, rollMode) {
+  if (!(actor.getFlag(SYSTEM_ID, 'approximateAscensionRounds') > 0)) {
+    return ui.notifications.warn("Spirit's Wrath is only available during Approximate Ascension.");
+  }
+  const ok1 = await spendTP(actor, 7);
+  if (!ok1) return;
+  const ok2 = await spendStamina(actor, 2);
+  if (!ok2) return;
+  const ok3 = await spendMana(actor, 2);
+  if (!ok3) return;
+
+  const soulVal = actor.system.abilities?.Soul?.value ?? 0;
+  const dmg = soulVal * 4;
+  await ChatMessage.create({ speaker, rollMode, content: shamanCard(
+    "Spirit's Wrath",
+    `A massive breath in a <strong>14-space line, 3 spaces wide</strong>.<br>
+     Deals <strong>${dmg} damage</strong> [4 × Soul (${soulVal})].<br>
+     Targets must beat <strong>Evasion Value 15</strong> or take full damage.`,
+    'Focused · 7 TP · 2 STA · 2 Mana'
+  )});
+}
+
+async function handleSpiritsCompassion(actor, speaker, rollMode) {
+  if (!(actor.getFlag(SYSTEM_ID, 'approximateAscensionRounds') > 0)) {
+    return ui.notifications.warn("Spirit's Compassion is only available during Approximate Ascension.");
+  }
+  const ok1 = await spendTP(actor, 7);
+  if (!ok1) return;
+  const ok2 = await spendStamina(actor, 2);
+  if (!ok2) return;
+  const ok3 = await spendMana(actor, 2);
+  if (!ok3) return;
+
+  // Heal all targeted allied actors
+  const targets = [...(game.user?.targets ?? [])].map(t => t.actor).filter(Boolean);
+  const healed = [];
+  for (const t of targets) {
+    if (t.id === actor.id) continue; // Shaman does not benefit
+    const cur = t.system.health?.value ?? 0;
+    const max = t.system.health?.max   ?? 0;
+    await t.update({ 'system.health.value': Math.min(max, cur + 15) });
+    healed.push(t.name);
+  }
+  await ChatMessage.create({ speaker, rollMode, content: shamanCard(
+    "Spirit's Compassion",
+    `A wave of healing washes over the battlefield.<br>
+     Every allied creature within <strong>6 spaces</strong> regains <strong>15 Health</strong>.<br>
+     ${healed.length ? `Healed: <strong>${healed.join(', ')}</strong>.` : '(No allied targets selected — heal manually.)'}<br>
+     <em>${actor.name} does not regain Health from this Tactic.</em>`,
+    'Focused · 7 TP · 2 STA · 2 Mana'
+  )});
+}
+
+// ── Per-round tick for Shaman time-limited effects ────────────
+export async function shamanEndOfRound(actor) {
+  // Spirit Armament countdown
+  const armament = actor.getFlag(SYSTEM_ID, 'spiritArmamentActive');
+  if (armament?.roundsLeft > 0) {
+    const newRounds = armament.roundsLeft - 1;
+    if (newRounds <= 0) {
+      // Revert movement
+      await actor.update({ 'system.attributes.move.running.value': armament.origMove ?? (actor.system.attributes?.move?.running?.value - 2) });
+      await actor.unsetFlag(SYSTEM_ID, 'spiritArmamentActive');
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: shamanCard('Spirit Armament', `${actor.name}'s Spirit Armament has expired. Movement and bonuses reverted.`, 'Expired'),
+      });
+    } else {
+      await actor.setFlag(SYSTEM_ID, 'spiritArmamentActive', { ...armament, roundsLeft: newRounds });
+    }
+  }
+
+  // Approximate Ascension countdown
+  const ascRounds = actor.getFlag(SYSTEM_ID, 'approximateAscensionRounds') ?? 0;
+  if (ascRounds > 0) {
+    const newAsc = ascRounds - 1;
+    if (newAsc <= 0) {
+      await revertApproximateAscension(actor);
+    } else {
+      await actor.setFlag(SYSTEM_ID, 'approximateAscensionRounds', newAsc);
+    }
+  }
 }
 
 // ══════════════════════════════════════════════════════════════

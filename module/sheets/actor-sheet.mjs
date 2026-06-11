@@ -257,19 +257,19 @@ const STRYDER_CLASS_FEATURES = {
   ],
   Shaman: [
     { level: 1,  feats: [
-      { id: 'ShmAbil01BndLv', name: 'Bonded Lives' },
-      { id: 'ShmTac01Atk',   name: 'Tactic — Attack' },
-      { id: 'ShmTac02Heal',  name: 'Tactic — Heal' },
-      { id: 'ShmTac03DgEv',  name: 'Tactic — Dodge/Evasion' },
-      { id: 'ShmTac04Ret',   name: 'Tactic — Return' },
-      { id: 'ShmTac05Met',   name: 'Tactic — Metamorph' },
+      { id: 'ShmAbil01BndLv', name: 'Bonded Lives', noEmbed: true },
+      { id: 'ShmTac01Atk',   name: 'Tactic: Attack' },
+      { id: 'ShmTac02Heal',  name: 'Tactic: Heal' },
+      { id: 'ShmTac03DgEv',  name: 'Tactic: Dodge/Evasion' },
+      { id: 'ShmTac04Ret',   name: 'Tactic: Return' },
+      { id: 'ShmTac05Met',   name: 'Tactic: Metamorph' },
       { id: null, name: 'Lordly Aspects (×3)', isLordlyChoice: true, count: 3, startIdx: 0 },
     ]},
     { level: 4,  feats: [
       { id: 'ShmAbil02ExpBnd', name: 'Expanding Bond' },
       { id: null, name: 'Mystic Blessings', isMysticBlessing: true },
-      { id: 'ShmTac06Rtr',   name: 'Tactic — Retreat' },
-      { id: 'ShmTac07TrTl',  name: 'Tactic — Transfer Talent' },
+      { id: 'ShmTac06Rtr',   name: 'Tactic: Retreat' },
+      { id: 'ShmTac07TrTl',  name: 'Tactic: Transfer Talent' },
       { id: null, name: 'Lordly Aspect', isLordlyChoice: true, count: 1, startIdx: 3 },
     ]},
     { level: 8,  feats: [
@@ -1795,8 +1795,23 @@ export class StryderActorSheet extends ActorSheet {
         this.actor.update({ 'system.abilities.Soul.value': spiritVal }).catch(() => {});
       }
 
-      context.tpPct = _pct(actorData.system.tactics?.value, actorData.system.tactics?.max);
+      // Auto-apply TP max from linked Shaman's level milestones
+      // (guard: skip while Approximate Ascension has doubled the max)
       const linkedId = actorData.system.linkedCharacterId;
+      const linkedShaman = linkedId ? game.actors.get(linkedId) : null;
+      if (linkedShaman && !linkedShaman.getFlag('stryder', 'approximateAscensionRounds')) {
+        const lvl = linkedShaman.system.attributes?.level?.value ?? 1;
+        let tpMax = 6;
+        if (lvl >= 4)  tpMax += 1;
+        if (lvl >= 8)  tpMax += 1;
+        if (lvl >= 12) tpMax += 1;
+        if (lvl >= 15) tpMax += 3;
+        if (tpMax !== (actorData.system.tactics?.max ?? 6)) {
+          this.actor.update({ 'system.tactics.max': tpMax }).catch(() => {});
+        }
+      }
+
+      context.tpPct = _pct(actorData.system.tactics?.value, actorData.system.tactics?.max);
       context.linkedCharacterName = linkedId ? (game.actors.get(linkedId)?.name ?? '') : '';
       context.characters = game.actors.filter(a => a.type === 'character').map(a => ({ id: a.id, name: a.name }));
     }
@@ -3956,14 +3971,24 @@ export class StryderActorSheet extends ActorSheet {
 			  await removeHaggardEffects(this.actor);
 			  
 			  // Reset uses for skills and folk abilities with perRest cooldown
-			  const itemsToReset = this.actor.items.filter(item => 
-				(item.type === 'skill' || item.type === 'racial') && 
-				item.system.cooldown_unit === 'perRest' && 
+			  const itemsToReset = this.actor.items.filter(item =>
+				(item.type === 'skill' || item.type === 'racial') &&
+				item.system.cooldown_unit === 'perRest' &&
 				item.system.cooldown_value > 0
 			  );
-			  
+
 			  for (const item of itemsToReset) {
 				await item.update({'system.uses_current': item.system.cooldown_value});
+			  }
+
+			  // Shaman: clear rest-scoped flags; also clear Lordling's essence drain
+			  {
+				const { isShamanClass } = await import('../abilities/shaman-abilities.mjs');
+				if (isShamanClass(this.actor)) {
+				  await this.actor.unsetFlag(SYSTEM_ID, 'spiritArmamentUsedToday');
+				  const lordling = game.actors.find(a => a.type === 'lordling' && a.system.linkedCharacterId === this.actor.id);
+				  if (lordling) await lordling.unsetFlag(SYSTEM_ID, 'lordlingEssenceDrained');
+				}
 			  }
 			  break;
 

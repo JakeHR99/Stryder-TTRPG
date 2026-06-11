@@ -1257,6 +1257,29 @@ Hooks.on('stryderCombatEvent', async (event) => {
     }
   }
 
+  // ── Shaman: endOfRound tick (Spirit Armament + Approximate Ascension) ──
+  if (event.type === 'endOfRound') {
+    const { isShamanClass, shamanEndOfRound } = await import('./abilities/shaman-abilities.mjs');
+    for (const combatant of event.combatants) {
+      if (combatant.actor && isShamanClass(combatant.actor)) {
+        await shamanEndOfRound(combatant.actor);
+      }
+    }
+  }
+
+  // ── Shaman: startOfCombat — reset Lordling TP ──────────────
+  if (event.type === 'startOfCombat') {
+    const { isShamanClass } = await import('./abilities/shaman-abilities.mjs');
+    const SYSTEM_ID_LOCAL = 'stryder';
+    for (const combatant of event.combatants) {
+      if (!combatant.actor || !isShamanClass(combatant.actor)) continue;
+      const lordling = game.actors.find(a => a.type === 'lordling' && a.system.linkedCharacterId === combatant.actor.id);
+      if (lordling) {
+        await lordling.update({ 'system.tactics.value': lordling.system.tactics?.max ?? 6 });
+      }
+    }
+  }
+
   if (event.type === 'endOfCombat') {
     await handleBloodlossReset(event.combatants);
     // Summoner: spirits exit through their Gates, flags reset
@@ -1267,6 +1290,34 @@ Hooks.on('stryderCombatEvent', async (event) => {
     for (const combatant of event.combatants) {
       if (combatant.actor && isWytchClass(combatant.actor)) {
         await clearHexForCombatEnd(combatant.actor);
+      }
+    }
+    // Shaman: clear engagement flags, revert Transfer Talent + any active Ascension
+    const { isShamanClass, revertApproximateAscension } = await import('./abilities/shaman-abilities.mjs');
+    const SYSTEM_ID_LOCAL = 'stryder';
+    for (const combatant of event.combatants) {
+      if (!combatant.actor || !isShamanClass(combatant.actor)) continue;
+      const sActor = combatant.actor;
+      await sActor.unsetFlag(SYSTEM_ID_LOCAL, 'tacticHealUsedThisEngagement');
+      // Revert Transfer Talent if still active
+      const xfer = sActor.getFlag(SYSTEM_ID_LOCAL, 'transferTalentOriginals');
+      if (xfer) {
+        const lordling = game.actors.get(xfer.lordlingId);
+        if (lordling) {
+          await sActor.update({ [`system.attributes.talent.${xfer.talent}.value`]: xfer.shamValue });
+          await lordling.update({ [`system.attributes.talent.${xfer.talent}.value`]: xfer.lordValue });
+        }
+        await sActor.unsetFlag(SYSTEM_ID_LOCAL, 'transferTalentOriginals');
+      }
+      // Revert Approximate Ascension if still active
+      if (sActor.getFlag(SYSTEM_ID_LOCAL, 'approximateAscensionRounds') > 0) {
+        await revertApproximateAscension(sActor);
+      }
+      // Revert Spirit Armament movement if still active
+      const armament = sActor.getFlag(SYSTEM_ID_LOCAL, 'spiritArmamentActive');
+      if (armament) {
+        await sActor.update({ 'system.attributes.move.running.value': armament.origMove ?? sActor.system.attributes?.move?.running?.value });
+        await sActor.unsetFlag(SYSTEM_ID_LOCAL, 'spiritArmamentActive');
       }
     }
   }
