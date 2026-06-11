@@ -146,6 +146,7 @@ export async function handleLordlyFeature(item, actor, speaker, rollMode) {
     case 'Ranged Arsenal':               return lordlyPassive(item, actor, speaker, rollMode);
     case 'Fight Through Me':             return lordlyPassive(item, actor, speaker, rollMode);
     default:
+      console.warn(`[Stryder] handleLordlyFeature: unmatched name "${item.name}" — no case in switch, posting generic card.`);
       return ChatMessage.create({ speaker, rollMode, content: shamanCard(item.name, item.system.description ?? '') });
   }
 }
