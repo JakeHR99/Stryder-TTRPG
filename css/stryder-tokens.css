@@ -51,6 +51,34 @@
   src: url('../assets/fonts/rajdhani-700.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: "Eagle Lake";
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/eagle-lake-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Metal Mania";
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/metal-mania-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Yatra One";
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/yatra-one-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Varela Round";
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/varela-round-400.woff2') format('woff2');
+}
+
 /* ===== (b) Design tokens ===== */
 
 :root {
