@@ -16629,3 +16629,445 @@ li.chat-message.sty-grp-end {
 .fantasy-item-sheet .oi-benefit-grid {
   gap: 15px;
 }
+
+/* ============================================================
+   DIALOG KIT (Phase 4A)
+   ============================================================ */
+
+/* ── Global dark chrome for all stryder system dialogs ────── */
+.app.dialog .window-content {
+  background: linear-gradient(180deg,rgba(13,24,48,.97) 0%,rgba(5,10,24,.98) 100%) !important; /* core-override */
+  background-image: none !important; /* core-override */
+  color: var(--sty-text);
+  font-family: var(--sty-font-ui);
+}
+.app.dialog .window-header {
+  background: var(--sty-bg-deep) !important; /* core-override */
+  border-bottom: 1px solid var(--sty-line-blue) !important; /* core-override */
+}
+.app.dialog .window-title {
+  font-family: var(--sty-font-display);
+  letter-spacing: 0.06em;
+  color: var(--sty-text);
+}
+/* Dark form controls in all system dialogs */
+.app.dialog input[type="text"],
+.app.dialog input[type="number"],
+.app.dialog textarea {
+  background: rgba(0,0,0,.3) !important; /* core-override */
+  border: 1px solid var(--sty-line-blue) !important; /* core-override */
+  color: var(--sty-text) !important; /* core-override */
+  border-radius: 3px;
+  padding: 4px 8px;
+}
+.app.dialog input[type="text"]:focus,
+.app.dialog input[type="number"]:focus,
+.app.dialog textarea:focus {
+  outline: none;
+  border-color: rgba(80,120,220,.5) !important; /* core-override */
+  box-shadow: 0 0 6px rgba(80,120,220,.25);
+}
+
+/* ── Kit utility classes ───────────────────────────────────── */
+
+/* Body wrapper (replaces inline font/color/padding on dialog root divs) */
+.sty-dlg-body {
+  padding: 10px 14px;
+  font-family: var(--sty-font-ui);
+  color: var(--sty-text);
+}
+
+/* Tiny Cinzel uppercase section label */
+.sty-dlg-label {
+  display: block;
+  font-family: var(--sty-font-display);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  margin-bottom: 5px;
+}
+
+/* Highlighted numeric value (points remaining, stat counts) */
+.sty-dlg-value {
+  font-family: var(--sty-font-number);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--sty-text);
+}
+
+/* Dim hint / help text */
+.sty-dlg-hint {
+  font-size: 11px;
+  color: rgba(140,200,255,.45);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Warning / danger text */
+.sty-dlg-warn { color: #e05050; }
+
+/* Block radio/checkbox option label (folk selections etc.) */
+.sty-dlg-option {
+  display: block;
+  color: var(--sty-stagger);
+  font-size: 12px;
+  margin: 2px 0;
+  cursor: pointer;
+}
+
+/* Flex option row (radio with image + name — lordling picker) */
+.sty-dlg-option-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  color: rgba(200,220,255,.85);
+  font-size: 12px;
+  margin: 2px 0;
+}
+.sty-dlg-option-row img {
+  border: 1px solid rgba(80,120,200,.3);
+  border-radius: 3px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.sty-dlg-option-row .sty-name {
+  font-family: var(--sty-font-display);
+  font-weight: 600;
+}
+
+/* 2- and 3-column grids */
+.sty-dlg-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.sty-dlg-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+
+/* Stat / talent distribution row */
+.sty-dlg-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 4px 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,.03);
+}
+.sty-dlg-row-label {
+  width: 64px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(180,210,255,.75);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.sty-dlg-row-base {
+  width: 22px;
+  text-align: right;
+  font-size: 13px;
+  color: rgba(180,210,255,.4);
+  flex-shrink: 0;
+}
+.sty-dlg-row-val {
+  min-width: 32px;
+  text-align: center;
+  font-family: var(--sty-font-number);
+  font-size: 17px;
+  font-weight: 700;
+  color: #e8f4ff;
+  flex-shrink: 0;
+}
+.sty-dlg-row-delta {
+  font-size: 11px;
+  color: rgba(100,200,255,.55);
+  min-width: 24px;
+  flex-shrink: 0;
+}
+
+/* Stepper −/+ buttons */
+.sty-step-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+}
+.sty-step-btn.minus {
+  background: rgba(255,80,80,.12);
+  border: 1px solid rgba(255,100,100,.25);
+  color: #ff9999;
+}
+.sty-step-btn.plus {
+  background: rgba(80,180,255,.12);
+  border: 1px solid rgba(100,180,255,.25);
+  color: #88ccff;
+}
+
+/* Horizontal "OR" divider */
+.sty-dlg-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px;
+  color: var(--sty-text-2);
+  font-family: var(--sty-font-display);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+.sty-dlg-divider::before,
+.sty-dlg-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--sty-line-blue);
+}
+
+/* Small chip (type labels, cost badges) */
+.sty-chip {
+  display: inline-block;
+  background: rgba(10,18,50,.7);
+  border: 1px solid rgba(80,120,200,.25);
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  color: var(--sty-text-2);
+  letter-spacing: 0.06em;
+}
+
+/* Scrollable list container (inventory browse, adaptation lists) */
+.sty-dlg-scroll {
+  margin-top: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid var(--sty-line-blue);
+  border-radius: 2px;
+  background: rgba(4,8,20,.7);
+}
+
+/* Number input for talent/stat point distribution */
+.sty-dlg-num-input {
+  width: 40px;
+  background: rgba(4,8,20,.8) !important; /* core-override */
+  color: var(--sty-stagger) !important; /* core-override */
+  border: 1px solid rgba(90,74,32,.5) !important; /* core-override */
+  text-align: center;
+  border-radius: 2px;
+  padding: 2px 4px;
+}
+
+/* Talent-item row (name label + number input) */
+.sty-dlg-talent-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.sty-dlg-talent-row .tlabel {
+  flex: 1;
+  font-size: 11px;
+  color: rgba(180,180,180,.85);
+}
+
+/* ── Per-dialog supplemental CSS ───────────────────────────── */
+
+/* Folk popup: card padding + title + section labels */
+.folk-popup-card { padding: 14px; border-radius: 2px; }
+.folk-popup-title {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #c8a03c;
+}
+.folk-popup-section > label {
+  color: #ddd;
+  display: block;
+  margin-bottom: 4px;
+}
+/* Folk adaptation list */
+.folk-adapt-list {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--sty-line-blue);
+  padding: 6px;
+  background: rgba(4,8,20,.7);
+}
+.folk-adapt-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 4px 0;
+  cursor: pointer;
+}
+.folk-adapt-item input { margin-top: 2px; flex-shrink: 0; }
+.folk-adapt-item .aname { font-weight: 700; color: var(--sty-stagger); }
+.folk-adapt-item .adesc { font-size: 10px; color: rgba(170,170,170,.8); }
+
+/* Inventory add dialog sections */
+.inv-add-section { padding: 12px 14px 8px; }
+.inv-add-row { padding: 8px 14px 14px; display: flex; gap: 10px; align-items: flex-end; }
+.inv-add-row > div:first-child { flex: 1; }
+.inv-add-size { width: 52px; }
+
+/* Browse rows (compendium item list) */
+.inv-browse-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgba(42,112,224,.08);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+.inv-browse-row img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  border-radius: 2px;
+  flex-shrink: 0;
+  opacity: .85;
+}
+.inv-browse-row .bname {
+  flex: 1;
+  font-size: 12px;
+  color: #c8dcf8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.inv-browse-row .btype {
+  font-size: 9px;
+  color: rgba(90,134,184,.45);
+  flex-shrink: 0;
+  letter-spacing: .05em;
+}
+
+/* Item popup: image wrap, slot label, description, action buttons */
+.inv-popup-img-wrap {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  background: rgba(80,160,255,.08);
+  border: 1px solid rgba(80,160,255,.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.inv-popup-img-wrap img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.inv-popup-img-wrap .inv-img-placeholder {
+  font-size: 24px;
+  color: rgba(80,160,255,.4);
+}
+.inv-popup-img-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.inv-popup-slot {
+  font-size: 11px;
+  color: rgba(140,200,255,.55);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.inv-popup-body {
+  font-size: 12px;
+  color: rgba(180,220,255,.8);
+  line-height: 1.5;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: rgba(80,160,255,.06);
+  border-radius: 6px;
+  border-left: 2px solid rgba(80,160,255,.3);
+  text-shadow: 0 0 8px rgba(100,180,255,.3);
+  min-height: 36px;
+}
+.inv-popup-body-empty {
+  opacity: .35;
+  font-style: italic;
+}
+.inv-popup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.inv-action-btn {
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  padding: 7px 0;
+  cursor: pointer;
+  width: 100%;
+}
+.inv-btn-use {
+  background: rgba(80,160,255,.12);
+  border: 1px solid rgba(80,160,255,.35);
+  color: #a8d4ff;
+  text-shadow: 0 0 10px rgba(100,180,255,.6);
+}
+.inv-btn-inspect {
+  background: rgba(80,160,255,.07);
+  border: 1px solid rgba(80,160,255,.2);
+  color: rgba(168,212,255,.75);
+}
+.inv-btn-discard {
+  background: rgba(255,80,80,.06);
+  border: 1px solid rgba(255,80,80,.2);
+  color: rgba(255,160,160,.65);
+}
+
+/* Icon picker dialog */
+.icon-picker-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.icon-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 400px;
+  box-sizing: border-box;
+}
+.icon-pick-cell {
+  aspect-ratio: 1/1;
+  min-width: 0;
+  background: rgba(10,18,45,.7);
+  border: 1px solid rgba(55,90,160,.2);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color .15s, background .15s;
+}
+.icon-pick-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.icon-pick-cell:hover {
+  border-color: rgba(80,120,220,.5);
+  background: rgba(20,40,90,.7);
+}
