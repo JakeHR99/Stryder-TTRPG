@@ -337,26 +337,26 @@ const STRYDER_CLASS_FEATURES = {
     { level: 1,  feats: [
       { id: 'WytAbil01MgFcs', name: 'Magykal Focus' },
       { id: 'WytAbil02HxWld', name: 'Hex Wielding' },
-      { id: 'WytHex01Sck',    name: 'Hex — Sicken' },
-      { id: 'WytHex02Bnd',    name: 'Hex — Bind' },
-      { id: 'WytHex03Dny',    name: 'Hex — Deny' },
+      { id: 'WytHex01Sck',    name: 'Hex: Sicken' },
+      { id: 'WytHex02Bnd',    name: 'Hex: Bind' },
+      { id: 'WytHex03Dny',    name: 'Hex: Deny' },
     ]},
     { level: 4,  feats: [
-      { id: 'WytAbil03FcsRmn', name: 'Focus & Remains' },
-      { id: 'WytHex04Mut',     name: 'Hex — Mutilate' },
-      { id: 'WytHex05Enr',     name: 'Hex — Enrage' },
-      { id: 'WytHex06Pnc',     name: 'Hex — Panic' },
+      { id: 'WytAbil03FcsRmn', name: 'Focus and Remains' },
+      { id: 'WytHex04Mut',     name: 'Hex: Mutilate' },
+      { id: 'WytHex05Enr',     name: 'Hex: Enrage' },
+      { id: 'WytHex06Pnc',     name: 'Hex: Panic' },
     ]},
     { level: 8,  feats: [
-      { id: 'WytAbil04WytEye', name: "The Wytche's Eye" },
-      { id: 'WytHex07Srg',     name: 'Hex — Surge' },
-      { id: 'WytHex08Rise',    name: 'Hex — Rise' },
-      { id: 'WytHex09Give',    name: 'Hex — Give' },
+      { id: 'WytAbil04WytEye', name: "The Wytch's Eye" },
+      { id: 'WytHex07Srg',     name: 'Hex: Surge' },
+      { id: 'WytHex08Rise',    name: 'Hex: Rise' },
+      { id: 'WytHex09Give',    name: 'Hex: Give' },
     ]},
     { level: 12, feats: [
-      { id: 'WytHex10Add', name: 'Hex — Addle' },
-      { id: 'WytHex11Sfr', name: 'Hex — Suffer' },
-      { id: 'WytHex12Del', name: 'Hex — Delude' },
+      { id: 'WytHex10Add', name: 'Hex: Addle' },
+      { id: 'WytHex11Sfr', name: 'Hex: Suffer' },
+      { id: 'WytHex12Del', name: 'Hex: Delude' },
     ]},
     { level: 15, feats: [
       { id: 'WytAbil05HxMst',  name: 'Hex Mastery' },
@@ -5148,6 +5148,30 @@ export class StryderActorSheet extends ActorSheet {
     const cfPack = game.packs.get('stryder.stryder-class-features');
     if (!cfPack) return { granted: [], hasWaitingChoice: false };
     const cfDocs = await cfPack.getDocuments();
+
+    // ── Wytch dedupe migration ─────────────────────────────────────────────
+    // Pre-C1 the table used em-dash names ('Hex — Sicken') which mismatched the
+    // pack ('Hex: Sicken') — every Growth render re-granted by ID, accumulating
+    // duplicates. Run once per open; no-op if no duplicates exist.
+    if (className === 'Wytch') {
+      const wytchNames = new Set((STRYDER_CLASS_FEATURES.Wytch ?? []).flatMap(ms => ms.feats.map(f => f.name)));
+      const byName = {};
+      for (const item of actor.items) {
+        if (!wytchNames.has(item.name)) continue;
+        (byName[item.name] ??= []).push(item);
+      }
+      const dupIds = [];
+      for (const items of Object.values(byName)) {
+        if (items.length <= 1) continue;
+        items.sort((a, b) => (a.id < b.id ? -1 : 1)); // oldest ID first
+        dupIds.push(...items.slice(1).map(i => i.id));
+      }
+      if (dupIds.length) {
+        await actor.deleteEmbeddedDocuments('Item', dupIds);
+        console.log(`[Stryder] Wytch dedupe: removed ${dupIds.length} duplicate feature item(s) from ${actor.name}.`);
+        ui.notifications.info(`${actor.name}: removed ${dupIds.length} duplicate Wytch feature(s).`);
+      }
+    }
 
     const cfById   = Object.fromEntries(cfDocs.map(d => [d._id, d]));
     const cfByName = Object.fromEntries(cfDocs.map(d => [d.name,  d]));
