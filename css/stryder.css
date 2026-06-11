@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Eagle+Lake&family=Metal+Mania&family=Lavishly+Yours&family=Yatra+One&family=Felipa&family=Varela+Round&family=Luxurious+Roman&family=MedievalSharp&family=EB+Garamond:wght@400;500&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Eagle+Lake&family=Metal+Mania&family=Yatra+One&family=Varela+Round&display=swap');
 /* Global styles */
 .window-app {
   font-family: "Roboto", sans-serif;
@@ -261,7 +261,7 @@
 }
 
 .header-stat-label {
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-size: 13px;
   color: #5c2b0a;
   font-weight: bold;
@@ -273,7 +273,7 @@
   width: 45px;
   height: 28px;
   text-align: center;
-  font-family: 'EB Garamond', serif;
+  font-family: var(--sty-font-number);
   font-size: 16px;
   color: #5c2b0a;
   background: rgba(255, 248, 220, 0.6);
@@ -917,7 +917,7 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .fantasy-input {
-    font-family: EB Garamond;
+    font-family: var(--sty-font-ui);
     background-size: cover;
     padding: 5px;
     border-radius: 10px;
@@ -926,7 +926,7 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .fantasy-input-item {
-    font-family: EB Garamond;
+    font-family: var(--sty-font-ui);
     background-size: cover;
     padding: 5px;
     border-radius: 10px;
@@ -999,7 +999,6 @@ progress.resource2-bar::-moz-progress-bar {
 .elixir-sickness-input {
     width: 40px;
     text-align: center;
-    font-family: 'EB Garamond', serif;
     font-size: 16px;
     background: transparent;
     border: 1px solid #8b5a2b;
@@ -1126,7 +1125,7 @@ progress.resource2-bar::-moz-progress-bar {
   
   .section-description {
     color: #7a6a5a;
-    font-family: "EB Garamond", "Palatino", serif;
+    font-family: var(--sty-font-ui);
     font-style: italic;
     margin-top: 0;
     margin-bottom: 1rem;
@@ -1149,7 +1148,7 @@ progress.resource2-bar::-moz-progress-bar {
     
     .editor-content {
       color: #3a3a3a;
-      font-family: "EB Garamond", "Book Antiqua", serif;
+      font-family: var(--sty-font-ui);
       font-size: 0.95rem;
       line-height: 1.4;
 	  width: 100%;
@@ -1252,7 +1251,7 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .biography {
-  font-family: 'EB Garamond', serif;
+  font-family: var(--sty-font-ui);
   color: #3a3123;
   padding: 15px;
   background-size: 200px;
@@ -1289,7 +1288,7 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .fancy-label {
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-size: 16px;
   color: #5c2b0a;
   display: block;
@@ -1308,7 +1307,7 @@ progress.resource2-bar::-moz-progress-bar {
   background: transparent;
   border: none;
   width: 100%;
-  font-family: 'EB Garamond', serif;
+  font-family: var(--sty-font-ui);
   color: #3a3123;
   text-align: center;
 }
@@ -1455,7 +1454,6 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .monster-substat-font {
-	font-family: 'MedievalSharp', serif;
 }
 
 .dropdown-container {
@@ -1525,7 +1523,6 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .vault-text {
-    font-family: 'EB Garamond', serif;
     font-size: 13px;
     text-align: justify;
     margin: 0;
@@ -1599,7 +1596,7 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .resource-button span {
-  font-family: "MedievalSharp", cursive;
+  font-family: var(--sty-font-ui);
   font-size: 12px;
   color: #5c3a21;
   text-align: center;
@@ -1683,7 +1680,7 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .resource-label {
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-weight: bold;
   font-size: 16px;
   color: #5c2b0a;
@@ -1693,7 +1690,7 @@ progress.resource2-bar::-moz-progress-bar {
 }
 
 .resource-label-info {
-  font-family: 'EB Garamond', cursive;
+  font-family: var(--sty-font-ui);
   font-weight: bold;
   font-size: 16px;
   color: #5c2b0a;
@@ -1757,10 +1754,7 @@ progress.resource2-bar::-moz-progress-bar {
 /* Legacy shared styles — kept for actor sheets, chat messages, and out-of-scope templates.   */
 /* Item-sheet-specific rules (parchment era) removed in Phase 3A. See ornate block below.     */
 
-.parchment-background {
-  background: none;
-  padding: 15px;
-}
+
 
 .editor-container {
   border: 1px solid #8b5a2b;
@@ -2496,7 +2490,7 @@ ol#chat-log > li,
 }
 
 .life-skill-name {
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   color: #5c2b0a;
   flex-grow: 1;
 }
@@ -2509,7 +2503,7 @@ ol#chat-log > li,
 .life-skill-value {
   width: 40px !important;
   text-align: center !important;
-  font-family: 'EB Garamond', serif !important;
+  font-family: var(--sty-font-number) !important;
   font-size: 16px !important;
   background: transparent !important;
   border: 1px solid #8b5a2b !important;
@@ -2544,7 +2538,7 @@ ol#chat-log > li,
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out;
-  font-family: 'EB Garamond', serif;
+  font-family: var(--sty-font-ui);
   color: #5c3a21;
   font-size: 14px;
   line-height: 1.4;
@@ -3599,7 +3593,7 @@ ol#chat-log > li,
 }
 
 .flex-group-center-speed label {
-	font-family: 'MedievalSharp', cursive;
+	font-family: var(--sty-font-ui);
 	color: #5c2b0a;
 	font-size: 18px;
 	margin-left: 10px;
@@ -3624,7 +3618,7 @@ ol#chat-log > li,
 .speed-input-box input[type="text"] {
 	width: 180px;
 	text-align: center;
-	font-family: 'EB Garamond', serif;
+	font-family: var(--sty-font-number);
 	font-size: 18px;
 	font-weight: bold;
 	color: #331a00;
@@ -3640,7 +3634,7 @@ ol#chat-log > li,
 	right: 10px;
 	top: 50%;
 	transform: translateY(-50%);
-	font-family: 'MedievalSharp', cursive;
+	font-family: var(--sty-font-ui);
 	font-size: 14px;
 	color: #5c3a21;
 	pointer-events: none;
@@ -3652,7 +3646,7 @@ ol#chat-log > li,
 }
 
 .expertise-title {
-	font-family: 'MedievalSharp', cursive;
+	font-family: var(--sty-font-ui);
 	color: #5c2b0a;
 	font-size: 16px;
 	margin-bottom: 15px;
@@ -3689,7 +3683,7 @@ ol#chat-log > li,
 }
 
 .expertise-label {
-	font-family: 'EB Garamond', serif;
+	font-family: var(--sty-font-ui);
 	color: #5c3a21;
 	font-size: 14px;
 	margin-bottom: 8px;
@@ -3776,7 +3770,7 @@ ol#chat-log > li,
 }
 
 .rules-text {
-	font-family: 'EB Garamond', serif;
+	font-family: var(--sty-font-ui);
 	font-size: 16px;
 	line-height: 1.2;
 	color: #5c3a21;
@@ -3790,7 +3784,7 @@ ol#chat-log > li,
 	font-size: 16px;
 	display: block;
 	margin-bottom: 1px;
-	font-family: 'MedievalSharp', cursive;
+	font-family: var(--sty-font-ui);
 }
 
 /* Sparks Section Styling */
@@ -3851,7 +3845,6 @@ ol#chat-log > li,
 }
 
 .spark-label {
-    font-family: 'MedievalSharp', cursive;
     font-size: 14px;
     color: #5c2b0a;
     text-align: center;
@@ -4053,7 +4046,7 @@ ol#chat-log > li,
   border: 1px solid rgba(139, 90, 43, 0.4);
   border-radius: 4px;
   padding: 4px 8px;
-  font-family: 'EB Garamond', serif;
+  font-family: var(--sty-font-number);
   font-size: 16px;
   color: #5c2b0a;
   text-align: center;
@@ -4145,7 +4138,7 @@ ol#chat-log > li,
 
 /* Ability Labels */
 .ability-label {
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   color: #5c2b0a;
   font-weight: bold;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
@@ -4214,7 +4207,6 @@ ol#chat-log > li,
 .fantasy-armor-input {
   background: transparent;
   border: none;
-  font-family: 'EB Garamond', serif;
   font-size: 18px;
   font-weight: bold;
   color: #5c2b0a;
@@ -4232,7 +4224,6 @@ ol#chat-log > li,
 }
 
 .armor-separator {
-  font-family: 'EB Garamond', serif;
   font-size: 18px;
   color: #5c2b0a;
   font-weight: bold;
@@ -4654,7 +4645,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   height: 26px;
   line-height: 26px;
   text-align: center;
-  font-family: 'EB Garamond', serif;
   font-size: 16px;
   font-weight: bold;
   color: #5c2b0a;
@@ -4766,7 +4756,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* Combat Button Text */
 .combat-button-text {
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-size: 9px;
   color: #000000;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
@@ -4945,7 +4935,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-weight: 600;
   color: #5c3a21;
   font-size: 13px;
@@ -5042,7 +5032,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 .flexcol-stats.scroll-wrapper .item .item-name h4 {
   margin: 0;
-  font-family: 'EB Garamond', serif;
+  font-family: var(--sty-font-ui);
   font-size: 13px;
   color: #3a2a1a;
   font-weight: 500;
@@ -5276,7 +5266,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* Button Text */
 .button-text {
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-size: 12px;
   color: #5c3a21;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
@@ -5437,7 +5427,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .attribute-modification-section .section-header .item-name {
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-size: 16px;
   color: #5c2b0a;
   margin: 0;
@@ -5482,7 +5472,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-size: 12px;
   font-weight: bold;
   color: #5c2b0a;
@@ -5502,7 +5492,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .attribute-input {
   width: 100%;
   padding: 8px 12px;
-  font-family: 'MedievalSharp', cursive;
+  font-family: var(--sty-font-ui);
   font-size: 14px;
   font-weight: bold;
   color: #5c2b0a;
@@ -6048,11 +6038,9 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: #ffffff;
   font-size: 1.1em;
   font-weight: bold;
-  font-family: "MedievalSharp", cursive;
 }
 
 .ward-label {
-  font-family: "MedievalSharp", cursive;
   font-size: 0.75em;
   font-weight: bold;
   color: #8b0000;
@@ -6102,7 +6090,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 .essence-label {
-  font-family: "MedievalSharp", cursive;
+  font-family: var(--sty-font-ui);
   font-size: 0.95em;
   color: #000;
   font-weight: bold;
@@ -13446,7 +13434,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border: 1px solid rgba(70,160,220,0.45);
   border-radius: 5px;
   color: #b8dff8;
-  font-family: Georgia, serif;
+  font-family: var(--sty-font-ui);
   font-size: 13px;
   letter-spacing: 1px;
   cursor: pointer;
@@ -13482,7 +13470,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 .ch2-lock-icon { font-size: 18px; opacity: 0.5; }
 .ch2-lock-name {
-  font-family: Georgia, serif;
+  font-family: var(--sty-font-ui);
   font-size: 12px;
   color: #5a7a90;
   letter-spacing: 1.5px;
@@ -13844,7 +13832,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   font-size: 110px; font-weight: bold; line-height: 1;
   color: #c8eeff;
   text-shadow: 0 0 40px rgba(100,200,255,0.7), 0 0 80px rgba(60,150,220,0.4);
-  font-family: Georgia, serif;
+  font-family: var(--sty-font-number);
   transition: color 0.2s, text-shadow 0.2s;
 }
 .fsc-roulette-sub  { font-size: 13px; color: #6a94a8; text-transform: uppercase; letter-spacing: 2px; }
@@ -13972,7 +13960,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border: 1px solid rgba(40,80,120,0.3);
   border-radius: 3px; padding: 1px 7px;
   min-width: 44px; text-align: center;
-  font-family: Georgia, serif; letter-spacing: 0.3px;
+  font-family: var(--sty-font-number); letter-spacing: 0.3px;
   transition: color 0.3s;
 }
 .fsc-pearl-roll.pearl-hit { color: #c0a0ff; border-color: rgba(160,100,255,0.4); }
@@ -14014,7 +14002,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 .f-reward-btn {
   padding: 9px 22px; border-radius: 5px; cursor: pointer;
-  font-family: Georgia, serif; font-size: 13px;
+  font-family: var(--sty-font-ui); font-size: 13px;
   background: linear-gradient(135deg, rgba(20,90,130,0.85), rgba(10,55,95,0.85));
   border: 1px solid rgba(80,170,220,0.5); color: #c8e8f8;
   backdrop-filter: blur(2px); transition: all 0.15s; letter-spacing: 0.3px;
