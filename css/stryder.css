@@ -17143,3 +17143,165 @@ li.chat-message.sty-grp-end {
   padding-top: 8px;
 }
 
+
+/* ----- Armor: resistance bonuses (arms, back, gems, head, legs) ----- */
+.fantasy-item-sheet .resistance-bonuses {
+  margin-bottom: 14px;
+}
+
+.fantasy-item-sheet .resistance-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fantasy-item-sheet .resistance-field label.resource-label {
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  color: var(--sty-text-2);
+  font-variant: small-caps;
+}
+
+.fantasy-item-sheet .resistance-field input {
+  width: 100%;
+}
+
+/* ----- Counter widget (arms/loot/gear slot size, inventory size) ----- */
+.fantasy-item-sheet .inventory-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.fantasy-item-sheet .counter-button {
+  width: 22px;
+  height: 24px;
+  border: 1px solid var(--sty-line-gold);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--sty-gold);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.fantasy-item-sheet .counter-button:hover {
+  background: rgba(200, 160, 40, 0.20);
+}
+
+.fantasy-item-sheet .counter-value {
+  width: 40px;
+  text-align: center;
+  border: 1px solid var(--sty-line-blue);
+  border-radius: 4px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.30);
+  color: var(--sty-text);
+  font-family: var(--sty-font-number);
+}
+
+/* ----- Charges section ----- */
+.fantasy-item-sheet .charges-section {
+  text-align: center;
+}
+
+.fantasy-item-sheet .oi-charges-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 80%;
+  margin: 4px auto 0;
+}
+
+.fantasy-item-sheet .oi-charges-display input {
+  width: 70px;
+  text-align: center;
+}
+
+.fantasy-item-sheet .oi-charges-sep {
+  color: var(--sty-text-2);
+  font-size: 14px;
+}
+
+/* ----- Consumable elixir toggle row ----- */
+.fantasy-item-sheet .consumable-elixir-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0 4px;
+}
+
+/* ----- Profession: benefits grid ----- */
+.fantasy-item-sheet .benefit-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fantasy-item-sheet .benefit-header {
+  font-family: var(--sty-font-display);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--sty-gold);
+  margin: 0 0 4px;
+}
+
+.fantasy-item-sheet .editor-wrapper .editor-container {
+  min-height: 80px;
+}
+
+/* ----- Range note (custom range explanation paragraph) ----- */
+.fantasy-item-sheet .oi-range-note {
+  font-size: 12px;
+  color: var(--sty-text-dim);
+  margin-bottom: 8px;
+}
+
+/* ----- Right-aligned field (tactic points) ----- */
+.fantasy-item-sheet .fantasy-field--end {
+  justify-content: flex-end;
+}
+
+.fantasy-item-sheet .fantasy-field--end label {
+  min-width: auto;
+  margin-right: auto;
+}
+
+/* ----- Grid row spacing (replaces margin-top: 15px inline styles) ----- */
+.fantasy-item-sheet .oi-grid-top {
+  margin-top: 12px;
+}
+
+/* ----- Nested checkbox indent (hex rollsDamage) ----- */
+.fantasy-item-sheet .oi-checkbox-indent {
+  margin-left: 20px;
+}
+
+/* ----- oi-extra-header: full-width inputs/selects ----- */
+.fantasy-item-sheet .oi-extra-header input[type="text"],
+.fantasy-item-sheet .oi-extra-header input[type="number"],
+.fantasy-item-sheet .oi-extra-header select {
+  width: 100%;
+}
+
+/* ----- Misc content area (no-tab item sheets) ----- */
+.fantasy-item-sheet .oi-simple-body {
+  padding: 12px;
+}
+
+
+/* full-width inputs/selects inside any .dropdown-field body content area */
+.fantasy-item-sheet .dropdown-field input,
+.fantasy-item-sheet .dropdown-field select {
+  width: 100%;
+}
+
+/* profession / grouped editor benefit grids */
+.fantasy-item-sheet .oi-benefit-grid {
+  gap: 15px;
+}

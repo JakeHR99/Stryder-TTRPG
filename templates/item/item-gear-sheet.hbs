@@ -1,43 +1,36 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Gear Item"}}
+
+    {{!-- Extra header: Quality, Nature, Sell Price --}}
+    <div class="oi-extra-header">
+      <div class="grid grid-3col">
+        <div class="dropdown-field">
+          <label class="resource-label secondary-input">Quality</label>
+          <select class="secondary-input" name="system.quality">
+            {{#select system.quality}}
+            <option value="prototype">Prototype</option>
+            <option value="improved">Improved</option>
+            <option value="perfect">Perfect</option>
+            {{/select}}
+          </select>
         </div>
-        <div class="item-type-label">
-          <span>Gear Item</span>
+        <div class="dropdown-field">
+          <label class="resource-label secondary-input">Nature</label>
+          <select class="secondary-input" name="system.nature">
+            {{#select system.nature}}
+            <option value="enchanted">Enchanted</option>
+            <option value="magytech">Magytech</option>
+            <option value="other">Other</option>
+            {{/select}}
+          </select>
         </div>
-        <div class="resource grid grid-3col" style="gap: 10px; margin-top: 10px; padding: 0 10px;">
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Quality</label>
-            <select class="secondary-input" name="system.quality" style="width: 100%; font-size: 16px; font-weight: normal;">
-              {{#select system.quality}}
-              <option value="prototype">Prototype</option>
-              <option value="improved">Improved</option>
-              <option value="perfect">Perfect</option>
-              {{/select}}
-            </select>
-          </div>
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Nature</label>
-            <select class="secondary-input" name="system.nature" style="width: 100%; font-size: 16px; font-weight: normal;">
-              {{#select system.nature}}
-              <option value="enchanted">Enchanted</option>
-              <option value="magytech">Magytech</option>
-              <option value="other">Other</option>
-              {{/select}}
-            </select>
-          </div>
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Sell Price (Grail)</label>
-            <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number" 
-              style="width: 100%; font-size: 16px; font-weight: normal;" />
-          </div>
+        <div class="dropdown-field">
+          <label class="resource-label secondary-input">Sell Price (Grail)</label>
+          <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number" />
         </div>
       </div>
-    </header>
+    </div>
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
@@ -76,7 +69,7 @@
                 <option value="focused">Focused</option>
                 <option value="swift">Swift</option>
                 <option value="passive">Passive</option>
-            <option value="trigger">Trigger</option>
+                <option value="trigger">Trigger</option>
                 {{/select}}
               </select>
             </div>
@@ -178,12 +171,10 @@
             <div class="header-decoration right"></div>
           </div>
           <div class="section-content">
-            <div class="resource flex-group-center" style="width: 80%; margin: 0 auto;">
-              <div class="resource-content flexrow flex-center flex-between" style="gap: 10px;">
-                <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
-                <span style="margin-top: 5px;"> / </span>
-                <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
-              </div>
+            <div class="oi-charges-display">
+              <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
+              <span class="oi-charges-sep"> / </span>
+              <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
             </div>
           </div>
         </div>
@@ -222,72 +213,5 @@
     item.update({'system.inventory_size': newValue});
   }
 </script>
-
-<style>
-  .slot-space-field {
-    display: flex;
-    align-items: center;
-  }
-
-  .inventory-counter {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-left: 10px;
-  }
-
-  .counter-button {
-    width: 28px;
-    height: 28px;
-    border: 1px solid #8b5a2b;
-    border-radius: 4px;
-    background: rgba(250, 240, 220, 0.8);
-    color: #5c3a21;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .counter-button:hover {
-    background: rgba(200, 160, 120, 0.3);
-  }
-
-  .counter-value {
-    width: 40px;
-    text-align: center;
-    border: 1px solid #8b5a2b;
-    border-radius: 4px;
-    padding: 4px;
-    background: rgba(255, 248, 220, 0.7);
-    font-family: 'EB Garamond', serif;
-  }
-
-  .charge-input {
-    width: 60px;
-    text-align: center;
-    border: 1px solid #8b5a2b;
-    border-radius: 4px;
-    padding: 5px;
-    background: rgba(255, 248, 220, 0.7);
-    font-family: 'EB Garamond', serif;
-  }
-
-  .charge-separator {
-    font-size: 18px;
-    color: #5c3a21;
-    font-weight: bold;
-    margin: 0 5px;
-  }
-
-  .cooldown-field {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .cooldown-field input {
-    width: 60px;
-  }
-</style>
 
 {{log system}}

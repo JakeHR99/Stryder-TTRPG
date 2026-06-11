@@ -1,16 +1,6 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" style="margin-top: 5px; margin-bottom: 5px;"/>
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-        </div>
-        <div class="item-type-label">
-          <span>{{localize "STRYDER.ItemTypes.SkillFeature"}}</span>
-        </div>
-      </div>
-    </header>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel=(localize "STRYDER.ItemTypes.SkillFeature")}}
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
@@ -79,9 +69,9 @@
               <label>{{localize "STRYDER.SheetLabels.Mana"}}:</label>
               <input type="number" name="system.mana_cost" value="{{system.mana_cost}}" min="0" placeholder="{{localize 'STRYDER.SheetLabels.ManaCost'}}" data-dtype="Number" />
             </div>
-            <div class="field fantasy-field" style="display: flex; justify-content: flex-end;">
+            <div class="field fantasy-field fantasy-field--end">
               <label>Tactic Points:</label>
-              <input type="number" name="system.tactics_cost" value="{{system.tactics_cost}}" min="0" placeholder="Tactic Points Cost" data-dtype="Number" style="width: 75%; margin-left: 10px;" />
+              <input type="number" name="system.tactics_cost" value="{{system.tactics_cost}}" min="0" placeholder="Tactic Points Cost" data-dtype="Number" />
             </div>
             <div class="field fantasy-field">
               <label>Limit:</label>
@@ -187,7 +177,7 @@
               <span class="formula-text">{{calculateFormula system.roll.diceNum system.roll.diceSize system.roll.diceBonus}}</span>
             </div>
 
-            <div class="grid grid-4col" style="margin-top: 15px;">
+            <div class="grid grid-4col oi-grid-top">
               <div class="roll-attribute-field">
                 <label>Dice #</label>
                 <input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
@@ -202,7 +192,7 @@
               </div>
             </div>
 
-            <div class="grid grid-2col" style="margin-top: 15px;">
+            <div class="grid grid-2col oi-grid-top">
               <div class="damage-amp-field">
                 <label>Base Amp</label>
                 <input type="text" name="system.roll.baseDamageAmp" value="{{system.roll.baseDamageAmp}}" data-dtype="Number" />
@@ -234,7 +224,7 @@
               <div class="header-decoration right"></div>
             </div>
             <div class="section-content">
-              <div class="grid grid-3col" style="margin-top: 15px;">
+              <div class="grid grid-3col oi-grid-top">
                 <div class="roll-attribute-field">
                   <label>Poor</label>
                   <input type="number" name="system.customDamage.poor" value="{{system.customDamage.poor}}" data-dtype="Number" />
@@ -271,8 +261,8 @@
               <div class="header-decoration right"></div>
             </div>
             <div class="section-content">
-              <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Set the max roll for <strong>Poor</strong> and min roll for <strong>Excellent</strong>. Good fills the gap.</p>
-              <div class="grid grid-2col" style="margin-top: 10px;">
+              <p class="oi-range-note">Set the max roll for <strong>Poor</strong> and min roll for <strong>Excellent</strong>. Good fills the gap.</p>
+              <div class="grid grid-2col oi-grid-top">
                 <div class="roll-attribute-field">
                   <label>Poor (max)</label>
                   <input type="number" name="system.customRange.poor" value="{{system.customRange.poor}}" data-dtype="Number" min="1" />

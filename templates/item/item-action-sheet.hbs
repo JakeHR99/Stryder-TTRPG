@@ -1,27 +1,21 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
-        </div>
-        <div class="item-type-label">
-          <span>Action</span>
-        </div>
-        <div class="resource" style="margin-top: 5px; padding: 0 10px;">
-          <label class="resource-label secondary-input">Action Type</label>
-          <select class="secondary-input" name="system.action_type" style="width: 100%; font-size: 16px; font-weight: normal;">
-            {{#select system.action_type}}
-            <option value="focused">Focused</option>
-            <option value="swift">Swift</option>
-            <option value="passive">Passive</option>
-            <option value="trigger">Trigger</option>
-            {{/select}}
-          </select>
-        </div>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Action"}}
+
+    {{!-- Extra header: Action Type --}}
+    <div class="oi-extra-header">
+      <div class="dropdown-field">
+        <label class="resource-label secondary-input">Action Type</label>
+        <select class="secondary-input" name="system.action_type">
+          {{#select system.action_type}}
+          <option value="focused">Focused</option>
+          <option value="swift">Swift</option>
+          <option value="passive">Passive</option>
+          <option value="trigger">Trigger</option>
+          {{/select}}
+        </select>
       </div>
-    </header>
+    </div>
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
@@ -56,8 +50,8 @@
               <label>Roll Formula:</label>
               <span class="formula-text">{{calculateFormula system.roll.diceNum system.roll.diceSize system.roll.diceBonus}}</span>
             </div>
-            
-            <div class="grid grid-4col" style="margin-top: 15px;">
+
+            <div class="grid grid-4col oi-grid-top">
               <div class="roll-attribute-field">
                 <label>No. of Dice</label>
                 <input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
@@ -90,9 +84,9 @@
               <label>Mana:</label>
               <input type="number" name="system.mana_cost" value="{{system.mana_cost}}" min="0" placeholder="Mana Cost" data-dtype="Number" />
             </div>
-            <div class="field fantasy-field" style="display: flex; justify-content: flex-end;">
+            <div class="field fantasy-field fantasy-field--end">
               <label>Tactic Points:</label>
-              <input type="number" name="system.tactics_cost" value="{{system.tactics_cost}}" min="0" placeholder="Tactic Points Cost" data-dtype="Number" style="width: 75%; margin-left: 10px;" />
+              <input type="number" name="system.tactics_cost" value="{{system.tactics_cost}}" min="0" placeholder="Tactic Points Cost" data-dtype="Number" />
             </div>
             <div class="field fantasy-field">
               <label>Other:</label>

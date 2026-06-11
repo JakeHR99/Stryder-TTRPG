@@ -1,48 +1,41 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Consumable Item"}}
+
+    {{!-- Extra header: Rarity, Nature, Sell Price --}}
+    <div class="oi-extra-header">
+      <div class="grid grid-3col">
+        <div class="dropdown-field">
+          <label class="resource-label secondary-input">Rarity</label>
+          <select class="secondary-input" name="system.rarity">
+            {{#select system.rarity}}
+            <option value="common">Common</option>
+            <option value="uncommon">Uncommon</option>
+            <option value="rare">Rare</option>
+            <option value="mythic">Legendary</option>
+            <option value="one of a kind">One of a Kind</option>
+            {{/select}}
+          </select>
         </div>
-        <div class="item-type-label">
-          <span>Consumable Item</span>
+        <div class="dropdown-field">
+          <label class="resource-label secondary-input">Nature</label>
+          <select class="secondary-input" name="system.nature">
+            {{#select system.nature}}
+            <option value="enchanted">Enchanted</option>
+            <option value="magytech">Magytech</option>
+            <option value="other">Other</option>
+            {{/select}}
+          </select>
         </div>
-        <div class="resource grid grid-3col" style="gap: 10px; margin-top: 10px; padding: 0 10px;">
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Rarity</label>
-            <select class="secondary-input" name="system.rarity" style="width: 100%; font-size: 16px; font-weight: normal;">
-              {{#select system.rarity}}
-              <option value="common">Common</option>
-              <option value="uncommon">Uncommon</option>
-              <option value="rare">Rare</option>
-              <option value="mythic">Legendary</option>
-              <option value="one of a kind">One of a Kind</option>
-              {{/select}}
-            </select>
-          </div>
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Nature</label>
-            <select class="secondary-input" name="system.nature" style="width: 100%; font-size: 16px; font-weight: normal;">
-              {{#select system.nature}}
-              <option value="enchanted">Enchanted</option>
-              <option value="magytech">Magytech</option>
-              <option value="other">Other</option>
-              {{/select}}
-            </select>
-          </div>
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Sell Price (Grail)</label>
-            <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number"
-              style="width: 100%; font-size: 16px; font-weight: normal;" />
-          </div>
+        <div class="dropdown-field">
+          <label class="resource-label secondary-input">Sell Price (Grail)</label>
+          <input class="tertiary-input" type="text" name="system.sell_price" value="{{system.sell_price}}" placeholder="0" data-dtype="Number" />
         </div>
       </div>
-    </header>
+    </div>
 
     {{!-- Content Area --}}
-    <div class="consumable-content-area" style="margin-top: -15px;">
+    <div class="oi-content-area">
       <div class="editor-container">
         <div class="editor-header">
           <i class="fas fa-flask"></i> Item Description
@@ -58,12 +51,10 @@
           <div class="header-decoration right"></div>
         </div>
         <div class="section-content">
-          <div class="resource flex-group-center" style="width: 80%; margin: 0 auto;">
-            <div class="resource-content flexrow flex-center flex-between" style="gap: 10px;">
-              <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
-              <span style="margin-top: 5px;"> / </span>
-              <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
-            </div>
+          <div class="oi-charges-display">
+            <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
+            <span class="oi-charges-sep"> / </span>
+            <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
           </div>
         </div>
       </div>
@@ -71,8 +62,7 @@
       {{!-- Is Elixir? toggle --}}
       <div class="consumable-elixir-toggle">
         <label class="resource-label secondary-input">Is Elixir?</label>
-        <input type="checkbox" name="system.is_elixir" {{#if system.is_elixir}}checked{{/if}}
-          style="width: 20px; height: 20px;" />
+        <input type="checkbox" name="system.is_elixir" {{#if system.is_elixir}}checked{{/if}} />
       </div>
 
       {{!-- Elixir Effects — only shown when Is Elixir is checked --}}
@@ -84,10 +74,10 @@
           <div class="header-decoration right"></div>
         </div>
         <div class="section-content">
-          <div class="resource grid grid-3col" style="gap: 10px; padding: 0 10px;">
+          <div class="resource grid grid-3col">
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Effect Type</label>
-              <select class="secondary-input" name="system.effect_type" style="width: 100%; font-size: 14px; font-weight: normal;">
+              <select class="secondary-input" name="system.effect_type">
                 {{#select system.effect_type}}
                 <option value="none">None</option>
                 <optgroup label="Percentage">
@@ -106,12 +96,12 @@
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Effect Value</label>
               <input class="tertiary-input" type="text" name="system.effect_value" value="{{system.effect_value}}"
-                placeholder="0" data-dtype="Number" style="width: 100%; font-size: 14px; font-weight: normal;" />
+                placeholder="0" data-dtype="Number" />
             </div>
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Elixir Sickness +</label>
               <input class="tertiary-input" type="text" name="system.elixir_sickness_amount" value="{{system.elixir_sickness_amount}}"
-                placeholder="1" data-dtype="Number" style="width: 100%; font-size: 14px; font-weight: normal;" />
+                placeholder="1" data-dtype="Number" />
             </div>
           </div>
         </div>
@@ -121,45 +111,5 @@
     </div>
   </div>
 </form>
-
-<style>
-  .consumable-content-area {
-    padding: 15px;
-  }
-
-  .charges-section {
-    margin-top: 20px;
-    text-align: center;
-  }
-
-  .consumable-elixir-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 16px;
-    margin-bottom: 4px;
-  }
-
-  .charges-display {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .charge-separator {
-    font-size: 18px;
-    color: #5c3a21;
-    font-weight: bold;
-    margin: 0 5px;
-  }
-
-  .editor-header .fa-flask {
-    color: #5c3a21;
-    margin-right: 8px;
-  }
-</style>
 
 {{log system}}

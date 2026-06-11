@@ -1,26 +1,21 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
-        </div>
-        <div class="item-type-label" style="display:flex; align-items:center; gap:8px;">
-          <span>Monster Ability</span>
-          <label style="display:flex; align-items:center; gap:4px; font-size:12px; cursor:pointer; margin:0;">
-            <input type="checkbox" name="system.isAttack" {{checked system.isAttack}} data-dtype="Boolean"
-              style="width:14px; height:14px; cursor:pointer;" />
-            Attack
-          </label>
-        </div>
-        <div class="resource" style="margin-top: 5px; padding: 0 10px;">
-          <label class="resource-label secondary-input">Parent Ability</label>
-          <input class="secondary-input" type="text" name="system.parent_ability" value="{{system.parent_ability}}" placeholder="Name of Feature" 
-            style="width: 100%; font-size: 16px; font-weight: normal;" />
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Monster Ability"}}
+
+    {{!-- Extra header: isAttack toggle + Parent Ability --}}
+    <div class="oi-extra-header">
+      <div class="fantasy-checkbox">
+        <label>Attack?</label>
+        <div class="checkbox-slider">
+          <input type="checkbox" name="system.isAttack" {{checked system.isAttack}} data-dtype="Boolean" />
+          <span class="slider"></span>
         </div>
       </div>
-    </header>
+      <div class="dropdown-field">
+        <label class="resource-label secondary-input">Parent Ability</label>
+        <input class="secondary-input" type="text" name="system.parent_ability" value="{{system.parent_ability}}" placeholder="Name of Feature" />
+      </div>
+    </div>
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
@@ -58,7 +53,7 @@
                 <option value="focused">Focused</option>
                 <option value="swift">Swift</option>
                 <option value="passive">Passive</option>
-            <option value="trigger">Trigger</option>
+                <option value="trigger">Trigger</option>
                 {{/select}}
               </select>
             </div>
@@ -74,9 +69,9 @@
               <label>Mana:</label>
               <input type="number" name="system.mana_cost" value="{{system.mana_cost}}" min="0" placeholder="Mana Cost" data-dtype="Number" />
             </div>
-            <div class="field fantasy-field" style="display: flex; justify-content: flex-end;">
+            <div class="field fantasy-field fantasy-field--end">
               <label>Tactic Points:</label>
-              <input type="number" name="system.tactics_cost" value="{{system.tactics_cost}}" min="0" placeholder="Tactic Points Cost" data-dtype="Number" style="width: 75%; margin-left: 10px;" />
+              <input type="number" name="system.tactics_cost" value="{{system.tactics_cost}}" min="0" placeholder="Tactic Points Cost" data-dtype="Number" />
             </div>
             <div class="field fantasy-field">
               <label>Other:</label>
@@ -122,8 +117,8 @@
               <label>Roll Formula:</label>
               <span class="formula-text">{{calculateFormula system.roll.diceNum system.roll.diceSize system.roll.diceBonus}}</span>
             </div>
-            
-            <div class="grid grid-4col" style="margin-top: 15px;">
+
+            <div class="grid grid-4col oi-grid-top">
               <div class="roll-attribute-field">
                 <label>No. of Dice</label>
                 <input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
@@ -138,7 +133,7 @@
               </div>
             </div>
 
-            <div class="grid grid-2col" style="margin-top: 15px;">
+            <div class="grid grid-2col oi-grid-top">
               <div class="damage-amp-field">
                 <label>Base Damage Amp</label>
                 <input type="text" name="system.roll.baseDamageAmp" value="{{system.roll.baseDamageAmp}}" data-dtype="Number" />
@@ -170,7 +165,7 @@
               <div class="header-decoration right"></div>
             </div>
             <div class="section-content">
-              <div class="grid grid-3col" style="margin-top: 15px;">
+              <div class="grid grid-3col oi-grid-top">
                 <div class="roll-attribute-field">
                   <label>Poor</label>
                   <input type="number" name="system.customDamage.poor" value="{{system.customDamage.poor}}" data-dtype="Number" />
@@ -207,8 +202,8 @@
               <div class="header-decoration right"></div>
             </div>
             <div class="section-content">
-              <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Set the max roll for <strong>Poor</strong> and min roll for <strong>Excellent</strong>. Good fills the gap.</p>
-              <div class="grid grid-2col" style="margin-top: 10px;">
+              <p class="oi-range-note">Set the max roll for <strong>Poor</strong> and min roll for <strong>Excellent</strong>. Good fills the gap.</p>
+              <div class="grid grid-2col oi-grid-top">
                 <div class="roll-attribute-field">
                   <label>Poor (max)</label>
                   <input type="number" name="system.customRange.poor" value="{{system.customRange.poor}}" data-dtype="Number" min="1" />

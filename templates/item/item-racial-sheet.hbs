@@ -1,16 +1,6 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" style="margin-top: 5px; margin-bottom: 5px;"/>
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-        </div>
-        <div class="item-type-label">
-          <span>{{localize "STRYDER.ItemTypes.FolkAbility"}}</span>
-        </div>
-      </div>
-    </header>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel=(localize "STRYDER.ItemTypes.FolkAbility")}}
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
@@ -143,15 +133,14 @@
             <div class="header-decoration right"></div>
           </div>
           <div class="section-content">
-            <div class="resource flex-group-center" style="width: 80%; margin: 0 auto;">
-              <div class="resource-content flexrow flex-center flex-between" style="gap: 10px;">
-                <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
-                <span style="margin-top: 5px;"> / </span>
-                <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
-              </div>
+            <div class="oi-charges-display">
+              <input type="text" name="system.charges.value" value="{{system.charges.value}}" data-dtype="Number" class="fantasy-field"/>
+              <span class="oi-charges-sep"> / </span>
+              <input type="text" name="system.charges.max" value="{{system.charges.max}}" data-dtype="Number" class="fantasy-field"/>
             </div>
           </div>
         </div>
+
         {{!-- Is an Attack Checkbox --}}
         <div class="section fantasy-section checkbox-section">
           <div class="fantasy-checkbox">
@@ -198,7 +187,7 @@
                 <label>Roll Formula:</label>
                 <span class="formula-text">{{calculateFormula system.roll.diceNum system.roll.diceSize system.roll.diceBonus}}</span>
               </div>
-              <div class="grid grid-4col" style="margin-top: 15px;">
+              <div class="grid grid-4col oi-grid-top">
                 <div class="roll-attribute-field">
                   <label>No. of Dice</label>
                   <input type="text" name="system.roll.diceNum" value="{{system.roll.diceNum}}" data-dtype="Number" />
@@ -223,7 +212,7 @@
               <div class="header-decoration right"></div>
             </div>
             <div class="section-content">
-              <div class="grid grid-3col" style="margin-top: 15px;">
+              <div class="grid grid-3col oi-grid-top">
                 <div class="roll-attribute-field">
                   <label>Poor</label>
                   <input type="number" name="system.customDamage.poor" value="{{system.customDamage.poor}}" data-dtype="Number" />

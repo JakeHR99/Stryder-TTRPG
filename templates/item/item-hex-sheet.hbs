@@ -1,16 +1,6 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-        <img class="profile-img" style="margin-top: 5px; margin-bottom: 5px;" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-        </div>
-        <div class="item-type-label">
-          <span>Hex Feature</span>
-        </div>
-      </div>
-    </header>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Hex Feature"}}
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
@@ -68,7 +58,7 @@
                 <option value="focused">Focused</option>
                 <option value="swift">Swift</option>
                 <option value="passive">Passive</option>
-            <option value="trigger">Trigger</option>
+                <option value="trigger">Trigger</option>
                 {{/select}}
               </select>
             </div>
@@ -135,7 +125,7 @@
             </div>
           </div>
           {{#if system.hex.rollsQuality}}
-          <div class="fantasy-checkbox" style="margin-left: 20px;">
+          <div class="fantasy-checkbox oi-checkbox-indent">
             <label>↳ Also Rolls Damage?</label>
             <div class="checkbox-slider">
               <input type="checkbox" name="system.hex.rollsDamage" value="true" {{#if system.hex.rollsDamage}}checked{{/if}} data-dtype="Boolean" />
@@ -258,7 +248,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   const qualityCheckbox = document.querySelector('input[name="system.hex.rollsQuality"]');
   const damageCheckbox = document.querySelector('input[name="system.hex.rollsDamage"]');
-  
+
   if (qualityCheckbox && damageCheckbox) {
     // When damage checkbox changes
     damageCheckbox.addEventListener('change', function() {
@@ -270,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
         qualityCheckbox.disabled = false;
       }
     });
-    
+
     // When quality checkbox changes
     qualityCheckbox.addEventListener('change', function() {
       if (!this.checked && damageCheckbox.checked) {
