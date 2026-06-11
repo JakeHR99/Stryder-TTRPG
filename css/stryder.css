@@ -1856,6 +1856,9 @@ progress.resource2-bar::-moz-progress-bar {
 
 /* Damage Undo Button Styling */
 .damage-undo {
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 14px;
   transition: all 0.2s ease;
 }
 
@@ -1866,14 +1869,19 @@ progress.resource2-bar::-moz-progress-bar {
 
 .damage-undo-container {
   display: inline-block;
+  margin-left: 5px;
 }
 
 /* Reduction Info Icon Styling */
 .reduction-info-container {
   display: inline-block;
+  margin-left: 5px;
 }
 
 .reduction-info {
+  color: #17a2b8;
+  cursor: help;
+  font-size: 14px;
   transition: all 0.2s ease;
 }
 
@@ -2417,6 +2425,15 @@ ol#chat-log > li,
 .hex-quality-message {
   position: relative;
   overflow: hidden;
+  background: rgba(75, 0, 130, 0.15);
+  border: 1px solid #4b0082;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  text-align: center;
+  font-family: 'Cinzel Decorative', cursive;
+  color: #4b0082;
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
 .hex-quality-message::before {
@@ -17078,3 +17095,124 @@ li.chat-message.sty-grp-end {
   font-size: 1.5em;
 }
 .sty-roll-formula-val { font-size: 1.2em; }
+
+/* ============ CHAT CARD KIT (Phase 4B) ============ */
+
+/* Utility */
+.sty-font-number { font-family: var(--sty-font-number, 'Varela Round', sans-serif); }
+.chat-bold { font-weight: bold; }
+.chat-card-center { text-align: center; }
+.chat-content-padded { padding: 0 15px; }
+.chat-content-italic-center { text-align: center; font-style: italic; }
+
+/* Resource label colors */
+.chat-resource-stamina { color: #147c32; font-weight: bold; }
+.chat-resource-mana { color: #08acff; font-weight: bold; }
+.chat-resource-tactic { color: #FFFF00; font-weight: bold; }
+.sty-bloodloss-label { color: #8b0000; font-weight: bold; }
+.damage-num { color: #dc3545; font-weight: bold; }
+
+/* Unbound Leap button */
+.unbound-leap-button {
+  background: linear-gradient(to bottom, #8b5a2b, #5c3a21);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 10px auto;
+  display: block;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Parchment card (resource spend / damage notifications) */
+.chat-parchment-card {
+  background: url('systems/stryder/assets/parchment.jpg');
+  background-size: cover;
+  padding: 15px;
+  border: 1px solid #c9a66b;
+  border-radius: 3px;
+}
+.chat-parchment-card h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #c9a66b;
+}
+.chat-parchment-card-damage {
+  background: url('systems/stryder/assets/parchment.jpg');
+  background-size: cover;
+  padding: 15px;
+  border: 1px solid #c9a66b;
+  border-radius: 3px;
+}
+.chat-parchment-card-damage h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #c9a66b;
+  color: #dc3545;
+}
+.chat-parchment-card-damage > p { margin-bottom: 0; }
+
+/* Bond folk/gender/age footer */
+.bond-details-footer {
+  font-size: 13px;
+  color: #5c3a21;
+  border-top: 1px solid #c0a070;
+  padding-top: 10px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  font-family: 'MedievalSharp', cursive;
+}
+
+/* Chat card item-detail spans */
+.chat-grade-span { font-family: 'Cinzel Decorative', cursive; font-weight: bold; }
+.gear-action-section { margin-top: 15px; border-top: 1px dashed #c0a070; padding-top: 10px; }
+.legacies-footer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #c0a070;
+  font-size: 12px;
+  color: #5c3a21;
+  text-align: center;
+}
+.equippable-footer {
+  margin-top: 15px;
+  padding: 8px;
+  background: rgba(139, 90, 43, 0.1);
+  border-radius: 4px;
+  text-align: center;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 14px;
+}
+.hex-quality-badge-wrap { margin-bottom: 5px; }
+
+/* Aspect-attack damage result card */
+.damage-result-card { padding: 6px 8px; }
+.chat-em-dash { color: rgba(200, 220, 255, 0.6); margin: 0 6px; }
+.chat-total-dmg { font-weight: 700; color: #e8f4ff; }
+.chat-dmg-suffix { color: rgba(150, 190, 230, 0.5); font-size: 11px; }
+.chat-dmg-formula { font-size: 10px; color: rgba(130, 170, 220, 0.45); margin-top: 2px; }
+.brutal-mods-line { margin-top: 4px; font-size: 11px; color: rgba(200, 140, 60, 0.8); }
+
+/* Onset of Doom notification */
+.onset-of-doom-card {
+  padding: 6px 10px;
+  font-family: 'Rajdhani', sans-serif;
+  color: rgba(210, 230, 255, 0.8);
+  font-size: 13px;
+}
+.chat-onset-label { color: rgba(200, 140, 60, 0.85); font-weight: 700; }
+
+/* Method mod damage variant (green) */
+.chat-method-mod-dmg {
+  background: rgba(100, 220, 100, 0.12);
+  border-color: rgba(100, 220, 100, 0.25);
+  color: #88dd88;
+}
+
+/* Subtitle separator spans */
+.chat-sep { color: rgba(150, 190, 230, 0.4); }
+.chat-sep-dot { color: rgba(150, 190, 230, 0.4); margin: 0 5px; }

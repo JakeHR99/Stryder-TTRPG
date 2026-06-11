@@ -503,13 +503,13 @@ export class StryderItem extends Item {
 	`;
 
 	let contentHTMLstat = `
-	<div class="chat-message-card" style="text-align: center;">
+	<div class="chat-message-card chat-card-center">
 	  <div class="chat-message-header">
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
-	  
-	  <div class="chat-message-content" style="padding: 0 15px;">
+
+	  <div class="chat-message-content chat-content-padded">
 		${item.system.description ?? ''}
 	  </div>
 	</div>
@@ -545,13 +545,13 @@ export class StryderItem extends Item {
 		  const resourceParts = [];
 		  
 		  if (hasStaminaCost) {
-			resourceParts.push(`<span style="font-family: 'Varela Round';">${item.system.stamina_cost}</span> <span style="color: #147c32; font-weight: bold;">Stamina</span>`);
+			resourceParts.push(`<span class="sty-font-number">${item.system.stamina_cost}</span> <span class="chat-resource-stamina">Stamina</span>`);
 		  }
 		  if (hasManaCost) {
-			resourceParts.push(`<span style="font-family: 'Varela Round';">${item.system.mana_cost}</span> <span style="color: #08acff; font-weight: bold;">Mana</span>`);
+			resourceParts.push(`<span class="sty-font-number">${item.system.mana_cost}</span> <span class="chat-resource-mana">Mana</span>`);
 		  }
 		  if (hasTacticsCost) {
-			resourceParts.push(`<span style="font-family: 'Varela Round';">${item.system.tactics_cost}</span> <span style="color: #FFFF00; font-weight: bold;">Tactic Points</span>`);
+			resourceParts.push(`<span class="sty-font-number">${item.system.tactics_cost}</span> <span class="chat-resource-tactic">Tactic Points</span>`);
 		  }
 		  
 		  if (resourceParts.length > 0) {
@@ -559,8 +559,8 @@ export class StryderItem extends Item {
 		  }
 
 		  buttonsHTML += `
-		  <div class="resource-spend-container" style="margin: 5px 0; text-align: center;">
-			<button class="resource-spend-button" 
+		  <div class="resource-spend-container">
+			<button class="resource-spend-button"
 					data-stamina-cost="${item.system.stamina_cost || 0}"
 					data-mana-cost="${item.system.mana_cost || 0}"
 					data-tactics-cost="${item.system.tactics_cost || 0}"
@@ -576,9 +576,8 @@ export class StryderItem extends Item {
 	  // Add Unbound Leap effect button if item name contains "Unbound Leap"
 	  if (item.name.includes("Unbound Leap")) {
 		buttonsHTML += `
-		<div class="resource-spend-container" style="margin: 5px 0; text-align: center;">
-		  <button class="unbound-leap-button" 
-				  style="background: linear-gradient(to bottom, #8b5a2b, #5c3a21); color: white; border: none; border-radius: 20px; padding: 8px 15px; font-family: 'Cinzel Decorative', cursive; font-size: 14px; cursor: pointer; margin: 10px auto; display: block; text-align: center; transition: all 0.3s ease;">
+		<div class="resource-spend-container">
+		  <button class="unbound-leap-button">
 			Apply Effect
 		  </button>
 		</div>
@@ -590,12 +589,12 @@ export class StryderItem extends Item {
 
 	function createDamageButton(damage, damageType = 'ahl', hasPierce = false) {
 	  return `
-	  <div class="damage-apply-container" style="margin: 5px 0; text-align: center;">
-		<button class="damage-apply-button" 
+	  <div class="damage-apply-container">
+		<button class="damage-apply-button"
 				data-damage="${damage}"
 				data-damage-type="${damageType}"
 				data-has-pierce="${hasPierce}">
-		  Apply <span style="color: #dc3545; font-weight: bold;">${damage}</span> Damage
+		  Apply <span class="damage-num">${damage}</span> Damage
 		</button>
 	  </div>
 	  `;
@@ -610,11 +609,11 @@ export class StryderItem extends Item {
 		return '';
 	  }
 	  
-	  const buttonText = `Spend <span style="font-family: 'Varela Round';">${item.system.blood_cost}</span> <span style="color: #8b0000; font-weight: bold;">Bloodloss</span>`;
-	  
+	  const buttonText = `Spend <span class="sty-font-number">${item.system.blood_cost}</span> <span class="sty-bloodloss-label">Bloodloss</span>`;
+
 	  return `
-		<div class="resource-spend-container" style="margin: 5px 0; text-align: center;">
-		  <button class="bloodloss-spend-button" 
+		<div class="resource-spend-container">
+		  <button class="bloodloss-spend-button"
 				  data-bloodloss-cost="${item.system.blood_cost}"
 				  data-item-id="${item.id}">
 			${buttonText}
@@ -890,12 +889,8 @@ export class StryderItem extends Item {
 			};
 			
 			chatData.content = `
-			  <div style="background: url('systems/stryder/assets/parchment.jpg'); 
-						  background-size: cover; 
-						  padding: 15px; 
-						  border: 1px solid #c9a66b; 
-						  border-radius: 3px;">
-				<h3 style="margin-top: 0; border-bottom: 1px solid #c9a66b;"><strong>Resource Expenditure</strong></h3>
+			  <div class="chat-parchment-card">
+				<h3><strong>Resource Expenditure</strong></h3>
 				<p>${messageContent}</p>
 			  </div>
 			`;
@@ -1023,12 +1018,8 @@ export class StryderItem extends Item {
 		  };
 		  
 		  chatData.content = `
-			<div style="background: url('systems/stryder/assets/parchment.jpg'); 
-						background-size: cover; 
-						padding: 15px; 
-						border: 1px solid #c9a66b; 
-						border-radius: 3px;">
-			  <h3 style="margin-top: 0; border-bottom: 1px solid #c9a66b;"><strong>Resource Expenditure</strong></h3>
+			<div class="chat-parchment-card">
+			  <h3><strong>Resource Expenditure</strong></h3>
 			  <p>${messageContent}</p>
 			</div>
 		  `;
@@ -1182,18 +1173,18 @@ export class StryderItem extends Item {
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
 	  
-	  <div class="chat-message-details" style="text-align: center;">
+	  <div class="chat-message-details chat-card-center">
 		<div class="chat-message-detail-row">
 		  <span class="chat-message-detail-label">Bond Level:</span>
 		  <span>${bondLevel}</span>
 		</div>
 	  </div>
-	  
-	  <div class="chat-message-content" style="text-align: center;">
+
+	  <div class="chat-message-content chat-card-center">
 		${item.system.description ?? ''}
 	  </div>
-	  
-	  <div style="font-size: 13px; color: #5c3a21; border-top: 1px solid #c0a070; padding-top: 10px; margin-top: 15px; display: flex; justify-content: space-around; gap: 10px; font-family: 'MedievalSharp', cursive;">
+
+	  <div class="bond-details-footer">
 		<div><strong>Folk:</strong> ${bondFolk}</div>
 		<div><strong>Gender:</strong> ${bondGender}</div>
 		<div><strong>Age:</strong> ${bondAge}</div>
@@ -1299,8 +1290,8 @@ export class StryderItem extends Item {
 		<div class="chat-message-title">${item.name}</div>
 		<div class="chat-message-subtitle">Passive Ability</div>
 	  </div>
-	  
-	  <div class="chat-message-content" style="text-align: center; font-style: italic;">
+
+	  <div class="chat-message-content chat-content-italic-center">
 		${item.system.description ?? ''}
 	  </div>
 	</div>
@@ -1372,7 +1363,7 @@ export class StryderItem extends Item {
 	  <div class="chat-message-details">
 		<div class="chat-message-detail-row">
 		  <span class="chat-message-detail-label">Grade:</span>
-		  <span style="font-family: 'Cinzel Decorative'; font-weight: bold;">${grade_rank}</span>
+		  <span class="chat-grade-span">${grade_rank}</span>
 		</div>
 		<div class="chat-message-detail-row">
 		  <span class="chat-message-detail-label">Value:</span>
@@ -1430,7 +1421,7 @@ export class StryderItem extends Item {
 	  <div class="chat-message-details">
 		<div class="chat-message-detail-row">
 		  <span class="chat-message-detail-label">Quality:</span>
-		  <span style="font-weight: bold;">${quality}</span>
+		  <span class="chat-bold">${quality}</span>
 		</div>
 		<div class="chat-message-detail-row">
 		  <span class="chat-message-detail-label">Nature:</span>
@@ -1448,7 +1439,7 @@ export class StryderItem extends Item {
 		</div>
 	  </div>
 	  
-	  <div class="chat-message-details" style="margin-top: 15px; border-top: 1px dashed #c0a070; padding-top: 10px;">
+	  <div class="chat-message-details gear-action-section">
 		<div class="chat-message-detail-row">
 		  <span class="chat-message-detail-label">Action:</span>
 		  <span>${actionType}</span>
@@ -1482,7 +1473,7 @@ export class StryderItem extends Item {
 		<div class="chat-message-subtitle">${itemType}</div>
 	  </div>
 	  
-	  <div class="chat-message-content" style="text-align: center; font-style: italic;">
+	  <div class="chat-message-content chat-content-italic-center">
 		${item.system.description ?? ''}
 	  </div>
 	</div>
@@ -1521,7 +1512,7 @@ export class StryderItem extends Item {
 		${item.system.description ?? ''}
 	  </div>
 	  
-	  <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed #c0a070; font-size: 12px; color: #5c3a21; text-align: center;">
+	  <div class="legacies-footer">
 		<i class="fas fa-scroll"></i> Soul Item - Bound to Character's Soul
 	  </div>
 	</div>
@@ -1553,7 +1544,7 @@ export class StryderItem extends Item {
 		${item.system.description ?? ''}
 	  </div>
 	  
-	  <div style="margin-top: 15px; padding: 8px; background: rgba(139, 90, 43, 0.1); border-radius: 4px; text-align: center; font-family: 'MedievalSharp', cursive; font-size: 14px;">
+	  <div class="equippable-footer">
 		<i class="fas fa-tshirt"></i> Equippable Item - ${getEquipmentSlot(item.type)}
 	  </div>
 	</div>
@@ -1695,18 +1686,8 @@ export class StryderItem extends Item {
 						const hasPierce = item.system.tag1 === 'pierce' || item.system.tag2 === 'pierce' || item.system.tag3 === 'pierce';
 						const damageButton = createDamageButton(totalDamage, item.system.damage_type || 'magykal', hasPierce);
 						const combinedMessage = `
-						<div style="margin-bottom: 5px;">
-							<div class="hex-quality-message" style="
-							  background: rgba(75, 0, 130, 0.15);
-							  border: 1px solid #4b0082;
-							  border-radius: 5px;
-							  padding: 8px 12px;
-							  margin-bottom: 5px;
-							  text-align: center;
-							  font-family: 'Cinzel Decorative', cursive;
-							  color: #4b0082;
-							  text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
-							">
+						<div class="hex-quality-badge-wrap">
+							<div class="hex-quality-message">
 							  <strong>Always Rolls a Twelve</strong> - Hex evoked at maximum efficiency.
 							</div>
 							<div class="damage-quality excellent">
@@ -1724,18 +1705,8 @@ export class StryderItem extends Item {
 					} else {
 						// Only show quality, no damage
 						const qualityMessage = `
-						<div style="margin-bottom: 5px;">
-							<div class="hex-quality-message" style="
-							  background: rgba(75, 0, 130, 0.15);
-							  border: 1px solid #4b0082;
-							  border-radius: 5px;
-							  padding: 8px 12px;
-							  margin-bottom: 5px;
-							  text-align: center;
-							  font-family: 'Cinzel Decorative', cursive;
-							  color: #4b0082;
-							  text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
-							">
+						<div class="hex-quality-badge-wrap">
+							<div class="hex-quality-message">
 							  <strong>Always Rolls a Twelve</strong> - Hex evoked at maximum efficiency.
 							</div>
 							<div class="damage-quality excellent">
@@ -1773,18 +1744,8 @@ export class StryderItem extends Item {
 						const hasPierce = item.system.tag1 === 'pierce' || item.system.tag2 === 'pierce' || item.system.tag3 === 'pierce';
 						const damageButton = createDamageButton(totalDamage, item.system.damage_type || 'magykal', hasPierce);
 						const combinedMessage = `
-						<div style="margin-bottom: 5px;">
-							<div class="hex-quality-message" style="
-							  background: rgba(75, 0, 130, 0.15);
-							  border: 1px solid #4b0082;
-							  border-radius: 5px;
-							  padding: 8px 12px;
-							  margin-bottom: 5px;
-							  text-align: center;
-							  font-family: 'Cinzel Decorative', cursive;
-							  color: #4b0082;
-							  text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
-							">
+						<div class="hex-quality-badge-wrap">
+							<div class="hex-quality-message">
 							  <strong>Always Excellent Hex</strong> - Perfect execution guaranteed.
 							</div>
 							<div class="damage-quality excellent">
@@ -1802,18 +1763,8 @@ export class StryderItem extends Item {
 					} else {
 						// Only show quality, no damage
 						const qualityMessage = `
-						<div style="margin-bottom: 5px;">
-							<div class="hex-quality-message" style="
-							  background: rgba(75, 0, 130, 0.15);
-							  border: 1px solid #4b0082;
-							  border-radius: 5px;
-							  padding: 8px 12px;
-							  margin-bottom: 5px;
-							  text-align: center;
-							  font-family: 'Cinzel Decorative', cursive;
-							  color: #4b0082;
-							  text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
-							">
+						<div class="hex-quality-badge-wrap">
+							<div class="hex-quality-message">
 							  <strong>Always Excellent Hex</strong> - Perfect execution guaranteed.
 							</div>
 							<div class="damage-quality excellent">
@@ -2947,10 +2898,10 @@ async function handleDamageApply(event) {
 		  infoTitle = `-${result.reductionAmount} less damage from ${result.reductionType} reduction.`;
 		}
 		
-		damageMessage += ` <span class="reduction-info-container" style="margin-left: 5px;">
+		damageMessage += ` <span class="reduction-info-container">
 		  <i class="fas fa-info-circle reduction-info" 
 			 title="${infoTitle}" 
-			 style="color: #17a2b8; cursor: help; font-size: 14px;"></i>
+			></i>
 		</span>`;
 	  }
 	} else {
@@ -2974,10 +2925,10 @@ async function handleDamageApply(event) {
 			infoTitle += `-${result.reductionAmount} less damage from ${result.reductionType} reduction.`;
 		  }
 		  
-		  damageMessage += ` <span class="reduction-info-container" style="margin-left: 5px;">
+		  damageMessage += ` <span class="reduction-info-container">
 			<i class="fas fa-info-circle reduction-info" 
 			   title="${infoTitle}" 
-			   style="color: #17a2b8; cursor: help; font-size: 14px;"></i>
+			   ></i>
 		  </span>`;
 		}
 	  } else {
@@ -3003,10 +2954,10 @@ async function handleDamageApply(event) {
 		      infoTitle += `-${result.reductionAmount} less damage from ${result.reductionType} reduction.`;
 			}
 			
-			line += ` <span class="reduction-info-container" style="margin-left: 5px;">
+			line += ` <span class="reduction-info-container">
 			  <i class="fas fa-info-circle reduction-info" 
 				 title="${infoTitle}" 
-				 style="color: #17a2b8; cursor: help; font-size: 14px;"></i>
+				></i>
 			</span>`;
 		  }
 		  return line;
@@ -3015,14 +2966,13 @@ async function handleDamageApply(event) {
 	  
 	  // Add undo button for non-zero damage
 	  undoButton = `
-		<span class="damage-undo-container" style="margin-left: 5px;">
+		<span class="damage-undo-container">
 		  <i class="fas fa-undo-alt damage-undo" 
 			 data-actor-ids="${damageResults.map(r => r.actor.id).join(',')}" 
 			 data-ward-damages="${damageResults.map(r => r.wardDamage).join(',')}" 
 			 data-armor-damages="${damageResults.map(r => r.armorDamage).join(',')}" 
 			 data-health-damages="${damageResults.map(r => r.healthDamage).join(',')}"
-			 title="Undo Damage" 
-			 style="color: #6c757d; cursor: pointer; font-size: 14px;"></i>
+			 title="Undo Damage"></i>
 		</span>
 	  `;
 	  
@@ -3032,13 +2982,9 @@ async function handleDamageApply(event) {
 	  user: game.user.id,
 	  speaker: ChatMessage.getSpeaker({actor: targetActors[0]}),
 	  content: `
-		<div style="background: url('systems/stryder/assets/parchment.jpg'); 
-					background-size: cover; 
-					padding: 15px; 
-					border: 1px solid #c9a66b; 
-					border-radius: 3px;">
-		  <h3 style="margin-top: 0; border-bottom: 1px solid #c9a66b; color: #dc3545;"><strong>Damage Applied</strong></h3>
-		  <p style="margin-bottom: 0;"><span class="damage-text">${damageMessage}</span>${undoButton}</p>
+		<div class="chat-parchment-card-damage">
+		  <h3><strong>Damage Applied</strong></h3>
+		  <p><span class="damage-text">${damageMessage}</span>${undoButton}</p>
 		</div>
 	  `,
 	  type: CONST.CHAT_MESSAGE_TYPES.OTHER
@@ -3240,12 +3186,8 @@ async function handleDamageUndo(event) {
 	  user: game.user.id,
 	  speaker: ChatMessage.getSpeaker({actor: targetActors[0]}),
 	  content: `
-		<div style="background: url('systems/stryder/assets/parchment.jpg'); 
-					background-size: cover; 
-					padding: 15px; 
-					border: 1px solid #c9a66b;
-				border-radius: 3px;">
-		  <h3 style="margin-top:0;border-bottom:1px solid #c9a66b;"><strong>Damage Restored</strong></h3>
+		<div class="chat-parchment-card">
+		  <h3><strong>Damage Restored</strong></h3>
 		  <p>${restorationMessage}</p>
 		</div>`,
 	  type: CONST.CHAT_MESSAGE_TYPES.OTHER

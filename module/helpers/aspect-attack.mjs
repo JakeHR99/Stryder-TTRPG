@@ -106,9 +106,9 @@ function tagHTML(t) {
 }
 
 function dmgBtn(damage, type = 'physical', pierce = false) {
-  return `<div class="damage-apply-container" style="margin:4px 0;text-align:center;">
+  return `<div class="damage-apply-container">
     <button class="damage-apply-button" data-damage="${damage}" data-damage-type="${type}" data-has-pierce="${pierce}">
-      Apply <span style="color:#dc3545;font-weight:bold;">${damage}</span> Damage
+      Apply <span class="damage-num">${damage}</span> Damage
     </button></div>`;
 }
 
@@ -243,7 +243,7 @@ export async function resolveAspectAttack(item, actor, { speaker, rollMode, meth
     <div class="chat-method-block">
       <span class="chat-method-key">${methodResult.key}</span>
       ${methodResult.attackMod !== 0 ? `<span class="chat-method-mod">${methodResult.attackMod > 0?'+':''}${methodResult.attackMod} atk</span>` : ''}
-      ${methodResult.damageMod !== 0 ? `<span class="chat-method-mod" style="background:rgba(100,220,100,0.12);border-color:rgba(100,220,100,0.25);color:#88dd88;">${methodResult.damageMod > 0?'+':''}${methodResult.damageMod} dmg</span>` : ''}
+      ${methodResult.damageMod !== 0 ? `<span class="chat-method-mod chat-method-mod-dmg">${methodResult.damageMod > 0?'+':''}${methodResult.damageMod} dmg</span>` : ''}
       <span class="chat-method-body">${methodResult.body}</span>
     </div>` : '';
 
@@ -258,8 +258,8 @@ export async function resolveAspectAttack(item, actor, { speaker, rollMode, meth
     <div class="chat-message-header">
       <div class="chat-message-title">${item.name}</div>
       <div class="chat-message-subtitle">
-        ${aspectName ? `<span class="aspect-label">${aspectName}</span><span style="color:rgba(150,190,230,0.4);margin:0 5px;">·</span>` : ''}
-        <span class="sa-label">${saName}</span><span style="color:rgba(150,190,230,0.4);"> — </span>
+        ${aspectName ? `<span class="aspect-label">${aspectName}</span><span class="chat-sep-dot">·</span>` : ''}
+        <span class="sa-label">${saName}</span><span class="chat-sep"> — </span>
         <span class="sa-detail">${saForm} · ${temperDisp} · ${saRange}</span>
       </div>
       ${tags ? `<div class="chat-message-tags">${tags}</div>` : ''}
@@ -278,16 +278,16 @@ export async function resolveAspectAttack(item, actor, { speaker, rollMode, meth
 
   // Brutality modifiers line for chat
   const brutalLine = brutalMods.bonusLabel.length
-    ? `<div style="margin-top:4px;font-size:11px;color:rgba(200,140,60,0.8);">⚔ ${brutalMods.bonusLabel.join(' · ')}</div>`
+    ? `<div class="brutal-mods-line">⚔ ${brutalMods.bonusLabel.join(' · ')}</div>`
     : '';
 
   await ChatMessage.create({ speaker, rollMode,
-    content:`<div class="damage-result-card" style="padding:6px 8px;">
+    content:`<div class="damage-result-card">
       <span style="color:${Q_COLOR[quality]};font-weight:700;">${quality}</span>
-      <span style="color:rgba(200,220,255,0.6);margin:0 6px;">—</span>
-      <span style="font-weight:700;color:#e8f4ff;">${totalDamage}</span>
-      <span style="color:rgba(150,190,230,0.5);font-size:11px;"> physical damage</span>
-      <div style="font-size:10px;color:rgba(130,170,220,0.45);margin-top:2px;">${dmgFormula(soulVal, multiplier, quality, brutalMods.damageMod)}</div>
+      <span class="chat-em-dash">—</span>
+      <span class="chat-total-dmg">${totalDamage}</span>
+      <span class="chat-dmg-suffix"> physical damage</span>
+      <div class="chat-dmg-formula">${dmgFormula(soulVal, multiplier, quality, brutalMods.damageMod)}</div>
       ${brutalLine}
       ${totalDamage > 0 ? dmgBtn(totalDamage, 'physical', hasPierce) : ''}
     </div>`
@@ -303,8 +303,8 @@ export async function resolveAspectAttack(item, actor, { speaker, rollMode, meth
   // Brutality: Onset of Doom — inflict Panicked on targeted token
   if (brutalMods.inflictPanicked) {
     await ChatMessage.create({ speaker, rollMode,
-      content: `<div style="padding:6px 10px;font-family:'Rajdhani';color:rgba(210,230,255,0.8);font-size:13px;">
-        <span style="color:rgba(200,140,60,0.85);font-weight:700;">Onset of Doom</span> — target is inflicted with <strong>Panicked</strong> for 2 rounds.
+      content: `<div class="onset-of-doom-card">
+        <span class="chat-onset-label">Onset of Doom</span> — target is inflicted with <strong>Panicked</strong> for 2 rounds.
       </div>`
     });
   }
@@ -386,7 +386,7 @@ export async function resolveFocusedAttack(actor, { speaker, rollMode, quick = f
     <div class="chat-message-header">
       <div class="chat-message-title">Focused Attack</div>
       <div class="chat-message-subtitle">
-        <span class="sa-label">${saName}</span><span style="color:rgba(150,190,230,0.4);"> — </span>
+        <span class="sa-label">${saName}</span><span class="chat-sep"> — </span>
         <span class="sa-detail">${saForm} · ${temperDisp} · ${saRange}</span>
       </div>
     </div>
@@ -399,16 +399,16 @@ export async function resolveFocusedAttack(actor, { speaker, rollMode, quick = f
   await roll.toMessage({ speaker, flavor, rollMode });
 
   const brutalLine2 = brutalMods.bonusLabel.length
-    ? `<div style="margin-top:4px;font-size:11px;color:rgba(200,140,60,0.8);">⚔ ${brutalMods.bonusLabel.join(' · ')}</div>`
+    ? `<div class="brutal-mods-line">⚔ ${brutalMods.bonusLabel.join(' · ')}</div>`
     : '';
 
   await ChatMessage.create({ speaker, rollMode,
-    content:`<div class="damage-result-card" style="padding:6px 8px;">
+    content:`<div class="damage-result-card">
       <span style="color:${Q_COLOR[quality]};font-weight:700;">${quality}</span>
-      <span style="color:rgba(200,220,255,0.6);margin:0 6px;">—</span>
-      <span style="font-weight:700;color:#e8f4ff;">${totalDamage}</span>
-      <span style="color:rgba(150,190,230,0.5);font-size:11px;"> physical damage</span>
-      <div style="font-size:10px;color:rgba(130,170,220,0.45);margin-top:2px;">${dmgFormula(soulVal, multiplier, quality, brutalMods.damageMod)}</div>
+      <span class="chat-em-dash">—</span>
+      <span class="chat-total-dmg">${totalDamage}</span>
+      <span class="chat-dmg-suffix"> physical damage</span>
+      <div class="chat-dmg-formula">${dmgFormula(soulVal, multiplier, quality, brutalMods.damageMod)}</div>
       ${brutalLine2}
       ${totalDamage > 0 ? dmgBtn(totalDamage) : ''}
     </div>`
@@ -417,8 +417,7 @@ export async function resolveFocusedAttack(actor, { speaker, rollMode, quick = f
   if (brutalMods.extraIchorOnHit > 0)
     await import('../abilities/brutality-abilities.mjs').then(m => m.grantIchor(actor, brutalMods.extraIchorOnHit));
   if (brutalMods.inflictPanicked)
-    await ChatMessage.create({ speaker, rollMode, content:`<div style="padding:6px 10px;font-family:'Rajdhani';color:rgba(210,230,255,0.8);font-size:13px;">
-      <span style="color:rgba(200,140,60,0.85);font-weight:700;">Onset of Doom</span> — target inflicted with <strong>Panicked</strong> for 2 rounds.</div>` });
+    await ChatMessage.create({ speaker, rollMode, content:`<div class="onset-of-doom-card"><span class="chat-onset-label">Onset of Doom</span> — target inflicted with <strong>Panicked</strong> for 2 rounds.</div>` });
 
   // Ranger: Create Weakness result card (GM confirms the Wound)
   if (cwEffects && ranger)
@@ -485,7 +484,7 @@ export async function resolveTwinAttack(actor, { speaker, rollMode } = {}) {
     <div class="chat-message-header">
       <div class="chat-message-title">⚔⚔ Twin Attack</div>
       <div class="chat-message-subtitle">
-        <span class="sa-label">${saName}</span><span style="color:rgba(150,190,230,0.4);"> — </span>
+        <span class="sa-label">${saName}</span><span class="chat-sep"> — </span>
         <span class="sa-detail">${saForm} · ${temperDisp} · ${saRange}</span>
       </div>
       <div class="chat-message-tags"><span class="chat-message-tag">DUAL WIELD</span></div>
@@ -509,8 +508,8 @@ export async function resolveTwinAttack(actor, { speaker, rollMode } = {}) {
           <span class="twin-hit-quality" style="color:${Q_COLOR[q1.quality]};font-weight:700;">${q1.quality}</span>
         </div>
         <div class="twin-hit-damage">
-          <span style="font-weight:700;color:#e8f4ff;">${dmg1}</span>
-          <span style="color:rgba(150,190,230,0.5);font-size:11px;"> physical</span>
+          <span class="chat-total-dmg">${dmg1}</span>
+          <span class="chat-dmg-suffix"> physical</span>
           ${dmg1 > 0 ? dmgBtn(dmg1) : ''}
         </div>
       </div>
@@ -522,8 +521,8 @@ export async function resolveTwinAttack(actor, { speaker, rollMode } = {}) {
           <span class="twin-hit-quality" style="color:${Q_COLOR[q2.quality]};font-weight:700;">${q2.quality}</span>
         </div>
         <div class="twin-hit-damage">
-          <span style="font-weight:700;color:#e8f4ff;">${dmg2}</span>
-          <span style="color:rgba(150,190,230,0.5);font-size:11px;"> physical</span>
+          <span class="chat-total-dmg">${dmg2}</span>
+          <span class="chat-dmg-suffix"> physical</span>
           ${dmg2 > 0 ? dmgBtn(dmg2) : ''}
         </div>
       </div>
