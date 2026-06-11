@@ -2254,13 +2254,21 @@ export class StryderActorSheet extends ActorSheet {
       9: [],
     };
 
+    // Pre-build the set of feature names for this actor's class so we can
+    // display auto-granted items without requiring the isClassFeature flag stamp.
+    const _actorClassName    = actorData.system?.class?.name ?? '';
+    const _classFeatureNames = new Set(
+      (STRYDER_CLASS_FEATURES[_actorClassName] ?? []).flatMap(ms => ms.feats.map(f => f.name))
+    );
+
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || Item.DEFAULT_ICON;
       // Append to actions.
       if (i.type === 'action') {
-        // Class Features: action items explicitly tagged as class features (e.g. Ranger Techniques)
-        if (i.flags?.stryder?.isClassFeature) {
+        // Class Features: explicitly tagged OR the item name is in this class's feature table
+        // (auto-granted pack items lack the flag; widening here avoids needing a migration)
+        if (i.flags?.stryder?.isClassFeature || _classFeatureNames.has(i.name)) {
           features.push(i);
         // Techniques: flagged isTechnique or have xpCost (techniques pack sets xpCost, aspect abilities don't)
         } else if (i.flags?.stryder?.isTechnique || i.flags?.stryder?.xpCost !== undefined) {
