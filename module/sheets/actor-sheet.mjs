@@ -1791,8 +1791,10 @@ export class StryderActorSheet extends ActorSheet {
 
     // Lordling-specific context
     if (actorData.type === 'lordling') {
-      // Spirit → Soul migration: copy legacy Spirit value to Soul if Soul is still 0/missing
-      const spiritVal = actorData.system.abilities?.Spirit?.value ?? 0;
+      // Spirit → Soul migration: copy legacy Spirit value to Soul if Soul is still 0/missing.
+      // Read from _source (raw db data) because Spirit is no longer in template.json and
+      // Foundry's data model strips it from the prepared actorData.
+      const spiritVal = this.actor._source?.system?.abilities?.Spirit?.value ?? 0;
       const soulVal   = actorData.system.abilities?.Soul?.value   ?? 0;
       if (spiritVal > 0 && soulVal === 0) {
         this.actor.update({ 'system.abilities.Soul.value': spiritVal }).catch(() => {});
@@ -4238,8 +4240,10 @@ export class StryderActorSheet extends ActorSheet {
 	    : this.actor;
 	  const { handleShamanAbility } = await import('../abilities/shaman-abilities.mjs').catch(() => ({ handleShamanAbility: null }));
 	  if (!handleShamanAbility) return;
-	  const tacticNameMap = { attack: 'Tactic — Attack', heal: 'Tactic — Heal', dodge: 'Tactic — Dodge/Evasion', metamorph: 'Tactic — Metamorph', retreat: 'Tactic — Retreat' };
-	  const fakeItem = { name: tacticNameMap[tactic] ?? tactic, system: { description: '' }, flags: { stryder: {} } };
+	  const tacticNameMap = { attack: 'Tactic: Attack', heal: 'Tactic: Heal', dodge: 'Tactic: Dodge/Evasion', metamorph: 'Tactic: Metamorph', retreat: 'Tactic: Retreat' };
+	  const tacticName = tacticNameMap[tactic];
+	  if (!tacticName) { console.warn(`[Stryder] lrd-tactic-quick: unknown tactic key "${tactic}"`); return; }
+	  const fakeItem = { name: tacticName, system: { description: '' }, flags: { stryder: {} } };
 	  await handleShamanAbility(fakeItem, shaman, speaker, rollMode);
 	});
 
@@ -4634,12 +4638,14 @@ export class StryderActorSheet extends ActorSheet {
 
 	// ── Lordling stat steppers (no point pool — just clamp 0–5) ───────────
 	if (this.actor.type === 'lordling') {
-	  const STAT_KEYS = ['Spirit', 'Reflex', 'Grit', 'Will'];
+	  const STAT_KEYS    = ['Soul', 'Reflex', 'Grit', 'Will'];
+	  // Soul is the schema key; in-world display name is Spirit.
+	  const DISPLAY_NAME = { Soul: 'Spirit' };
 	  html.find('.stat-btn-up').on('click', async (ev) => {
 	    const stat = ev.currentTarget.dataset.stat;
 	    if (!STAT_KEYS.includes(stat)) return;
 	    const cur = this.actor.system.abilities?.[stat]?.value ?? 0;
-	    if (cur >= 5) { ui.notifications.warn(`${stat} is already at maximum (5).`); return; }
+	    if (cur >= 5) { ui.notifications.warn(`${DISPLAY_NAME[stat] ?? stat} is already at maximum (5).`); return; }
 	    await this.actor.update({ [`system.abilities.${stat}.value`]: cur + 1 });
 	  });
 	  html.find('.stat-btn-down').on('click', async (ev) => {

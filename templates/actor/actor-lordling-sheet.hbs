@@ -396,7 +396,7 @@
               {{#each system.abilities as |ability key|}}
               {{#unless (eq key 'Intuition')}}
               <div class="jrpg-stat-row">
-                <label class="jrpg-char-label">{{key}}</label>
+                <label class="jrpg-char-label">{{#if (eq key 'Soul')}}Spirit{{else}}{{key}}{{/if}}</label>
                 <div class="jrpg-stat-stepper">
                   <button type="button" class="stat-btn stat-btn-down" data-stat="{{key}}">−</button>
                   <input type="number" name="system.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number" class="jrpg-char-input jrpg-stat-input" min="0" max="5" />
