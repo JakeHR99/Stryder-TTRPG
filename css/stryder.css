@@ -9330,87 +9330,87 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* Tighten HUD — cluster resources around portrait */
 .jrpg-sub-screen .jrpg-battle-top {
-  justify-content: center !important;
-  gap: 14px !important;
+  justify-content: center;
+  gap: 14px;
 }
 .jrpg-sub-screen .jrpg-battle-res-panel {
-  flex: 0 0 auto !important;
+  flex: 0 0 auto;
 }
 .jrpg-sub-screen .jrpg-battle-res-right {
-  align-items: flex-start !important;
+  align-items: flex-start;
 }
 
 /* Diamond pips — Mana (blue) */
 .jrpg-mp-pip {
-  width: 14px !important;
-  height: 14px !important;
-  border: 2px solid rgba(60, 130, 255, 0.30) !important;
-  border-radius: 3px !important;
-  transform: rotate(45deg) !important;
-  background: rgba(20, 8, 45, 0.85) !important;
-  opacity: 1 !important;
-  transition: all 0.15s ease !important;
-  flex-shrink: 0 !important;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(60, 130, 255, 0.30);
+  border-radius: 3px;
+  transform: rotate(45deg);
+  background: rgba(20, 8, 45, 0.85);
+  opacity: 1;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 .jrpg-mp-pip.filled {
-  background: rgba(50, 120, 255, 0.88) !important;
-  border-color: rgba(120, 180, 255, 0.95) !important;
+  background: rgba(50, 120, 255, 0.88);
+  border-color: rgba(120, 180, 255, 0.95);
   box-shadow:
     0 0 5px rgba(60, 140, 255, 0.90),
     0 0 12px rgba(40, 100, 255, 0.55),
-    0 0 24px rgba(20, 70, 220, 0.25) !important;
+    0 0 24px rgba(20, 70, 220, 0.25);
 }
 
 /* Diamond pips — Stamina (green) */
 .jrpg-sta-pip {
-  width: 14px !important;
-  height: 14px !important;
-  border: 2px solid rgba(80, 200, 100, 0.30) !important;
-  border-radius: 3px !important;
-  transform: rotate(45deg) !important;
-  background: rgba(20, 8, 45, 0.85) !important;
-  opacity: 1 !important;
-  transition: all 0.15s ease !important;
-  flex-shrink: 0 !important;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(80, 200, 100, 0.30);
+  border-radius: 3px;
+  transform: rotate(45deg);
+  background: rgba(20, 8, 45, 0.85);
+  opacity: 1;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 .jrpg-sta-pip.filled {
-  background: rgba(60, 190, 90, 0.88) !important;
-  border-color: rgba(120, 255, 150, 0.95) !important;
+  background: rgba(60, 190, 90, 0.88);
+  border-color: rgba(120, 255, 150, 0.95);
   box-shadow:
     0 0 5px rgba(80, 220, 110, 0.90),
     0 0 12px rgba(60, 200, 90, 0.55),
-    0 0 24px rgba(40, 170, 70, 0.25) !important;
+    0 0 24px rgba(40, 170, 70, 0.25);
 }
 
 /* Diamond pips — Elixir Sickness (orange) */
 .jrpg-skull-pip {
-  width: 14px !important;
-  height: 14px !important;
-  border: 2px solid rgba(255, 130, 30, 0.30) !important;
-  border-radius: 3px !important;
-  transform: rotate(45deg) !important;
-  background: rgba(20, 8, 45, 0.85) !important;
-  opacity: 1 !important;
-  font-size: 0 !important;
-  transition: all 0.15s ease !important;
-  flex-shrink: 0 !important;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 130, 30, 0.30);
+  border-radius: 3px;
+  transform: rotate(45deg);
+  background: rgba(20, 8, 45, 0.85);
+  opacity: 1;
+  font-size: 0;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 .jrpg-skull-pip.filled {
-  background: rgba(240, 120, 20, 0.88) !important;
-  border-color: rgba(255, 190, 100, 0.95) !important;
+  background: rgba(240, 120, 20, 0.88);
+  border-color: rgba(255, 190, 100, 0.95);
   box-shadow:
     0 0 5px rgba(255, 150, 40, 0.90),
     0 0 12px rgba(255, 120, 20, 0.55),
-    0 0 24px rgba(220, 90, 0, 0.25) !important;
-  text-shadow: none !important;
+    0 0 24px rgba(220, 90, 0, 0.25);
+  text-shadow: none;
 }
 
 /* Pip containers — add gap for the rotated diamonds */
 .jrpg-mp-pips,
 .jrpg-sta-pips,
 .jrpg-skull-pips {
-  gap: 6px !important;
-  align-items: center !important;
+  gap: 6px;
+  align-items: center;
 }
 
 /* Defense rows — plain glowing text */
@@ -10030,30 +10030,30 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 /* Taller top container */
 .jrpg-sub-screen .jrpg-battle-top {
-  padding: 14px 16px !important;
-  min-height: 110px !important;
+  padding: 14px 16px;
+  min-height: 110px;
 }
 
 /* Larger resource labels (HP / MP / STA) */
 .jrpg-hud-stat .jrpg-battle-res-label {
-  font-size: 15px !important;
-  letter-spacing: 0.08em !important;
+  font-size: 15px;
+  letter-spacing: 0.08em;
 }
 
 /* Larger value inputs */
 .jrpg-hud-stat .jrpg-battle-res-num {
-  font-size: 20px !important;
+  font-size: 20px !important;  /* base .jrpg-battle-res-num uses !important — must match */
   width: 40px !important;
 }
 
 /* Larger max values */
 .jrpg-hud-stat .jrpg-battle-res-max {
-  font-size: 16px !important;
+  font-size: 16px;
 }
 
 /* Larger separator */
 .jrpg-hud-stat .jrpg-battle-res-sep {
-  font-size: 16px !important;
+  font-size: 16px;
 }
 
 /* Slightly larger diamond symbols */
