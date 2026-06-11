@@ -2256,7 +2256,7 @@ export class StryderActorSheet extends ActorSheet {
 
     // Pre-build the set of feature names for this actor's class so we can
     // display auto-granted items without requiring the isClassFeature flag stamp.
-    const _actorClassName    = actorData.system?.class?.name ?? '';
+    const _actorClassName    = context.system?.class?.name ?? '';
     const _classFeatureNames = new Set(
       (STRYDER_CLASS_FEATURES[_actorClassName] ?? []).flatMap(ms => ms.feats.map(f => f.name))
     );
