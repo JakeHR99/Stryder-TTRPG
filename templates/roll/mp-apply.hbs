@@ -2,14 +2,14 @@
 <div class="flexrow flex-group-center grid grid-5col nogapmargin">
     <div class="grid-span-3" style="text-align: center;">
         {{#if isView}}
-        MP<span style="color: #862020; font-weight: bold; font-size: 1.5em;"> {{targetMP}}</span>
-        >>><span style="color: #862020; font-weight: bold; font-size: 1.5em;"> {{resultMP}}</span>
+        MP<span class="sty-roll-val"> {{targetMP}}</span>
+        >>><span class="sty-roll-val"> {{resultMP}}</span>
         {{/if}}
     </div>
     <div>
-        {{#if metaB}}<button style="font-size: 0.8em;" class="buttonclick" data-buttontype="buttonmeta">{{localize "Spend Mana"}}</button>{{/if}}
+        {{#if metaB}}<button class="buttonclick" data-buttontype="buttonmeta">{{localize "Spend Mana"}}</button>{{/if}}
     </div>
     <div>
-        <button style="font-size: 0.8em;" class="buttonclick" data-buttontype="buttonmpcancel">{{localize "Cancel"}}</button>
+        <button class="buttonclick" data-buttontype="buttonmpcancel">{{localize "Cancel"}}</button>
     </div>
 </div>

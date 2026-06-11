@@ -2,14 +2,14 @@
 {{#if nofix}}
 <div class="dice-roll">
     <div class="dice-result">
-        <div class="dice-formula">{{formula}} : <b style="font-size: 1.2em;">{{resultValue}}</b>{{#if limit}} ({{totalValue}}){{/if}}</div>
+        <div class="dice-formula">{{formula}} : <b class="sty-roll-formula-val">{{resultValue}}</b>{{#if limit}} ({{totalValue}}){{/if}}</div>
         {{{tooltip}}}
     </div>
 </div>
 {{/if}}
 <div class="flexrow flex-group-center grid grid-4col nogapmargin">
     <div class="grid-span-3" style="text-align: center;">
-        HP<span style="color: #862020; font-weight: bold; font-size: 1.5em;"> {{targetHP}}</span>
-        >>><span style="color: #862020; font-weight: bold; font-size: 1.5em;"> {{resultHP}}</span>
+        HP<span class="sty-roll-val"> {{targetHP}}</span>
+        >>><span class="sty-roll-val"> {{resultHP}}</span>
     </div>
 </div>

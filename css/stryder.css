@@ -17071,3 +17071,11 @@ li.chat-message.sty-grp-end {
   border-color: rgba(80,120,220,.5);
   background: rgba(20,40,90,.7);
 }
+
+/* Roll-result value (HP/MP apply chat cards) */
+.sty-roll-val {
+  color: #862020;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+.sty-roll-formula-val { font-size: 1.2em; }

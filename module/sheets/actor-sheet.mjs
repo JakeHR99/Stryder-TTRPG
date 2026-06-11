@@ -40,22 +40,20 @@ async function _showStatDistributePopup(actor, pts) {
 
   const rows = STATS.map(s => {
     const cur = actor.system.abilities?.[s]?.value ?? 0;
-    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:4px 6px;border-radius:3px;background:rgba(255,255,255,0.03);">
-      <span style="width:64px;font-size:13px;font-weight:700;color:rgba(180,210,255,0.75);letter-spacing:1px;text-transform:uppercase;flex-shrink:0;">${s}</span>
-      <span style="width:22px;text-align:right;font-size:13px;color:rgba(180,210,255,0.4);flex-shrink:0;" data-sdc-base="${s}">${cur}</span>
-      <button type="button" class="sdc-minus" data-stat="${s}" style="width:24px;height:24px;background:rgba(255,80,80,0.12);border:1px solid rgba(255,100,100,0.25);border-radius:3px;color:#ff9999;cursor:pointer;font-size:15px;line-height:1;padding:0;flex-shrink:0;">−</button>
-      <span style="min-width:32px;text-align:center;font-size:17px;font-weight:700;color:#e8f4ff;flex-shrink:0;" data-sdc-val="${s}">${cur}</span>
-      <button type="button" class="sdc-plus" data-stat="${s}" style="width:24px;height:24px;background:rgba(80,180,255,0.12);border:1px solid rgba(100,180,255,0.25);border-radius:3px;color:#88ccff;cursor:pointer;font-size:15px;line-height:1;padding:0;flex-shrink:0;">+</button>
-      <span style="font-size:11px;color:rgba(100,200,255,0.55);min-width:24px;flex-shrink:0;" data-sdc-delta="${s}"></span>
+    return `<div class="sty-dlg-row">
+      <span class="sty-dlg-row-label">${s}</span>
+      <span class="sty-dlg-row-base" data-sdc-base="${s}">${cur}</span>
+      <button type="button" class="sty-step-btn minus sdc-minus" data-stat="${s}">−</button>
+      <span class="sty-dlg-row-val" data-sdc-val="${s}">${cur}</span>
+      <button type="button" class="sty-step-btn plus sdc-plus" data-stat="${s}">+</button>
+      <span class="sty-dlg-row-delta" data-sdc-delta="${s}"></span>
     </div>`;
   }).join('');
 
-  const content = `<div style="padding:8px 0;font-family:'Rajdhani',sans-serif;">
-    <p style="margin:0 0 10px;color:rgba(180,210,255,0.7);font-size:13px;line-height:1.4;">
-      Distribute <strong style="color:#88aadf;">${pts}</strong> new stat points (max 7 per stat).
-    </p>
-    <div style="margin-bottom:14px;font-size:12px;color:rgba(150,190,230,0.6);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;">
-      Points remaining:&ensp;<strong id="sdc-remaining" style="font-size:16px;color:#88aadf;">${pts}</strong>
+  const content = `<div class="sty-dlg-body">
+    <p>Distribute <strong>${pts}</strong> new stat points (max 7 per stat).</p>
+    <div class="sty-dlg-label" style="margin-bottom:14px;">
+      Points remaining:&ensp;<strong id="sdc-remaining" class="sty-dlg-value">${pts}</strong>
     </div>
     ${rows}
   </div>`;
@@ -3449,55 +3447,34 @@ export class StryderActorSheet extends ActorSheet {
       const rowHTML = (items) => items.length
         ? items.map(it => `
           <button type="button" class="inv-browse-row"
-               data-pack-id="${it.packId}" data-item-id="${it._id}"
-               style="display:flex;align-items:center;gap:8px;padding:5px 10px;width:100%;
-                      border:none;border-bottom:1px solid rgba(42,112,224,0.08);
-                      background:transparent;cursor:pointer;text-align:left;">
-            <img src="${it.img || 'icons/svg/item-bag.svg'}"
-                 style="width:18px;height:18px;object-fit:contain;border-radius:2px;flex-shrink:0;opacity:0.85;">
-            <span style="flex:1;font-size:12px;color:#c8dcf8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${it.name}</span>
-            <span style="font-size:9px;color:rgba(90,134,184,0.45);flex-shrink:0;letter-spacing:0.05em;">${it.type}</span>
+               data-pack-id="${it.packId}" data-item-id="${it._id}">
+            <img src="${it.img || 'icons/svg/item-bag.svg'}">
+            <span class="bname">${it.name}</span>
+            <span class="btype">${it.type}</span>
           </button>`).join('')
-        : `<div style="padding:10px;font-size:11px;color:rgba(90,134,184,0.45);text-align:center;">No items found</div>`;
+        : `<div class="sty-dlg-hint" style="padding:10px;text-align:center;">No items found</div>`;
 
-      const inputStyle = `width:100%;box-sizing:border-box;background:rgba(4,8,20,0.9);
-        border:1px solid rgba(42,112,224,0.3);border-radius:2px;color:#d8e8ff;
-        font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;padding:5px 9px;outline:none;`;
-
-      const content = `<div style="background:linear-gradient(135deg,#0d1628 0%,#080e1c 100%);">
+      const content = `<div>
 
         <!-- Compendium browse -->
-        <div style="padding:12px 14px 8px;">
-          <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.14em;
-                      text-transform:uppercase;color:rgba(90,134,184,0.6);margin-bottom:6px;">
-            Browse Compendium</div>
-          <input id="inv-search" type="text" placeholder="Search…" style="${inputStyle}">
-          <div id="inv-browse-list" style="margin-top:5px;max-height:150px;overflow-y:auto;
-               border:1px solid rgba(42,112,224,0.15);border-radius:2px;
-               background:rgba(4,8,20,0.7);">${rowHTML(compItems)}</div>
+        <div class="inv-add-section">
+          <div class="sty-dlg-label">Browse Compendium</div>
+          <input id="inv-search" type="text" placeholder="Search…">
+          <div id="inv-browse-list" class="sty-dlg-scroll">${rowHTML(compItems)}</div>
         </div>
 
         <!-- Divider -->
-        <div style="display:flex;align-items:center;gap:8px;padding:4px 14px;">
-          <div style="flex:1;height:1px;background:rgba(42,112,224,0.18);"></div>
-          <span style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.12em;
-                       color:rgba(90,134,184,0.4);">OR CREATE CUSTOM</span>
-          <div style="flex:1;height:1px;background:rgba(42,112,224,0.18);"></div>
-        </div>
+        <div class="sty-dlg-divider">OR CREATE CUSTOM</div>
 
         <!-- Custom item -->
-        <div style="padding:8px 14px 14px;display:flex;gap:10px;align-items:flex-end;">
-          <div style="flex:1;">
-            <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.12em;
-                        text-transform:uppercase;color:rgba(90,134,184,0.6);margin-bottom:5px;">Name</div>
-            <input id="new-item-name" type="text" placeholder="e.g. Iron Sword" style="${inputStyle}">
+        <div class="inv-add-row">
+          <div>
+            <div class="sty-dlg-label">Name</div>
+            <input id="new-item-name" type="text" placeholder="e.g. Iron Sword">
           </div>
           <div>
-            <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.12em;
-                        text-transform:uppercase;color:rgba(90,134,184,0.6);margin-bottom:5px;">Size</div>
-            <input id="new-item-size" type="number" min="1" max="11" value="1"
-                   style="width:52px;background:rgba(4,8,20,0.9);border:1px solid rgba(42,112,224,0.3);
-                          border-radius:2px;color:#d8e8ff;font-size:12px;padding:5px 7px;outline:none;">
+            <div class="sty-dlg-label">Size</div>
+            <input id="new-item-size" type="number" min="1" max="11" value="1" class="inv-add-size">
           </div>
         </div>
       </div>`;
@@ -3712,7 +3689,7 @@ export class StryderActorSheet extends ActorSheet {
 			  const chosen = await new Promise(resolve => {
 			    new Dialog({
 			      title: 'Set Lordling Aspect',
-			      content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.8);font-size:13px;">Choose the Lordling's Aspect:</p>`,
+			      content: `<p>Choose the Lordling's Aspect:</p>`,
 			      buttons: {
 			        wild:   { label: '🌿 Wild',    callback: () => resolve('Wild')   },
 			        royal:  { label: '👑 Royal',   callback: () => resolve('Royal')  },
@@ -3730,7 +3707,7 @@ export class StryderActorSheet extends ActorSheet {
 			  const chosen = await new Promise(resolve => {
 			    new Dialog({
 			      title: 'Set Lordling Form',
-			      content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.8);font-size:13px;">Choose the current battle form:</p>`,
+			      content: `<p>Choose the current battle form:</p>`,
 			      buttons: {
 			        wild:   { label: '🌿 Wild (Medium)',  callback: () => resolve('Wild (Medium)')   },
 			        royal:  { label: '👑 Royal (Huge)',   callback: () => resolve('Royal (Huge)')    },
@@ -3859,7 +3836,7 @@ export class StryderActorSheet extends ActorSheet {
 			  if (isDualWield) {
 				const go = await Dialog.confirm({
 				  title: 'Dual Wield — Twin Attack?',
-				  content: `<p style="margin:0;padding:8px 0;">Make a <strong>Twin Attack</strong> (two rolls, combined message)?</p>`,
+				  content: `<p>Make a <strong>Twin Attack</strong> (two rolls, combined message)?</p>`,
 				  yes: () => true, no: () => false, defaultYes: true,
 				  options: { classes: ['dialog','stryder-stat-popup'], width: 320 }
 				});
@@ -4435,7 +4412,7 @@ export class StryderActorSheet extends ActorSheet {
 	    if (hasBonuses || oldFolk) {
 	      const ok = await Dialog.confirm({
 	        title:   'Remove Folk',
-	        content: `<p style="margin:0;padding:8px 0;">Removing your folk will <strong>permanently delete all folk talent and sense bonuses</strong> from this character. Are you sure?</p>`
+	        content: `<p>Removing your folk will <strong>permanently delete all folk talent and sense bonuses</strong> from this character. Are you sure?</p>`
 	      });
 	      if (!ok) { this.render(false); return; }
 	    }
@@ -4448,7 +4425,7 @@ export class StryderActorSheet extends ActorSheet {
 	  if (oldFolk && oldFolk !== folkName) {
 	    const ok = await Dialog.confirm({
 	      title:   'Change Folk',
-	      content: `<p style="margin:0;padding:8px 0;">Changing from <strong>${oldFolk}</strong> to <strong>${folkName}</strong> will <strong>remove all current folk bonuses</strong> (talents, senses, passives). You will reconfigure your new folk in the next popup.</p><p style="margin:4px 0 0;padding:0;color:#e05050;">This cannot be undone.</p>`
+	      content: `<p>Changing from <strong>${oldFolk}</strong> to <strong>${folkName}</strong> will <strong>remove all current folk bonuses</strong> (talents, senses, passives). You will reconfigure your new folk in the next popup.</p><p class="sty-dlg-warn">This cannot be undone.</p>`
 	    });
 	    if (!ok) { this.render(false); return; }
 	  }
@@ -4899,13 +4876,7 @@ export class StryderActorSheet extends ActorSheet {
     // Use Dialog.confirm for proper handling
     const confirmed = await Dialog.confirm({
       title: game.i18n.localize("STRYDER.DOCUMENT.DeleteConfirm"),
-      content: `
-        <div style="text-align: center; padding: 20px;">
-          <p style="font-size: 16px; margin-bottom: 20px;">
-            ${game.i18n.format("STRYDER.DOCUMENT.DeleteConfirmMessage", { name: item.name })}
-          </p>
-        </div>
-      `,
+      content: `<p>${game.i18n.format("STRYDER.DOCUMENT.DeleteConfirmMessage", { name: item.name })}</p>`,
       yes: async () => {
         await item.delete();
         li.slideUp(200, () => this.render(false));
@@ -5155,20 +5126,18 @@ export class StryderActorSheet extends ActorSheet {
     // Build option list HTML
     const optionRows = hasLordlings
       ? available.map(l =>
-          `<label style="display:flex;align-items:center;gap:8px;padding:5px 4px;border-radius:3px;cursor:pointer;color:rgba(200,220,255,0.85);font-size:12px;">
-            <input type="radio" name="lordling-pick" value="${l.id}" style="flex-shrink:0;">
-            <img src="${l.img}" width="24" height="24" style="border:1px solid rgba(80,120,200,0.3);border-radius:3px;object-fit:cover;flex-shrink:0;">
-            <span style="font-family:'Cinzel',serif;font-weight:600;">${l.name}</span>
+          `<label class="sty-dlg-option-row">
+            <input type="radio" name="lordling-pick" value="${l.id}">
+            <img src="${l.img}" width="24" height="24">
+            <span class="sty-name">${l.name}</span>
           </label>`
         ).join('')
-      : `<p style="color:rgba(160,180,220,0.55);font-size:11px;font-style:italic;margin:0;">No Lordling actors found. Create one below.</p>`;
+      : `<p class="sty-dlg-hint">No Lordling actors found. Create one below.</p>`;
 
     const content = `
-      <div style="font-family:'Rajdhani',sans-serif;padding:4px 0;">
-        <p style="color:rgba(180,210,255,0.8);font-size:13px;margin:0 0 10px;">
-          As a Shaman, <strong>${actor.name}</strong> requires a linked <strong>Lordling</strong> sheet
-          to track their companion's stats, Tactic Points, and Aspect Features.
-        </p>
+      <div class="sty-dlg-body">
+        <p>As a Shaman, <strong>${actor.name}</strong> requires a linked <strong>Lordling</strong> sheet
+          to track their companion's stats, Tactic Points, and Aspect Features.</p>
         ${hasLordlings ? `<div style="margin-bottom:10px;">${optionRows}</div>` : optionRows}
       </div>`;
 
@@ -5389,18 +5358,18 @@ export class StryderActorSheet extends ActorSheet {
 
     const isFixed = !folkData.freePoints && !folkData.statChoice && !folkData.sizeChoices && !folkData.originFolkPicker;
 
-    let content = `<div class="folk-popup-card" style="padding:14px;font-family:'Rajdhani',sans-serif;background:#0f0c1e;color:#ddd;border-radius:2px;">`;
-    content += `<div class="folk-popup-title" style="font-size:15px;font-weight:bold;margin-bottom:10px;color:#c8a03c;">${folkName}</div>`;
+    let content = `<div class="folk-popup-card">`;
+    content += `<div class="folk-popup-title">${folkName}</div>`;
 
     // --- Fixed-bonus folk: read-only summary ---
     if (isFixed) {
       const talentLines = Object.entries(folkData.talents).map(([k,v]) => `${k} +${v}`).join(', ');
       const senseLines  = Object.entries(folkData.senses ).map(([k,v]) => `${k} +${v}`).join(', ');
-      content += `<p style="margin:4px 0;color:#ddd;">Talents: <span style="color:#e0c87a;">${talentLines || '—'}</span></p>`;
-      content += `<p style="margin:4px 0;color:#ddd;">Senses: <span style="color:#e0c87a;">${senseLines || '—'}</span></p>`;
+      content += `<p>Talents: <span style="color:var(--sty-stagger);">${talentLines || '—'}</span></p>`;
+      content += `<p>Senses: <span style="color:var(--sty-stagger);">${senseLines || '—'}</span></p>`;
       if (folkData.passives.length) {
         folkData.passives.forEach(p => {
-          content += `<p style="margin:6px 0;font-size:11px;color:#c0955a;">⚑ ${p}</p>`;
+          content += `<p>⚑ ${p}</p>`;
         });
       }
     }
@@ -5409,7 +5378,7 @@ export class StryderActorSheet extends ActorSheet {
     if (folkData.originFolkPicker) {
       const others = Object.keys(STRYDER_FOLK_DATA).filter(f => f !== 'Oumen');
       const curOrigin = existingChoices.originFolk || '';
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Origin Folk (appearance only)</label>`;
+      content += `<div class="folk-popup-section"><label>Origin Folk (appearance only)</label>`;
       content += `<div class="fp-custom-select" data-fpid="fp-origin">`;
       content += `<button type="button" class="fp-cs-trigger">${curOrigin || '— Choose —'}<span class="fp-cs-arrow">▾</span></button>`;
       content += `<div class="fp-cs-options">`;
@@ -5424,13 +5393,13 @@ export class StryderActorSheet extends ActorSheet {
     // --- Oumen: affliction picker ---
     if (folkData.afflictionPicker) {
       const curAffliction = existingChoices.affliction || '';
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:6px;">Affliction <span style="font-size:10px;color:#888;">— which body part was corrupted by the Other?</span></label>`;
+      content += `<div class="folk-popup-section"><label>Affliction <span class="sty-dlg-hint">— which body part was corrupted by the Other?</span></label>`;
       Object.entries(STRYDER_OUMEN_AFFLICTIONS).forEach(([name, aff]) => {
         const chk = curAffliction === name ? 'checked' : '';
-        content += `<label style="display:block;color:#e0c87a;margin:5px 0;font-size:12px;cursor:pointer;">
-          <input type="radio" name="fp-affliction" value="${name}" ${chk} style="margin-right:6px;">
+        content += `<label class="sty-dlg-option">
+          <input type="radio" name="fp-affliction" value="${name}" ${chk}>
           <strong>${name}</strong>
-          <span style="color:#999;font-size:10px;margin-left:4px;">— ${aff.summary}</span>
+          <span class="sty-dlg-hint">— ${aff.summary}</span>
         </label>`;
       });
       content += `</div>`;
@@ -5438,54 +5407,54 @@ export class StryderActorSheet extends ActorSheet {
 
     // --- Size picker ---
     if (folkData.sizeChoices) {
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Size</label>`;
+      content += `<div class="folk-popup-section"><label>Size</label>`;
       folkData.sizeChoices.forEach(sz => {
         const chk = (existingChoices.size === sz) ? 'checked' : '';
-        content += `<label style="display:block;color:#e0c87a;margin:2px 0;"><input type="radio" name="fp-size" value="${sz}" ${chk}> ${sz}</label>`;
+        content += `<label class="sty-dlg-option"><input type="radio" name="fp-size" value="${sz}" ${chk}> ${sz}</label>`;
       });
       content += `</div>`;
     }
 
     // --- Colossus subfolk + stat choice ---
     if (folkData.subfolks && folkName === 'Colossus') {
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Subfolk</label>`;
+      content += `<div class="folk-popup-section"><label>Subfolk</label>`;
       folkData.subfolks.forEach(sf => {
         const sub = STRYDER_COLOSSUS_SUBFOLK[sf];
         const chk = (existingChoices.subfolk === sf) ? 'checked' : '';
         const note = sub ? ` — Immune to ${sub.immunities.join(', ')}; +${Object.entries(sub.talents).map(([k,v])=>`${v} ${k}`).join(', ')}` : '';
-        content += `<label style="display:block;color:#e0c87a;margin:2px 0;font-size:11px;"><input type="radio" name="fp-subfolk" value="${sf}" ${chk}> ${sf}${note}</label>`;
+        content += `<label class="sty-dlg-option"><input type="radio" name="fp-subfolk" value="${sf}" ${chk}> ${sf}${note}</label>`;
       });
       content += `</div>`;
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Assign +3 to Stat (+1 to the other)</label>`;
+      content += `<div class="folk-popup-section"><label>Assign +3 to Stat (+1 to the other)</label>`;
       ['Strength','Endurance'].forEach(st => {
         const chk = (existingChoices.colossusStat === st) ? 'checked' : '';
-        content += `<label style="display:block;color:#e0c87a;margin:2px 0;"><input type="radio" name="fp-stat" value="${st}" ${chk}> ${st}</label>`;
+        content += `<label class="sty-dlg-option"><input type="radio" name="fp-stat" value="${st}" ${chk}> ${st}</label>`;
       });
       content += `</div>`;
     }
 
     // --- Traveler subfolk + talent distribution + sense picks ---
     if (folkName === 'Traveler') {
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Boon (Subfolk)</label>`;
+      content += `<div class="folk-popup-section"><label>Boon (Subfolk)</label>`;
       folkData.subfolks.forEach(sf => {
         const chk = (existingChoices.travelerBoon === sf || existingChoices.subfolk === sf) ? 'checked' : '';
-        content += `<label style="display:block;color:#e0c87a;margin:2px 0;"><input type="radio" name="fp-boon" value="${sf}" ${chk}> ${sf}</label>`;
+        content += `<label class="sty-dlg-option"><input type="radio" name="fp-boon" value="${sf}" ${chk}> ${sf}</label>`;
       });
       content += `</div>`;
 
       const allTalents = ['Aggression','Charm','Deceit','Diplomacy','Endurance','Finesse','Intimacy','Nimbleness','Strength','Survival','Wisdom','Wit'];
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Distribute 4 Talent Points <span id="fp-talent-remaining" style="color:#c8a03c;">(4 remaining)</span></label>`;
-      content += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">`;
+      content += `<div class="folk-popup-section"><label>Distribute 4 Talent Points <span id="fp-talent-remaining">(4 remaining)</span></label>`;
+      content += `<div class="sty-dlg-grid-2">`;
       allTalents.forEach(t => {
         const cur = existingChoices.talentPoints?.[t] ?? 0;
-        content += `<div style="display:flex;align-items:center;gap:4px;"><span style="color:#bbb;font-size:11px;flex:1;">${t}</span><input type="number" class="fp-talent-input" data-talent="${t}" value="${cur}" min="0" max="4" style="width:40px;background:#1a1630;color:#e0c87a;border:1px solid #5a4a20;text-align:center;"></div>`;
+        content += `<div class="sty-dlg-talent-row"><span class="tlabel">${t}</span><input type="number" class="fp-talent-input sty-dlg-num-input" data-talent="${t}" value="${cur}" min="0" max="4"></div>`;
       });
       content += `</div></div>`;
 
       const senses = ['Arcane','Hearing','Sight','Smell','Touch'];
       ['1','2'].forEach(n => {
         const cur = existingChoices.senseChoices?.[Number(n)-1] ?? '';
-        content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Sense Pick ${n}</label>`;
+        content += `<div class="folk-popup-section"><label>Sense Pick ${n}</label>`;
         content += `<div class="fp-custom-select" data-fpidx="${n}">`;
         content += `<button type="button" class="fp-cs-trigger">${cur || '— Choose —'}<span class="fp-cs-arrow">▾</span></button>`;
         content += `<div class="fp-cs-options">`;
@@ -5501,28 +5470,28 @@ export class StryderActorSheet extends ActorSheet {
     // --- Wildkin: talent distribution + sense choice + adaptations ---
     if (folkName === 'Wildkin') {
       const fp = folkData.freePoints;
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Distribute 4 Talent Points (max 5 per talent) <span id="fp-talent-remaining" style="color:#c8a03c;">(4 remaining)</span></label>`;
-      content += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">`;
+      content += `<div class="folk-popup-section"><label>Distribute 4 Talent Points (max 5 per talent) <span id="fp-talent-remaining">(4 remaining)</span></label>`;
+      content += `<div class="sty-dlg-grid-2">`;
       fp.talentTargets.forEach(t => {
         const cur = existingChoices.talentPoints?.[t] ?? 0;
-        content += `<div style="display:flex;align-items:center;gap:4px;"><span style="color:#bbb;font-size:11px;flex:1;">${t}</span><input type="number" class="fp-talent-input" data-talent="${t}" value="${cur}" min="0" max="5" style="width:40px;background:#1a1630;color:#e0c87a;border:1px solid #5a4a20;text-align:center;"></div>`;
+        content += `<div class="sty-dlg-talent-row"><span class="tlabel">${t}</span><input type="number" class="fp-talent-input sty-dlg-num-input" data-talent="${t}" value="${cur}" min="0" max="5"></div>`;
       });
       content += `</div></div>`;
 
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Sense Bonus (+2 to one)</label>`;
+      content += `<div class="folk-popup-section"><label>Sense Bonus (+2 to one)</label>`;
       fp.senseChoice.forEach(s => {
         const cur = existingChoices.senseChoices?.[0] ?? existingChoices.senseOneChoice ?? '';
-        content += `<label style="display:block;color:#e0c87a;margin:2px 0;"><input type="radio" name="fp-sense-one" value="${s}" ${cur===s?'checked':''}> ${s} +2</label>`;
+        content += `<label class="sty-dlg-option"><input type="radio" name="fp-sense-one" value="${s}" ${cur===s?'checked':''}> ${s} +2</label>`;
       });
       content += `</div>`;
 
       const chosen = existingChoices.adaptations || [];
-      content += `<div class="folk-popup-section"><label style="color:#ddd;display:block;margin-bottom:4px;">Choose 3 Adaptations <span id="fp-adapt-count" style="color:#c8a03c;">(${chosen.length}/3 chosen)</span></label>`;
-      content += `<div class="folk-adapt-list" style="max-height:220px;overflow-y:auto;border:1px solid #3a2e10;padding:6px;background:#0f0c1e;">`;
+      content += `<div class="folk-popup-section"><label>Choose 3 Adaptations <span id="fp-adapt-count">(${chosen.length}/3 chosen)</span></label>`;
+      content += `<div class="folk-adapt-list">`;
       folkData.adaptations.forEach(a => {
         const chk = chosen.includes(a.name) ? 'checked' : '';
         const dis = (!chk && chosen.length >= 3) ? 'disabled' : '';
-        content += `<label class="folk-adapt-item" style="display:flex;gap:8px;align-items:flex-start;margin:4px 0;cursor:pointer;"><input type="checkbox" class="fp-adapt-cb" value="${a.name}" ${chk} ${dis} style="margin-top:2px;flex-shrink:0;"><span><strong style="color:#e0c87a;">${a.name}</strong><br><span style="font-size:10px;color:#aaa;">${a.description}</span></span></label>`;
+        content += `<label class="folk-adapt-item"><input type="checkbox" class="fp-adapt-cb" value="${a.name}" ${chk} ${dis}><span><span class="aname">${a.name}</span><br><span class="adesc">${a.description}</span></span></label>`;
       });
       content += `</div></div>`;
     }
@@ -5752,93 +5721,27 @@ export class StryderActorSheet extends ActorSheet {
     const strippedDescription = (item.system?.description ?? '').replace(/<[^>]+>/g, '');
 
     const content = `
-      <div class="inv-popup" style="
-        background: linear-gradient(160deg, #0a1628 0%, #0d1f3c 60%, #081020 100%);
-        border: 1px solid rgba(80,160,255,0.25);
-        border-radius: 10px;
-        padding: 18px 18px 10px;
-        color: #a8d4ff;
-        font-family: inherit;
-        min-width: 220px;
-      ">
-        <!-- Icon -->
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
-          <div class="inv-popup-img-wrap" style="
-            width:64px;height:64px;flex-shrink:0;
-            background:rgba(80,160,255,0.08);
-            border:1px solid rgba(80,160,255,0.2);
-            border-radius:8px;
-            display:flex;align-items:center;justify-content:center;
-            cursor:pointer;
-          " data-action="changeIcon">
+      <div class="inv-popup">
+        <!-- Icon + slot -->
+        <div class="inv-popup-img-row">
+          <div class="inv-popup-img-wrap" data-action="changeIcon">
             ${itemImg
-              ? `<img src="${itemImg}" alt="${itemName}" style="width:52px;height:52px;object-fit:contain;image-rendering:pixelated;">`
-              : `<i class="fas fa-box" style="font-size:24px;color:rgba(80,160,255,0.4);"></i>`}
+              ? `<img src="${itemImg}" alt="${itemName}">`
+              : `<i class="fas fa-box inv-img-placeholder"></i>`}
           </div>
           <div>
-            <div style="
-              font-size:11px;
-              color:rgba(140,200,255,0.55);
-              letter-spacing:0.08em;
-              text-transform:uppercase;
-              margin-bottom:3px;
-            ">${itemSize} slot${itemSize !== 1 ? 's' : ''}</div>
+            <div class="inv-popup-slot">${itemSize} slot${itemSize !== 1 ? 's' : ''}</div>
           </div>
         </div>
 
         <!-- Description -->
-        <div style="
-          font-size:12px;
-          color:rgba(180,220,255,0.8);
-          line-height:1.5;
-          margin-bottom:14px;
-          padding:10px 12px;
-          background:rgba(80,160,255,0.06);
-          border-radius:6px;
-          border-left:2px solid rgba(80,160,255,0.3);
-          text-shadow: 0 0 8px rgba(100,180,255,0.3);
-          min-height:36px;
-        ">${strippedDescription || '<span style="opacity:0.35;font-style:italic;">No description.</span>'}</div>
+        <div class="inv-popup-body">${strippedDescription || '<span class="inv-popup-body-empty">No description.</span>'}</div>
 
         <!-- Action Buttons -->
-        <div class="inv-popup-actions" style="display:flex;flex-direction:column;gap:6px;">
-          <button type="button" class="inv-action-btn inv-btn-use" data-action="use" style="
-            background:rgba(80,160,255,0.12);
-            border:1px solid rgba(80,160,255,0.35);
-            border-radius:6px;
-            color:#a8d4ff;
-            font-size:12px;
-            font-weight:600;
-            letter-spacing:0.06em;
-            padding:7px 0;
-            cursor:pointer;
-            text-shadow:0 0 10px rgba(100,180,255,0.6);
-            width:100%;
-          ">✦ USE</button>
-          <button type="button" class="inv-action-btn inv-btn-inspect" data-action="inspect" style="
-            background:rgba(80,160,255,0.07);
-            border:1px solid rgba(80,160,255,0.2);
-            border-radius:6px;
-            color:rgba(168,212,255,0.75);
-            font-size:12px;
-            font-weight:500;
-            letter-spacing:0.06em;
-            padding:7px 0;
-            cursor:pointer;
-            width:100%;
-          ">INSPECT</button>
-          <button type="button" class="inv-action-btn inv-btn-discard" data-action="discard" style="
-            background:rgba(255,80,80,0.06);
-            border:1px solid rgba(255,80,80,0.2);
-            border-radius:6px;
-            color:rgba(255,160,160,0.65);
-            font-size:12px;
-            font-weight:500;
-            letter-spacing:0.06em;
-            padding:7px 0;
-            cursor:pointer;
-            width:100%;
-          ">DISCARD</button>
+        <div class="inv-popup-actions">
+          <button type="button" class="inv-action-btn inv-btn-use" data-action="use">✦ USE</button>
+          <button type="button" class="inv-action-btn inv-btn-inspect" data-action="inspect">INSPECT</button>
+          <button type="button" class="inv-action-btn inv-btn-discard" data-action="discard">DISCARD</button>
         </div>
       </div>
     `;
@@ -5906,7 +5809,7 @@ export class StryderActorSheet extends ActorSheet {
           dialog.close();
           const confirmed = await Dialog.confirm({
             title: 'Discard Item',
-            content: `<p style="padding:8px 0;">Remove <strong>${item.name}</strong> from your inventory?</p>`,
+            content: `<p>Remove <strong>${item.name}</strong> from your inventory?</p>`,
           });
           if (confirmed) await item.delete();
         });
@@ -6032,20 +5935,19 @@ export class StryderActorSheet extends ActorSheet {
       const num = String(i).padStart(3, '0');
       const path = `${BASE_PATH}/item_${num}.png`;
       iconsHtml += `
-        <div class="icon-pick-cell" data-path="${path}" title="item_${num}"
-             style="aspect-ratio:1/1;min-width:0;background:rgba(10,18,45,0.7);border:1px solid rgba(55,90,160,0.2);border-radius:5px;display:flex;align-items:center;justify-content:center;padding:4px;box-sizing:border-box;cursor:pointer;overflow:hidden;">
-          <img src="${path}" alt="item ${num}" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated;">
+        <div class="icon-pick-cell" data-path="${path}" title="item_${num}">
+          <img src="${path}" alt="item ${num}">
         </div>
       `;
     }
 
     const content = `
-      <div class="icon-picker-wrap" style="display:flex;flex-direction:column;height:100%;">
+      <div class="icon-picker-wrap">
         <div class="icon-picker-search-row">
           <input class="icon-picker-search" type="text" placeholder="Filter by number…" />
           <span class="icon-picker-count">${TOTAL_ICONS} icons</span>
         </div>
-        <div class="icon-picker-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:10px;overflow-y:auto;max-height:400px;box-sizing:border-box;">
+        <div class="icon-picker-grid">
           ${iconsHtml}
         </div>
       </div>
