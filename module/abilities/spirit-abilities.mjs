@@ -105,7 +105,7 @@ async function handleRevitalize(item, actor, speaker) {
     ? `<button class="spirit-remove-condition" data-token-id="${tokenId}" data-condition="poison" ${btnStyle('#1a1a2e')}>🧪 Remove Poison</button>
       <button class="spirit-remove-condition" data-token-id="${tokenId}" data-condition="burning" ${btnStyle('#2e1a0a')}>🔥 Remove Burning</button>
       <button class="spirit-remove-condition" data-token-id="${tokenId}" data-condition="bleeding" ${btnStyle('#2e0a0a')}>🩸 Remove Bleeding Wounds</button>`
-    : `<p style="opacity:0.7;">⚠ No token targeted — target one first, then re-use the ability.</p>`;
+    : `<p class="dlg-muted-p">⚠ No token targeted — target one first, then re-use the ability.</p>`;
 
   await ChatMessage.create({ speaker, content:
     card('Revitalize', 'Swift Action · 1 Stamina (spent)',
@@ -129,7 +129,7 @@ async function handleEnhanceProwess(item, actor, speaker) {
     new Dialog({
       title: 'Enhance Prowess — Choose Talent',
       content: `<p>Raise one of <strong>${targetActor.name}</strong>'s Physical Talents by <strong>${soul}</strong> (max 5).</p>
-        <select id="ep-talent" style="width:100%;margin-top:6px;">${options}</select>`,
+        <select id="ep-talent" class="dlg-select-full">${options}</select>`,
       buttons: {
         apply: {
           label: 'Apply',
@@ -163,7 +163,7 @@ async function handleRapidRepair(item, actor, speaker) {
     new Dialog({
       title: 'Rapid Repair — How much damage did you take?',
       content: `<div style="margin-top:6px;"><label>Damage taken:</label>
-        <input id="rr-damage" type="number" min="1" value="1" style="width:100%;margin-top:4px;" /></div>`,
+        <input id="rr-damage" type="number" min="1" value="1" class="dlg-input-full" /></div>`,
       buttons: {
         heal: {
           label: '💚 Heal',
@@ -190,7 +190,7 @@ async function handleLifeForALife(item, actor, speaker) {
     new Dialog({
       title: 'Life for a Life — Choose self-damage',
       content: `<p>Choose how much damage to take. That amount is added to your next Survival Mode Focused Attack.</p>
-        <input id="lfl-damage" type="number" min="1" value="1" style="width:100%;margin-top:6px;" />`,
+        <input id="lfl-damage" type="number" min="1" value="1" class="dlg-select-full" />`,
       buttons: {
         confirm: {
           label: '💀 Take Damage',
@@ -245,7 +245,7 @@ async function handleHealingWave(item, actor, speaker) {
   const targets = [...game.user.targets];
   const targetButtons = targets.length
     ? targets.map(t => `<button class="spirit-heal-apply" data-token-id="${t.id}" data-amount="${healAmt}" ${btnStyle()}>💚 Heal ${t.actor?.name ?? 'target'} for ${healAmt}</button>`).join('')
-    : `<p style="opacity:0.7;">Target tokens before clicking — or use button below for each target.</p>`;
+    : `<p class="dlg-muted-p">Target tokens before clicking — or use button below for each target.</p>`;
 
   await ChatMessage.create({ speaker, content:
     card('Healing Wave', 'Focused Action · 6 Stamina (spent)',
@@ -263,13 +263,13 @@ async function handleStarwalker(item, actor, speaker) {
     new Dialog({
       title: 'Starwalker — Choose Expenditure',
       content: `<p>Target: <strong>${targetActor?.name ?? 'None selected'}</strong></p>
-        <div style="margin-top:8px;">
+        <div class="dlg-mt-8">
           <label>Stamina to spend (1–3, already deducted base cost):</label>
-          <input id="sw-stamina" type="number" min="1" max="3" value="1" style="width:100%;margin-top:4px;" />
+          <input id="sw-stamina" type="number" min="1" max="3" value="1" class="dlg-input-full" />
         </div>
-        <div style="margin-top:8px;">
+        <div class="dlg-mt-8">
           <label>Mana to spend:</label>
-          <input id="sw-mana" type="number" min="1" value="1" style="width:100%;margin-top:4px;" />
+          <input id="sw-mana" type="number" min="1" value="1" class="dlg-input-full" />
         </div>`,
       buttons: {
         apply: {

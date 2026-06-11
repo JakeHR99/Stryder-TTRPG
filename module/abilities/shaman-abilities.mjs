@@ -18,10 +18,10 @@ function shamanCard(title, body, tag = '') {
       <div class="chat-message-title">${title}</div>
       <div class="chat-message-subtitle">
         <span class="aspect-label">Shaman</span>
-        ${tag ? `<span style="color:rgba(150,190,230,0.4);margin:0 5px;">·</span><span style="color:rgba(180,210,255,0.65);font-size:10px;letter-spacing:1px;text-transform:uppercase;">${tag}</span>` : ''}
+        ${tag ? `<span class="chat-sep-dot">·</span><span class="chat-action-tag">${tag}</span>` : ''}
       </div>
     </div>
-    <div class="chat-message-content" style="font-family:'Rajdhani',sans-serif;font-size:13px;color:rgba(210,230,255,0.85);">
+    <div class="chat-message-content chat-content-rajdhani">
       ${body}
     </div>
   </div>`;
@@ -64,7 +64,7 @@ function tacticDialog(title, focused, swift) {
     const swiftLabel   = `Swift (${swift.tp} TP${swift.sta ? ` · ${swift.sta} STA` : ''})`;
     new Dialog({
       title: `Tactic: ${title}`,
-      content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.8);font-size:13px;padding:6px 0;">Choose action type:</p>`,
+      content: `<p class="chat-hint-p">Choose action type:</p>`,
       buttons: {
         focused: { label: focusedLabel, callback: () => resolve({ mode: 'Focused', tpCost: focused.tp, staCost: focused.sta ?? 0 }) },
         swift:   { label: swiftLabel,   callback: () => resolve({ mode: 'Swift',   tpCost: swift.tp,   staCost: swift.sta   ?? 0 }) },
@@ -167,14 +167,14 @@ async function tacticAttack(actor, speaker, rollMode) {
     await roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: lordling }), rollMode,
       flavor: `<div class="chat-message-card"><div class="chat-message-header"><div class="chat-message-title">${lordlingName} — Quick Attack</div></div></div>` });
     await ChatMessage.create({ speaker, rollMode,
-      content: `<div class="damage-result-card" style="padding:6px 8px;">
+      content: `<div class="damage-result-card">
         <span style="color:${quality==='Excellent'?'#ffd700':quality==='Poor'?'#dc3545':'#5cb85c'};font-weight:700;">${quality}</span>
-        <span style="color:rgba(200,220,255,0.6);margin:0 6px;">—</span>
-        <span style="font-weight:700;color:#e8f4ff;">${dmg}</span>
-        <span style="color:rgba(150,190,230,0.5);font-size:11px;"> physical (Spirit ${spirit})</span>
-        <div class="damage-apply-container" style="margin:4px 0;text-align:center;">
+        <span class="chat-em-dash">—</span>
+        <span class="chat-total-dmg">${dmg}</span>
+        <span class="chat-dmg-suffix"> physical (Spirit ${spirit})</span>
+        <div class="damage-apply-container">
           <button class="damage-apply-button" data-damage="${dmg}" data-damage-type="physical" data-has-pierce="false">
-            Apply <span style="color:#dc3545;font-weight:bold;">${dmg}</span> Damage
+            Apply <span class="damage-num">${dmg}</span> Damage
           </button>
         </div>
       </div>`
@@ -247,7 +247,7 @@ async function tacticMetamorph(actor, speaker, rollMode) {
   const form = await new Promise(resolve => {
     new Dialog({
       title: 'Metamorph — Choose Form',
-      content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.8);font-size:13px;padding:6px 0;">Change ${lordling?.name ?? 'Lordling'}'s form:</p>`,
+      content: `<p class="chat-hint-p">Change ${lordling?.name ?? 'Lordling'}'s form:</p>`,
       buttons: {
         wild:   { label: '🌿 Wild (Medium)',  callback: () => resolve('Wild (Medium)')   },
         royal:  { label: '👑 Royal (Huge)',   callback: () => resolve('Royal (Huge)')    },
@@ -286,7 +286,7 @@ async function tacticTransferTalent(actor, speaker, rollMode) {
   const result = await new Promise(resolve => {
     new Dialog({
       title: 'Transfer Talent',
-      content: `<div style="font-family:'Rajdhani';color:rgba(180,210,255,0.8);font-size:13px;padding:6px 0;">
+      content: `<div class="chat-hint-p">
         <p>Transfer a Physical Talent between ${actor.name} and ${lordling?.name ?? 'Lordling'} for 1 minute (max 5).</p>
         <select id="xfer-talent" style="width:100%;background:#0a0e1a;color:#88acd8;border:1px solid rgba(50,90,170,0.4);border-radius:3px;padding:4px;">
           ${talentOpts}
@@ -433,14 +433,14 @@ async function lordlingAttackRoll(lordling, actor, speaker, rollMode, bonusTP = 
   await roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: lordling }), rollMode,
     flavor: `<div class="chat-message-card"><div class="chat-message-header"><div class="chat-message-title">${lordling.name} Attacks</div></div></div>` });
   await ChatMessage.create({ speaker, rollMode,
-    content: `<div class="damage-result-card" style="padding:6px 8px;">
+    content: `<div class="damage-result-card">
       <span style="color:${Q_COLOR[quality]};font-weight:700;">${quality}</span>
-      <span style="color:rgba(200,220,255,0.6);margin:0 6px;">—</span>
-      <span style="font-weight:700;color:#e8f4ff;">${dmg}</span>
-      <span style="color:rgba(150,190,230,0.5);font-size:11px;"> physical (Spirit ${spirit})</span>
-      <div class="damage-apply-container" style="margin:4px 0;text-align:center;">
+      <span class="chat-em-dash">—</span>
+      <span class="chat-total-dmg">${dmg}</span>
+      <span class="chat-dmg-suffix"> physical (Spirit ${spirit})</span>
+      <div class="damage-apply-container">
         <button class="damage-apply-button" data-damage="${dmg}" data-damage-type="physical" data-has-pierce="false">
-          Apply <span style="color:#dc3545;font-weight:bold;">${dmg}</span> Damage
+          Apply <span class="damage-num">${dmg}</span> Damage
         </button>
       </div>
     </div>`
@@ -585,7 +585,7 @@ async function lordlyDiamondBody(actor, speaker, rollMode) {
   const dmgType = await new Promise(resolve => {
     new Dialog({
       title: 'Diamond Body, Reverent Mind',
-      content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.8);font-size:13px;">Choose resistance type:</p>`,
+      content: `<p class="chat-hint-p">Choose resistance type:</p>`,
       buttons: {
         physical: { label: 'Physical', callback: () => resolve('Physical') },
         magykal:  { label: 'Magykal',  callback: () => resolve('Magykal')  },

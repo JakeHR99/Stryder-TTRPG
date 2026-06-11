@@ -127,7 +127,7 @@ async function handleDeepGuard(item, actor, speaker) {
       content: `<div style="margin-top:6px;">
         <p>Soul <strong>${soul}</strong> + Known Resilience abilities <strong>${knownCount}</strong>${fullBraceBonus > 0 ? ` + Full Brace <strong>${fullBraceBonus}</strong>` : ''} = <strong>${totalReduction}</strong> reduction.</p>
         <label>How much damage are you taking (before reduction)?</label>
-        <input id="dg-damage" type="number" min="0" value="0" style="width:100%;margin-top:4px;" />
+        <input id="dg-damage" type="number" min="0" value="0" class="dlg-input-full" />
       </div>`,
       buttons: {
         apply: {
@@ -222,7 +222,7 @@ async function handleSacrifice(item, actor, speaker) {
       title: 'Sacrifice — Take Ally Damage',
       content: `<p>You take the damage <strong>${allyName}</strong> would have taken.</p>
         <label>Damage amount:</label>
-        <input id="sac-damage" type="number" min="0" value="0" style="width:100%;margin-top:4px;" />`,
+        <input id="sac-damage" type="number" min="0" value="0" class="dlg-input-full" />`,
       buttons: {
         confirm: {
           label: '❤ Sacrifice',

@@ -95,22 +95,22 @@ function warlockCard(title, subtitle, body, resources = null) {
   const resLine = resources
     ? `<div class="chat-message-detail-row">
         <span class="chat-message-detail-label">Bloodloss:</span>
-        <span style="color:#e05555;font-weight:700;">${resources.bloodloss}</span>
-        <span style="color:rgba(150,190,230,0.4);margin:0 6px;">·</span>
+        <span class="sty-bloodloss-cost">${resources.bloodloss}</span>
+        <span class="chat-sep-dot">·</span>
         <span class="chat-message-detail-label">Manaburn:</span>
-        <span style="color:#b070e0;font-weight:700;">${resources.manaburn}</span>
+        <span class="sty-manaburn">${resources.manaburn}</span>
        </div>`
     : '';
   return `<div class="chat-message-card">
     <div class="chat-message-header">
       <div class="chat-message-title">${title}</div>
-      <div class="chat-message-subtitle"><span class="aspect-label" style="color:rgba(220,80,80,0.85);">Warlock</span></div>
+      <div class="chat-message-subtitle"><span class="aspect-label aspect-label-warlock">Warlock</span></div>
     </div>
     <div class="chat-message-details">
       ${subtitle ? `<div class="chat-message-detail-row"><span class="chat-message-detail-label">Action:</span><span>${subtitle}</span></div>` : ''}
       ${resLine}
     </div>
-    <div class="chat-message-content" style="font-family:'Rajdhani',sans-serif;font-size:13px;color:rgba(210,230,255,0.85);">
+    <div class="chat-message-content chat-content-rajdhani">
       ${body}
     </div>
   </div>`;
@@ -121,9 +121,9 @@ function resSnapshot(actor) {
 }
 
 function dmgApplyBtn(damage, type = 'physical') {
-  return `<div class="damage-apply-container" style="margin:4px 0;text-align:center;">
+  return `<div class="damage-apply-container">
     <button class="damage-apply-button" data-damage="${damage}" data-damage-type="${type}" data-has-pierce="false">
-      Apply <span style="color:#dc3545;font-weight:bold;">${damage}</span> Damage
+      Apply <span class="damage-num">${damage}</span> Damage
     </button></div>`;
 }
 
@@ -132,11 +132,11 @@ function bloodNumberDialog(title, label, min = 0, max = 20, start = null) {
   return new Promise(resolve => {
     new Dialog({
       title,
-      content: `<div style="padding:8px 0;font-family:'Rajdhani',sans-serif;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <label style="color:rgba(180,210,255,0.65);font-size:12px;letter-spacing:1px;">${label}</label>
+      content: `<div class="dlg-rajdhani-pad">
+        <div class="dlg-flex-row">
+          <label class="dlg-input-label">${label}</label>
           <input id="blood-amount" type="number" min="${min}" max="${max}" value="${start ?? min}"
-            style="width:60px;background:rgba(255,255,255,0.06);border:1px solid rgba(220,80,80,0.4);border-radius:3px;color:#e88a8a;font-size:15px;text-align:center;padding:3px;" />
+            class="dlg-bloodloss-input" />
         </div>
       </div>`,
       buttons: {
@@ -227,7 +227,7 @@ async function handleScarletStrike(item, actor, speaker, rollMode) {
 
   await ChatMessage.create({ speaker, rollMode, content: warlockCard(
     'Scarlet Strike', 'Trigger — X Bloodloss',
-    `Paid <strong style="color:#e05555;">${x} Bloodloss</strong> with <strong style="color:#b070e0;">${manaburn} Manaburn</strong> stored.<br>
+    `Paid <strong class="sty-bloodloss-cost">${x} Bloodloss</strong> with <strong class="sty-manaburn">${manaburn} Manaburn</strong> stored.<br>
      Your next <strong>Focused Attack</strong> deals <strong>+${bonus} base damage</strong>.`,
     resSnapshot(actor)
   )});
@@ -253,8 +253,8 @@ async function handleScarletWarden(item, actor, speaker, rollMode) {
 
   await ChatMessage.create({ speaker, rollMode, content: warlockCard(
     'Scarlet Warden', 'Trigger — 1 Stamina',
-    `Reduce the damage ${actor.name} would take by <strong style="color:#5cb85c;">${total}</strong>.<br>
-     <span style="font-size:11px;color:rgba(200,210,255,0.55);">⌊1.5 × Soul ${soulVal}⌋ = ${base}${n > 0 ? ` &nbsp;+&nbsp; ${n} Bloodloss × 3 = ${3 * n}` : ''}</span>`,
+    `Reduce the damage ${actor.name} would take by <strong class="chat-green-bold">${total}</strong>.<br>
+     <span class="chat-footnote">⌊1.5 × Soul ${soulVal}⌋ = ${base}${n > 0 ? ` &nbsp;+&nbsp; ${n} Bloodloss × 3 = ${3 * n}` : ''}</span>`,
     resSnapshot(actor)
   )});
 }
@@ -278,8 +278,8 @@ async function handleSinSiphon(item, actor, speaker, rollMode) {
   await ChatMessage.create({ speaker, rollMode, content: warlockCard(
     'Sin Siphon', 'Trigger — 1 Mana',
     `Your blood reacts violently to the flood of mana.<br>
-     Deal <strong>+${bonusDmg}</strong> additional damage <span style="font-size:11px;color:rgba(200,210,255,0.55);">(6 + Manaburn ${manaburn})</span> to the target of your Excellent Attack.<br>
-     ${actor.name} regains <strong style="color:#5cb85c;">2 Health</strong> (${curHP} → ${newHP})${restoredMax > 0 ? ` and <strong style="color:#5cb85c;">${restoredMax} Maximum Health</strong>` : ''}.
+     Deal <strong>+${bonusDmg}</strong> additional damage <span class="chat-footnote">(6 + Manaburn ${manaburn})</span> to the target of your Excellent Attack.<br>
+     ${actor.name} regains <strong class="chat-green-bold">2 Health</strong> (${curHP} → ${newHP})${restoredMax > 0 ? ` and <strong class="chat-green-bold">${restoredMax} Maximum Health</strong>` : ''}.
      ${dmgApplyBtn(bonusDmg)}`,
     resSnapshot(actor)
   )});
@@ -296,8 +296,8 @@ async function handleBloodTithes(item, actor, speaker, rollMode) {
 
   await ChatMessage.create({ speaker, rollMode, content: warlockCard(
     'Blood Tithes', 'Passive',
-    `${actor.name} pays a <strong>${x} Mana</strong> cost with <strong style="color:#e05555;">${x} Maximum Health</strong> instead.<br>
-     <span style="font-size:11px;color:rgba(200,210,255,0.55);">Do not deduct Mana for that ability. (No Manaburn is generated — no Mana was expended.)</span>`,
+    `${actor.name} pays a <strong>${x} Mana</strong> cost with <strong class="sty-bloodloss-cost">${x} Maximum Health</strong> instead.<br>
+     <span class="chat-footnote">Do not deduct Mana for that ability. (No Manaburn is generated — no Mana was expended.)</span>`,
     resSnapshot(actor)
   )});
 }
@@ -320,7 +320,7 @@ async function handleSanguineIchor(item, actor, speaker, rollMode) {
     'Sanguine Ichor', 'Swift — 1+ Bloodloss',
     `${actor.name}'s blood swirls with power.<br>
      <strong>+${bonus}</strong> to <strong>[Reflex] Rolls</strong> and <strong>Attack Rolls</strong> for 1 Round.<br>
-     <span style="font-size:11px;color:rgba(200,210,255,0.55);">Attack rolls apply automatically; clears at the start of your next turn.</span>`,
+     <span class="chat-footnote">Attack rolls apply automatically; clears at the start of your next turn.</span>`,
     resSnapshot(actor)
   )});
 }
@@ -340,7 +340,7 @@ async function handleCrimsonCrown(item, actor, speaker, rollMode) {
     const mode = await new Promise(resolve => {
       new Dialog({
         title: `Crimson Crown — Spend Gemstones (${crown.gems} available)`,
-        content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.75);font-size:13px;padding:6px 0;">
+        content: `<p class="chat-hint-p">
           How will you expend the gemstones?</p>`,
         buttons: {
           atk:     { label: '+1 Attack Roll / gem',   callback: () => resolve('atk') },
@@ -373,7 +373,7 @@ async function handleCrimsonCrown(item, actor, speaker, rollMode) {
     return ChatMessage.create({ speaker, rollMode, content: warlockCard(
       'Crimson Crown — Gemstones', 'Swift',
       `${actor.name} crushes <strong>${n} gemstone${n === 1 ? '' : 's'}</strong> from the crown.<br>${effect}<br>
-       <span style="font-size:11px;color:rgba(200,210,255,0.55);">Gemstones remaining: ${crown.gems - n} · Rounds left: ${crown.rounds}</span>`,
+       <span class="chat-footnote">Gemstones remaining: ${crown.gems - n} · Rounds left: ${crown.rounds}</span>`,
       resSnapshot(actor)
     )});
   }
@@ -386,7 +386,7 @@ async function handleCrimsonCrown(item, actor, speaker, rollMode) {
     'Crimson Crown', 'Swift — 3 Bloodloss',
     `A crown of dripping blood manifests above ${actor.name}'s head.<br>
      Lasts <strong>5 Rounds</strong> or until the end of the engagement. Every <strong>1 Mana</strong> expended charges the crown with <strong>1 gemstone</strong>.<br>
-     <span style="font-size:11px;color:rgba(200,210,255,0.55);">Use Crimson Crown again to spend gemstones. The crown vanishes early if you are put into Last Breaths.</span>`,
+     <span class="chat-footnote">Use Crimson Crown again to spend gemstones. The crown vanishes early if you are put into Last Breaths.</span>`,
     resSnapshot(actor)
   )});
 }
@@ -416,8 +416,8 @@ async function handleHemorrhagingLance(item, actor, speaker, rollMode) {
     `${actor.name} forms a spiraling lance of blood between empty hands and fires it forward.<br>
      <div class="chat-message-detail-row" style="margin-top:4px;"><span class="chat-message-detail-label">Arcane Sense (range):</span><span><strong>${rangeRoll.total}</strong> — select a target within ${rangeRoll.total} Spaces (LoS not required)</span></div>
      <div class="chat-message-detail-row"><span class="chat-message-detail-label">Attack Roll:</span><span>${atkFormula} = <strong>${atkRoll.total}</strong></span></div>
-     <div class="chat-message-detail-row"><span class="chat-message-detail-label">Damage:</span><span><strong>${damage}</strong> <span style="font-size:11px;color:rgba(200,210,255,0.55);">(3 × Soul ${soulVal} + Manaburn ${manaburn})</span></span></div>
-     <span style="font-size:11px;color:rgba(200,210,255,0.55);">Pierces 1 Space of cover (obstruction also takes the damage). A creature interrupting LoS may make an Evasion check against your Potency; on failure it also suffers this damage.</span>
+     <div class="chat-message-detail-row"><span class="chat-message-detail-label">Damage:</span><span><strong>${damage}</strong> <span class="chat-footnote">(3 × Soul ${soulVal} + Manaburn ${manaburn})</span></span></div>
+     <span class="chat-footnote">Pierces 1 Space of cover (obstruction also takes the damage). A creature interrupting LoS may make an Evasion check against your Potency; on failure it also suffers this damage.</span>
      ${dmgApplyBtn(damage)}`,
     resSnapshot(actor)
   )});
@@ -449,7 +449,7 @@ async function handleSacrifice(item, actor, speaker, rollMode) {
   await ChatMessage.create({ speaker, rollMode, content: warlockCard(
     'Sacrifice', 'Swift — 6 Maximum Health',
     `${actor.name} pays a desperate price for victory:<br>
-     ✦ Regains <strong style="color:#5cb85c;">3 Mana</strong> and <strong style="color:#5cb85c;">all Stamina</strong><br>
+     ✦ Regains <strong class="chat-green-bold">3 Mana</strong> and <strong class="chat-green-bold">all Stamina</strong><br>
      ✦ May use a <strong>second Focused Action</strong> this Phase<br>
      <span style="font-size:11px;color:#e05555;">The 6 Maximum Health can only be restored by visiting a Spring of Life.</span>`,
     resSnapshot(actor)
@@ -471,7 +471,7 @@ async function handleMasochisticReturns(item, actor, speaker, rollMode) {
 
   await ChatMessage.create({ speaker, rollMode, content: warlockCard(
     'Masochistic Returns', 'Passive',
-    `${actor.name} trades flesh for vigor — recovers <strong style="color:#5cb85c;">${n} Stamina</strong> for <strong style="color:#e05555;">${2 * n} Maximum Health</strong>.`,
+    `${actor.name} trades flesh for vigor — recovers <strong class="chat-green-bold">${n} Stamina</strong> for <strong class="sty-bloodloss-cost">${2 * n} Maximum Health</strong>.`,
     resSnapshot(actor)
   )});
 }
@@ -555,9 +555,9 @@ export async function warlockEndOfEngagement(actor, speaker = null) {
 
     await ChatMessage.create({ speaker, content: warlockCard(
       'Bloodloss Recovered', 'End of Engagement',
-      `${actor.name} regains <strong style="color:#5cb85c;">${bloodloss} Maximum Health</strong> lost to Bloodloss
-       and heals for <strong style="color:#5cb85c;">${healAmt} HP</strong> (${curHP} → ${newHP})
-       ${hasEclipse ? '<span style="font-size:11px;color:#ffd700;">— Bloodied Eclipse: full heal instead of half.</span>' : '<span style="font-size:11px;color:rgba(200,210,255,0.55);">(half the restored amount)</span>'}`,
+      `${actor.name} regains <strong class="chat-green-bold">${bloodloss} Maximum Health</strong> lost to Bloodloss
+       and heals for <strong class="chat-green-bold">${healAmt} HP</strong> (${curHP} → ${newHP})
+       ${hasEclipse ? '<span class="chat-gold-note">— Bloodied Eclipse: full heal instead of half.</span>' : '<span class="chat-footnote">(half the restored amount)</span>'}`,
       resSnapshot(actor)
     )});
     did = true;

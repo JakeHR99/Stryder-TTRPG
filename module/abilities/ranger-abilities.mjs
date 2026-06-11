@@ -29,10 +29,10 @@ function rangerCard(title, body, actionTag = '') {
       <div class="chat-message-title">${title}</div>
       <div class="chat-message-subtitle">
         <span class="aspect-label">Ranger</span>
-        ${actionTag ? `<span style="color:rgba(150,190,230,0.4);margin:0 5px;">·</span><span style="color:rgba(180,210,255,0.65);font-size:10px;letter-spacing:1px;text-transform:uppercase;">${actionTag}</span>` : ''}
+        ${actionTag ? `<span class="chat-sep-dot">·</span><span class="chat-action-tag">${actionTag}</span>` : ''}
       </div>
     </div>
-    <div class="chat-message-content" style="font-family:'Rajdhani',sans-serif;font-size:13px;color:rgba(210,230,255,0.85);">
+    <div class="chat-message-content chat-content-rajdhani">
       ${body}
     </div>
   </div>`;
@@ -181,7 +181,7 @@ async function handleVault(item, actor, speaker, rollMode) {
     new Dialog({
       title: 'Vault',
       content: `<div style="padding:8px 0;font-family:'Rajdhani',sans-serif;color:rgba(180,210,255,0.85);font-size:13px;">
-        <p style="margin:0 0 8px;">Move through <strong style="color:#e8c87a;">${targetName}</strong>'s space — costs <strong>1 extra Movement</strong>.</p>
+        <p style="margin:0 0 8px;">Move through <strong class="chat-amber">${targetName}</strong>'s space — costs <strong>1 extra Movement</strong>.</p>
         <p style="margin:0;color:rgba(150,190,230,0.6);font-size:12px;">Spend 1 Stamina to make a Quick Attack while vaulting?</p>
       </div>`,
       buttons: {
@@ -275,10 +275,10 @@ export async function promptCreateWeaknessChoice(actor, targetActor, { fromAttac
   const maxPicks = twoEffects ? 2 : 1;
 
   const rows = Object.entries(CW_EFFECTS).map(([key, e]) => `
-    <label class="cw-pick-row" style="display:flex;align-items:flex-start;gap:8px;padding:5px 8px;border-radius:4px;cursor:pointer;background:rgba(12,20,48,0.55);margin-bottom:3px;">
+    <label class="cw-pick-row">
       <input type="checkbox" name="cw-effect" value="${key}" style="margin-top:2px;flex-shrink:0;">
-      <span style="flex:1;">
-        <strong style="color:#e8c87a;">${e.label}</strong><br>
+      <span class="cw-flex-1">
+        <strong class="chat-amber">${e.label}</strong><br>
         <span style="font-size:11px;color:rgba(150,190,230,0.7);">Good: ${e.Good} · Excellent: ${e.Excellent}</span>
       </span>
     </label>`).join('');
@@ -356,19 +356,18 @@ export async function postCreateWeaknessResult(actor, targetActor, effects, qual
     const strength = e[quality];
     if (e.dmg) {
       // Dispatch — additional damage via the standard damage pipeline
-      return `<div style="margin:6px 0;">
-        <strong style="color:#e8c87a;">${e.label}</strong> — ${strength}
-        <div class="damage-apply-container" style="margin:4px 0;text-align:center;">
+      return `<div class="cw-effect-row">
+        <strong class="chat-amber">${e.label}</strong> — ${strength}
+        <div class="damage-apply-container">
           <button class="damage-apply-button cw-dispatch-button" data-damage="${e.dmg[quality]}" data-damage-type="physical" data-has-pierce="false" data-attacker-id="${actor.id}">
-            Wound Confirmed — Apply <span style="color:#dc3545;font-weight:bold;">${e.dmg[quality]}</span> Additional Damage
+            Wound Confirmed — Apply <span class="damage-num">${e.dmg[quality]}</span> Additional Damage
           </button>
         </div></div>`;
     }
-    return `<div style="margin:6px 0;">
-      <strong style="color:#e8c87a;">${e.label}</strong> — ${strength}
+    return `<div class="cw-effect-row">
+      <strong class="chat-amber">${e.label}</strong> — ${strength}
       <div style="margin:4px 0;text-align:center;">
-        <button class="cw-apply-button" data-effect="${key}" data-strength="${strength}" data-attacker-id="${actor.id}"
-          style="background:linear-gradient(to bottom,#3d2e0e,#2a1f08);border:1px solid rgba(232,200,122,0.4);border-radius:4px;color:#e8c87a;padding:4px 12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:12px;">
+        <button class="cw-apply-button" data-effect="${key}" data-strength="${strength}" data-attacker-id="${actor.id}">
           Wound Confirmed — Apply ${e.label}
         </button>
       </div></div>`;
@@ -378,17 +377,16 @@ export async function postCreateWeaknessResult(actor, targetActor, effects, qual
   if (bs.guardReduction) riderLines.push(`<strong>6+ Wounds:</strong> as attack Leader, ${targetName}'s Guard is reduced by 1.`);
   if (bs.extraWound)     riderLines.push(`<strong>15+ Wounds:</strong> whenever you inflict a Wound, inflict <strong>one additional Wound</strong>.`);
   if (bs.deepWounds)     riderLines.push(`<strong>21+ Wounds:</strong> all Wounds you inflict are <strong>Deep Wounds</strong> — and all existing Wounds become Deep Wounds.
-    <div style="margin:4px 0;text-align:center;"><button class="cw-grave-button"
-      style="background:linear-gradient(to bottom,#3d0e0e,#2a0808);border:1px solid rgba(220,53,69,0.5);border-radius:4px;color:#ff8a8a;padding:4px 12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:12px;">
+    <div style="margin:4px 0;text-align:center;"><button class="cw-grave-button">
       Convert Selected Monster's Wounds → Deep</button></div>`);
   const riders = riderLines.length
-    ? `<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(80,110,200,0.25);font-size:11px;color:rgba(125,224,178,0.85);">${riderLines.map(l => `<div style="margin:3px 0;">${l}</div>`).join('')}</div>`
+    ? `<div class="cw-rider-lines">${riderLines.map(l => `<div class="cw-rider-item">${l}</div>`).join('')}</div>`
     : '';
 
   await ChatMessage.create({ speaker, rollMode, content: rangerCard(
     'Create Weakness',
     `Quality: <strong style="color:${quality === 'Excellent' ? '#ffd700' : '#5cb85c'};">${quality}</strong> vs <strong>${targetName}</strong>.<br>
-     <span style="font-size:11px;color:rgba(150,190,230,0.6);">If the attack inflicted a Wound, confirm below — select the target's token first. Effects last until the end of the next Challenger Phase.</span>
+     <span class="chat-footnote-blue">If the attack inflicted a Wound, confirm below — select the target's token first. Effects last until the end of the next Challenger Phase.</span>
      ${lines}${riders}`,
     'Swift · Targeted'
   )});
@@ -482,8 +480,8 @@ async function handleCreateWeakness(item, actor, speaker, rollMode) {
   const labels = effects.map(k => CW_EFFECTS[k]?.label).filter(Boolean).join(' + ');
   await ChatMessage.create({ speaker, rollMode, content: rangerCard(
     'Create Weakness',
-    `${actor.name} studies their prey — <strong style="color:#e8c87a;">${labels}</strong> armed.<br>
-     <span style="font-size:11px;color:rgba(150,190,230,0.6);">If the next Focused attack inflicts a Wound, the target is afflicted. Strength set by attack quality; lasts until the end of the next Challenger Phase.</span>`,
+    `${actor.name} studies their prey — <strong class="chat-amber">${labels}</strong> armed.<br>
+     <span class="chat-footnote-blue">If the next Focused attack inflicts a Wound, the target is afflicted. Strength set by attack quality; lasts until the end of the next Challenger Phase.</span>`,
     'Swift · Targeted'
   )});
 }
@@ -499,7 +497,7 @@ async function handleBehemothSlayer(item, actor, speaker, rollMode) {
     `<div style="margin:2px 0;${active ? 'color:#7de0b2;' : 'opacity:0.45;'}"><strong>${threshold}:</strong> ${text}${active ? ' ✦' : ''}</div>`;
 
   const body = targetActor
-    ? `Target <strong>${targetActor.name}</strong> has <strong style="color:#e8c87a;">${bs.wounds} Wound${bs.wounds === 1 ? '' : 's'}</strong>.<br>` : 'No target selected — thresholds shown below.<br>';
+    ? `Target <strong>${targetActor.name}</strong> has <strong class="chat-amber">${bs.wounds} Wound${bs.wounds === 1 ? '' : 's'}</strong>.<br>` : 'No target selected — thresholds shown below.<br>';
 
   await ChatMessage.create({ speaker, rollMode, content: rangerCard(
     item.name,
@@ -533,9 +531,9 @@ async function handleExploitWeakness(item, actor, speaker, rollMode) {
     let resolved = false;
     const done = v => { if (!resolved) { resolved = true; resolve(v); } };
     const rows = Object.entries(EXPLOIT_EFFECTS).map(([key, e]) => `
-      <label style="display:flex;align-items:flex-start;gap:8px;padding:5px 8px;border-radius:4px;cursor:pointer;background:rgba(12,20,48,0.55);margin-bottom:3px;">
+      <label class="cw-pick-row">
         <input type="radio" name="ew-effect" value="${key}" style="margin-top:2px;flex-shrink:0;">
-        <span style="flex:1;"><strong style="color:#e8c87a;">${e.label}</strong><br>
+        <span class="cw-flex-1"><strong class="chat-amber">${e.label}</strong><br>
         <span style="font-size:11px;color:rgba(150,190,230,0.7);">${e.text}</span></span>
       </label>`).join('');
     new Dialog({
@@ -564,17 +562,17 @@ async function handleExploitWeakness(item, actor, speaker, rollMode) {
   const e = EXPLOIT_EFFECTS[choice];
   const targetName = targetActor?.name ?? 'The target';
   const dmgBlock = e.dmg ? `
-    <div class="damage-apply-container" style="margin:4px 0;text-align:center;">
+    <div class="damage-apply-container">
       <button class="damage-apply-button" data-damage="${e.dmg}" data-damage-type="physical" data-has-pierce="false">
-        Resistance Failed — Apply <span style="color:#dc3545;font-weight:bold;">${e.dmg}</span> Damage
+        Resistance Failed — Apply <span class="damage-num">${e.dmg}</span> Damage
       </button></div>` : '';
 
   await ChatMessage.create({ speaker, rollMode, content: rangerCard(
     'Exploit Weakness',
     `${actor.name} exploits the weakness of <strong>${targetName}</strong>!<br>
-     <strong>${targetName}</strong> rolls <strong style="color:#e8c87a;">${resType} Resistance</strong>
-     <span style="font-size:11px;color:rgba(150,190,230,0.6);">(channeling ${isMortal ? 'a Mortal' : 'an Immortal'} Aspect)</span>.<br>
-     On failure — <strong style="color:#e8c87a;">${e.label}:</strong> ${e.text}${dmgBlock}`,
+     <strong>${targetName}</strong> rolls <strong class="chat-amber">${resType} Resistance</strong>
+     <span class="chat-footnote-blue">(channeling ${isMortal ? 'a Mortal' : 'an Immortal'} Aspect)</span>.<br>
+     On failure — <strong class="chat-amber">${e.label}:</strong> ${e.text}${dmgBlock}`,
     'Focused · 4 Stamina'
   )});
 }
@@ -586,7 +584,7 @@ async function handleTyrantExecutioner(item, actor, speaker, rollMode) {
     'Tyrant Executioner',
     `At the start of the engagement, ${actor.name} <strong>Dashes ${move} spaces</strong> (maximum Movement).<br>
      If a target is within range of your Soul Armament when the Dash ends, you may use <strong>two Focused Actions</strong> this Round.<br>
-     If you inflict a Wound this Round, your target gains <strong style="color:#e8c87a;">3 additional Wounds</strong>.`,
+     If you inflict a Wound this Round, your target gains <strong class="chat-amber">3 additional Wounds</strong>.`,
     'Passive'
   )});
 }

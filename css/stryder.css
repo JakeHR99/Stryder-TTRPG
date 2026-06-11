@@ -17216,3 +17216,108 @@ li.chat-message.sty-grp-end {
 /* Subtitle separator spans */
 .chat-sep { color: rgba(150, 190, 230, 0.4); }
 .chat-sep-dot { color: rgba(150, 190, 230, 0.4); margin: 0 5px; }
+
+/* ---- Phase 4B ability-file extensions ---- */
+
+/* Rajdhani chat content block */
+.chat-content-rajdhani { font-family: 'Rajdhani', sans-serif; font-size: 13px; color: rgba(210, 230, 255, 0.85); }
+.chat-action-tag { color: rgba(180, 210, 255, 0.65); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+
+/* Inline footnote / note spans */
+.chat-footnote { font-size: 11px; color: rgba(200, 210, 255, 0.55); }
+.chat-footnote-blue { font-size: 11px; color: rgba(150, 190, 230, 0.6); }
+.chat-gold-note { font-size: 11px; color: #ffd700; }
+
+/* Semantic color helpers */
+.chat-amber { color: #e8c87a; }
+.chat-green-bold { color: #5cb85c; font-weight: bold; }
+.chat-ichor { color: #c87a30; font-weight: 700; }
+.sty-bloodloss-cost { color: #e05555; font-weight: 700; }
+.sty-manaburn { color: #b070e0; font-weight: 700; }
+.aspect-label-warlock { color: rgba(220, 80, 80, 0.85); }
+
+/* Hint paragraph (Rajdhani, dialog or chat) */
+.chat-hint-p { font-family: 'Rajdhani', sans-serif; color: rgba(180, 210, 255, 0.75); font-size: 13px; padding: 6px 0; }
+
+/* Dialog utility classes */
+.dlg-input-full { width: 100%; margin-top: 4px; }
+.dlg-select-full { width: 100%; margin-top: 6px; }
+.dlg-muted-p { opacity: 0.7; }
+.dlg-mt-8 { margin-top: 8px; }
+.dlg-flex-row { display: flex; align-items: center; gap: 8px; }
+.dlg-input-label { color: rgba(180, 210, 255, 0.65); font-size: 12px; letter-spacing: 1px; }
+.dlg-rajdhani-pad { padding: 8px 0; font-family: 'Rajdhani', sans-serif; }
+.dlg-bloodloss-input {
+  width: 60px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(220, 80, 80, 0.4);
+  border-radius: 3px;
+  color: #e88a8a;
+  font-size: 15px;
+  text-align: center;
+  padding: 3px;
+}
+.dlg-ichor-input {
+  width: 60px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(200, 140, 60, 0.4);
+  border-radius: 3px;
+  color: #e8c87a;
+  font-size: 15px;
+  text-align: center;
+  padding: 3px;
+}
+
+/* Create Weakness dialog / card */
+.cw-pick-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: rgba(12, 20, 48, 0.55);
+  margin-bottom: 3px;
+}
+.cw-flex-1 { flex: 1; }
+.cw-effect-row { margin: 6px 0; }
+.cw-rider-lines {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(80, 110, 200, 0.25);
+  font-size: 11px;
+  color: rgba(125, 224, 178, 0.85);
+}
+.cw-rider-item { margin: 3px 0; }
+
+/* CW event-wired buttons — visual styling only, class names untouched */
+.cw-dispatch-button {
+  background: linear-gradient(to bottom, #3d2e0e, #2a1f08);
+  border: 1px solid rgba(232, 200, 122, 0.4);
+  border-radius: 4px;
+  color: #e8c87a;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+}
+.cw-apply-button {
+  background: linear-gradient(to bottom, #3d2e0e, #2a1f08);
+  border: 1px solid rgba(232, 200, 122, 0.4);
+  border-radius: 4px;
+  color: #e8c87a;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+}
+.cw-grave-button {
+  background: linear-gradient(to bottom, #3d0e0e, #2a0808);
+  border: 1px solid rgba(220, 53, 69, 0.5);
+  border-radius: 4px;
+  color: #ff8a8a;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+}

@@ -49,7 +49,7 @@ function brutalityCard(title, subtitle, body, ichorDisplay = null) {
   const ichorLine = ichorDisplay !== null
     ? `<div class="chat-message-detail-row">
         <span class="chat-message-detail-label">Ichor:</span>
-        <span style="color:#c87a30;font-weight:700;">${ichorDisplay}</span>
+        <span class="chat-ichor">${ichorDisplay}</span>
        </div>`
     : '';
   return `<div class="chat-message-card">
@@ -61,7 +61,7 @@ function brutalityCard(title, subtitle, body, ichorDisplay = null) {
       ${subtitle ? `<div class="chat-message-detail-row"><span class="chat-message-detail-label">Action:</span><span>${subtitle}</span></div>` : ''}
       ${ichorLine}
     </div>
-    <div class="chat-message-content" style="font-family:'Rajdhani',sans-serif;font-size:13px;color:rgba(210,230,255,0.85);">
+    <div class="chat-message-content chat-content-rajdhani">
       ${body}
     </div>
   </div>`;
@@ -74,14 +74,14 @@ function ichorSpendDialog(title, current, min = 1, max = null) {
     let amount = min;
     new Dialog({
       title,
-      content: `<div style="padding:8px 0;font-family:'Rajdhani',sans-serif;">
+      content: `<div class="dlg-rajdhani-pad">
         <p style="margin:0 0 10px;color:rgba(180,210,255,0.7);font-size:13px;">
-          Current Ichor: <strong style="color:#c87a30;">${current}</strong>
+          Current Ichor: <strong class="chat-ichor">${current}</strong>
         </p>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <label style="color:rgba(180,210,255,0.65);font-size:12px;letter-spacing:1px;">Ichor to spend:</label>
+        <div class="dlg-flex-row">
+          <label class="dlg-input-label">Ichor to spend:</label>
           <input id="ichor-amount" type="number" min="${min}" max="${maxVal}" value="${min}"
-            style="width:60px;background:rgba(255,255,255,0.06);border:1px solid rgba(200,140,60,0.4);border-radius:3px;color:#e8c87a;font-size:15px;text-align:center;padding:3px;" />
+            class="dlg-ichor-input" />
         </div>
       </div>`,
       buttons: {
@@ -218,7 +218,7 @@ async function handleOnsetOfDoom(item, actor, speaker, rollMode) {
   await ChatMessage.create({ speaker, rollMode, content: brutalityCard(
     'Onset of Doom', 'Swift',
     `Next Focused Attack inflicts the <strong>Panicked</strong> condition on targets hit, lasting 2 rounds.<br>
-     <span style="color:rgba(200,210,255,0.55);font-size:11px;">Form Passive: +1 extra Ichor when hitting Panicked creatures.</span>`,
+     <span class="chat-footnote">Form Passive: +1 extra Ichor when hitting Panicked creatures.</span>`,
     cur
   )});
 }
@@ -267,7 +267,7 @@ async function handleImpenetrableWill(item, actor, speaker, rollMode) {
   const resistType = await new Promise(resolve => {
     new Dialog({
       title: 'Impenetrable Will',
-      content: `<p style="font-family:'Rajdhani';color:rgba(180,210,255,0.75);font-size:13px;padding:6px 0;">
+      content: `<p class="chat-hint-p">
         Which resistance against the [Control] ability?
       </p>`,
       buttons: {
