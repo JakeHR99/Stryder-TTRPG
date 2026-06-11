@@ -1788,6 +1788,13 @@ export class StryderActorSheet extends ActorSheet {
 
     // Lordling-specific context
     if (actorData.type === 'lordling') {
+      // Spirit → Soul migration: copy legacy Spirit value to Soul if Soul is still 0/missing
+      const spiritVal = actorData.system.abilities?.Spirit?.value ?? 0;
+      const soulVal   = actorData.system.abilities?.Soul?.value   ?? 0;
+      if (spiritVal > 0 && soulVal === 0) {
+        this.actor.update({ 'system.abilities.Soul.value': spiritVal }).catch(() => {});
+      }
+
       context.tpPct = _pct(actorData.system.tactics?.value, actorData.system.tactics?.max);
       const linkedId = actorData.system.linkedCharacterId;
       context.linkedCharacterName = linkedId ? (game.actors.get(linkedId)?.name ?? '') : '';

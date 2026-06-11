@@ -77,10 +77,15 @@ function tacticDialog(title, focused, swift) {
 
 // ── Name lists for routing ─────────────────────────────────────
 export const SHAMAN_ABILITY_NAMES = [
-  'Tactic — Attack', 'Tactic — Heal', 'Tactic — Dodge/Evasion',
-  'Tactic — Return', 'Tactic — Metamorph', 'Tactic — Retreat', 'Tactic — Transfer Talent',
+  'Tactic: Attack', 'Tactic: Heal', 'Tactic: Dodge/Evasion',
+  'Tactic: Return', 'Tactic: Metamorph', 'Tactic: Retreat', 'Tactic: Transfer Talent',
   'Desperate Strength', 'Spirit Armament', 'Approximate Ascension', 'Bonded Lives',
 ];
+
+export function isShamanClass(actor) {
+  return (actor?.system?.class?.name ?? '') === 'Shaman'
+    || (actor?.items?.some(i => i.type === 'class' && i.name === 'Shaman') ?? false);
+}
 
 export const LORDLY_TACTIC_NAMES = [
   // Wild
@@ -97,13 +102,13 @@ export const LORDLY_TACTIC_NAMES = [
 // ── Main dispatchers ───────────────────────────────────────────
 export async function handleShamanAbility(item, actor, speaker, rollMode) {
   switch (item.name) {
-    case 'Tactic — Attack':          return tacticAttack(actor, speaker, rollMode);
-    case 'Tactic — Heal':            return tacticHeal(actor, speaker, rollMode);
-    case 'Tactic — Dodge/Evasion':   return tacticDodge(actor, speaker, rollMode);
-    case 'Tactic — Return':          return tacticReturn(actor, speaker, rollMode);
-    case 'Tactic — Metamorph':       return tacticMetamorph(actor, speaker, rollMode);
-    case 'Tactic — Retreat':         return tacticRetreat(actor, speaker, rollMode);
-    case 'Tactic — Transfer Talent': return tacticTransferTalent(actor, speaker, rollMode);
+    case 'Tactic: Attack':          return tacticAttack(actor, speaker, rollMode);
+    case 'Tactic: Heal':            return tacticHeal(actor, speaker, rollMode);
+    case 'Tactic: Dodge/Evasion':   return tacticDodge(actor, speaker, rollMode);
+    case 'Tactic: Return':          return tacticReturn(actor, speaker, rollMode);
+    case 'Tactic: Metamorph':       return tacticMetamorph(actor, speaker, rollMode);
+    case 'Tactic: Retreat':         return tacticRetreat(actor, speaker, rollMode);
+    case 'Tactic: Transfer Talent': return tacticTransferTalent(actor, speaker, rollMode);
     case 'Desperate Strength':       return handleDesperateStrength(actor, speaker, rollMode);
     case 'Spirit Armament':          return handleSpiritArmament(actor, speaker, rollMode);
     case 'Approximate Ascension':    return handleApproximateAscension(actor, speaker, rollMode);

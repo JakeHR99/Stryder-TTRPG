@@ -2211,11 +2211,12 @@ export class StryderItem extends Item {
 		  }
 
 		  // ── Shaman ability & tactic routing ────────────────────
-		  if (item.flags?.stryder?.isClassFeature) {
-			const { SHAMAN_ABILITY_NAMES, handleShamanAbility } = await import('../abilities/shaman-abilities.mjs');
-			if (SHAMAN_ABILITY_NAMES.includes(item.name)) {
-			  const actor = item.actor || game.actors.get(speaker.actor);
-			  return await handleShamanAbility(item, actor, speaker, rollMode);
+		  {
+			const { SHAMAN_ABILITY_NAMES, handleShamanAbility, isShamanClass } = await import('../abilities/shaman-abilities.mjs');
+			const sActor = item.actor || game.actors.get(speaker.actor);
+			if (sActor && isShamanClass(sActor) && SHAMAN_ABILITY_NAMES.includes(item.name)
+			    && !item.system.isAspectAbility && !item.flags?.stryder?.aspectName) {
+			  return await handleShamanAbility(item, sActor, speaker, rollMode);
 			}
 		  }
 		  if (item.flags?.stryder?.isLordlyFeature) {
