@@ -25,6 +25,7 @@ export const preloadHandlebarsTemplates = async function () {
     'systems/stryder/templates/actor/parts/spirit-beast-battle.hbs',
     // Item partials
     'systems/stryder/templates/item/parts/item-effects.hbs',
+    'systems/stryder/templates/item/parts/ornate-header.hbs',
 	// Combat templates
 	"systems/stryder/templates/combat/combat-tracker-header.hbs",
 	"systems/stryder/templates/combat/combat-tracker.hbs",

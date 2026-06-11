@@ -1,16 +1,6 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" style="margin-top: 5px; margin-bottom: 5px;"/>
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-        </div>
-        <div class="item-type-label">
-          <span>Class Feature</span>
-        </div>
-      </div>
-    </header>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Class Feature"}}
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
@@ -49,7 +39,7 @@
                 <option value="focused">Focused</option>
                 <option value="swift">Swift</option>
                 <option value="passive">Passive</option>
-            <option value="trigger">Trigger</option>
+                <option value="trigger">Trigger</option>
                 {{/select}}
               </select>
             </div>

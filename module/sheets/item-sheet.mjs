@@ -55,6 +55,26 @@ export class StryderItemSheet extends ItemSheet {
     // Prepare active effects for easier access
     context.effects = prepareActiveEffectCategories(this.item.effects);
 
+    // Rarity ribbon class for ornate item frames (Phase 3A)
+    const type = this.item.type;
+    const sys = context.system;
+    let rarityClass = '';
+    if (['loot', 'consumable', 'legacies', 'head', 'back', 'arms', 'legs', 'gems'].includes(type)) {
+      const r = (sys.rarity ?? 'common').toLowerCase();
+      const valid = ['common', 'uncommon', 'rare', 'legendary', 'unique'];
+      rarityClass = 'sty-rarity-' + (valid.includes(r) ? r : 'common');
+    } else if (type === 'component') {
+      const gradeMap = { 'G4': 'common', 'G3': 'uncommon', 'G2': 'rare', 'G1': 'legendary', 'Mythic': 'unique' };
+      rarityClass = 'sty-rarity-' + (gradeMap[sys.grade] ?? 'common');
+    } else if (type === 'ingredient') {
+      const qualMap = { 'rotten': 'common', 'bad': 'uncommon', 'good': 'rare', 'great': 'legendary', 'gourmet': 'unique' };
+      rarityClass = 'sty-rarity-' + (qualMap[sys.quality] ?? 'rare');
+    } else if (type === 'gear') {
+      const gearMap = { 'prototype': 'common', 'standard': 'uncommon', 'refined': 'rare', 'masterwork': 'legendary', 'artifact': 'unique' };
+      rarityClass = 'sty-rarity-' + (gearMap[sys.quality] ?? 'common');
+    }
+    context.rarityClass = rarityClass;
+
     return context;
   }
 

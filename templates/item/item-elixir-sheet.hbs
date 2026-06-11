@@ -1,18 +1,8 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
-        </div>
-        <div class="item-type-label">
-          <span>Elixir</span>
-        </div>
-      </div>
-    </header>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Elixir"}}
 
-    <div class="elixir-content-area">
+    <div class="oi-content-area">
 
       {{!-- Description --}}
       <div class="editor-container">
@@ -23,49 +13,45 @@
       </div>
 
       {{!-- Brewing --}}
-      <div class="resource effect-section" style="margin-top:16px;">
+      <div class="resource effect-section">
         <div class="section-header">
           <div class="header-decoration left"></div>
           <label class="resource-label">Brewing</label>
           <div class="header-decoration right"></div>
         </div>
         <div class="section-content">
-          <div class="resource grid grid-3col" style="gap:10px;padding:0 10px;">
+          <div class="resource grid grid-3col">
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Ingredients</label>
               <input class="tertiary-input" type="text" name="system.ingredients"
-                value="{{system.ingredients}}" placeholder="e.g. 5 Essence"
-                style="width:100%;font-size:13px;" />
+                value="{{system.ingredients}}" placeholder="e.g. 5 Essence" />
             </div>
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Success Value</label>
               <input class="tertiary-input" type="number" name="system.success_value"
-                value="{{system.success_value}}" placeholder="0"
-                style="width:100%;font-size:13px;" />
+                value="{{system.success_value}}" placeholder="0" />
             </div>
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Perfection Value</label>
               <input class="tertiary-input" type="number" name="system.perfection_value"
-                value="{{system.perfection_value}}" placeholder="0"
-                style="width:100%;font-size:13px;" />
+                value="{{system.perfection_value}}" placeholder="0" />
             </div>
           </div>
         </div>
       </div>
 
       {{!-- Effect --}}
-      <div class="resource effect-section" style="margin-top:12px;">
+      <div class="resource effect-section">
         <div class="section-header">
           <div class="header-decoration left"></div>
           <label class="resource-label">Effect</label>
           <div class="header-decoration right"></div>
         </div>
         <div class="section-content">
-          <div class="resource grid grid-3col" style="gap:10px;padding:0 10px;">
+          <div class="resource grid grid-3col">
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Effect Type</label>
-              <select class="secondary-input" name="system.effect_type"
-                style="width:100%;font-size:13px;font-weight:normal;">
+              <select class="secondary-input" name="system.effect_type">
                 {{#select system.effect_type}}
                 <option value="none">Narrative / Complex</option>
                 <option value="heal_hp_pct">Heal HP (%)</option>
@@ -80,28 +66,24 @@
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Effect Value</label>
               <input class="tertiary-input" type="number" name="system.effect_value"
-                value="{{system.effect_value}}" placeholder="0"
-                style="width:100%;font-size:13px;" />
+                value="{{system.effect_value}}" placeholder="0" />
             </div>
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Elixir Sickness</label>
               <input class="tertiary-input" type="number" name="system.sickness"
-                value="{{system.sickness}}" placeholder="0"
-                style="width:100%;font-size:13px;" />
+                value="{{system.sickness}}" placeholder="0" />
             </div>
           </div>
-          <div style="padding:8px 10px 0;">
+          <div class="dropdown-field oi-field-gap">
             <label class="resource-label secondary-input">Duration</label>
             <input class="tertiary-input" type="text" name="system.duration"
-              value="{{system.duration}}" placeholder="e.g. 10 minutes"
-              style="width:100%;font-size:13px;margin-top:4px;" />
+              value="{{system.duration}}" placeholder="e.g. 10 minutes" />
           </div>
           {{#if (or (eq system.effect_type "remove_condition") (eq system.effect_type "apply_condition"))}}
-          <div style="padding:8px 10px 0;">
+          <div class="dropdown-field oi-field-gap">
             <label class="resource-label secondary-input">Condition Name</label>
             <input class="tertiary-input" type="text" name="system.effect_detail"
-              value="{{system.effect_detail}}" placeholder="e.g. Burning"
-              style="width:100%;font-size:13px;margin-top:4px;" />
+              value="{{system.effect_detail}}" placeholder="e.g. Burning" />
           </div>
           {{/if}}
         </div>
@@ -110,9 +92,3 @@
     </div>
   </div>
 </form>
-
-<style>
-  .elixir-content-area {
-    padding: 15px;
-  }
-</style>

@@ -16628,3 +16628,518 @@ li.chat-message.sty-grp-end {
   margin-right: -20px;
   margin-left: -10px;
 }
+
+
+/* ============ ITEM SHEETS — ornate (Phase 3A) ============ */
+
+/* ----- Sheet root ----- */
+.fantasy-item-sheet {
+  font-family: var(--sty-font-ui);
+  background: var(--sty-sky);
+  color: var(--sty-text);
+}
+
+/* ----- Ornate frame container ----- */
+.fantasy-item-sheet .oi-frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ----- Header ----- */
+.fantasy-item-sheet .oi-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--sty-line-gold);
+}
+
+.fantasy-item-sheet .oi-portrait {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border: 1px solid var(--sty-line-gold-strong);
+  border-radius: var(--sty-r-card);
+  flex-shrink: 0;
+}
+
+.fantasy-item-sheet .oi-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.fantasy-item-sheet .oi-name-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--sty-line-blue);
+  color: var(--sty-gold);
+  font-family: var(--sty-font-ornate);
+  font-size: 15px;
+  padding: 2px 0;
+  width: 100%;
+}
+
+.fantasy-item-sheet .oi-name-input:focus {
+  outline: none;
+  border-bottom-color: var(--sty-cyan);
+  box-shadow: 0 2px 6px var(--sty-cyan-glow);
+}
+
+.fantasy-item-sheet .oi-type-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+}
+
+.fantasy-item-sheet .oi-ribbon-default {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--sty-line-gold-strong);
+}
+
+/* ----- Extra header fields (armament form, ingredient fields) ----- */
+.fantasy-item-sheet .oi-extra-header {
+  padding: 6px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--sty-line-blue);
+}
+
+.fantasy-item-sheet .oi-extra-header .resource-label.secondary-input {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  min-width: 50px;
+  flex-shrink: 0;
+}
+
+/* ----- Tab nav ----- */
+.fantasy-item-sheet .sheet-tabs {
+  display: flex;
+  flex-direction: row;
+  background: var(--sty-panel-nav);
+  border-bottom: 1px solid var(--sty-line-gold);
+  padding: 0 10px;
+  gap: 0;
+}
+
+.fantasy-item-sheet .sheet-tabs .item {
+  font-family: var(--sty-font-display);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  padding: 7px 12px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.fantasy-item-sheet .sheet-tabs .item:hover {
+  color: var(--sty-text);
+}
+
+.fantasy-item-sheet .sheet-tabs .item.active {
+  color: var(--sty-gold);
+  border-bottom-color: var(--sty-gold);
+}
+
+/* ----- Sheet body & content area ----- */
+.fantasy-item-sheet .sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.fantasy-item-sheet .oi-content-area {
+  padding: 14px;
+}
+
+/* ----- Section headers ----- */
+.fantasy-item-sheet .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 4px;
+  border: none;
+}
+
+.fantasy-item-sheet .section-header h2,
+.fantasy-item-sheet .section-header label.resource-label {
+  font-family: var(--sty-font-display);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sty-gold);
+  margin: 0;
+}
+
+.fantasy-item-sheet .header-decoration {
+  flex: 1;
+  height: 1px;
+  background: var(--sty-line-gold);
+}
+
+/* ----- Fantasy sections ----- */
+.fantasy-item-sheet .fantasy-section {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-card);
+  margin: 8px 10px;
+  padding: 4px 0;
+}
+
+.fantasy-item-sheet .section-content {
+  padding: 2px 10px 8px;
+}
+
+/* ----- Field rows ----- */
+.fantasy-item-sheet .fantasy-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--sty-line-blue);
+}
+
+.fantasy-item-sheet .fantasy-field:last-child {
+  border-bottom: none;
+}
+
+.fantasy-item-sheet .fantasy-field label {
+  font-variant: small-caps;
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  color: var(--sty-text-2);
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+/* ----- Inputs & selects (dark field treatment) ----- */
+.fantasy-item-sheet input[type="text"],
+.fantasy-item-sheet input[type="number"],
+.fantasy-item-sheet select {
+  background: rgba(0, 0, 0, 0.30);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: 4px;
+  color: var(--sty-text);
+  font-family: var(--sty-font-ui);
+  font-size: 13px;
+  padding: 3px 6px;
+}
+
+.fantasy-item-sheet input[type="text"]:focus,
+.fantasy-item-sheet input[type="number"]:focus,
+.fantasy-item-sheet select:focus {
+  outline: none;
+  border-color: var(--sty-cyan);
+  box-shadow: 0 0 6px var(--sty-cyan-glow);
+}
+
+/* ----- Cooldown field (number + select side-by-side) ----- */
+.fantasy-item-sheet .cooldown-field {
+  gap: 6px;
+}
+
+.fantasy-item-sheet .cooldown-field input[type="number"] {
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.fantasy-item-sheet .cooldown-field select {
+  flex: 1;
+}
+
+/* ----- Formula display ----- */
+.fantasy-item-sheet .formula-text {
+  font-family: var(--sty-font-number);
+  font-size: 16px;
+  color: var(--sty-gold);
+  letter-spacing: 1px;
+}
+
+/* ----- Roll attribute / damage amp fields ----- */
+.fantasy-item-sheet .roll-attribute-field,
+.fantasy-item-sheet .damage-amp-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+}
+
+.fantasy-item-sheet .roll-attribute-field label,
+.fantasy-item-sheet .damage-amp-field label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  text-align: center;
+  min-width: auto;
+}
+
+.fantasy-item-sheet .roll-attribute-field input,
+.fantasy-item-sheet .damage-amp-field input {
+  width: 100%;
+  text-align: center;
+}
+
+/* ----- Checkbox toggles (fantasy-checkbox / slider) ----- */
+.fantasy-item-sheet .checkbox-section {
+  margin: 4px 10px 6px;
+  padding: 4px 10px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--sty-r-card);
+}
+
+.fantasy-item-sheet .fantasy-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--sty-line-blue);
+}
+
+.fantasy-item-sheet .fantasy-checkbox:last-child {
+  border-bottom: none;
+}
+
+.fantasy-item-sheet .fantasy-checkbox label {
+  font-size: 12px;
+  color: var(--sty-text);
+  min-width: auto;
+}
+
+.fantasy-item-sheet .checkbox-slider {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.fantasy-item-sheet .checkbox-slider input[type="checkbox"] {
+  opacity: 0;
+  width: 36px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.fantasy-item-sheet .checkbox-slider .slider {
+  position: absolute;
+  inset: 0;
+  background: rgba(80, 80, 100, 0.45);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: 10px;
+  pointer-events: none;
+  transition: background .2s;
+}
+
+.fantasy-item-sheet .checkbox-slider .slider::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background: var(--sty-text-2);
+  border-radius: 50%;
+  transition: left .2s, background .2s;
+}
+
+.fantasy-item-sheet .checkbox-slider input:checked ~ .slider {
+  background: rgba(200, 160, 40, 0.35);
+  border-color: var(--sty-line-gold-strong);
+}
+
+.fantasy-item-sheet .checkbox-slider input:checked ~ .slider::after {
+  left: calc(100% - 17px);
+  background: var(--sty-gold);
+}
+
+/* ----- Tags container ----- */
+.fantasy-item-sheet .tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 10px;
+}
+
+.fantasy-item-sheet .tag-field {
+  flex: 1;
+  min-width: 80px;
+  border-bottom: none;
+  padding: 0;
+}
+
+.fantasy-item-sheet .tag-field select {
+  width: 100%;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.35);
+  border-color: var(--sty-line-gold);
+  color: var(--sty-gold);
+}
+
+/* ----- Dropdown fields & secondary inputs ----- */
+.fantasy-item-sheet .dropdown-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fantasy-item-sheet .resource-label.secondary-input {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+}
+
+.fantasy-item-sheet .secondary-input,
+.fantasy-item-sheet .tertiary-input {
+  background: rgba(0, 0, 0, 0.30);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: 4px;
+  color: var(--sty-text);
+  font-size: 13px;
+  padding: 3px 6px;
+}
+
+/* ----- Description tab ----- */
+.fantasy-item-sheet .tab.description-tab {
+  padding: 12px;
+}
+
+/* ----- Rich-text editors (critical: dark-theme readability) ----- */
+.fantasy-item-sheet .editor-container {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-card);
+  overflow: hidden;
+}
+
+.fantasy-item-sheet .editor-header {
+  font-family: var(--sty-font-display);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid var(--sty-line-blue);
+}
+
+.fantasy-item-sheet .editor,
+.fantasy-item-sheet .editor-content,
+.fantasy-item-sheet .ProseMirror {
+  background: rgba(0, 0, 0, 0.25) !important; /* core-override: dark editor background */
+  color: var(--sty-text) !important; /* core-override: ProseMirror resets color to browser default */
+  padding: 10px 12px;
+  min-height: 120px;
+  font-family: var(--sty-font-ui);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.fantasy-item-sheet .editor-toolbar,
+.fantasy-item-sheet .prosemirror-toolbar {
+  background: rgba(0, 0, 0, 0.45) !important; /* core-override */
+  border-bottom: 1px solid var(--sty-line-blue);
+}
+
+.fantasy-item-sheet .editor-toolbar button,
+.fantasy-item-sheet .prosemirror-toolbar button {
+  color: var(--sty-text-2);
+}
+
+.fantasy-item-sheet .editor-toolbar button:hover,
+.fantasy-item-sheet .prosemirror-toolbar button:hover {
+  color: var(--sty-cyan);
+}
+
+/* ----- Effect sections (elixir brewing / effect blocks) ----- */
+.fantasy-item-sheet .effect-section {
+  margin-top: 12px;
+}
+
+/* ----- Ingredient quality bar ----- */
+.fantasy-item-sheet .ingr-quality-bar {
+  margin: 0 14px 6px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--sty-line-gold);
+  border-radius: var(--sty-r-bar);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.fantasy-item-sheet .ingr-quality-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  font-weight: 700;
+}
+
+.fantasy-item-sheet .ingr-quality-value {
+  font-family: var(--sty-font-number);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fantasy-item-sheet .ingr-quality-value.sty-rarity-common    { color: var(--sty-rarity-common); }
+.fantasy-item-sheet .ingr-quality-value.sty-rarity-uncommon  { color: var(--sty-rarity-uncommon); }
+.fantasy-item-sheet .ingr-quality-value.sty-rarity-rare      { color: var(--sty-rarity-rare); }
+.fantasy-item-sheet .ingr-quality-value.sty-rarity-legendary { color: var(--sty-rarity-legendary); }
+.fantasy-item-sheet .ingr-quality-value.sty-rarity-unique    { color: var(--sty-rarity-unique); }
+
+.fantasy-item-sheet .ingr-quality-cat {
+  font-size: 11px;
+  color: var(--sty-text-dim);
+  margin-left: auto;
+}
+
+/* ----- Enchanted toggle row (ingredient) ----- */
+.fantasy-item-sheet .oi-enchanted-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 2px;
+}
+
+.fantasy-item-sheet .oi-enchanted-row label {
+  font-size: 12px;
+  color: var(--sty-text);
+  cursor: pointer;
+}
+
+.fantasy-item-sheet .oi-enchanted-row input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+/* ----- Enchant type conditional (ingredient) ----- */
+.fantasy-item-sheet .oi-enchant-type-row {
+  padding: 4px 14px 6px;
+}
+
+/* ============ END ITEM SHEETS — ornate (Phase 3A) ============ */
+
+/* ----- Field gap utility (elixir extra rows) ----- */
+.fantasy-item-sheet .oi-field-gap {
+  padding-top: 8px;
+}
+

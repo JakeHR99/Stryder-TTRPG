@@ -1,0 +1,8 @@
+<header class="oi-header">
+  <img class="profile-img oi-portrait" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+  <div class="oi-title-block">
+    <input class="oi-name-input" name="name" type="text" value="{{item.name}}" placeholder="Item Name" />
+    <span class="oi-type-label">{{typeLabel}}</span>
+    <div class="sty-ornate__ribbon {{#if rarityClass}}{{rarityClass}}{{else}}oi-ribbon-default{{/if}}"></div>
+  </div>
+</header>

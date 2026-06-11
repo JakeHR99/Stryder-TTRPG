@@ -1,113 +1,81 @@
 <form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
-  <div class="parchment-background">
-    <header class="sheet-header">
-      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-      <div class="header-fields fantasy-input-item">
-        <div>
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Ingredient Name" /></h1>
-        </div>
-        <div class="item-type-label">
-          <span>Ingredient</span>
-        </div>
+  <div class="oi-frame sty-ornate">
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Ingredient"}}
 
-        <div class="resource grid grid-3col" style="gap: 10px; margin-top: 10px; padding: 0 10px;">
-
-          {{!-- Ingredient Type --}}
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Category</label>
-            <select class="secondary-input" name="system.ingredient_type" style="width:100%;font-size:14px;">
-              {{#select system.ingredient_type}}
-              <option value="base">Base</option>
-              <option value="protein">Protein</option>
-              <option value="spice">Spice</option>
-              <option value="sauce">Sauce</option>
-              {{/select}}
-            </select>
-          </div>
-
-          {{!-- Quality --}}
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Quality</label>
-            <select class="secondary-input ingr-quality-select" name="system.quality" style="width:100%;font-size:14px;">
-              {{#select system.quality}}
-              <option value="rotten">Rotten (−2)</option>
-              <option value="bad">Bad (−1)</option>
-              <option value="good">Good (+0)</option>
-              <option value="great">Great (+1)</option>
-              <option value="gourmet">Gourmet (+2)</option>
-              {{/select}}
-            </select>
-          </div>
-
-          {{!-- Sell Price --}}
-          <div class="dropdown-field">
-            <label class="resource-label secondary-input">Sell Price (Grail)</label>
-            <input class="tertiary-input" type="number" name="system.sell_price"
-              value="{{system.sell_price}}" placeholder="0" data-dtype="Number"
-              style="width:100%;font-size:14px;" />
-          </div>
-
-        </div>
-
-        {{!-- Enchanted toggle --}}
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 0;">
-          <input type="checkbox" name="system.is_enchanted" {{#if system.is_enchanted}}checked{{/if}}
-            id="ingr-enchanted-{{item.id}}" style="width:16px;height:16px;cursor:pointer;" />
-          <label for="ingr-enchanted-{{item.id}}" style="font-size:13px;cursor:pointer;color:#5c3a21;">
-            Enchanted (Monster Component)
-          </label>
-        </div>
-
-        {{#if system.is_enchanted}}
-        <div style="padding:4px 10px 0;">
-          <label class="resource-label secondary-input">Enchant Type</label>
-          <select class="secondary-input" name="system.enchant_type" style="width:100%;font-size:14px;margin-top:4px;">
-            {{#select system.enchant_type}}
-            <option value="">— None —</option>
-            <option value="bones">Bones — Hardy (Rush Party Action)</option>
-            <option value="eyes">Eyes — Watchful (Raise Perception)</option>
-            <option value="mana_veins">Mana Veins — Restoration (Restore Mana)</option>
-            <option value="heart">Heart — Power (Unique Ward)</option>
-            {{/select}}
-          </select>
-        </div>
-        {{/if}}
-
+    {{!-- Extra header: Category, Quality, Sell Price --}}
+    <div class="oi-extra-header">
+      <div class="dropdown-field">
+        <label class="resource-label secondary-input">Category</label>
+        <select class="secondary-input" name="system.ingredient_type">
+          {{#select system.ingredient_type}}
+          <option value="base">Base</option>
+          <option value="protein">Protein</option>
+          <option value="spice">Spice</option>
+          <option value="sauce">Sauce</option>
+          {{/select}}
+        </select>
       </div>
-    </header>
+
+      <div class="dropdown-field">
+        <label class="resource-label secondary-input">Quality</label>
+        <select class="secondary-input ingr-quality-select" name="system.quality">
+          {{#select system.quality}}
+          <option value="rotten">Rotten (−2)</option>
+          <option value="bad">Bad (−1)</option>
+          <option value="good">Good (+0)</option>
+          <option value="great">Great (+1)</option>
+          <option value="gourmet">Gourmet (+2)</option>
+          {{/select}}
+        </select>
+      </div>
+
+      <div class="dropdown-field">
+        <label class="resource-label secondary-input">Sell Price (Grail)</label>
+        <input class="tertiary-input" type="number" name="system.sell_price"
+          value="{{system.sell_price}}" placeholder="0" data-dtype="Number" />
+      </div>
+    </div>
+
+    {{!-- Enchanted toggle --}}
+    <div class="oi-enchanted-row">
+      <input type="checkbox" name="system.is_enchanted" {{#if system.is_enchanted}}checked{{/if}}
+        id="ingr-enchanted-{{item.id}}" />
+      <label for="ingr-enchanted-{{item.id}}">Enchanted (Monster Component)</label>
+    </div>
+
+    {{#if system.is_enchanted}}
+    <div class="oi-enchant-type-row">
+      <div class="dropdown-field">
+        <label class="resource-label secondary-input">Enchant Type</label>
+        <select class="secondary-input" name="system.enchant_type">
+          {{#select system.enchant_type}}
+          <option value="">— None —</option>
+          <option value="bones">Bones — Hardy (Rush Party Action)</option>
+          <option value="eyes">Eyes — Watchful (Raise Perception)</option>
+          <option value="mana_veins">Mana Veins — Restoration (Restore Mana)</option>
+          <option value="heart">Heart — Power (Unique Ward)</option>
+          {{/select}}
+        </select>
+      </div>
+    </div>
+    {{/if}}
 
     {{!-- Quality modifier callout --}}
-    <div class="ingr-quality-bar" style="margin:0 15px 6px;padding:6px 12px;
-      background:rgba(139,90,43,0.12);border:1px solid rgba(139,90,43,0.25);
-      border-radius:4px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-      <span style="font-size:12px;color:#5c3a21;font-weight:bold;letter-spacing:0.5px;">QUALITY MODIFIER</span>
-      <span style="font-size:15px;font-weight:700;color:
-        {{#if (eq system.quality 'gourmet')}}#2a7a2a
-        {{else if (eq system.quality 'great')}}#3a8a3a
-        {{else if (eq system.quality 'good')}}#5c3a21
-        {{else if (eq system.quality 'bad')}}#8b3a1a
-        {{else}}#aa1a1a{{/if}};">
-        {{#if (eq system.quality 'rotten')}}−2
-        {{else if (eq system.quality 'bad')}}−1
-        {{else if (eq system.quality 'good')}}+0
-        {{else if (eq system.quality 'great')}}+1
-        {{else if (eq system.quality 'gourmet')}}+2
-        {{/if}}
-        &nbsp;·&nbsp;
-        {{#if (eq system.quality 'rotten')}}Rotten
-        {{else if (eq system.quality 'bad')}}Bad
-        {{else if (eq system.quality 'good')}}Good
-        {{else if (eq system.quality 'great')}}Great
-        {{else if (eq system.quality 'gourmet')}}Gourmet
+    <div class="ingr-quality-bar">
+      <span class="ingr-quality-label">Quality Modifier</span>
+      <span class="ingr-quality-value {{rarityClass}}">
+        {{#if (eq system.quality 'rotten')}}−2 · Rotten
+        {{else if (eq system.quality 'bad')}}−1 · Bad
+        {{else if (eq system.quality 'good')}}+0 · Good
+        {{else if (eq system.quality 'great')}}+1 · Great
+        {{else if (eq system.quality 'gourmet')}}+2 · Gourmet
         {{/if}}
       </span>
-      <span style="font-size:11px;color:#8b6040;margin-left:auto;">
-        Category: <strong>{{system.ingredient_type}}</strong>
-      </span>
+      <span class="ingr-quality-cat">Category: <strong>{{system.ingredient_type}}</strong></span>
     </div>
 
     {{!-- Description --}}
-    <div class="loot-content-area" style="margin-top:0;">
+    <div class="oi-content-area">
       <div class="editor-container">
         <div class="editor-header"><i class="fas fa-quill"></i> Description</div>
         {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
