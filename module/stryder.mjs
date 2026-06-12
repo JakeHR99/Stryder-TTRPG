@@ -1362,6 +1362,7 @@ Hooks.once('ready', async function () {
                     StryderCombat.showTurnNotification(data.combatantName);
                 }
                 break;
+            case "generateBeasts":
             case "summonSpirit":
             case "dismissSpirits":
             case "summonerApplyStatus": {

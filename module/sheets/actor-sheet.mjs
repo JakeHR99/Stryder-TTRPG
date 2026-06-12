@@ -1937,6 +1937,18 @@ export class StryderActorSheet extends ActorSheet {
 
     if (actorData.type == 'spirit-beast') {
       this._prepareItems(context);
+      // Summon-status context for spirit-beast-battle.hbs
+      context.isSummoned   = this.actor.getActiveTokens().length > 0;
+      context.summonedAt   = this.actor.getFlag('stryder', 'summonedAt') ?? null;
+      const baseHP         = this.actor.getFlag('stryder', 'summonBaseMaxHP')   ?? null;
+      const tempBonus      = this.actor.getFlag('stryder', 'summonTempMaxBonus') ?? 0;
+      context.tempBonuses  = baseHP !== null
+        ? { baseHP, tempBonus, totalHP: baseHP + tempBonus }
+        : null;
+      const summonerId     = actorData.system?.linkedCharacterId;
+      const summoner       = summonerId ? game.actors.get(summonerId) : null;
+      context.summonerName = summoner?.name ?? null;
+      context.freePrimaryDefenseUsed = this.actor.getFlag('stryder', 'freePrimaryDefenseUsed') ?? false;
     }
 
     // Add roll data for TinyMCE editors.
@@ -2761,6 +2773,17 @@ export class StryderActorSheet extends ActorSheet {
           border-color: rgba(175,155,245,0.70);
           box-shadow: 0 0 14px rgba(120,100,210,0.40), inset 0 1px 0 rgba(200,180,255,0.25);
         }
+        .summoner-generate-button {
+          background: linear-gradient(135deg, rgba(20,55,45,0.85) 0%, rgba(30,80,65,0.85) 50%, rgba(15,45,38,0.85) 100%);
+          border: 1px solid rgba(80,180,140,0.40);
+          color: rgba(160,230,200,0.90);
+          box-shadow: 0 0 8px rgba(40,140,100,0.20), inset 0 1px 0 rgba(120,210,170,0.15);
+        }
+        .summoner-generate-button:hover {
+          background: linear-gradient(135deg, rgba(28,72,58,0.95) 0%, rgba(42,105,85,0.95) 50%, rgba(22,60,50,0.95) 100%);
+          border-color: rgba(100,210,165,0.70);
+          box-shadow: 0 0 14px rgba(50,175,130,0.35), inset 0 1px 0 rgba(150,240,200,0.20);
+        }
 
         /* ── Turn Start / Combat End — top bar ── */
         .jrpg-battle-turn-btns {
@@ -3384,6 +3407,11 @@ export class StryderActorSheet extends ActorSheet {
       ev.preventDefault();
       const { requestDismiss } = await import('../abilities/summoner-abilities.mjs');
       await requestDismiss(this.actor);
+    });
+    html.on('click', '.summoner-generate-button', async (ev) => {
+      ev.preventDefault();
+      const { generateSpiritBeasts } = await import('../abilities/summoner-abilities.mjs');
+      await generateSpiritBeasts(this.actor);
     });
 
     // -------------------------------------------------------------
@@ -4606,6 +4634,15 @@ export class StryderActorSheet extends ActorSheet {
 	    const alreadyLinked = game.actors.find(a => a.type === 'lordling' && a.system.linkedCharacterId === this.actor.id);
 	    if (!alreadyLinked) {
 	      await this._promptLordlingLink();
+	    }
+	  }
+
+	  // ── Summoner: prompt to generate Spirit Beasts ──────────────────────
+	  if (className === 'Summoner') {
+	    const { generateSpiritBeasts, linkedSpirits } = await import('../abilities/summoner-abilities.mjs');
+	    const hasBeasts = linkedSpirits(this.actor).length > 0;
+	    if (!hasBeasts) {
+	      await generateSpiritBeasts(this.actor);
 	    }
 	  }
 

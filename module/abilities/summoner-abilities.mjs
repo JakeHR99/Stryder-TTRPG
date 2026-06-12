@@ -1,19 +1,24 @@
 // ============================================================
 // STRYDER — Summoner Class Handler (The Binding Gates)
 // ============================================================
+// Architecture: persistent Spirit Beast actors, one per gate per
+// Summoner, stored in a named folder. Temp bonuses are tracked
+// via reversible flags/values — never baked into the actor data.
+//
 // Level 1–3 scope, future-proofed for L4+:
 //   • Summon dialog: pick Gate, pay 2 Stamina OR sacrifice a
 //     Rank 4 (G4) component.
-//   • Spawns/links the Spirit Beast actor, places its token in
-//     an unoccupied space within 3 spaces of the summoner.
+//   • Resolves player's own linked beast; warns if generation
+//     not done (no silent compendium import).
 //   • Enforces concurrent-spirit limit (1; 2 at L4; 3 at L12).
 //   • Spirit abilities cost the SUMMONER 1 Stamina; the first
 //     Primary/Defense use per summon is free.
 //   • On summon, beast copies summoner's Resistances and gains
-//     +3 Magykal resist.
+//     +3 Magykal resist (applied fresh each summon; reverted on
+//     dismiss via flag comparison).
 //   • Reinforced Gates (L4+): +4 Health on first summon of each
-//     combat.
-//   • End of combat: spirits are sent through their Gates.
+//     gate each combat (per-gate tracking in Commit 2).
+//   • End of combat: tokens removed, actors preserved.
 // ============================================================
 
 const SYSTEM_ID = 'stryder';
@@ -56,11 +61,167 @@ export function activeSpirits(actor) {
   return linkedSpirits(actor).filter(a => a.getActiveTokens().length > 0);
 }
 
+/** Name of the beast folder for a given summoner. */
+function beastFolderName(summoner) {
+  return `${summoner.name}'s Spirit Beasts`;
+}
+
 function gateCard(borderColor, title, body) {
   return `<div style="background: url('systems/stryder/assets/parchment.jpg'); background-size: cover; padding: 15px; border: 2px solid ${borderColor}; border-radius: 4px;">
     <h3 style="margin-top: 0; border-bottom: 1px solid ${borderColor}; color: ${borderColor};">${title}</h3>
     ${body}
   </div>`;
+}
+
+// ── Beast Generation ──────────────────────────────────────────
+
+/**
+ * Show the generation dialog to the player. Routes execution to
+ * GM via socket if the current user is not GM.
+ */
+export async function generateSpiritBeasts(actor) {
+  if (!isSummoner(actor)) return ui.notifications.warn('Only Summoners can generate Spirit Beasts.');
+
+  const existing    = linkedSpirits(actor);
+  const existGates  = new Set(existing.map(b => b.system?.gate));
+  const missing     = Object.keys(GATES).filter(g => !existGates.has(g));
+  const folderName  = beastFolderName(actor);
+
+  let statusHtml = '';
+  if (existing.length > 0) {
+    const rows = existing.map(b => {
+      const g = GATES[b.system?.gate];
+      return `<li style="color:${g?.color ?? '#aaa'};">✓ ${b.name}</li>`;
+    }).join('');
+    statusHtml = `<p style="margin-bottom:4px;"><strong>Already created:</strong></p><ul style="margin:0 0 8px 16px;">${rows}</ul>`;
+  }
+
+  let missingHtml = '';
+  if (missing.length > 0) {
+    const rows = missing.map(g => {
+      const gd = GATES[g];
+      return `<li style="color:${gd.color};">${gd.label} — ${gd.name}</li>`;
+    }).join('');
+    missingHtml = `<p style="margin-bottom:4px;"><strong>Will be created:</strong></p><ul style="margin:0 0 8px 16px;">${rows}</ul>`;
+  }
+
+  if (missing.length === 0) {
+    return ui.notifications.info(`All Spirit Beasts for ${actor.name} already exist in "${folderName}".`);
+  }
+
+  const content = `
+    <div class="sty-dlg-body">
+      <p>Generate persistent <strong>Spirit Beast</strong> actors for <strong>${actor.name}</strong>.
+        These actors will be saved in the <em>${folderName}</em> folder and will persist between sessions.
+        You can rename and customize them freely.</p>
+      ${statusHtml}${missingHtml}
+      <p style="font-style:italic; font-size:0.9em; color:#a0a0a0;">
+        Generation requires a GM to be connected.
+      </p>
+    </div>`;
+
+  const confirmed = await new Promise(resolve => {
+    new Dialog({
+      title: 'Generate Spirit Beasts',
+      content,
+      buttons: {
+        generate: {
+          icon: '<i class="fas fa-paw"></i>',
+          label: 'Generate',
+          callback: () => resolve(true)
+        },
+        cancel: {
+          icon: '<i class="fas fa-times"></i>',
+          label: 'Cancel',
+          callback: () => resolve(false)
+        }
+      },
+      default: 'generate',
+    }, { width: 440, classes: ['dialog', 'stryder-stat-popup'] }).render(true);
+  });
+
+  if (!confirmed) return;
+
+  if (game.user.isGM) {
+    await _executeGenerateBeasts({ summonerId: actor.id });
+  } else {
+    if (!game.users.activeGM) return ui.notifications.error('A GM must be connected to generate Spirit Beasts.');
+    game.socket.emit(`system.${SYSTEM_ID}`, { type: 'generateBeasts', summonerId: actor.id });
+    ui.notifications.info('Beast generation request sent to the GM…');
+  }
+}
+
+/**
+ * GM-side: create the beast folder (idempotent) and any missing
+ * gate actors cloned from the compendium.
+ */
+export async function _executeGenerateBeasts({ summonerId }) {
+  if (!game.user.isGM) return;
+  const summoner = game.actors.get(summonerId);
+  if (!summoner) return;
+
+  // Find or create the beast folder
+  const folderName = beastFolderName(summoner);
+  let folder = game.folders.find(f => f.type === 'Actor' && f.name === folderName);
+  if (!folder) {
+    folder = await Folder.create({ name: folderName, type: 'Actor', color: '#4a1a6e' });
+  }
+
+  // Move any existing linked beasts into the folder
+  const existing   = linkedSpirits(summoner);
+  const existGates = new Set(existing.map(b => b.system?.gate));
+  for (const beast of existing) {
+    if (beast.folder?.id !== folder.id) {
+      await beast.update({ folder: folder.id });
+    }
+  }
+
+  const pack = game.packs.get(PACK_ID);
+  if (!pack) return ui.notifications.error(`Compendium ${PACK_ID} not found.`);
+
+  const created = [];
+  for (const [gateKey, gateData] of Object.entries(GATES)) {
+    if (existGates.has(gateKey)) continue;
+
+    let source = await pack.getDocument(gateData.packId);
+    if (!source) {
+      const index = await pack.getIndex();
+      const entry = index.find(e => e.name.includes(gateData.name));
+      if (entry) source = await pack.getDocument(entry._id);
+    }
+    if (!source) {
+      ui.notifications.error(`${gateData.name} not found in Spirit Beasts compendium — skipping.`);
+      continue;
+    }
+
+    const data = source.toObject();
+    delete data._id;
+    data.name   = `${gateData.name} (${summoner.name})`;
+    data.folder = folder.id;
+    data.system.linkedCharacterId = summoner.id;
+    data.ownership = foundry.utils.deepClone(summoner.ownership ?? { default: 0 });
+    // Ensure the token is linked and friendly
+    data.prototypeToken = foundry.utils.mergeObject(data.prototypeToken ?? {}, {
+      disposition: 1,  // FRIENDLY
+      actorLink: true,
+    }, { inplace: false });
+
+    const beast = await Actor.create(data);
+    created.push(beast.name);
+  }
+
+  if (created.length > 0) {
+    ui.notifications.info(`Spirit Beasts created for ${summoner.name}: ${created.join(', ')}.`);
+    await ChatMessage.create({
+      content: gateCard('#4a1a6e', 'Spirit Beasts Generated',
+        `<p><strong>${summoner.name}</strong> has opened their Binding Gates.</p>
+         <p>Created: ${created.join(', ')}</p>
+         <p><em>Find them in the "${folderName}" actor folder. Rename or customize them as you like.</em></p>`),
+      speaker: ChatMessage.getSpeaker({ actor: summoner })
+    });
+  } else {
+    ui.notifications.info(`All Spirit Beasts already exist for ${summoner.name}.`);
+  }
 }
 
 // ── Summon Dialog ─────────────────────────────────────────────
@@ -71,22 +232,38 @@ export async function openSummonDialog(actor) {
   const token = actor.getActiveTokens()[0];
   if (!token) return ui.notifications.warn(`${actor.name} has no token on the current scene — place one first.`);
 
+  // Warn if beasts haven't been generated yet
+  const beasts = linkedSpirits(actor);
+  if (beasts.length === 0) {
+    return ui.notifications.warn(
+      `${actor.name} has no Spirit Beasts yet. Use the "Generate Spirit Beasts" button first.`
+    );
+  }
+
   const components = actor.items.filter(i =>
     i.type === 'component' && (i.system?.rank === '4' || (!i.system?.rank && i.system?.grade === 'G4'))
   );
   const componentOptions = components.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-  const gateButtons = Object.entries(GATES).map(([key, g]) => `
-    <label class="summoner-gate-choice" style="display:flex; align-items:center; gap:8px; padding:6px 10px; border:2px solid ${g.color}; border-radius:6px; cursor:pointer; margin-bottom:6px;">
-      <input type="radio" name="gate" value="${key}" ${key === 'crimson' ? 'checked' : ''}>
-      <span style="color:${g.color}; font-weight:700;">${g.label}</span>
-      <span style="margin-left:auto; font-style:italic;">${g.name}</span>
-    </label>`).join('');
+  // Only show gates for which the beast has been generated
+  const beastByGate = Object.fromEntries(beasts.map(b => [b.system?.gate, b]));
+  const gateButtons = Object.entries(GATES)
+    .filter(([key]) => beastByGate[key])
+    .map(([key, g]) => {
+      const beast = beastByGate[key];
+      const isActive = beast.getActiveTokens().length > 0;
+      return `
+        <label class="summoner-gate-choice" style="display:flex; align-items:center; gap:8px; padding:6px 10px; border:2px solid ${g.color}; border-radius:6px; cursor:pointer; margin-bottom:6px; opacity:${isActive ? '0.5' : '1'};">
+          <input type="radio" name="gate" value="${key}" ${key === 'crimson' ? 'checked' : ''} ${isActive ? 'disabled' : ''}>
+          <span style="color:${g.color}; font-weight:700;">${g.label}</span>
+          <span style="margin-left:auto; font-style:italic;">${beast.name}${isActive ? ' — already summoned' : ''}</span>
+        </label>`;
+    }).join('');
 
   const content = `
     <form>
       <p style="margin-top:0;"><strong>Choose a Gate</strong></p>
-      ${gateButtons}
+      ${gateButtons || '<p style="color:#a00;">No Spirit Beasts are available for summoning.</p>'}
       <p><strong>Pay the cost</strong></p>
       <label style="display:block; margin-bottom:4px;">
         <input type="radio" name="costMethod" value="stamina" checked>
@@ -112,6 +289,7 @@ export async function openSummonDialog(actor) {
           const gate = html.find('input[name="gate"]:checked').val();
           const costMethod = html.find('input[name="costMethod"]:checked').val();
           const componentId = html.find('select[name="componentId"]').val() || null;
+          if (!gate) return ui.notifications.warn('Select a Gate first.');
           if (costMethod === 'stamina' && (actor.system.stamina?.value ?? 0) < STAMINA_COST) {
             return ui.notifications.warn(`Not enough Stamina — summoning costs ${STAMINA_COST}.`);
           }
@@ -151,6 +329,20 @@ export async function executeSummon({ summonerId, gate, costMethod, componentId 
   const token = summoner.getActiveTokens()[0];
   if (!token) return ui.notifications.warn(`${summoner.name} has no token on the current scene.`);
 
+  // ── Resolve the player's own persistent beast for this gate ──
+  const beast = linkedSpirits(summoner).find(b => b.system?.gate === gate);
+  if (!beast) {
+    return ui.notifications.warn(
+      `${summoner.name} has no Spirit Beast for the ${gateData.label}. ` +
+      `Generate Spirit Beasts first using the button on their sheet.`
+    );
+  }
+
+  // ── If this beast is already out, just report ──
+  if (beast.getActiveTokens().length > 0) {
+    return ui.notifications.warn(`${beast.name} is already summoned.`);
+  }
+
   // ── Pay the cost ──
   let costLine;
   if (costMethod === 'component') {
@@ -165,35 +357,8 @@ export async function executeSummon({ summonerId, gate, costMethod, componentId 
     costLine = `Paid <strong>${STAMINA_COST} Stamina</strong> (${stamina} → ${stamina - STAMINA_COST}).`;
   }
 
-  // ── Get (or import) the beast actor ──
-  let beast = game.actors.find(a =>
-    a.type === 'spirit-beast' && a.system?.gate === gate && a.system?.linkedCharacterId === summoner.id);
-
-  if (!beast) {
-    const pack = game.packs.get(PACK_ID);
-    if (!pack) return ui.notifications.error(`Compendium ${PACK_ID} not found.`);
-    let source = await pack.getDocument(gateData.packId);
-    if (!source) {
-      const index = await pack.getIndex();
-      const entry = index.find(e => e.name.includes(gateData.name));
-      if (entry) source = await pack.getDocument(entry._id);
-    }
-    if (!source) return ui.notifications.error(`${gateData.name} not found in the Spirit Beasts compendium. Run the populate macro first.`);
-    const data = source.toObject();
-    delete data._id;
-    data.name = `${gateData.name} (${summoner.name})`;
-    data.system.linkedCharacterId = summoner.id;
-    data.ownership = foundry.utils.deepClone(summoner.ownership ?? { default: 0 });
-    beast = await Actor.create(data);
-  }
-
-  // ── If this beast is already out, just report ──
-  if (beast.getActiveTokens().length > 0) {
-    return ui.notifications.warn(`${beast.name} is already summoned.`);
-  }
-
   // ── Enforce concurrent spirit limit: dismiss oldest ──
-  const limit = maxSpirits(summoner);
+  const limit  = maxSpirits(summoner);
   const active = activeSpirits(summoner)
     .sort((a, b) => (a.getFlag(SYSTEM_ID, 'summonedAt') ?? 0) - (b.getFlag(SYSTEM_ID, 'summonedAt') ?? 0));
   while (active.length >= limit) {
@@ -201,38 +366,52 @@ export async function executeSummon({ summonerId, gate, costMethod, componentId 
     await dismissSpirit(oldest, { reason: 'replaced' });
   }
 
-  // ── Reset beast state for this summon ──
-  const rawMax = beast.system.health?.max;
-  let hpMax = (typeof rawMax === 'object' && rawMax !== null)
+  // ── Compute base HP from raw source (never use prepared data which may drift) ──
+  const rawMax = beast._source?.system?.health?.max;
+  const baseMaxHP = (typeof rawMax === 'object' && rawMax !== null)
     ? Number(rawMax.value ?? 0) + Number(rawMax.mod ?? 0)
     : Number(rawMax ?? 0);
 
-  // Reinforced Gates (L4+): +4 Health on first summon each combat
+  // ── Reinforced Gates (L4+): +4 Health on first summon per gate each combat ──
+  // Full per-gate tracking arrives in Commit 2; single flag covers L4 for now.
+  let tempBonus = 0;
   let reinforcedLine = '';
   if (summonerLevel(summoner) >= 4 && game.combat?.started && !summoner.getFlag(SYSTEM_ID, 'reinforcedGatesUsed')) {
-    hpMax += 4;
+    tempBonus = 4;
     reinforcedLine = `<p><em>Reinforced Gates:</em> +4 Health on this summon.</p>`;
     await summoner.setFlag(SYSTEM_ID, 'reinforcedGatesUsed', true);
   }
 
+  // Store temp bonus in flags so dismiss can read it (Commit 2 expands on this)
+  await beast.setFlag(SYSTEM_ID, 'summonBaseMaxHP', baseMaxHP);
+  await beast.setFlag(SYSTEM_ID, 'summonTempMaxBonus', tempBonus);
+
+  // Apply summon state (fresh each summon; reverted on dismiss)
   await beast.update({
-    'system.health.value': hpMax,
-    'system.physical_reduction': summoner.system.physical_reduction ?? 0,
-    'system.magykal_reduction': summoner.system.magykal_reduction ?? 0,
+    'system.health.value':        baseMaxHP + tempBonus,
+    'system.physical_reduction':  summoner.system.physical_reduction  ?? 0,
+    'system.magykal_reduction':   summoner.system.magykal_reduction   ?? 0,
     'system.physical_resist_mod': summoner.system.physical_resist_mod ?? 0,
-    'system.magykal_resist_mod': (Number(summoner.system.magykal_resist_mod) || 0) + 3,
+    'system.magykal_resist_mod':  (Number(summoner.system.magykal_resist_mod) || 0) + 3,
   });
   await beast.setFlag(SYSTEM_ID, 'freePrimaryDefenseUsed', false);
   await beast.setFlag(SYSTEM_ID, 'summonedAt', Date.now());
+  // Record summoner resistances so dismiss can cleanly revert them
+  await beast.setFlag(SYSTEM_ID, 'summonResistSnapshot', {
+    physical_reduction:  summoner.system.physical_reduction  ?? 0,
+    magykal_reduction:   summoner.system.magykal_reduction   ?? 0,
+    physical_resist_mod: summoner.system.physical_resist_mod ?? 0,
+    magykal_resist_mod:  (Number(summoner.system.magykal_resist_mod) || 0) + 3,
+  });
 
-  // ── Place the token in an unoccupied space within 3 spaces ──
+  // ── Place the token ──
   const placed = await placeSpiritToken(beast, token);
   if (!placed) ui.notifications.warn('No unoccupied space within 3 spaces — drag the token out manually.');
 
   // ── Announce ──
   await ChatMessage.create({
     content: gateCard(gateData.color, `${gateData.label} Opens`, `
-      <p><strong>${summoner.name}</strong> summons the <strong>${gateData.name}</strong>!</p>
+      <p><strong>${summoner.name}</strong> summons the <strong>${beast.name}</strong>!</p>
       <p>${costLine}</p>
       ${reinforcedLine}
       <p style="font-size:0.9em; font-style:italic;">Its first Primary or Defense Ability this summon costs no Stamina. Further abilities cost ${summoner.name} 1 Stamina each (Swift Actions).</p>
@@ -278,10 +457,19 @@ async function placeSpiritToken(beast, summonerToken) {
 
 export async function dismissSpirit(beast, { reason = 'dismissed', silent = false } = {}) {
   const gateData = GATES[beast.system?.gate] ?? { color: '#c9a66b', label: 'Gate', name: beast.name };
+
+  // Remove all tokens — NEVER delete the actor
   for (const t of beast.getActiveTokens()) {
     await t.document.delete();
   }
+
+  // Clear summon-session flags (temp bonuses evaporate with the token)
+  await beast.unsetFlag(SYSTEM_ID, 'summonBaseMaxHP');
+  await beast.unsetFlag(SYSTEM_ID, 'summonTempMaxBonus');
+  await beast.unsetFlag(SYSTEM_ID, 'summonResistSnapshot');
   await beast.setFlag(SYSTEM_ID, 'freePrimaryDefenseUsed', false);
+  await beast.unsetFlag(SYSTEM_ID, 'summonedAt');
+
   if (!silent) {
     const text = reason === 'replaced'
       ? `<p><strong>${beast.name}</strong> is sent back through its Gate as a new Spirit takes its place.</p>`
@@ -400,6 +588,9 @@ async function applyStatusToTokens(tokenIds, statusId) {
 export async function handleSummonerSocket(data) {
   if (!game.user.isGM || game.user !== game.users.activeGM) return;
   switch (data.type) {
+    case 'generateBeasts':
+      await _executeGenerateBeasts(data);
+      break;
     case 'summonSpirit':
       await executeSummon(data);
       break;

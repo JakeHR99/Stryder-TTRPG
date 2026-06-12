@@ -1,3 +1,72 @@
+<style>
+.sb-status-panel {
+  margin: 8px 10px 0;
+  padding: 8px 12px;
+  background: rgba(12,20,55,0.65);
+  border: 1px solid rgba(45,70,170,0.30);
+  border-radius: 5px;
+  font-family: 'Rajdhani', sans-serif;
+}
+.sb-status-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; margin-bottom: 3px;
+}
+.sb-status-row:last-child { margin-bottom: 0; }
+.sb-status-label {
+  color: rgba(120,150,210,0.65);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  flex: 0 0 110px;
+}
+.sb-status-val {
+  color: rgba(200,220,255,0.90);
+  font-weight: 600;
+}
+.sb-status-active  { color: rgba(100,210,150,0.90); }
+.sb-status-passive { color: rgba(150,160,200,0.70); font-style: italic; }
+.sb-status-free    { color: rgba(255,210,80,0.90); }
+.sb-status-used    { color: rgba(160,140,180,0.60); text-decoration: line-through; }
+</style>
+
+{{!-- Summon Status Panel --}}
+<div class="sb-status-panel">
+  <div class="sb-status-row">
+    <span class="sb-status-label">Status</span>
+    {{#if isSummoned}}
+      <span class="sb-status-val sb-status-active">◈ Summoned</span>
+    {{else}}
+      <span class="sb-status-val sb-status-passive">◇ Not summoned</span>
+    {{/if}}
+  </div>
+  {{#if summonerName}}
+  <div class="sb-status-row">
+    <span class="sb-status-label">Linked to</span>
+    <span class="sb-status-val">{{summonerName}}</span>
+  </div>
+  {{/if}}
+  {{#if isSummoned}}
+  <div class="sb-status-row">
+    <span class="sb-status-label">Primary/Defense</span>
+    {{#if freePrimaryDefenseUsed}}
+      <span class="sb-status-val sb-status-used">First use spent</span>
+    {{else}}
+      <span class="sb-status-val sb-status-free">✦ First use free</span>
+    {{/if}}
+  </div>
+  {{#if tempBonuses}}
+  <div class="sb-status-row">
+    <span class="sb-status-label">HP this summon</span>
+    <span class="sb-status-val">{{tempBonuses.totalHP}}
+      {{#if tempBonuses.tempBonus}}
+        <span style="font-size:0.85em; color:rgba(100,210,150,0.75);">(+{{tempBonuses.tempBonus}} bonus)</span>
+      {{/if}}
+    </span>
+  </div>
+  {{/if}}
+  {{/if}}
+</div>
+
 <div class="spirit-beast-movement" style="padding: 10px;">
 
   <h2 class="section-header" style="border-bottom: 0px;">
