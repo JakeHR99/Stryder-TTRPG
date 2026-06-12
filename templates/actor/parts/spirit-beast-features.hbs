@@ -18,4 +18,19 @@
     <div class="ability-block sb-panel">
       <div class="sb-panel-header">
         <strong style="flex: 1;">Defense Ability</strong>
-        <a class="spirit-beast-ability-use" data-abili
+        <a class="spirit-beast-ability-use" data-ability="defense" title="Use Defense Ability (Swift — 1 Stamina from your Summoner, first use free)"><i class="fas fa-dice-d20"></i> Use</a>
+        {{#if editable}}<a class="spirit-beast-ability-edit" data-ability="defense" title="Edit"><i class="fas fa-edit"></i></a>{{/if}}
+      </div>
+      <div class="ability-description-display" data-ability="defense">{{{system.abilities.defense}}}</div>
+      <div class="ability-editor" data-ability="defense" style="display: none;">
+        <textarea name="system.abilities.defense" rows="4" style="width: 100%;">{{system.abilities.defense}}</textarea>
+      </div>
+    </div>
+
+  </div>{{!-- /.spirit-beast-core-abilities --}}
+
+  <div style="margin-top: 16px; background-image: url('systems/stryder/assets/parchment.jpg'); background-size: cover; padding: 10px; border: 1px solid #c9a66b; border-radius: 6px; font-style: italic; font-size: 12px; color: #555;">
+    <strong>Resistances:</strong> Spirit Beasts use their Summoner's Resistances when rolling Resistance. Spirit Beasts gain +3 when rolling to Resist [Magykal] abilities.
+  </div>
+
+</div>{{!-- /.spirit-beast-abilities --}}

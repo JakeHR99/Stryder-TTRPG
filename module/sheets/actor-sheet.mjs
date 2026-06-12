@@ -600,6 +600,7 @@ export class StryderActorSheet extends ActorSheet {
       resizable: true,
       scrollY: ['.jrpg-sub-content'],
       dragDrop: [{ dragSelector: '.item', dropSelector: null }],
+      tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'features' }],
     });
   }
 
