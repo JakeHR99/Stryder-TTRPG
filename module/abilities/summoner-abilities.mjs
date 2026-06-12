@@ -34,6 +34,33 @@ export const GATES = {
 const STAMINA_COST = 2;
 const ABILITY_STAMINA_COST = 1;
 
+// Canonical ability text per gate — sourced from _source/stryder-spirit-beasts/*.json.
+// Used as a fallback when the compiled pack is stale and lacks the ability fields,
+// and for the repair pass on existing ability-less beasts.
+// NEVER auto-overwrite non-empty fields (player may have customized them).
+const GATE_ABILITIES = {
+  crimson: {
+    primary: '<p>Make an attack with a range of 1 that deals <strong>5 damage</strong>.</p>',
+    defense: '<p>When your Spirit takes damage, make a counter attack dealing <strong>3 damage</strong> to the creature that harmed it.</p>',
+  },
+  violet: {
+    primary: '<p>If the Spirit is within 7 spaces of a creature who is the target of an Attack, it moves to the creature\'s side and takes the damage instead, then enters the nearest unoccupied space.</p>',
+    defense: '<p>By bracing itself this Spirit takes <strong>3 less damage</strong> from the oncoming attack.</p>',
+  },
+  azure: {
+    primary: '<p>If the Spirit is within 10 spaces of an ally that must make an Evasion roll, it swoops in and tries to fly them out of the affected area. The ally must still make an Evasion Roll but does not need to expend movement to do so.</p><p><strong>Primary II:</strong> You can evoke Hexes from this Spirit\'s location. You can also make Sense or Perception Checks from this Spirit\'s location; you gain a +2 when you do this.</p>',
+    defense: '<p>This Spirit can use Dodge and Evasion. Its Dodge is equal to <strong>[1d6 + 4]</strong>.</p>',
+  },
+  sage: {
+    primary: '<p>The Spirit inflicts the <strong>Energized</strong> Condition on 1 or 2 creatures within 3 Spaces.</p>',
+    defense: '<p>When it becomes the target of an attack, its attacker becomes <strong>Shocked</strong>.</p>',
+  },
+};
+
+// Creature size token name by tier (for prototype token width/height in grid units)
+const SIZE_SMALL  = '0.5';  // pre-L8 default
+const SIZE_MEDIUM = '1';    // granted by Size and Matter (L8)
+
 // ── Helpers ───────────────────────────────────────────────────
 
 export function isSummoner(actor) {
@@ -87,11 +114,20 @@ export async function generateSpiritBeasts(actor) {
   const missing     = Object.keys(GATES).filter(g => !existGates.has(g));
   const folderName  = beastFolderName(actor);
 
+  // Check for beasts that need ability repair
+  const needsRepair = existing.filter(b => {
+    const canon = GATE_ABILITIES[b.system?.gate];
+    if (!canon) return false;
+    return !b.system?.abilities?.primary?.trim() || !b.system?.abilities?.defense?.trim();
+  });
+
   let statusHtml = '';
   if (existing.length > 0) {
     const rows = existing.map(b => {
       const g = GATES[b.system?.gate];
-      return `<li style="color:${g?.color ?? '#aaa'};">✓ ${b.name}</li>`;
+      const hasAbilities = b.system?.abilities?.primary?.trim() && b.system?.abilities?.defense?.trim();
+      const badge = hasAbilities ? '' : ' <span style="color:#c84; font-size:0.85em;">(needs repair)</span>';
+      return `<li style="color:${g?.color ?? '#aaa'};">✓ ${b.name}${badge}</li>`;
     }).join('');
     statusHtml = `<p style="margin-bottom:4px;"><strong>Already created:</strong></p><ul style="margin:0 0 8px 16px;">${rows}</ul>`;
   }
@@ -105,18 +141,31 @@ export async function generateSpiritBeasts(actor) {
     missingHtml = `<p style="margin-bottom:4px;"><strong>Will be created:</strong></p><ul style="margin:0 0 8px 16px;">${rows}</ul>`;
   }
 
-  if (missing.length === 0) {
-    return ui.notifications.info(`All Spirit Beasts for ${actor.name} already exist in "${folderName}".`);
+  let repairHtml = '';
+  if (needsRepair.length > 0) {
+    repairHtml = `<p style="color:#c84; margin-bottom:4px;"><strong>Will repair (fill empty ability fields):</strong></p><ul style="margin:0 0 8px 16px;">${needsRepair.map(b => `<li>${b.name}</li>`).join('')}</ul>`;
+  }
+
+  // If nothing to do at all, skip the dialog and just run (for level sync)
+  if (missing.length === 0 && needsRepair.length === 0) {
+    // Still run to apply level sync (e.g. Size and Matter if newly at L8)
+    if (game.user.isGM) {
+      await _executeGenerateBeasts({ summonerId: actor.id });
+    } else {
+      if (!game.users.activeGM) return ui.notifications.error('A GM must be connected.');
+      game.socket.emit(`system.${SYSTEM_ID}`, { type: 'generateBeasts', summonerId: actor.id });
+    }
+    return;
   }
 
   const content = `
     <div class="sty-dlg-body">
-      <p>Generate persistent <strong>Spirit Beast</strong> actors for <strong>${actor.name}</strong>.
+      <p>Generate/repair persistent <strong>Spirit Beast</strong> actors for <strong>${actor.name}</strong>.
         These actors will be saved in the <em>${folderName}</em> folder and will persist between sessions.
         You can rename and customize them freely.</p>
-      ${statusHtml}${missingHtml}
+      ${statusHtml}${missingHtml}${repairHtml}
       <p style="font-style:italic; font-size:0.9em; color:#a0a0a0;">
-        Generation requires a GM to be connected.
+        Generation requires a GM to be connected. Existing ability text is never overwritten.
       </p>
     </div>`;
 
@@ -152,22 +201,24 @@ export async function generateSpiritBeasts(actor) {
 }
 
 /**
- * GM-side: create the beast folder (idempotent) and any missing
- * gate actors cloned from the compendium.
+ * GM-side: create the beast folder (idempotent), create any missing gate actors
+ * cloned from the compendium, repair empty ability fields on existing beasts
+ * (never overwrites non-empty — player customization is preserved), then apply
+ * level-gated stat syncs.
  */
 export async function _executeGenerateBeasts({ summonerId }) {
   if (!game.user.isGM) return;
   const summoner = game.actors.get(summonerId);
   if (!summoner) return;
 
-  // Find or create the beast folder
+  // ── Find or create the beast folder ──────────────────────────
   const folderName = beastFolderName(summoner);
   let folder = game.folders.find(f => f.type === 'Actor' && f.name === folderName);
   if (!folder) {
     folder = await Folder.create({ name: folderName, type: 'Actor', color: '#4a1a6e' });
   }
 
-  // Move any existing linked beasts into the folder
+  // ── Move any existing linked beasts into the folder ──────────
   const existing   = linkedSpirits(summoner);
   const existGates = new Set(existing.map(b => b.system?.gate));
   for (const beast of existing) {
@@ -176,6 +227,26 @@ export async function _executeGenerateBeasts({ summonerId }) {
     }
   }
 
+  // ── Repair pass: fill empty abilities on existing beasts ──────
+  // Never overwrite non-empty fields — player may have customized them.
+  const repaired = [];
+  for (const beast of existing) {
+    const gate     = beast.system?.gate;
+    const canon    = GATE_ABILITIES[gate];
+    if (!canon) continue;
+    const curPrimary = beast.system?.abilities?.primary ?? '';
+    const curDefense = beast.system?.abilities?.defense ?? '';
+    const updates    = {};
+    if (!curPrimary.trim()) updates['system.abilities.primary'] = canon.primary;
+    if (!curDefense.trim()) updates['system.abilities.defense'] = canon.defense;
+    if (Object.keys(updates).length) {
+      await beast.update(updates);
+      repaired.push(`${beast.name} (${Object.keys(updates).map(k => k.endsWith('primary') ? 'Primary' : 'Defense').join(', ')})`);
+      console.log(`[Stryder] generateBeasts: repaired abilities on ${beast.name}:`, Object.keys(updates));
+    }
+  }
+
+  // ── Create missing gate actors ────────────────────────────────
   const pack = game.packs.get(PACK_ID);
   if (!pack) return ui.notifications.error(`Compendium ${PACK_ID} not found.`);
 
@@ -206,22 +277,101 @@ export async function _executeGenerateBeasts({ summonerId }) {
       actorLink: true,
     }, { inplace: false });
 
+    // Ability fallback: if the compiled pack lacks ability text, apply canonical text.
+    // This guards against a stale pack that was built before the ability fields were populated.
+    const canon = GATE_ABILITIES[gateKey];
+    if (canon) {
+      if (!data.system?.abilities?.primary?.trim()) {
+        data.system.abilities = data.system.abilities ?? {};
+        data.system.abilities.primary = canon.primary;
+      }
+      if (!data.system?.abilities?.defense?.trim()) {
+        data.system.abilities = data.system.abilities ?? {};
+        data.system.abilities.defense = canon.defense;
+      }
+    }
+
     const beast = await Actor.create(data);
     created.push(beast.name);
   }
 
-  if (created.length > 0) {
-    ui.notifications.info(`Spirit Beasts created for ${summoner.name}: ${created.join(', ')}.`);
+  // ── Level sync (Size and Matter, etc.) ───────────────────────
+  const synced = await syncSpiritBeastsToLevel(summoner, { silent: true });
+
+  // ── Announce ─────────────────────────────────────────────────
+  const lines = [];
+  if (created.length)  lines.push(`<p><strong>Created:</strong> ${created.join(', ')}</p>`);
+  if (repaired.length) lines.push(`<p><strong>Repaired abilities:</strong> ${repaired.join(', ')}</p>`);
+  if (synced.length)   lines.push(`<p><strong>Level sync applied:</strong> ${synced.join(', ')}</p>`);
+
+  if (lines.length > 0) {
+    ui.notifications.info(`Spirit Beasts updated for ${summoner.name}.`);
     await ChatMessage.create({
-      content: gateCard('#4a1a6e', 'Spirit Beasts Generated',
-        `<p><strong>${summoner.name}</strong> has opened their Binding Gates.</p>
-         <p>Created: ${created.join(', ')}</p>
+      content: gateCard('#4a1a6e', 'Spirit Beasts Updated',
+        `<p><strong>${summoner.name}</strong>'s Spirit Beasts have been updated.</p>
+         ${lines.join('')}
          <p><em>Find them in the "${folderName}" actor folder. Rename or customize them as you like.</em></p>`),
       speaker: ChatMessage.getSpeaker({ actor: summoner })
     });
   } else {
-    ui.notifications.info(`All Spirit Beasts already exist for ${summoner.name}.`);
+    ui.notifications.info(`All Spirit Beasts already up-to-date for ${summoner.name}.`);
   }
+}
+
+// ── Level sync ────────────────────────────────────────────────
+
+/**
+ * Apply level-gated stat changes to all persistent beasts for a Summoner.
+ * Currently handles:
+ *   L8 Size and Matter: creature_size → "1" (Medium) if currently the Small
+ *     default ("0.5"). Only changes if the value is still the pre-L8 default —
+ *     skip + log if the player has manually resized the beast.
+ *
+ * Future level gates (Commit 3+) should add cases here rather than duplicating logic.
+ *
+ * @param {Actor}   summoner
+ * @param {object}  opts
+ * @param {boolean} [opts.silent=false]  If true, suppress ui.notifications
+ * @returns {string[]} Description of each change made (for chat/log reporting)
+ */
+export async function syncSpiritBeastsToLevel(summoner, { silent = false } = {}) {
+  const level   = summonerLevel(summoner);
+  const beasts  = linkedSpirits(summoner);
+  const changes = [];
+
+  for (const beast of beasts) {
+    const curSize = beast.system?.attributes?.creature_size ?? SIZE_SMALL;
+    const bName   = beast.name;
+
+    // ── L8 Size and Matter ──────────────────────────────────────
+    if (level >= 8) {
+      if (curSize === SIZE_SMALL) {
+        // Safe to upgrade: still at the default Small size
+        const update = {
+          'system.attributes.creature_size': SIZE_MEDIUM,
+          'prototypeToken.width':  1,
+          'prototypeToken.height': 1,
+        };
+        await beast.update(update);
+        // Also resize any currently placed tokens (in-scene)
+        for (const token of beast.getActiveTokens()) {
+          await token.document.update({ width: 1, height: 1 });
+        }
+        changes.push(`${bName} → Medium (L8 Size and Matter)`);
+        console.log(`[Stryder] syncSpiritBeastsToLevel: upgraded ${bName} to Medium.`);
+      } else if (curSize !== SIZE_MEDIUM) {
+        // Player has set a custom size — skip
+        console.log(`[Stryder] syncSpiritBeastsToLevel: skipping ${bName} — creature_size is "${curSize}" (not default Small); may be player-customized.`);
+      }
+      // If already Medium ("1"), nothing to do
+    }
+    // Below L8: leave size as-is (never shrink a manually-resized beast)
+  }
+
+  if (changes.length && !silent) {
+    ui.notifications.info(`Spirit Beast level sync: ${changes.join('; ')}`);
+  }
+  return changes;
 }
 
 // ── Summon Dialog ─────────────────────────────────────────────

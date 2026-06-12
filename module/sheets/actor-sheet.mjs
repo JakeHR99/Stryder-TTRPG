@@ -5372,6 +5372,14 @@ export class StryderActorSheet extends ActorSheet {
       await actor.createEmbeddedDocuments('Item', toGrant.map(d => d.toObject()));
     }
 
+    // ── Summoner: sync beast sheets to level after feature grants ──────────
+    // Fires on level-up, class select, and Growth open — all paths that call
+    // _grantClassFeatures — so Size and Matter (L8) is applied immediately.
+    if (className === 'Summoner' && game.user.isGM) {
+      const { syncSpiritBeastsToLevel } = await import('../abilities/summoner-abilities.mjs');
+      await syncSpiritBeastsToLevel(actor);
+    }
+
     return { granted: toGrant.map(d => d.name), hasWaitingChoice };
   }
 
