@@ -1,4 +1,4 @@
-<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+﻿<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
   <div class="oi-frame sty-ornate">
     {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel=(localize "STRYDER.ItemTypes.FolkAbility")}}
 
@@ -35,25 +35,25 @@
             <div class="field fantasy-field">
               <label>{{localize "STRYDER.SheetLabels.Action"}}:</label>
               <select name="system.action_type">
-                {{#select system.action_type}}
+                {{#sty-select system.action_type}}
                 <option value="focused">{{localize "STRYDER.SheetLabels.Focused"}}</option>
                 <option value="swift">{{localize "STRYDER.SheetLabels.Swift"}}</option>
                 <option value="passive">{{localize "STRYDER.SheetLabels.Passive"}}</option>
                 <option value="trigger">{{localize "STRYDER.SheetLabels.Trigger"}}</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="field fantasy-field cooldown-field">
               <label>{{localize "STRYDER.SheetLabels.Cooldown"}}:</label>
               <input type="number" name="system.cooldown_value" value="{{system.cooldown_value}}" min="0" placeholder="{{localize 'STRYDER.SheetLabels.Number'}}">
               <select name="system.cooldown_unit">
-                {{#select system.cooldown_unit}}
+                {{#sty-select system.cooldown_unit}}
                 <option value="turn">{{localize "STRYDER.SheetLabels.Turns"}}</option>
                 <option value="round">{{localize "STRYDER.SheetLabels.Rounds"}}</option>
                 <option value="perRest">{{localize "STRYDER.SheetLabels.PerRest"}}</option>
                 <option value="perTurn">{{localize "STRYDER.SheetLabels.PerTurn"}}</option>
                 <option value="perSpring">{{localize "STRYDER.SheetLabels.PerSpringOfLife"}}</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="field fantasy-field">
@@ -85,7 +85,7 @@
           <div class="section-content tags-container">
             <div class="field fantasy-field tag-field">
               <select name="system.tag1">
-                {{#select system.tag1}}
+                {{#sty-select system.tag1}}
                 <option value=""></option>
                 <option value="aid">{{localize "STRYDER.SheetLabels.Aid"}}</option>
                 <option value="augment">{{localize "STRYDER.SheetLabels.Augment"}}</option>
@@ -93,12 +93,12 @@
                 <option value="persistent">{{localize "STRYDER.SheetLabels.Persistent"}}</option>
                 <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
                 <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="field fantasy-field tag-field">
               <select name="system.tag2">
-                {{#select system.tag2}}
+                {{#sty-select system.tag2}}
                 <option value=""></option>
                 <option value="aid">{{localize "STRYDER.SheetLabels.Aid"}}</option>
                 <option value="augment">{{localize "STRYDER.SheetLabels.Augment"}}</option>
@@ -106,12 +106,12 @@
                 <option value="persistent">{{localize "STRYDER.SheetLabels.Persistent"}}</option>
                 <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
                 <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="field fantasy-field tag-field">
               <select name="system.tag3">
-                {{#select system.tag3}}
+                {{#sty-select system.tag3}}
                 <option value=""></option>
                 <option value="aid">{{localize "STRYDER.SheetLabels.Aid"}}</option>
                 <option value="augment">{{localize "STRYDER.SheetLabels.Augment"}}</option>
@@ -119,7 +119,7 @@
                 <option value="persistent">{{localize "STRYDER.SheetLabels.Persistent"}}</option>
                 <option value="targeted">{{localize "STRYDER.SheetLabels.Targeted"}}</option>
                 <option value="breach">{{localize "STRYDER.SheetLabels.Breach"}}</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
           </div>
@@ -165,11 +165,11 @@
               <div class="field fantasy-field">
                 <label>Damage Type:</label>
                 <select name="system.damage_type" class="damage-type-select">
-                  {{#select system.damage_type}}
+                  {{#sty-select system.damage_type}}
                   <option value="ahl">Ahl</option>
                   <option value="physical">Physical</option>
                   <option value="magykal">Magykal</option>
-                  {{/select}}
+                  {{/sty-select}}
                 </select>
               </div>
             </div>

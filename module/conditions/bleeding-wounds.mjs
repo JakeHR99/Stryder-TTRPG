@@ -192,24 +192,19 @@ Hooks.on('updateCombat', async (combat, updateData, options, userId) => {
 
 
 // Handle undo button
-Hooks.on('renderChatMessage', (message, html, data) => {
-  html.find('.bleeding-undo').click(async (event) => {
+Hooks.on('renderChatMessageHTML', (message, html) => {
+  html.querySelector('.bleeding-undo')?.addEventListener('click', async (event) => {
     const actorId = event.currentTarget.dataset.actorId;
     const damage = parseInt(event.currentTarget.dataset.damage);
     const actor = game.actors.get(actorId);
-    
     if (actor) {
-      await actor.update({
-        "system.health.value": actor.system.health.value + damage
-      });
-      
-      // Cross out the entire message content
-      const messageCard = html.find('.chat-message-card');
-      messageCard.css('text-decoration', 'line-through');
-      messageCard.css('opacity', '0.7');
-      
-      // Remove the undo button
-      event.currentTarget.closest('.bleeding-undo-container').remove();
+      await actor.update({ 'system.health.value': actor.system.health.value + damage });
+      const messageCard = html.querySelector('.chat-message-card');
+      if (messageCard) {
+        messageCard.style.textDecoration = 'line-through';
+        messageCard.style.opacity = '0.7';
+      }
+      event.currentTarget.closest('.bleeding-undo-container')?.remove();
     }
   });
 });

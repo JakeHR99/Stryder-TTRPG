@@ -1,4 +1,4 @@
-<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+﻿<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
   <div class="oi-frame sty-ornate">
     {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Gem Slot"}}
 
@@ -8,23 +8,23 @@
         <div class="dropdown-field">
           <label class="resource-label secondary-input">Rarity</label>
           <select class="secondary-input" name="system.rarity">
-            {{#select system.rarity}}
+            {{#sty-select system.rarity}}
             <option value="common">Common</option>
             <option value="uncommon">Uncommon</option>
             <option value="rare">Rare</option>
             <option value="mythic">Legendary</option>
             <option value="one of a kind">One of a Kind</option>
-            {{/select}}
+            {{/sty-select}}
           </select>
         </div>
         <div class="dropdown-field">
           <label class="resource-label secondary-input">Nature</label>
           <select class="secondary-input" name="system.nature">
-            {{#select system.nature}}
+            {{#sty-select system.nature}}
             <option value="enchanted">Enchanted</option>
             <option value="magytech">Magytech</option>
             <option value="other">Other</option>
-            {{/select}}
+            {{/sty-select}}
           </select>
         </div>
         <div class="dropdown-field">

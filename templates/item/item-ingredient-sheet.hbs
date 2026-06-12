@@ -1,4 +1,4 @@
-<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+﻿<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
   <div class="oi-frame sty-ornate">
     {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Ingredient"}}
 
@@ -7,25 +7,25 @@
       <div class="dropdown-field">
         <label class="resource-label secondary-input">Category</label>
         <select class="secondary-input" name="system.ingredient_type">
-          {{#select system.ingredient_type}}
+          {{#sty-select system.ingredient_type}}
           <option value="base">Base</option>
           <option value="protein">Protein</option>
           <option value="spice">Spice</option>
           <option value="sauce">Sauce</option>
-          {{/select}}
+          {{/sty-select}}
         </select>
       </div>
 
       <div class="dropdown-field">
         <label class="resource-label secondary-input">Quality</label>
         <select class="secondary-input ingr-quality-select" name="system.quality">
-          {{#select system.quality}}
+          {{#sty-select system.quality}}
           <option value="rotten">Rotten (−2)</option>
           <option value="bad">Bad (−1)</option>
           <option value="good">Good (+0)</option>
           <option value="great">Great (+1)</option>
           <option value="gourmet">Gourmet (+2)</option>
-          {{/select}}
+          {{/sty-select}}
         </select>
       </div>
 
@@ -48,13 +48,13 @@
       <div class="dropdown-field">
         <label class="resource-label secondary-input">Enchant Type</label>
         <select class="secondary-input" name="system.enchant_type">
-          {{#select system.enchant_type}}
+          {{#sty-select system.enchant_type}}
           <option value="">— None —</option>
           <option value="bones">Bones — Hardy (Rush Party Action)</option>
           <option value="eyes">Eyes — Watchful (Raise Perception)</option>
           <option value="mana_veins">Mana Veins — Restoration (Restore Mana)</option>
           <option value="heart">Heart — Power (Unique Ward)</option>
-          {{/select}}
+          {{/sty-select}}
         </select>
       </div>
     </div>

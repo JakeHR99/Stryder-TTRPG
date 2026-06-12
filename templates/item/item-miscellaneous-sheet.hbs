@@ -1,4 +1,4 @@
-<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+﻿<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
   <div class="oi-frame sty-ornate">
     {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Miscellaneous"}}
 
@@ -7,14 +7,14 @@
       <div class="dropdown-field">
         <label class="resource-label secondary-input">Type</label>
         <select class="secondary-input" name="system.itemtype">
-          {{#select system.itemtype}}
+          {{#sty-select system.itemtype}}
           <option value="Other">Other</option>
           <option value="Scrap">Scrap</option>
           <option value="Book">Book</option>
           <option value="Treasure">Treasure</option>
           <option value="Tool">Tool</option>
           <option value="Trash">Trash</option>
-          {{/select}}
+          {{/sty-select}}
         </select>
       </div>
     </div>

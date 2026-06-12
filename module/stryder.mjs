@@ -965,6 +965,15 @@ Handlebars.registerHelper('eq', function(a, b) {
     return a === b;
 });
 
+// Non-deprecated drop-in replacement for the removed {{#select}} block helper.
+// Usage: {{#sty-select system.someField}} <option value="x">X</option> {{/sty-select}}
+Handlebars.registerHelper('sty-select', function(selected, options) {
+  const escapedValue = RegExp.escape(Handlebars.escapeExpression(String(selected ?? '')));
+  const rgx = new RegExp(` value=["']${escapedValue}["']`);
+  const html = options.fn(this);
+  return html.replace(rgx, '$& selected');
+});
+
 Hooks.once('init', function() {
     Handlebars.registerHelper('calculateFormula', function(diceNum, diceSize, diceBonus) {
         return `${diceNum}d${diceSize} + ${diceBonus}`;
@@ -1856,81 +1865,71 @@ Hooks.once('ready', async function () {
 /*  Chat Message Enhancements                   */
 /* -------------------------------------------- */
 
-Hooks.on('renderChatMessage', (message, html, data) => {
+Hooks.on('renderChatMessageHTML', (message, html) => {
 
-  // Handle collapsible sections
-  html.on('click', '.collapsible-toggle', function() {
-    const content = $(this).next('.collapsible-content');
-    content.slideToggle(200);
-    $(this).find('i').toggleClass('fa-caret-down fa-caret-up');
+  // Handle collapsible sections (legacy .collapsible-toggle pattern)
+  html.addEventListener('click', (ev) => {
+    const toggle = ev.target.closest('.collapsible-toggle');
+    if (!toggle) return;
+    const content = toggle.nextElementSibling;
+    if (content?.classList.contains('collapsible-content')) {
+      content.style.display = content.style.display === 'none' ? '' : 'none';
+    }
+    const icon = toggle.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('fa-caret-down');
+      icon.classList.toggle('fa-caret-up');
+    }
   });
 
   // ── Chat Card Auto-Collapse ──────────────────────────────────────────────
-  // .chat-message-details and .chat-message-content are hidden by default.
-  // Clicking the header expands / collapses them.
-  html.find('.chat-message-card').each(function() {
-    const $card = $(this);
-    const $header = $card.children('.chat-message-header').first();
-    const $collapsible = $card.children('.chat-message-details, .chat-message-content');
+  html.querySelectorAll('.chat-message-card').forEach(card => {
+    const header = card.querySelector(':scope > .chat-message-header');
+    if (!header) return;
+    const collapsibles = [...card.querySelectorAll(':scope > .chat-message-details, :scope > .chat-message-content')];
+    if (collapsibles.length === 0) return;
 
-    // Nothing to collapse — skip simple notification cards
-    if ($collapsible.length === 0) return;
+    header.classList.add('chat-header-collapsible');
+    card.classList.add('chat-collapsed');
+    collapsibles.forEach(el => { el.style.display = 'none'; });
 
-    // Mark as collapsible and start collapsed
-    $header.addClass('chat-header-collapsible');
-    $card.addClass('chat-collapsed');
-    $collapsible.hide();
-
-    // Inject chevron once (guard against double-render)
-    if (!$header.find('.chat-collapse-chevron').length) {
-      $header.append('<span class="chat-collapse-chevron">▾</span>');
+    if (!header.querySelector('.chat-collapse-chevron')) {
+      header.insertAdjacentHTML('beforeend', '<span class="chat-collapse-chevron">▾</span>');
     }
 
-    // Click header to toggle (ignore clicks on child buttons/links/inputs)
-    $header.off('click.chatcollapse').on('click.chatcollapse', function(ev) {
-      if ($(ev.target).closest('button, a, input').length) return;
-      const isCollapsed = $card.hasClass('chat-collapsed');
+    header.addEventListener('click', (ev) => {
+      if (ev.target.closest('button, a, input')) return;
+      const isCollapsed = card.classList.contains('chat-collapsed');
       if (isCollapsed) {
-        $card.removeClass('chat-collapsed').addClass('chat-expanded');
-        $collapsible.slideDown(160);
+        card.classList.replace('chat-collapsed', 'chat-expanded');
+        collapsibles.forEach(el => { el.style.display = ''; });
       } else {
-        $card.removeClass('chat-expanded').addClass('chat-collapsed');
-        $collapsible.slideUp(120);
+        card.classList.replace('chat-expanded', 'chat-collapsed');
+        collapsibles.forEach(el => { el.style.display = 'none'; });
       }
     });
   });
 
-    // Handle effect expiration buttons
-    html.find('.effect-button').click(async (event) => {
-        event.preventDefault();
-        const action = event.currentTarget.dataset.action;
-        
-        if (message.getFlag(SYSTEM_ID, 'effectExpiration')) {
-            const effectId = message.getFlag(SYSTEM_ID, 'effectId');
-            const actorId = message.getFlag(SYSTEM_ID, 'actorId');
-            const actor = game.actors.get(actorId);
-            
-            const buttons = {
-                yes: {
-                    callback: async () => {
-                        if (actor) {
-                            await actor.deleteEmbeddedDocuments('ActiveEffect', [effectId]);
-                        }
-                        await message.delete();
-                    }
-                },
-                no: {
-                    callback: async () => {
-                        await message.delete();
-                    }
-                }
-            };
-            
-            if (buttons[action]?.callback) {
-                await buttons[action].callback();
-            }
-        }
+  // Handle effect expiration buttons
+  html.querySelectorAll('.effect-button').forEach(btn => {
+    btn.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const action = event.currentTarget.dataset.action;
+      if (message.getFlag(SYSTEM_ID, 'effectExpiration')) {
+        const effectId = message.getFlag(SYSTEM_ID, 'effectId');
+        const actorId  = message.getFlag(SYSTEM_ID, 'actorId');
+        const actor    = game.actors.get(actorId);
+        const callbacks = {
+          yes: async () => {
+            if (actor) await actor.deleteEmbeddedDocuments('ActiveEffect', [effectId]);
+            await message.delete();
+          },
+          no: async () => { await message.delete(); },
+        };
+        await callbacks[action]?.();
+      }
     });
+  });
 
 });
 
@@ -3082,9 +3081,10 @@ Hooks.on('renderTokenHUD', (hud, html, data) => {
 /* -------------------------------------------- */
 
 // Handle grapple resistance button clicks
-Hooks.on('renderChatMessage', (message, html, data) => {
-  html.on('click', '.grapple-resist-button', async (event) => {
-    const button = event.currentTarget;
+Hooks.on('renderChatMessageHTML', (message, html) => {
+  html.addEventListener('click', async (event) => {
+    const button = event.target.closest('.grapple-resist-button');
+    if (!button) return;
     const grappleDC = parseInt(button.dataset.grappleDc);
     const grapplerId = button.dataset.grapplerId;
     

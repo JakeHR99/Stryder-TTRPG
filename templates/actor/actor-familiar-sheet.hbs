@@ -1,4 +1,4 @@
-<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+﻿<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
 <script>
 	// Enhanced sheen clipping function
 	function updateSheenClipping() {
@@ -103,10 +103,10 @@
             <label for="{{actor._id}}familiar_type" class="resource-label-info">{{localize "Familiar Type"}}</label>
 			<div class="dropdown-field">
 				<select class="secondary-input" name="system.attributes.familiar_type">
-				  {{#select system.attributes.familiar_type}}
+				  {{#sty-select system.attributes.familiar_type}}
 				  <option value="Pet">{{localize "Pet"}}</option>
 				  <option value="Companion">{{localize "Companion"}}</option>
-				  {{/select}}
+				  {{/sty-select}}
 				</select>
 			</div>
           </div>
@@ -114,12 +114,12 @@
             <label for="{{actor._id}}trust_level" class="resource-label-info">{{localize "Trust Level"}}</label>
 			<div class="dropdown-field">
 				<select class="secondary-input" name="system.attributes.trust_level">
-				  {{#select system.attributes.trust_level}}
+				  {{#sty-select system.attributes.trust_level}}
 				  <option value="Stranger">{{localize "Stranger"}}</option>
 				  <option value="Friend">{{localize "Friend"}}</option>
 				  <option value="Comrade">{{localize "Comrade"}}</option>
 				  <option value="Best Friend">{{localize "Best Friend"}}</option>
-				  {{/select}}
+				  {{/sty-select}}
 				</select>
 			</div>
           </div>
@@ -127,7 +127,7 @@
             <label for="{{actor._id}}creature_size" class="resource-label-info">{{localize "Creature Size"}}</label>
 			<div class="dropdown-field">
 				<select class="secondary-input" name="system.attributes.creature_size">
-				  {{#select system.attributes.creature_size}}
+				  {{#sty-select system.attributes.creature_size}}
 				  <option value="0.25">{{localize "Mini"}}</option>
 				  <option value="0.5">{{localize "Small"}}</option>
 				  <option value="1">{{localize "Normal"}}</option>
@@ -135,7 +135,7 @@
 				  <option value="3">{{localize "Massive"}}</option>
 				  <option value="4">{{localize "Colossal"}}</option>
 				  <option value="5">{{localize "Titanic"}}</option>
-				  {{/select}}
+				  {{/sty-select}}
 				</select>
 			</div>
           </div>

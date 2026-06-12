@@ -1,4 +1,4 @@
-<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+﻿<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
   <div class="oi-frame sty-ornate">
     {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Elixir"}}
 
@@ -52,7 +52,7 @@
             <div class="dropdown-field">
               <label class="resource-label secondary-input">Effect Type</label>
               <select class="secondary-input" name="system.effect_type">
-                {{#select system.effect_type}}
+                {{#sty-select system.effect_type}}
                 <option value="none">Narrative / Complex</option>
                 <option value="heal_hp_pct">Heal HP (%)</option>
                 <option value="restore_mana_flat">Restore Mana (Flat)</option>
@@ -60,7 +60,7 @@
                 <option value="remove_condition">Remove Condition</option>
                 <option value="apply_condition">Apply Condition (Offensive)</option>
                 <option value="roll_d6">Roll d6 Effect</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="dropdown-field">

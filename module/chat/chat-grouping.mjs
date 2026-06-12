@@ -55,7 +55,12 @@ export function registerChatGrouping() {
   Hooks.on('renderChatMessageHTML', (message, html) => {
     requestAnimationFrame(() => {
       try {
-        const li = html.tagName === 'LI' ? html : html.closest('li.chat-message');
+        // Normalize: parseHTML returns HTMLCollection (multiple roots) when the chat
+        // template has more than one root element; handle both HTMLElement and collection.
+        const el = html instanceof HTMLElement ? html
+          : html?.[0] instanceof HTMLElement ? html[0] : null;
+        if (!el) return;
+        const li = el.tagName === 'LI' ? el : el.closest('li.chat-message');
         const log = li?.closest('ol') ?? document.querySelector('#chat-log');
         recomputeLog(log);
       } catch (err) {

@@ -1,4 +1,4 @@
-<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
+﻿<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
   <div class="oi-frame sty-ornate">
     {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Class Feature"}}
 
@@ -35,25 +35,25 @@
             <div class="field fantasy-field">
               <label>Action:</label>
               <select name="system.action_type">
-                {{#select system.action_type}}
+                {{#sty-select system.action_type}}
                 <option value="focused">Focused</option>
                 <option value="swift">Swift</option>
                 <option value="passive">Passive</option>
                 <option value="trigger">Trigger</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="field fantasy-field cooldown-field">
               <label>Cooldown:</label>
               <input type="number" name="system.cooldown_value" value="{{system.cooldown_value}}" min="0" placeholder="Number">
               <select name="system.cooldown_unit">
-                {{#select system.cooldown_unit}}
+                {{#sty-select system.cooldown_unit}}
                 <option value="turn">Turn(s)</option>
                 <option value="round">Round(s)</option>
                 <option value="perRest">per Rest</option>
                 <option value="perTurn">per Turn</option>
                 <option value="perSpring">per Spring of Life</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="field fantasy-field">
@@ -89,7 +89,7 @@
           <div class="section-content tags-container">
             <div class="field fantasy-field tag-field">
               <select name="system.tag1">
-                {{#select system.tag1}}
+                {{#sty-select system.tag1}}
                 <option value=""></option>
                 <option value="aid">Aid</option>
                 <option value="augment">Augment</option>
@@ -100,12 +100,12 @@
                 <option value="reflex">Reflex</option>
                 <option value="control">Control</option>
                 <option value="sunder">Sunder</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="field fantasy-field tag-field">
               <select name="system.tag2">
-                {{#select system.tag2}}
+                {{#sty-select system.tag2}}
                 <option value=""></option>
                 <option value="aid">Aid</option>
                 <option value="augment">Augment</option>
@@ -116,12 +116,12 @@
                 <option value="reflex">Reflex</option>
                 <option value="control">Control</option>
                 <option value="sunder">Sunder</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             <div class="field fantasy-field tag-field">
               <select name="system.tag3">
-                {{#select system.tag3}}
+                {{#sty-select system.tag3}}
                 <option value=""></option>
                 <option value="aid">Aid</option>
                 <option value="augment">Augment</option>
@@ -132,7 +132,7 @@
                 <option value="reflex">Reflex</option>
                 <option value="control">Control</option>
                 <option value="sunder">Sunder</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
           </div>

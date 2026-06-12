@@ -1,4 +1,4 @@
-<form class="{{cssClass}} {{actor.type}} jrpg-sheet lrd-v2" autocomplete="off">
+﻿<form class="{{cssClass}} {{actor.type}} jrpg-sheet lrd-v2" autocomplete="off">
 <style>
 /* ── Lordling v2 layout ── */
 .lrd-v2.jrpg-sheet { background: #06101e; }
@@ -415,12 +415,12 @@
           <div class="lrd-cfg-strip">
             <span class="lrd-cfg-lbl">Size</span>
             <select name="system.attributes.creature_size" class="lrd-cfg-select">
-              {{#select system.attributes.creature_size}}
+              {{#sty-select system.attributes.creature_size}}
               <option value="0.5">Small</option>
               <option value="1">Normal</option>
               <option value="2">Huge</option>
               <option value="3">Massive</option>
-              {{/select}}
+              {{/sty-select}}
             </select>
             <span class="lrd-cfg-lbl">Aspect</span>
             <button type="button" data-action="setLordlingAspect" class="lrd-cfg-btn lrd-action-btn">

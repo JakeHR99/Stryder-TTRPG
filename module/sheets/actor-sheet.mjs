@@ -1950,6 +1950,19 @@ export class StryderActorSheet extends ActorSheet {
       const summoner       = summonerId ? game.actors.get(summonerId) : null;
       context.summonerName = summoner?.name ?? null;
       context.freePrimaryDefenseUsed = this.actor.getFlag('stryder', 'freePrimaryDefenseUsed') ?? false;
+      context.gateChoices = {
+        crimson: 'Crimson Gate',
+        violet:  'Violet Gate',
+        azure:   'Azure Gate',
+        sage:    'Sage Gate',
+      };
+      context.creatureSizeChoices = {
+        '0.25': 'Mini',
+        '0.5':  'Small',
+        '1':    'Normal',
+        '2':    'Huge',
+        '3':    'Massive',
+      };
     }
 
     // Add roll data for TinyMCE editors.

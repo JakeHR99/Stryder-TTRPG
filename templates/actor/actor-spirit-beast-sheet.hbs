@@ -62,12 +62,7 @@
           <label for="{{actor._id}}gate" class="resource-label-info">Gate</label>
           <div class="dropdown-field">
             <select class="secondary-input" name="system.gate" style="width: 100%; font-size: 16px; font-weight: normal;">
-              {{#select system.gate}}
-              <option value="crimson">Crimson Gate</option>
-              <option value="violet">Violet Gate</option>
-              <option value="azure">Azure Gate</option>
-              <option value="sage">Sage Gate</option>
-              {{/select}}
+              {{selectOptions gateChoices selected=system.gate}}
             </select>
           </div>
         </div>
@@ -75,13 +70,7 @@
           <label for="{{actor._id}}creature_size" class="resource-label-info">{{localize "Creature Size"}}</label>
           <div class="dropdown-field">
             <select class="secondary-input" name="system.attributes.creature_size" style="width: 100%; font-size: 16px; font-weight: normal;">
-              {{#select system.attributes.creature_size}}
-              <option value="0.25">Mini</option>
-              <option value="0.5">Small</option>
-              <option value="1">Normal</option>
-              <option value="2">Huge</option>
-              <option value="3">Massive</option>
-              {{/select}}
+              {{selectOptions creatureSizeChoices selected=system.attributes.creature_size}}
             </select>
           </div>
         </div>

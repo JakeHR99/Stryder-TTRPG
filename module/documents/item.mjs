@@ -1131,9 +1131,9 @@ export class StryderItem extends Item {
 	  });
 	}
 
-	Hooks.once('renderChatMessage', (message, html, data) => {
-	  html.find('.resource-spend-button').click(handleResourceSpend);
-	  html.find('.bloodloss-spend-button').click(handleBloodlossSpend);
+	Hooks.once('renderChatMessageHTML', (message, html) => {
+	  html.querySelector('.resource-spend-button')?.addEventListener('click', handleResourceSpend);
+	  html.querySelector('.bloodloss-spend-button')?.addEventListener('click', handleBloodlossSpend);
 	});
 
 	let section1 = await createCollapsibleSection("Level 1 - Novice", item.system.novice);
@@ -1561,8 +1561,8 @@ export class StryderItem extends Item {
 	  return slots[itemType] || "Equipment Slot";
 	}
 
-	Hooks.on("renderChatMessage", (message, html, data) => {
-	  html[0].querySelectorAll(".collapsible-toggle").forEach(button => {
+	Hooks.on("renderChatMessageHTML", (message, html) => {
+	  html.querySelectorAll(".collapsible-toggle").forEach(button => {
 		button.addEventListener("click", () => {
 		  const content = button.nextElementSibling;
 		  if (content) {

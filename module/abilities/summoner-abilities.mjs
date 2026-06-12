@@ -61,6 +61,16 @@ const GATE_ABILITIES = {
 const SIZE_SMALL  = '0.5';  // pre-L8 default
 const SIZE_MEDIUM = '1';    // granted by Size and Matter (L8)
 
+/**
+ * Returns true when an ability HTML field has no meaningful text content.
+ * Handles empty strings, null/undefined, AND ProseMirror placeholders like
+ * "<p></p>" or "<p><br></p>" that look empty on screen but aren't empty strings.
+ */
+function abilityIsEmpty(html) {
+  if (!html?.trim()) return true;
+  return !html.replace(/<[^>]*>/g, '').trim();
+}
+
 // ── Helpers ───────────────────────────────────────────────────
 
 export function isSummoner(actor) {
@@ -118,7 +128,7 @@ export async function generateSpiritBeasts(actor) {
   const needsRepair = existing.filter(b => {
     const canon = GATE_ABILITIES[b.system?.gate];
     if (!canon) return false;
-    return !b.system?.abilities?.primary?.trim() || !b.system?.abilities?.defense?.trim();
+    return abilityIsEmpty(b.system?.abilities?.primary) || abilityIsEmpty(b.system?.abilities?.defense);
   });
 
   let statusHtml = '';
@@ -237,8 +247,8 @@ export async function _executeGenerateBeasts({ summonerId }) {
     const curPrimary = beast.system?.abilities?.primary ?? '';
     const curDefense = beast.system?.abilities?.defense ?? '';
     const updates    = {};
-    if (!curPrimary.trim()) updates['system.abilities.primary'] = canon.primary;
-    if (!curDefense.trim()) updates['system.abilities.defense'] = canon.defense;
+    if (abilityIsEmpty(curPrimary)) updates['system.abilities.primary'] = canon.primary;
+    if (abilityIsEmpty(curDefense)) updates['system.abilities.defense'] = canon.defense;
     if (Object.keys(updates).length) {
       await beast.update(updates);
       repaired.push(`${beast.name} (${Object.keys(updates).map(k => k.endsWith('primary') ? 'Primary' : 'Defense').join(', ')})`);

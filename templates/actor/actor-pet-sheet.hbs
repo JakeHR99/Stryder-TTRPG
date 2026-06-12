@@ -1,4 +1,4 @@
-<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+﻿<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
 <script>
 	// Enhanced sheen clipping function
 	function updateSheenClipping() {
@@ -60,12 +60,12 @@
 				<label for="{{actor._id}}creature_size" class="resource-label-info">{{localize "Size"}}</label>
 				<div class="dropdown-field">
 					<select class="secondary-input" name="system.attributes.creature_size">
-						{{#select system.attributes.creature_size}}
+						{{#sty-select system.attributes.creature_size}}
 						<option value="0.25">Mini</option>
 						<option value="0.5">Small</option>
 						<option value="1">Normal</option>
 						<option value="2">Huge</option>
-						{{/select}}
+						{{/sty-select}}
 					</select>
 				</div>
 			</div>

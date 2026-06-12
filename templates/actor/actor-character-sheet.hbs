@@ -1,4 +1,4 @@
-<form class="{{cssClass}} {{actor.type}} jrpg-sheet" autocomplete="off">
+﻿<form class="{{cssClass}} {{actor.type}} jrpg-sheet" autocomplete="off">
 	<script>
 		function adjustElixirSickness(change) {
 			const elixirInput = document.querySelector('input[name="system.elixir_sickness.value"]');
@@ -532,7 +532,7 @@
             <div class="sa-heavy-wc-row">
               <label class="sa-heavy-wc-label">Weapon Weight Class</label>
               <select name="system.soul_armament.weaponWeightClass" class="sa-heavy-wc-select">
-                {{#select system.soul_armament.weaponWeightClass}}
+                {{#sty-select system.soul_armament.weaponWeightClass}}
                 <option value="3">WC 3 (+1 dmg)</option>
                 <option value="4">WC 4 (+2 dmg)</option>
                 <option value="5">WC 5 (+3 dmg)</option>
@@ -541,7 +541,7 @@
                 <option value="8">WC 8 (+6 dmg)</option>
                 <option value="9">WC 9 (+7 dmg)</option>
                 <option value="10">WC 10 (+8 dmg)</option>
-                {{/select}}
+                {{/sty-select}}
               </select>
             </div>
             {{/if}}

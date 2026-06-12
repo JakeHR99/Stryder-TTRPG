@@ -1,4 +1,4 @@
-<form class="{{cssClass}}" autocomplete="off">
+﻿<form class="{{cssClass}}" autocomplete="off">
   <header class="sheet-header">
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
     <div class="header-fields">
@@ -11,10 +11,10 @@
         <div>
           <span>
             <select id="checkMethodSelect" name="system.checkmethod" onchange="toggleCustomRollInput()">
-              {{#select system.checkmethod}}
+              {{#sty-select system.checkmethod}}
               <option value="normal">{{localize "Normal Check"}}</option>
               <option value="dice">{{localize "Custom Roll"}}</option>
-              {{/select}}
+              {{/sty-select}}
             </select>
           </span>
         </div>
