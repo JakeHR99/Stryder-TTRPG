@@ -607,10 +607,15 @@ export class StryderActorSheet extends ActorSheet {
   /** Async — fetches compendium data and injects Growth page content. */
   async _buildGrowthPage(_html) {
     try {
-      const classPanel = document.getElementById('jrpg-growth-class-panel');
-      const buyPanel   = document.getElementById('jrpg-growth-buy-panel');
+      // Scope panel lookup to THIS sheet's DOM. Using global document.getElementById
+      // here meant that with multiple sheets open (or rapid open/close re-renders)
+      // the duplicate panel ids could resolve to a stale/other sheet's node, leaving
+      // the live sheet stuck on its "Loading…" placeholder until a browser reload.
+      const root = _html?.[0] ?? this.element?.[0] ?? document;
+      const classPanel = root.querySelector('#jrpg-growth-class-panel');
+      const buyPanel   = root.querySelector('#jrpg-growth-buy-panel');
       if (!classPanel || !buyPanel) {
-        console.warn('[Growth] Panels not found in DOM — skipping build');
+        console.warn('[Growth] Panels not found in this sheet — skipping build');
         return;
       }
 
@@ -1781,6 +1786,61 @@ export class StryderActorSheet extends ActorSheet {
     context.system = actorData.system;
     context.flags = actorData.flags;
 
+    // ── Talent layering (base + effect bonus = total) ──
+    // The talent inputs must bind to the SOURCE (base) value, not the derived
+    // value. Otherwise an Active Effect (Folk bonus, condition, etc.) that adds
+    // to system.attributes.talent.X.value makes the input show the boosted total,
+    // and saving the sheet writes that total back to source — re-applying the
+    // bonus on top of itself (the "Folk bonus double-counts" bug). Rolls keep
+    // reading the derived value (= base + bonus = correct total) unchanged.
+    {
+      // base  = the player's own allocated points (source value, edited by +/-).
+      // total = base + effect layer (Folk foundation + conditions + level-up picks).
+      // bonus = total - base = the always-applied effect contribution (Folk floor).
+      const tSrc = this.actor._source?.system?.attributes?.talent ?? {};
+      const tDer = actorData.system?.attributes?.talent ?? {};
+      context.talentLayers = {};
+      for (const k of Object.keys(tDer)) {
+        const base  = Number(tSrc[k]?.value ?? 0);
+        const total = Number(tDer[k]?.value ?? 0);
+        context.talentLayers[k] = { base, total, bonus: total - base };
+      }
+      // Senses use the same layered model; built as an array for the {{#each}} loop.
+      const sSrc = this.actor._source?.system?.attributes?.sense ?? {};
+      const sDer = actorData.system?.attributes?.sense ?? {};
+      context.senseLayers = Object.keys(sDer).map(k => {
+        const base  = Number(sSrc[k]?.value ?? 0);
+        const total = Number(sDer[k]?.value ?? 0);
+        return { key: k, base, total, bonus: total - base };
+      });
+
+      // Potency follows the book baseline: Physical = 2×Grit, Magykal = 2×Will.
+      // A stored value > 0 is a manual override (set via +/-) that no longer
+      // tracks the stat; a stored 0 means "use the formula" (auto, cyan-tinted).
+      const gritV = Number(actorData.system?.abilities?.Grit?.value ?? 0);
+      const willV = Number(actorData.system?.abilities?.Will?.value ?? 0);
+      const pOvr  = Number(this.actor._source?.system?.attributes?.physical_potency?.value ?? 0);
+      const mOvr  = Number(this.actor._source?.system?.attributes?.magykal_potency?.value ?? 0);
+      const physical = { label: 'P. Potency', stat: 'physical_potency', formula: 2 * gritV, total: pOvr > 0 ? pOvr : 2 * gritV, isFormula: !(pOvr > 0) };
+      const magykal  = { label: 'M. Potency', stat: 'magykal_potency', formula: 2 * willV, total: mOvr > 0 ? mOvr : 2 * willV, isFormula: !(mOvr > 0) };
+      // The battle HUD shows only the potency for the attuned Aspect — Mortal
+      // Aspects use Physical (2×Grit), Immortal use Magykal (2×Will). Hidden when
+      // no Aspect is attuned. The Stats page shows both regardless.
+      const MORTAL_ASPECTS   = ['Brutality','Heroism','Vigilance','Destruction','Precision','Pain','Discipline','Resilience','Misdirection'];
+      const IMMORTAL_ASPECTS = ['Control','Dimensions','Elementalism','Mind','Power','Spirit','Resonance','Time'];
+      const activeAspect = actorData.flags?.stryder?.activeAspect ?? '';
+      let activePotency = null;
+      if (activeAspect) {
+        if (MORTAL_ASPECTS.some(a => activeAspect.includes(a)))        activePotency = physical;
+        else if (IMMORTAL_ASPECTS.some(a => activeAspect.includes(a))) activePotency = magykal;
+      }
+      context.potency = {
+        physical, magykal, active: activePotency,
+        // legacy fields kept for any template still reading potency.total directly
+        formula: physical.formula, total: physical.total, isFormula: physical.isFormula,
+      };
+    }
+
     // Pre-compute resource bar percentages for the main-menu player card.
     // Baking these into the template at render time is more reliable than
     // setting them via querySelector in activateListeners (which can silently
@@ -2510,6 +2570,36 @@ export class StryderActorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
+    // Talent / sense +/- steppers. Adjusts the SOURCE (base) value only — the
+    // player's own points. The Folk/effect layer is applied on top during
+    // derivation and always remains the foundation, so the displayed total can
+    // never drop below the Folk contribution (base clamps at 0). This never
+    // touches or double-counts the effect bonus.
+    html.on('click', '.jrpg-stat-step', async (ev) => {
+      ev.preventDefault();
+      const group = ev.currentTarget.dataset.group; // 'talent' | 'sense' | 'potency'
+      const stat  = ev.currentTarget.dataset.stat;
+      const step  = Number(ev.currentTarget.dataset.step) || 0;
+      if (!group || !stat || !step) return;
+
+      if (group === 'potency') {
+        // Baseline follows the book (Physical = 2×Grit, Magykal = 2×Will). The
+        // +/- OVERWRITE that baseline: seed from the formula on the first nudge,
+        // then store an absolute value that no longer tracks the stat. Decrement
+        // back to 0 to return to the auto formula.
+        const gov     = stat === 'magykal_potency' ? 'Will' : 'Grit';
+        const formula = 2 * Number(this.actor.system?.abilities?.[gov]?.value ?? 0);
+        const stored  = Number(foundry.utils.getProperty(this.actor._source.system, `attributes.${stat}.value`) ?? 0);
+        const current = stored > 0 ? stored : formula;
+        await this.actor.update({ [`system.attributes.${stat}.value`]: Math.max(0, current + step) });
+        return;
+      }
+
+      const path = `attributes.${group}.${stat}.value`;
+      const base = Number(foundry.utils.getProperty(this.actor._source.system, path) ?? 0);
+      await this.actor.update({ [`system.${path}`]: Math.max(0, base + step) });
+    });
+
     // Lordling: set a narrow default window size on first open
     if (this.actor.type === 'lordling') {
       setTimeout(() => this.setPosition({ width: 420, height: 555 }), 80);
@@ -3168,7 +3258,17 @@ export class StryderActorSheet extends ActorSheet {
       }
 
       if (!unlockedMap.size) {
-        ui.notifications.warn('No Aspects unlocked yet — purchase a Core Skillset from the Growth menu first.');
+        // Self-heal pre-existing stuck state: an activeAspect flag with no
+        // owning items (e.g. a Core Aspect was deleted before the deleteItem
+        // hook existed). Clear it here so the sheet no longer needs a JSON edit.
+        if (actor.getFlag('stryder', 'activeAspect')) {
+          await actor.unsetFlag('stryder', 'activeAspect');
+          const lbl = ev.currentTarget?.querySelector('.jrpg-aspect-select-label');
+          if (lbl) lbl.textContent = 'Select Aspect';
+          ui.notifications.info('Active Aspect cleared — no Aspect abilities remain on this sheet.');
+        } else {
+          ui.notifications.warn('No Aspects unlocked yet — purchase a Core Skillset from the Growth menu first.');
+        }
         return;
       }
 
@@ -4075,10 +4175,34 @@ export class StryderActorSheet extends ActorSheet {
 				[`flags.${SYSTEM_ID}.wytchRiseHealthReduction`]: null,
 			  });
 
-			  // 3. Remove all active effects (conditions), preserving permanent ones
-			  const effectIds = this.actor.effects
-			    .filter(e => !e.flags?.stryder?.isPermanent)
-			    .map(e => e.id);
+			  // 3. Remove only CONDITION effects (status effects), preserving folk
+			  //    bonuses, talent overrides, Warrior aug effects, and any other
+			  //    non-condition / permanent Active Effect. Previously this deleted
+			  //    EVERYTHING not flagged isPermanent, which wiped Folk bonuses etc.
+			  const conditionKeys = new Set();
+			  for (const se of (CONFIG.statusEffects ?? [])) {
+			    if (se.id)    conditionKeys.add(String(se.id).toLowerCase());
+			    if (se.label) conditionKeys.add(String(se.label).toLowerCase());
+			    if (se.name)  conditionKeys.add(String(se.name).toLowerCase());
+			  }
+			  const isCondition = (e) => {
+			    // Never treat permanent or system bonus effects as conditions
+			    if (e.flags?.stryder?.isPermanent)    return false;
+			    if (e.flags?.stryder?.isFolkBonus)    return false;
+			    if (e.flags?.stryder?.isFolkAbility)  return false;
+			    if (e.flags?.stryder?.isPlayerTalents) return false;
+			    if (e.flags?.stryder?.isLevelUpTalent) return false;
+			    // Foundry status-applied effects carry a statuses set / core.statusId
+			    for (const s of (e.statuses ?? [])) {
+			      if (conditionKeys.has(String(s).toLowerCase())) return true;
+			    }
+			    const coreStatus = e.flags?.core?.statusId;
+			    if (coreStatus && conditionKeys.has(String(coreStatus).toLowerCase())) return true;
+			    // Plain-AE conditions created by this system match a status label by name
+			    const nm = (e.name ?? e.label ?? '').toLowerCase();
+			    return conditionKeys.has(nm);
+			  };
+			  const effectIds = this.actor.effects.filter(isCondition).map(e => e.id);
 			  if (effectIds.length) {
 			    await this.actor.deleteEmbeddedDocuments('ActiveEffect', effectIds);
 			  }
@@ -4152,6 +4276,98 @@ export class StryderActorSheet extends ActorSheet {
 		  case 'resetHpMax': {
 			await this.actor.update({ 'system.health.bonus': 0 });
 			ui.notifications.info(`${this.actor.name}: Bonus HP removed.`);
+			return;
+		  }
+
+		  case 'resetCharacter': {
+			if (!this.actor.isOwner) {
+			  ui.notifications.warn("You don't have permission to reset this character.");
+			  return;
+			}
+			const confirmed = await Dialog.confirm({
+			  title: `Reset ${this.actor.name}?`,
+			  content: `<p>Resets this character to a blank <strong>Level 1</strong> for testing:</p>
+				<ul style="margin:4px 0 8px 18px;font-size:12px;line-height:1.5;">
+				  <li>Level, XP, Sparks, Mastery Points → 0</li>
+				  <li>Abilities, Talents, Senses, Life Skills, Potency → 0</li>
+				  <li>Class, Folk, and all Aspects removed</li>
+				  <li>Granted class features, techniques, hexes, folk abilities, stat perks removed</li>
+				  <li>All Active Effects and all <code>stryder</code> flags cleared</li>
+				</ul>
+				<p><strong>Kept:</strong> name, art, biography, inventory, Soul Armament, currency.</p>
+				<p class="sty-dlg-warn">This cannot be undone.</p>`,
+			  yes: () => true,
+			  no: () => false,
+			  defaultYes: false,
+			});
+			if (!confirmed) return;
+
+			// 1. Delete build-defining items (keep physical inventory, armament, etc.)
+			const BUILD_TYPES = new Set(['action','technique','hex','class','folk','racial','feature','statperk']);
+			const buildItemIds = this.actor.items.filter(i =>
+			  BUILD_TYPES.has(i.type)
+			  || i.flags?.stryder?.aspectName
+			  || i.flags?.stryder?.isClassFeature
+			  || i.flags?.stryder?.isTechnique
+			  || i.flags?.stryder?.isFolkAbility
+			  || i.flags?.stryder?.isLordlyFeature
+			).map(i => i.id);
+			if (buildItemIds.length) await this.actor.deleteEmbeddedDocuments('Item', buildItemIds);
+
+			// 2. Delete ALL Active Effects (folk bonuses, conditions, level-up picks, etc.)
+			const allEffectIds = this.actor.effects.map(e => e.id);
+			if (allEffectIds.length) await this.actor.deleteEmbeddedDocuments('ActiveEffect', allEffectIds);
+
+			// 3. Zero build/system fields + clear the entire stryder flag namespace.
+			const reset = {
+			  'system.attributes.level.value': 1,
+			  'system.attributes.xp.value': 3, // Level-1 starting XP (class bonuses, e.g. Warrior +2, re-apply on class re-selection)
+			  'system.masteryPoints.essence': 0,
+			  'system.gloryToken': false,
+			  'system.health.bonus': 0,
+			  'system.ward.value': 0,
+			  'system.physical_reduction': 0,
+			  'system.magykal_reduction': 0,
+			  'system.physical_resist_mod': 0,
+			  'system.magykal_resist_mod': 0,
+			  'system.dodge.bonus': 0,
+			  'system.evade.bonus': 0,
+			  'system.reflex_tag.bonus': 0,
+			  'system.leap_bonus.bonus': 0,
+			  'system.class.name': '',
+			  'system.folk.name': '',
+			  'system.folk.subfolk': '',
+			  'system.folk.size_choice': '',
+			  'system.folk.traveler_boon': '',
+			  'system.folk.wildkin_adaptations': [],
+			  'system.folk.talent_free_points': {},
+			  'system.folk.sense_free_choices': [],
+			  'system.folk.oumen_affliction': '',
+			  'system.folk.bonuses_applied': false,
+			  'system.attributes.physical_potency.value': 0,
+			  'system.attributes.physical_potency.mod': 0,
+			  'system.attributes.magykal_potency.value': 0,
+			  'system.attributes.magykal_potency.mod': 0,
+			  'flags.-=stryder': null,
+			};
+			for (let i = 1; i <= 5; i++) reset[`system.sparks.spark${i}`] = false;
+			for (const k of Object.keys(this.actor.system.abilities ?? {}))            reset[`system.abilities.${k}.value`] = 0;
+			for (const k of Object.keys(this.actor.system.attributes?.talent ?? {}))   reset[`system.attributes.talent.${k}.value`] = 0;
+			for (const k of Object.keys(this.actor.system.attributes?.sense ?? {}))    reset[`system.attributes.sense.${k}.value`] = 0;
+			for (const k of Object.keys(this.actor.system.life ?? {}))                 reset[`system.life.${k}.value`] = 0;
+			await this.actor.update(reset);
+
+			// 4. Recompute max resources for the now-blank Level 1 and refill them.
+			await this._syncComputedStats();
+			const after = this._calcMaxStats(this.actor);
+			await this.actor.update({
+			  'system.health.value':  after.maxHealth,
+			  'system.stamina.value': after.maxStamina,
+			  'system.mana.value':    after.maxMana,
+			});
+
+			ui.notifications.info(`${this.actor.name} has been reset to a blank Level 1.`);
+			this.render(false);
 			return;
 		  }
 
@@ -5634,8 +5850,13 @@ export class StryderActorSheet extends ActorSheet {
     // --- Build ActiveEffect changes ---
     const changes = [];
     for (const [talent, bonus] of Object.entries(talentBonuses)) {
+      // Folk data keys talents with capitalised names (e.g. "Intimacy"), but the
+      // schema/talent paths are lowercase ("intimacy"). Lowercase the key so the
+      // ADD lands on the real field — otherwise the Folk talent bonus writes to a
+      // phantom "talent.Intimacy.value" and never shows (the sense loop below
+      // already lowercases, which is why senses worked but talents didn't).
       if (bonus) changes.push({
-        key:   `system.attributes.talent.${talent}.value`,
+        key:   `system.attributes.talent.${talent.toLowerCase()}.value`,
         mode:  CONST.ACTIVE_EFFECT_MODES.ADD,
         value: String(bonus),
         priority: 50
@@ -6466,6 +6687,26 @@ Hooks.on('updateActor', async (actor, changes) => {
   await actor.update({ 'system.attributes.xp.value': current + bonus });
   await actor.setFlag('stryder', flagKey, true);
   ui.notifications.info(`${actor.name} received ${bonus} bonus XP from ${newClass} class feature (${newClass === 'Warrior' ? 'Augmented Combatant' : 'class bonus'}).`);
+});
+
+// When an Aspect item is removed, clear the `activeAspect` combat flag if the
+// actor no longer owns ANY item belonging to that aspect. Without this, deleting
+// a Core Aspect (or all of an aspect's abilities) left activeAspect pointing at a
+// now-absent aspect with no UI path to clear it — forcing a JSON edit or a brand
+// new sheet, and leaving aspect-keyed behaviour (e.g. Brutality) firing.
+Hooks.on('deleteItem', async (item, options, userId) => {
+  if (game.user.id !== userId) return;                 // only the deleting client acts
+  const actor = item.parent;
+  if (!actor || actor.type !== 'character') return;
+  if (!item.flags?.stryder?.aspectName) return;        // only react to aspect items
+  const activeAspect = actor.getFlag('stryder', 'activeAspect');
+  if (!activeAspect) return;
+  // deleteItem fires after removal, so actor.items already excludes the deleted item
+  const stillOwned = actor.items.some(i => i.flags?.stryder?.aspectName === activeAspect);
+  if (!stillOwned) {
+    await actor.unsetFlag('stryder', 'activeAspect');
+    ui.notifications?.info(`${actor.name}: Active Aspect cleared — no ${activeAspect.replace('Aspect of ', '')} abilities remain.`);
+  }
 });
 
 /**

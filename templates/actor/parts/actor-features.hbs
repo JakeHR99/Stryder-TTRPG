@@ -47,10 +47,12 @@
     <span class="jrpg-side-panel-val">{{system.attributes.move.running.value}}</span>
   </div>
 
+  {{#if potency.active}}
   <div class="jrpg-hud-side-panel">
-    <span class="jrpg-side-panel-label">Potency</span>
-    <span class="jrpg-side-panel-val">{{system.attributes.physical_potency.value}}</span>
+    <span class="jrpg-side-panel-label">{{potency.active.label}}</span>
+    <span class="jrpg-side-panel-val" title="{{#if potency.active.isFormula}}Auto from attuned Aspect{{else}}Manually set (baseline {{potency.active.formula}}){{/if}}">{{potency.active.total}}</span>
   </div>
+  {{/if}}
 
   {{!-- Flow counter — only shown when actor has Discipline --}}
   {{#if flags.stryder.flow}}
@@ -335,10 +337,10 @@
       <div class="jrpg-defense-panel">
         <div class="jrpg-defense-header">Defense</div>
         <div class="jrpg-defense-grid">
-          <span class="jrpg-defense-row rollable" data-custom-roll="1d6+@abilities.Reflex.value+@reflex_tag.bonus" data-label="Dodge Roll">Dodge</span>
-          <span class="jrpg-defense-row rollable" data-custom-roll="2d6+@abilities.Reflex.value+@reflex_tag.bonus" data-label="Evade Roll">Evade</span>
-          <span class="jrpg-defense-row rollable" data-roll="2d6+@abilities.Will.value+@checks.Magykal.mod" data-label="Magykal Resistance Check">M. Resist</span>
-          <span class="jrpg-defense-row rollable" data-roll="2d6+@abilities.Grit.value+@checks.Physical.mod" data-label="Physical Resistance Check">P. Resist</span>
+          <span class="jrpg-defense-row rollable" data-custom-roll="1d6+@abilities.Reflex.value+@dodge.bonus" data-label="Dodge Roll">Dodge</span>
+          <span class="jrpg-defense-row rollable" data-custom-roll="2d6+@abilities.Reflex.value+@evade.bonus" data-label="Evade Roll">Evade</span>
+          <span class="jrpg-defense-row rollable" data-roll="2d6+@abilities.Will.value+@checks.Magykal.mod+@magykal_resist_mod" data-label="Magykal Resistance Check">M. Resist</span>
+          <span class="jrpg-defense-row rollable" data-roll="2d6+@abilities.Grit.value+@checks.Physical.mod+@physical_resist_mod" data-label="Physical Resistance Check">P. Resist</span>
         </div>
       </div>
       <details class="stryder-section" open style="margin-top:8px;">

@@ -8724,6 +8724,60 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   color: #c8b0ff !important;
 }
 
+/* Talent / sense steppers (.jrpg-stat-step) — match the Challenge steppers,
+   grouped tight with the total display via .jrpg-stat-controls. */
+.jrpg-stat-controls {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-shrink: 0 !important;
+}
+.jrpg-stat-step {
+  width: 20px !important;
+  height: 20px !important;
+  padding: 0 !important;
+  border-radius: 3px !important;
+  background: rgba(80, 40, 140, 0.50) !important;
+  border: 1px solid rgba(130, 100, 200, 0.40) !important;
+  color: #c0b0f0 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background 0.12s ease, opacity 0.12s ease !important;
+}
+.jrpg-stat-step:hover {
+  background: rgba(120, 70, 200, 0.70) !important;
+  color: #ffffff !important;
+}
+/* The total (base + Folk/effect foundation). Read-only display, so saving the
+   sheet can never write it back and double-count the effect bonus. */
+.jrpg-stat-total {
+  min-width: 22px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+}
+/* Cyan tint when a Folk/effect foundation is contributing to the total. */
+.jrpg-stat-total.has-folk {
+  color: var(--sty-cyan);
+  text-shadow: 0 0 6px var(--sty-cyan-glow);
+}
+
+/* Hover-reveal steppers — keep the sheet clean. Buttons hold their layout
+   space (opacity, not display) so the total never shifts; they fade in when
+   the row is hovered or focused. */
+.jrpg-explore-row .jrpg-stat-step { opacity: 0; }
+.jrpg-explore-row:hover .jrpg-stat-step,
+.jrpg-explore-row:focus-within .jrpg-stat-step { opacity: 1; }
+.jrpg-challenge-row .jrpg-chal-btn { opacity: 0; transition: background 0.12s ease, opacity 0.12s ease !important; }
+.jrpg-challenge-row:hover .jrpg-chal-btn,
+.jrpg-challenge-row:focus-within .jrpg-chal-btn { opacity: 1; }
+
 /* ============================================================
    EXPLORATION — brighter, larger column headers
    ============================================================ */
@@ -12241,6 +12295,20 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border-color: var(--sty-cyan) !important;
   color: var(--sty-cyan-bright) !important;
   box-shadow: 0 0 8px var(--sty-cyan-glow) !important;
+}
+
+/* Destructive "Reset Character" button — crimson danger voice, set apart
+   from Rest / Spring of Life so it isn't fat-fingered. */
+.jrpg-recovery-btn.jrpg-reset-char-btn {
+  margin-left: 14px !important;
+  border-color: var(--sty-crimson-line) !important;
+  color: var(--sty-crimson) !important;
+}
+.jrpg-recovery-btn.jrpg-reset-char-btn:hover {
+  border-color: var(--sty-crimson) !important;
+  color: #ffffff !important;
+  background: var(--sty-crimson) !important;
+  box-shadow: 0 0 8px var(--sty-crimson-glow) !important;
 }
 
 /* ═══════════════════════════════ GROWTH MENU ════════════════════════════ */

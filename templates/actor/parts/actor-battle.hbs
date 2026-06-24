@@ -6,10 +6,14 @@
 
 		<div class="jrpg-explore-col">
 			<div class="jrpg-explore-col-header">Senses</div>
-			{{#each system.attributes.sense as |sense key|}}
+			{{#each senseLayers as |L|}}
 			<div class="jrpg-explore-row">
-				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.sense.{{key}}.value" data-label="{{key}}">{{key}}</span>
-				<input type="text" name="system.attributes.sense.{{key}}.value" value="{{sense.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.sense.{{L.key}}.value" data-label="{{L.key}}">{{L.key}}</span>
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="sense" data-stat="{{L.key}}" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if L.bonus}} has-folk{{/if}}" title="Total {{L.total}} — Folk/effect foundation +{{L.bonus}}, your points {{L.base}}">{{L.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="sense" data-stat="{{L.key}}" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			{{/each}}
 		</div>
@@ -51,19 +55,35 @@
 			<div class="jrpg-explore-col-header">Physical</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.strength.value" data-label="Strength">Strength</span>
-				<input type="text" name="system.attributes.talent.strength.value" value="{{system.attributes.talent.strength.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="strength" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.strength.bonus}} has-folk{{/if}}" title="Total {{talentLayers.strength.total}} — Folk/effect foundation +{{talentLayers.strength.bonus}}, your points {{talentLayers.strength.base}}">{{talentLayers.strength.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="strength" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.nimbleness.value" data-label="Nimbleness">Nimbleness</span>
-				<input type="text" name="system.attributes.talent.nimbleness.value" value="{{system.attributes.talent.nimbleness.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="nimbleness" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.nimbleness.bonus}} has-folk{{/if}}" title="Total {{talentLayers.nimbleness.total}} — Folk/effect foundation +{{talentLayers.nimbleness.bonus}}, your points {{talentLayers.nimbleness.base}}">{{talentLayers.nimbleness.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="nimbleness" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.finesse.value" data-label="Finesse">Finesse</span>
-				<input type="text" name="system.attributes.talent.finesse.value" value="{{system.attributes.talent.finesse.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="finesse" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.finesse.bonus}} has-folk{{/if}}" title="Total {{talentLayers.finesse.total}} — Folk/effect foundation +{{talentLayers.finesse.bonus}}, your points {{talentLayers.finesse.base}}">{{talentLayers.finesse.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="finesse" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.endurance.value" data-label="Endurance">Endurance</span>
-				<input type="text" name="system.attributes.talent.endurance.value" value="{{system.attributes.talent.endurance.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="endurance" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.endurance.bonus}} has-folk{{/if}}" title="Total {{talentLayers.endurance.total}} — Folk/effect foundation +{{talentLayers.endurance.bonus}}, your points {{talentLayers.endurance.base}}">{{talentLayers.endurance.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="endurance" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 		</div>
 
@@ -71,15 +91,27 @@
 			<div class="jrpg-explore-col-header">Mental</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.wit.value" data-label="Wit">Wit</span>
-				<input type="text" name="system.attributes.talent.wit.value" value="{{system.attributes.talent.wit.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="wit" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.wit.bonus}} has-folk{{/if}}" title="Total {{talentLayers.wit.total}} — Folk/effect foundation +{{talentLayers.wit.bonus}}, your points {{talentLayers.wit.base}}">{{talentLayers.wit.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="wit" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.wisdom.value" data-label="Wisdom">Wisdom</span>
-				<input type="text" name="system.attributes.talent.wisdom.value" value="{{system.attributes.talent.wisdom.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="wisdom" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.wisdom.bonus}} has-folk{{/if}}" title="Total {{talentLayers.wisdom.total}} — Folk/effect foundation +{{talentLayers.wisdom.bonus}}, your points {{talentLayers.wisdom.base}}">{{talentLayers.wisdom.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="wisdom" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.survival.value" data-label="Survival">Survival</span>
-				<input type="text" name="system.attributes.talent.survival.value" value="{{system.attributes.talent.survival.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="survival" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.survival.bonus}} has-folk{{/if}}" title="Total {{talentLayers.survival.total}} — Folk/effect foundation +{{talentLayers.survival.bonus}}, your points {{talentLayers.survival.base}}">{{talentLayers.survival.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="survival" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 		</div>
 
@@ -87,23 +119,43 @@
 			<div class="jrpg-explore-col-header">Social</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.aggression.value" data-label="Aggression">Aggression</span>
-				<input type="text" name="system.attributes.talent.aggression.value" value="{{system.attributes.talent.aggression.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="aggression" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.aggression.bonus}} has-folk{{/if}}" title="Total {{talentLayers.aggression.total}} — Folk/effect foundation +{{talentLayers.aggression.bonus}}, your points {{talentLayers.aggression.base}}">{{talentLayers.aggression.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="aggression" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.deceit.value" data-label="Deceit">Deceit</span>
-				<input type="text" name="system.attributes.talent.deceit.value" value="{{system.attributes.talent.deceit.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="deceit" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.deceit.bonus}} has-folk{{/if}}" title="Total {{talentLayers.deceit.total}} — Folk/effect foundation +{{talentLayers.deceit.bonus}}, your points {{talentLayers.deceit.base}}">{{talentLayers.deceit.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="deceit" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.diplomacy.value" data-label="Diplomacy">Diplomacy</span>
-				<input type="text" name="system.attributes.talent.diplomacy.value" value="{{system.attributes.talent.diplomacy.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="diplomacy" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.diplomacy.bonus}} has-folk{{/if}}" title="Total {{talentLayers.diplomacy.total}} — Folk/effect foundation +{{talentLayers.diplomacy.bonus}}, your points {{talentLayers.diplomacy.base}}">{{talentLayers.diplomacy.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="diplomacy" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.intimacy.value" data-label="Intimacy">Intimacy</span>
-				<input type="text" name="system.attributes.talent.intimacy.value" value="{{system.attributes.talent.intimacy.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="intimacy" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.intimacy.bonus}} has-folk{{/if}}" title="Total {{talentLayers.intimacy.total}} — Folk/effect foundation +{{talentLayers.intimacy.bonus}}, your points {{talentLayers.intimacy.base}}">{{talentLayers.intimacy.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="intimacy" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 			<div class="jrpg-explore-row">
 				<span class="jrpg-explore-label rollable" data-roll="2d6+@attributes.talent.charm.value" data-label="Charm">Charm</span>
-				<input type="text" name="system.attributes.talent.charm.value" value="{{system.attributes.talent.charm.value}}" data-dtype="Number" class="jrpg-explore-input" />
+				<span class="jrpg-stat-controls">
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="charm" data-step="-1" title="Decrease your points">&minus;</button>
+					<span class="jrpg-stat-total{{#if talentLayers.charm.bonus}} has-folk{{/if}}" title="Total {{talentLayers.charm.total}} — Folk/effect foundation +{{talentLayers.charm.bonus}}, your points {{talentLayers.charm.base}}">{{talentLayers.charm.total}}</span>
+					<button type="button" class="jrpg-stat-step" data-group="talent" data-stat="charm" data-step="1" title="Increase your points">+</button>
+				</span>
 			</div>
 		</div>
 

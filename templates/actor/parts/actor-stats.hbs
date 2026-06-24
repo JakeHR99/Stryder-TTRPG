@@ -72,9 +72,20 @@
 	{{!-- Potency — single combined stat beneath the grid --}}
 	<div class="stats-potency-row">
 		<div class="header-stat">
-			<label class="header-stat-label">Potency</label>
-			<input type="text" name="system.attributes.physical_potency.value" value="{{system.attributes.physical_potency.value}}"
-				data-dtype="Number" class="header-stat-input" />
+			<label class="header-stat-label">P. Potency</label>
+			<span class="jrpg-stat-controls">
+				<button type="button" class="jrpg-stat-step" data-group="potency" data-stat="physical_potency" data-step="-1" title="Decrease (overrides the 2×Grit baseline; reach 0 to return to auto)">&minus;</button>
+				<span class="jrpg-stat-total{{#if potency.physical.isFormula}} has-folk{{/if}}" title="{{#if potency.physical.isFormula}}Auto: 2×Grit = {{potency.physical.total}}{{else}}Manually set to {{potency.physical.total}} (baseline 2×Grit = {{potency.physical.formula}}){{/if}}">{{potency.physical.total}}</span>
+				<button type="button" class="jrpg-stat-step" data-group="potency" data-stat="physical_potency" data-step="1" title="Increase (overrides the 2×Grit baseline)">+</button>
+			</span>
+		</div>
+		<div class="header-stat">
+			<label class="header-stat-label">M. Potency</label>
+			<span class="jrpg-stat-controls">
+				<button type="button" class="jrpg-stat-step" data-group="potency" data-stat="magykal_potency" data-step="-1" title="Decrease (overrides the 2×Will baseline; reach 0 to return to auto)">&minus;</button>
+				<span class="jrpg-stat-total{{#if potency.magykal.isFormula}} has-folk{{/if}}" title="{{#if potency.magykal.isFormula}}Auto: 2×Will = {{potency.magykal.total}}{{else}}Manually set to {{potency.magykal.total}} (baseline 2×Will = {{potency.magykal.formula}}){{/if}}">{{potency.magykal.total}}</span>
+				<button type="button" class="jrpg-stat-step" data-group="potency" data-stat="magykal_potency" data-step="1" title="Increase (overrides the 2×Will baseline)">+</button>
+			</span>
 		</div>
 	</div>
 </div>
