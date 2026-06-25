@@ -269,7 +269,16 @@
 
 						<!-- ── Resources (left, compact) ── -->
 						<div class="jrpg-char-col-resources">
-							<h3 class="jrpg-char-section-title">Resources</h3>
+							<div class="jrpg-stat-section-header">
+								<h3 class="jrpg-char-section-title csheet-stats-title">Resources</h3>
+								<span class="jrpg-stat-pool-counter" style="visibility:hidden;" aria-hidden="true">
+									<span class="jrpg-stat-pool-remaining">0</span>
+									<span class="jrpg-stat-pool-sep">/</span>
+									<span class="jrpg-stat-pool-total">0</span>
+									<span class="jrpg-stat-pool-label">&nbsp;pts</span>
+								</span>
+							</div>
+							<div class="csheet-stats-hairline"></div>
 
 							<div class="jrpg-res-compact-row">
 								<span class="jrpg-char-res-label hp-label">HP</span>
@@ -282,7 +291,7 @@
 										class="jrpg-char-input jrpg-res-bonus-input" placeholder="0" title="Bonus max HP" min="0" />
 									<button type="button" class="jrpg-reset-btn resource-button" data-action="resetHpMax" title="Remove bonus HP">↺</button>
 								</div>
-								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar hp-fill" style="width:{{system.health.value}}%"></div></div>
+								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar hp-fill" style="width:{{hpPct}}%"></div></div>
 							</div>
 							<div class="jrpg-char-hp-breakdown">
 							  <span class="jrpg-char-hp-src">Class + Level</span>
@@ -297,7 +306,7 @@
 									<span class="jrpg-char-divider">/</span>
 									<input type="number" name="system.mana.max" value="{{system.mana.max}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
 								</div>
-								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar mp-fill" style="width:{{system.mana.value}}%"></div></div>
+								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar mp-fill" style="width:{{mpPct}}%"></div></div>
 							</div>
 
 							<div class="jrpg-res-compact-row">
@@ -307,7 +316,7 @@
 									<span class="jrpg-char-divider">/</span>
 									<input type="number" name="system.stamina.max" value="{{system.stamina.max}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
 								</div>
-								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar sp-fill" style="width:{{system.stamina.value}}%"></div></div>
+								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar sp-fill" style="width:{{staPct}}%"></div></div>
 							</div>
 						</div>
 

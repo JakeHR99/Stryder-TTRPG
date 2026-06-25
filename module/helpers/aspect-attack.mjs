@@ -100,6 +100,17 @@ function calcDamage(soulVal, multiplier, quality, damageMod = 0) {
   return quality === 'Excellent' ? Math.ceil(base * multiplier) : Math.floor(base * multiplier);
 }
 
+// Base damage value for an attack. A per-item `system.damage_override` (set on
+// the item sheet) replaces the actor's Soul value, letting players hand-tune the
+// damage of imported / aspect abilities. Blank = use Soul as normal.
+function baseDamageStat(actor, item) {
+  const ov = item?.system?.damage_override;
+  if (ov !== null && ov !== undefined && String(ov).trim() !== '' && !Number.isNaN(Number(ov))) {
+    return Number(ov);
+  }
+  return actor.system.abilities?.Soul?.value ?? 0;
+}
+
 // ── Shared: HTML helpers ─────────────────────────────────────
 const Q_COLOR = { Poor:'#dc3545', Good:'#5cb85c', Excellent:'#ffd700' };
 
@@ -211,7 +222,7 @@ export async function resolveAspectAttack(item, actor, { speaker, rollMode, meth
   let { quality, multiplier } = resolveQuality(roll.total, actor, augDoubleDmg);
   ({ quality, multiplier } = await checkUnbreakableDowngrade(quality, multiplier, targetActor, speaker, rollMode));
 
-  const soulVal = actor.system.abilities?.Soul?.value ?? 0;
+  const soulVal = baseDamageStat(actor, item);
   let totalDamage = calcDamage(soulVal, multiplier, quality, brutalMods.damageMod);
   if (saTemper === 'heavy' && item.system.action_type === 'focused') totalDamage += Math.max(0, weaponWC - 2);
 

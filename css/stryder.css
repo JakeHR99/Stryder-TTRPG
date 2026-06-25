@@ -1918,6 +1918,31 @@ ol#chat-log > li,
   margin: 0 !important;
 }
 
+/* ── Plain chat messages: soft glowing white "bubble" (MMO style) ──
+   Targets ordinary typed messages only. Excludes dice rolls (:has(.dice-roll))
+   and the system's custom dark cards (:has(.chat-message-card)) so those keep
+   their own styling. Without this, plain messages render on the stripped
+   transparent background and are hard to read. */
+.message .message-content:not(:has(.dice-roll)):not(:has(.chat-message-card)) {
+  background: linear-gradient(180deg, rgba(248,251,255,0.97) 0%, rgba(228,238,250,0.95) 100%) !important;
+  color: #1a2433 !important;
+  border: 1px solid rgba(255,255,255,0.85) !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  margin-top: 3px !important;
+  box-shadow:
+    0 0 10px rgba(150,195,255,0.45),
+    0 0 20px rgba(255,255,255,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.95) !important;
+}
+.message .message-content:not(:has(.dice-roll)):not(:has(.chat-message-card)) * {
+  color: #1a2433 !important;
+}
+.message .message-content:not(:has(.dice-roll)):not(:has(.chat-message-card)) a {
+  color: #1d4ed8 !important;
+  text-shadow: none !important;
+}
+
 /* ── Chat message sender / timestamp ── */
 .message .message-sender,
 .message-header .message-sender {

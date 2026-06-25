@@ -84,11 +84,6 @@
           "description"
         ]
       },
-      "hex": {
-        "htmlFields": [
-          "description"
-        ]
-      },
       "loot": {
         "htmlFields": [
           "description"
@@ -441,7 +436,7 @@
     }
   ],
   "socket": true,
-  "background": "systems/punkmagykdevkit/assets/stryderfvtt.png",
+  "background": "systems/stryder/assets/stryderfvtt.png",
   "grid": {
     "distance": 1,
     "units": "m"

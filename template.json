@@ -721,7 +721,7 @@
     }
   },
   "Item": {
-    "types": ["action", "armament", "generic", "aegiscore", "legacies", "head", "back", "arms", "legs", "gems", "loot", "component", "consumable", "elixir", "gear", "hex", "skill", "feature", "racial", "statperk", "technique", "profession", "bonds", "passive", "miscellaneous", "class", "folk", "ingredient"],
+    "types": ["action", "armament", "generic", "aegiscore", "legacies", "head", "back", "arms", "legs", "gems", "loot", "component", "consumable", "elixir", "gear", "skill", "feature", "racial", "statperk", "technique", "profession", "bonds", "passive", "miscellaneous", "class", "folk", "ingredient"],
     "templates": {
       "base": {
         "description": "",
@@ -746,7 +746,8 @@
         "value": 0
       },
       "isAspectAbility": false,
-      "isCampTask": false
+      "isCampTask": false,
+      "damage_override": ""
     },
     "generic": {
       "templates": ["base"],
@@ -803,21 +804,6 @@
         "poor": "",
         "good": "",
         "excellent": ""
-      },
-      "roll": {
-        "diceBonus": 0,
-        "diceNum": 2,
-        "diceSize": 6
-      }
-    },
-    "hex": {
-      "templates": ["base"],
-      "damage_type": "magykal",
-      "hex": {
-        "rollsDamage": false,
-        "alwaysRollsExcellent": false,
-        "addsMastery": false,
-        "canOverflow": false
       },
       "roll": {
         "diceBonus": 0,

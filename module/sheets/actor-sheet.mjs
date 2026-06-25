@@ -3494,6 +3494,22 @@ export class StryderActorSheet extends ActorSheet {
       await this.actor.setFlag('stryder', 'favorites', [...current]);
     });
 
+    // Right-click any item row → post its name + description to chat (RP / reference).
+    // Resolves the nearest element carrying a data-item-id; left native menus in
+    // text fields alone.
+    html.on('contextmenu', '[data-item-id]', async (ev) => {
+      if (ev.target.closest('input, textarea, [contenteditable="true"]')) return;
+      const item = this.actor.items.get(ev.currentTarget.dataset.itemId);
+      if (!item) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      const desc = (item.system?.description ?? '').trim() || '<em>No description.</em>';
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        content: `<div class="chat-message-card"><div class="chat-message-header"><h3 class="chat-message-title">${item.name}</h3></div><div class="chat-message-content">${desc}</div></div>`,
+      });
+    });
+
     // Render the item sheet for viewing/editing prior to the editable check.
     html.on('click', '.item-edit', (ev) => {
       const li = $(ev.currentTarget).parents('.item');
@@ -4465,17 +4481,8 @@ export class StryderActorSheet extends ActorSheet {
 
 		  if (message) {
 			ChatMessage.create({
-			  content: `
-				<div style="background: url('systems/stryder/assets/parchment.jpg'); 
-							background-size: cover; 
-							padding: 15px; 
-							border: 1px solid #c9a66b; 
-							border-radius: 3px;">
-				  <h3 style="margin-top: 0; border-bottom: 1px solid #c9a66b;"><strong>${button.textContent.trim()}</strong></h3>
-				  <p style="margin-bottom: 0;">${message}</p>
-				</div>
-			  `,
-			  speaker: ChatMessage.getSpeaker({actor: this.actor})
+			  speaker: ChatMessage.getSpeaker({actor: this.actor}),
+			  content: `<div class="chat-message-card"><div class="chat-message-header"><h3 class="chat-message-title">${button.textContent.trim()}</h3></div><div class="chat-message-content">${message}</div></div>`,
 			});
 		  }
 
@@ -5147,12 +5154,15 @@ export class StryderActorSheet extends ActorSheet {
       duplicateName = `${baseName} (Copy) (${counter})`;
     }
 
-    // Create the duplicate item data
+    // Create the duplicate item data. Copy flags too so a duplicated
+    // Growth-imported item keeps its identity (aspectName / isTechnique /
+    // isClassFeature) and stays categorised in the right Battle section.
     const duplicateData = {
       name: duplicateName,
       type: item.type,
       img: item.img,
-      system: foundry.utils.deepClone(item.system)
+      system: foundry.utils.deepClone(item.system),
+      flags: foundry.utils.deepClone(item.flags ?? {})
     };
 
     // Create the duplicate item
@@ -6743,7 +6753,13 @@ function _openPokemonBattleWindow(actorRef) {
   const favoriteIds   = new Set(actor.getFlag('stryder', 'favorites') || []);
   const isFav         = (i) => favoriteIds.has(i.id);
 
-  const skills        = actor.items.filter(i => isFav(i) && (i.type === 'skill' || isAspectAction(i)));
+  const skills        = actor.items.filter(i => isFav(i) && (
+    i.type === 'skill'
+    || isAspectAction(i)
+    || i.type === 'technique' || i.flags?.stryder?.isTechnique
+    || i.type === 'racial'
+    || i.type === 'feature'   || i.flags?.stryder?.isClassFeature
+  ));
   const playerActions = actor.items.filter(i => isFav(i) && i.type === 'action' && !isAspectAction(i));
   const elixirs      = actor.items.filter(i => i.type === 'elixir');
   const consumes     = actor.items.filter(i => i.type === 'consumable');
