@@ -8719,59 +8719,13 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 }
 
 /* SUB-SCREEN SLIDING DIAGONAL — removed */
+/* Sub-screen falling light lines — removed */
 
-/* ============================================================
-   Sub-screen — falling light lines
-   ============================================================ */
-
-/* bg container sits behind everything */
-.jrpg-sub-bg {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* header and content always above the lines */
+/* header and content keep their own stacking context */
 .jrpg-sub-header,
 .jrpg-sub-content {
   position: relative;
   z-index: 2;
-}
-
-.jrpg-sub-line {
-  position: absolute;
-  width: 1px;
-  height: 100%;
-  top: 0;
-  left: 50%;
-  background: rgba(255,255,255,0.03);
-  overflow: hidden;
-}
-
-.jrpg-sub-line::after {
-  content: '';
-  display: block;
-  position: absolute;
-  height: 15vh;
-  width: 100%;
-  top: -50%;
-  left: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.18) 75%, rgba(255,255,255,0.18) 100%);
-  animation: jrpgLineDrop 7s 0s infinite;
-  animation-fill-mode: forwards;
-  animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
-}
-
-.jrpg-sub-line:nth-child(1) { margin-left: -25%; }
-.jrpg-sub-line:nth-child(1)::after { animation-delay: 2s; }
-.jrpg-sub-line:nth-child(3) { margin-left: 25%; }
-.jrpg-sub-line:nth-child(3)::after { animation-delay: 2.5s; }
-
-@keyframes jrpgLineDrop {
-  0%   { top: -50%; }
-  100% { top: 110%; }
 }
 
 /* ============================================================
@@ -10588,11 +10542,6 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   background: rgba(0, 30, 24, 0.55) !important;
   border: none !important;
   box-shadow: none !important;
-}
-
-/* === Tempering — Hide sub-bg lines === */
-.jrpg-sub-screen.is-tempering .jrpg-sub-bg {
-  display: none !important;
 }
 
 /* === Tempering sub-page visibility toggles ===
