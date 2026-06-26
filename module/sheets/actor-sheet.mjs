@@ -2099,6 +2099,53 @@ export class StryderActorSheet extends ActorSheet {
       context.saSumCapacity = { slot1: '1 Slot', slot2: '2 Slots', slot3: '3 Slots', slot4: '4 Slots' }[sa.capacity ?? 'slot1'] ?? '1 Slot';
     }
 
+    // ── Biography & Journal (Phase 1) ──
+    // Only the character sheet carries the bio spine this phase; guard so other
+    // actor types that share this sheet class don't pay for (or break on) it.
+    if (this.actor.type === 'character') {
+      // 1) Enriched rich text (appearance description + backstory). Matches the
+      //    TextEditor.enrichHTML precedent in module/documents/item.mjs:520.
+      const _enrich = (s) => TextEditor.enrichHTML(s ?? "", {
+        async: true,
+        secrets: this.actor.isOwner,
+        relativeTo: this.actor,
+        rollData: this.actor.getRollData?.()
+      });
+      context.bioEnriched = {
+        description: await _enrich(this.actor.system.bio?.appearance?.description),
+        backstory:   await _enrich(this.actor.system.bio?.backstory?.text)
+      };
+
+      // 2) Section-level visibility map. can(vis) per Build Spec §4:
+      //    GM sees all; public → all; party → any player; gm → owner-hidden
+      //    (false here, GM already short-circuited); private → owner only.
+      const isGM = game.user.isGM;
+      const isOwner = this.actor.isOwner;
+      const can = (vis) => isGM ? true
+        : vis === 'public' ? true
+        : vis === 'party'  ? game.user.role >= CONST.USER_ROLES.PLAYER
+        : vis === 'gm'     ? false
+        : /* private */      isOwner;
+      context.bioCan = Object.fromEntries(
+        Object.entries(this.actor.system.bio?.visibility ?? {}).map(([k, v]) => [k, can(v)])
+      );
+      // Owner/GM get the visibility selectors on each section header.
+      context.bioIsEditor = isGM || isOwner;
+
+      // 3) One-time legacy migration: copy the old base `system.biography`
+      //    string into bio.backstory.text if backstory is still empty. Guarded
+      //    by a transient flag (the async update + re-render would otherwise
+      //    re-enter before the write lands). Old field is left untouched.
+      const legacyBio = this.actor.system.biography;
+      const newBackstory = this.actor.system.bio?.backstory?.text;
+      if (!this._bioMigrated && isOwner
+          && typeof legacyBio === 'string' && legacyBio.trim() !== ''
+          && (!newBackstory || newBackstory.trim() === '')) {
+        this._bioMigrated = true;
+        this.actor.update({ 'system.bio.backstory.text': legacyBio });
+      }
+    }
+
     return context;
   }
 
