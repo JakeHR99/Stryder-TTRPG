@@ -395,7 +395,9 @@
 						</div>
 						<div class="jrpg-bio-nav-group">
 							<span class="jrpg-bio-nav-label">Journal</span>
-							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="diary" disabled title="Coming in a later phase"><span>Diary</span></button>
+							{{#if journalCanTab}}
+							<button type="button" class="jrpg-bio-nav-btn" data-target="diary"><span>Diary</span></button>
+							{{/if}}
 							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="quests" disabled title="Coming in a later phase"><span>Quests</span></button>
 							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="people" disabled title="Coming in a later phase"><span>People</span></button>
 						</div>
@@ -600,6 +602,84 @@
 							</div>
 						</div>
 						{{/if}}
+					</div>
+
+					{{!-- ── DIARY (journal entries — Phase 2) ── --}}
+					<div class="jrpg-bio-panel" data-section="diary">
+						<div class="jrpg-bio-section-head">
+							<h3 class="jrpg-bio-section-title">Diary</h3>
+							{{#if bioIsEditor}}
+							<label class="jrpg-bio-vis-wrap" title="Default visibility for NEW entries">
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="journal">
+									<option value="public"  {{#if (eq bioVis.journal "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.journal "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.journal "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.journal "private")}}selected{{/if}}>Private</option>
+								</select>
+							</label>
+							<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="journal.entries">+ New Entry</button>
+							{{/if}}
+						</div>
+
+						{{#if bioIsEditor}}
+						<div class="jrpg-diary-filterbar">
+							<input type="search" class="jrpg-diary-search jrpg-char-input" placeholder="Search entries…" />
+							<div class="jrpg-diary-filter-modes">
+								<button type="button" class="jrpg-diary-fmode is-active" data-mode="all">All</button>
+								<button type="button" class="jrpg-diary-fmode" data-mode="ic">In-Character</button>
+								<button type="button" class="jrpg-diary-fmode" data-mode="ooc">Notes</button>
+							</div>
+							{{#if journalTags.length}}
+							<div class="jrpg-diary-tagchips">
+								{{#each journalTags}}<button type="button" class="jrpg-diary-tagchip" data-tag="{{this}}">{{this}}</button>{{/each}}
+							</div>
+							{{/if}}
+						</div>
+						{{/if}}
+
+						<div class="jrpg-diary-list">
+							{{#each journalEntries}}
+							<article class="jrpg-diary-card {{#if pinned}}is-pinned{{/if}} {{#if ic}}is-ic{{else}}is-ooc{{/if}}"
+									 data-id="{{id}}" data-tags="{{#each tags}}{{this}} {{/each}}" data-ic="{{ic}}">
+								<header class="jrpg-diary-card-head">
+									{{#if ../bioIsEditor}}
+										<input class="jrpg-diary-title jrpg-char-input" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="title" type="text" value="{{title}}" placeholder="Untitled" />
+									{{else}}<span class="jrpg-diary-title-ro">{{title}}</span>{{/if}}
+									<span class="jrpg-diary-badge">{{#if ic}}IC{{else}}OOC{{/if}}</span>
+									{{#if ../bioIsEditor}}
+										<button type="button" class="jrpg-diary-pin {{#if pinned}}is-on{{/if}}" data-action="bioToggleField" data-list="journal.entries" data-id="{{id}}" data-field="pinned" title="Pin">★</button>
+										<button type="button" class="jrpg-diary-del" data-action="bioDelRow" data-list="journal.entries" data-id="{{id}}" title="Delete">🗙</button>
+									{{/if}}
+								</header>
+
+								<div class="jrpg-diary-meta">
+									{{#if ../bioIsEditor}}
+										<label class="jrpg-diary-icflag"><input type="checkbox" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="ic" data-dtype="Boolean" {{checked ic}}/> In-character</label>
+										<input class="jrpg-diary-ingame jrpg-char-input" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="inGameDate" type="text" value="{{inGameDate}}" placeholder="In-game date" />
+										<input class="jrpg-diary-mood jrpg-char-input" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="mood" type="text" value="{{mood}}" placeholder="Mood" />
+										<input class="jrpg-diary-tags jrpg-char-input" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="tags" data-dtype="Array" type="text" value="{{#each tags}}{{this}}, {{/each}}" placeholder="tags, comma, sep" />
+										<select class="jrpg-bio-vis-select jrpg-diary-vis" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="visibility" title="Who can see this entry">
+											<option value="public"  {{#if (eq visibility "public")}}selected{{/if}}>Public</option>
+											<option value="party"   {{#if (eq visibility "party")}}selected{{/if}}>Party</option>
+											<option value="gm"      {{#if (eq visibility "gm")}}selected{{/if}}>GM</option>
+											<option value="private" {{#if (eq visibility "private")}}selected{{/if}}>Private</option>
+										</select>
+									{{/if}}
+									<span class="jrpg-diary-date">{{_realDateLabel}}{{#if inGameDate}} · {{inGameDate}}{{/if}}{{#if mood}} · {{mood}}{{/if}}</span>
+								</div>
+
+								{{#if ../bioIsEditor}}
+									<div class="jrpg-bio-editor jrpg-diary-editor">
+										{{editor _bodyEnriched target=(concat "system.journal.entries." _idx ".body") engine="prosemirror" button=true editable=../editable}}
+									</div>
+								{{else}}
+									<div class="jrpg-diary-body">{{{_bodyEnriched}}}</div>
+								{{/if}}
+							</article>
+							{{else}}
+							<div class="jrpg-diary-empty">No entries yet.{{#if bioIsEditor}} Click “+ New Entry” to start your journal.{{/if}}</div>
+							{{/each}}
+						</div>
 					</div>
 
 				</div>

@@ -17765,3 +17765,253 @@ li.chat-message.sty-grp-end {
   line-height: 1.6;
 }
 /* ===== End of Bio/Journal Phase 1 region ===== */
+
+/* ===== BIOGRAPHY & JOURNAL — Phase 2 (Diary) ===== */
+
+/* Section head: title + default-visibility chip + add button on one row. */
+.jrpg-bio-section-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--sty-line-gold);
+}
+.jrpg-bio-section-title {
+  font-family: var(--sty-font-display);
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sty-gold);
+  text-shadow: 0 0 10px var(--sty-gold-muted);
+  margin: 0;
+  flex: 0 0 auto;
+}
+.jrpg-bio-vis-wrap {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+}
+.jrpg-bio-add-btn {
+  background: var(--sty-panel-deep);
+  border: 1px solid var(--sty-line-gold-strong);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-gold);
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.jrpg-bio-add-btn:hover {
+  border-color: var(--sty-gold);
+  background: var(--sty-select-fill);
+  text-shadow: 0 0 8px var(--sty-gold-muted);
+}
+
+/* Filter / search bar — matches party-sheet control weight. */
+.jrpg-diary-filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.jrpg-diary-search {
+  flex: 1 1 180px;
+  min-width: 140px;
+}
+.jrpg-diary-filter-modes {
+  display: inline-flex;
+  gap: 4px;
+}
+.jrpg-diary-fmode {
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-cyan-soft);
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.jrpg-diary-fmode:hover {
+  color: var(--sty-cyan-bright);
+  border-color: var(--sty-line-blue-strong);
+}
+.jrpg-diary-fmode.is-active {
+  color: var(--sty-gold);
+  border-color: var(--sty-line-gold-strong);
+  background: var(--sty-panel-deep);
+}
+.jrpg-diary-tagchips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.jrpg-diary-tagchip {
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-cyan-soft);
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.jrpg-diary-tagchip:hover {
+  color: var(--sty-cyan-bright);
+  border-color: var(--sty-line-blue-strong);
+}
+.jrpg-diary-tagchip.is-active {
+  color: var(--sty-gold);
+  border-color: var(--sty-line-gold-strong);
+  background: var(--sty-panel-deep);
+}
+
+/* Entry list + cards. IC = gold left-voice, OOC = cyan; pinned = gold edge. */
+.jrpg-diary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.jrpg-diary-card {
+  background: var(--sty-panel);
+  border: 1px solid var(--sty-line-blue);
+  border-left: 3px solid var(--sty-line-blue-strong);
+  border-radius: var(--sty-r-card);
+  padding: 10px 14px;
+}
+.jrpg-diary-card.is-ic {
+  border-left-color: var(--sty-gold);
+}
+.jrpg-diary-card.is-ooc {
+  border-left-color: var(--sty-cyan);
+}
+.jrpg-diary-card.is-pinned {
+  border-color: var(--sty-line-gold-strong);
+  box-shadow: 0 0 10px var(--sty-gold-muted);
+}
+.jrpg-diary-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.jrpg-diary-title {
+  flex: 1 1 auto;
+  font-family: var(--sty-font-display);
+  font-size: 15px;
+  color: var(--sty-gold);
+}
+.jrpg-diary-title-ro {
+  flex: 1 1 auto;
+  font-family: var(--sty-font-display);
+  font-size: 15px;
+  color: var(--sty-gold);
+}
+.jrpg-diary-badge {
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: var(--sty-r-bar);
+  border: 1px solid var(--sty-line-blue);
+  color: var(--sty-cyan);
+  flex: 0 0 auto;
+}
+.jrpg-diary-card.is-ic .jrpg-diary-badge {
+  color: var(--sty-gold);
+  border-color: var(--sty-line-gold);
+}
+.jrpg-diary-pin,
+.jrpg-diary-del {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  flex: 0 0 auto;
+  transition: all 0.15s ease;
+}
+.jrpg-diary-pin {
+  color: var(--sty-text-dim);
+}
+.jrpg-diary-pin:hover {
+  color: var(--sty-gold);
+}
+.jrpg-diary-pin.is-on {
+  color: var(--sty-gold);
+  text-shadow: 0 0 8px var(--sty-gold-muted);
+}
+.jrpg-diary-del {
+  color: var(--sty-text-dim);
+}
+.jrpg-diary-del:hover {
+  color: var(--sty-crimson);
+  text-shadow: 0 0 8px var(--sty-crimson-glow);
+}
+.jrpg-diary-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.jrpg-diary-icflag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+}
+.jrpg-diary-ingame,
+.jrpg-diary-mood,
+.jrpg-diary-tags {
+  flex: 1 1 120px;
+  min-width: 90px;
+  font-size: 12px;
+}
+.jrpg-diary-vis {
+  flex: 0 0 auto;
+}
+.jrpg-diary-date {
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  color: var(--sty-text-dim);
+  margin-left: auto;
+}
+.jrpg-diary-body {
+  color: var(--sty-text);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 4px 2px;
+}
+.jrpg-diary-editor .editor,
+.jrpg-diary-editor .editor-content {
+  min-height: 110px;
+}
+.jrpg-diary-empty {
+  font-family: var(--sty-font-number);
+  font-size: 13px;
+  color: var(--sty-text-dim);
+  text-align: center;
+  padding: 24px 12px;
+  border: 1px dashed var(--sty-line-blue);
+  border-radius: var(--sty-r-card);
+}
+/* ===== End of Bio/Journal Phase 2 region ===== */
