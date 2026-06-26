@@ -2126,9 +2126,25 @@ export class StryderActorSheet extends ActorSheet {
         : vis === 'party'  ? game.user.role >= CONST.USER_ROLES.PLAYER
         : vis === 'gm'     ? false
         : /* private */      isOwner;
-      context.bioCan = Object.fromEntries(
-        Object.entries(this.actor.system.bio?.visibility ?? {}).map(([k, v]) => [k, can(v)])
+      // Default-complete the visibility map over the spec defaults: actors
+      // created before the `bio` template existed have no system.bio, so a raw
+      // read yields {} and every {{#if bioCan.*}} gate would render empty.
+      // New writes still persist to system.bio.visibility.* normally.
+      const DEFAULT_BIO_VIS = {
+        identity: "public", appearance: "public", personality: "party",
+        tastes: "party", motivations: "gm", backstory: "party",
+        beliefs: "party", secrets: "private", journal: "private",
+        relationships: "party", quests: "party", gallery: "public"
+      };
+      const bioVis = foundry.utils.mergeObject(
+        DEFAULT_BIO_VIS, this.actor.system.bio?.visibility ?? {}, { inplace: false }
       );
+      context.bioCan = Object.fromEntries(
+        Object.entries(bioVis).map(([k, v]) => [k, can(v)])
+      );
+      // Effective (default-complete) visibility values for the header selectors,
+      // so the chip shows the real default even before system.bio is persisted.
+      context.bioVis = bioVis;
       // Owner/GM get the visibility selectors on each section header.
       context.bioIsEditor = isGM || isOwner;
 
@@ -3286,6 +3302,39 @@ export class StryderActorSheet extends ActorSheet {
     // Open Biography & Journal from the Character page book icon
     html.on('click', '[data-action="openBiography"]', () => {
       _showPage('biography', 'Biography & Journal');
+    });
+
+    // ── Biography internal section nav (Phase 1) ──
+    // Custom data-target show/hide scoped within the bio page (NOT Foundry
+    // tabs). Mirrors _showPage's approach but only swaps the active panel and
+    // preserves per-section scroll keyed bio:<section> via _jrpgScroll.
+    html.on('click', '.jrpg-bio-nav-btn', (ev) => {
+      const btn = ev.currentTarget;
+      if (btn.disabled || btn.classList.contains('coming-soon')) return;
+      const section = btn.dataset.target;
+      if (!section) return;
+      // Stash the outgoing section's scroll before swapping panels.
+      const prev = this._jrpgBioSection || 'profile';
+      const scroller = _subContentEl();
+      if (scroller) this._jrpgScroll['bio:' + prev] = scroller.scrollTop;
+      this._jrpgBioSection = section;
+      html.find('.jrpg-bio-nav-btn').removeClass('is-active');
+      $(btn).addClass('is-active');
+      html.find('.jrpg-bio-panel').removeClass('is-active');
+      html.find(`.jrpg-bio-panel[data-section="${section}"]`).addClass('is-active');
+      // Restore the incoming section's scroll across a few layout ticks.
+      const y = this._jrpgScroll['bio:' + section] ?? 0;
+      const apply = () => { const el = _subContentEl(); if (el) el.scrollTop = y; };
+      apply();
+      requestAnimationFrame(apply);
+      setTimeout(apply, 80);
+    });
+
+    // ── Biography section visibility (Phase 1) ── owner/GM only selectors
+    html.on('change', '[data-action="bioSetVisibility"]', (ev) => {
+      const sec = ev.currentTarget.dataset.section;
+      if (!sec) return;
+      this.actor.update({ ['system.bio.visibility.' + sec]: ev.currentTarget.value });
     });
 
     // ── Battle Form Select ──

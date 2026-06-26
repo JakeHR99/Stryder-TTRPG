@@ -410,10 +410,10 @@
 								<h3 class="jrpg-bio-block-title">Identity</h3>
 								{{#if bioIsEditor}}
 								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="identity" title="Who can see this section">
-									<option value="public"  {{#if (eq system.bio.visibility.identity "public")}}selected{{/if}}>Public</option>
-									<option value="party"   {{#if (eq system.bio.visibility.identity "party")}}selected{{/if}}>Party</option>
-									<option value="gm"      {{#if (eq system.bio.visibility.identity "gm")}}selected{{/if}}>GM</option>
-									<option value="private" {{#if (eq system.bio.visibility.identity "private")}}selected{{/if}}>Private</option>
+									<option value="public"  {{#if (eq bioVis.identity "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.identity "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.identity "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.identity "private")}}selected{{/if}}>Private</option>
 								</select>
 								{{/if}}
 							</div>
@@ -468,10 +468,10 @@
 								<h3 class="jrpg-bio-block-title">Appearance</h3>
 								{{#if bioIsEditor}}
 								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="appearance" title="Who can see this section">
-									<option value="public"  {{#if (eq system.bio.visibility.appearance "public")}}selected{{/if}}>Public</option>
-									<option value="party"   {{#if (eq system.bio.visibility.appearance "party")}}selected{{/if}}>Party</option>
-									<option value="gm"      {{#if (eq system.bio.visibility.appearance "gm")}}selected{{/if}}>GM</option>
-									<option value="private" {{#if (eq system.bio.visibility.appearance "private")}}selected{{/if}}>Private</option>
+									<option value="public"  {{#if (eq bioVis.appearance "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.appearance "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.appearance "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.appearance "private")}}selected{{/if}}>Private</option>
 								</select>
 								{{/if}}
 							</div>
@@ -526,10 +526,10 @@
 								<h3 class="jrpg-bio-block-title">Persona</h3>
 								{{#if bioIsEditor}}
 								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="personality" title="Who can see this section">
-									<option value="public"  {{#if (eq system.bio.visibility.personality "public")}}selected{{/if}}>Public</option>
-									<option value="party"   {{#if (eq system.bio.visibility.personality "party")}}selected{{/if}}>Party</option>
-									<option value="gm"      {{#if (eq system.bio.visibility.personality "gm")}}selected{{/if}}>GM</option>
-									<option value="private" {{#if (eq system.bio.visibility.personality "private")}}selected{{/if}}>Private</option>
+									<option value="public"  {{#if (eq bioVis.personality "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.personality "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.personality "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.personality "private")}}selected{{/if}}>Private</option>
 								</select>
 								{{/if}}
 							</div>
@@ -588,10 +588,10 @@
 								<h3 class="jrpg-bio-block-title">Story</h3>
 								{{#if bioIsEditor}}
 								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="backstory" title="Who can see this section">
-									<option value="public"  {{#if (eq system.bio.visibility.backstory "public")}}selected{{/if}}>Public</option>
-									<option value="party"   {{#if (eq system.bio.visibility.backstory "party")}}selected{{/if}}>Party</option>
-									<option value="gm"      {{#if (eq system.bio.visibility.backstory "gm")}}selected{{/if}}>GM</option>
-									<option value="private" {{#if (eq system.bio.visibility.backstory "private")}}selected{{/if}}>Private</option>
+									<option value="public"  {{#if (eq bioVis.backstory "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.backstory "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.backstory "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.backstory "private")}}selected{{/if}}>Private</option>
 								</select>
 								{{/if}}
 							</div>
