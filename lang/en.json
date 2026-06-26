@@ -177,7 +177,7 @@
       "component": "Component",
       "consumable": "Consumable",
       "elixir": "Elixir",
-      "ingredient": "Ingredient",
+      "ingredient": "Food",
       "gear": "Gear",
       "fantasm": "Fantasm",
       "skill": "Skill",

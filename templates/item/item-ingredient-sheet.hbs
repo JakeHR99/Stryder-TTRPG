@@ -1,6 +1,6 @@
 ﻿<form class="{{cssClass}} fantasy-item-sheet" autocomplete="off">
   <div class="oi-frame sty-ornate">
-    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Ingredient"}}
+    {{> "systems/stryder/templates/item/parts/ornate-header.hbs" typeLabel="Food"}}
 
     {{!-- Extra header: Category, Quality, Sell Price --}}
     <div class="oi-extra-header">
@@ -12,6 +12,7 @@
           <option value="protein">Protein</option>
           <option value="spice">Spice</option>
           <option value="sauce">Sauce</option>
+          <option value="fish">Fish</option>
           {{/sty-select}}
         </select>
       </div>
@@ -35,6 +36,15 @@
           value="{{system.sell_price}}" placeholder="0" data-dtype="Number" />
       </div>
     </div>
+
+    {{!-- Fish: prepare permanently as a Protein or a Base --}}
+    {{#if (eq system.ingredient_type 'fish')}}
+    <div class="oi-fish-convert-row">
+      <span class="resource-label secondary-input">Prepare this Fish as:</span>
+      <button type="button" class="sty-button ingr-fish-convert" data-target="protein">Use as Protein</button>
+      <button type="button" class="sty-button ingr-fish-convert" data-target="base">Use as Base</button>
+    </div>
+    {{/if}}
 
     {{!-- Enchanted toggle --}}
     <div class="oi-enchanted-row">

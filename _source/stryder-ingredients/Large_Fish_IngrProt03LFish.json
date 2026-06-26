@@ -3,8 +3,8 @@
   "type": "ingredient",
   "img": "icons/consumables/fish/fish-purple-orange.webp",
   "system": {
-    "description": "<p>A powerful fish hauled ashore after a Mighty Reeling struggle. Yields more meat than a common catch and commands a higher price at market. Prized by camp cooks for its rich flavour.</p>",
-    "ingredient_type": "protein",
+    "description": "<p>A powerful fish hauled ashore after a Mighty Reeling struggle. Yields more meat than a common catch and commands a higher price at market. Prepare it as a Protein or a Base on its sheet before cooking.</p>",
+    "ingredient_type": "fish",
     "quality": "great",
     "quality_modifier": 1,
     "is_enchanted": false,

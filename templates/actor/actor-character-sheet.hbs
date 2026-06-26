@@ -154,8 +154,10 @@
 				<div class="jrpg-player-card">
 					<div class="jrpg-player-portrait-wrap">
 						<div class="jrpg-player-portrait-diamond">
-							<img src="{{actor.prototypeToken.texture.src}}" class="jrpg-player-portrait-img" data-edit="prototypeToken.texture.src" title="Set card portrait" />
+							<img src="{{portraitSrc}}" class="jrpg-player-portrait-img" data-portrait-field="{{portraitEdit}}" title="{{portraitLabel}} — click to set the image" />
 						</div>
+						<button type="button" class="jrpg-portrait-toggle" data-action="cyclePortrait" title="Portrait source: {{portraitLabel}}. Click to cycle Token / Character / Face Art."><i class="fas fa-sync-alt"></i></button>
+						<span class="jrpg-portrait-mode-label">{{portraitLabelShort}}</span>
 					</div>
 					<div class="jrpg-player-info">
 						<div class="jrpg-player-name">
@@ -198,11 +200,17 @@
 		<div class="jrpg-sub-header">
 			<button type="button" class="jrpg-back-btn">&#8592; Main Menu</button>
 			<button type="button" class="jrpg-back-to-tempering-btn" style="display:none;">&#8592; Tempering</button>
+			<button type="button" class="jrpg-back-to-character-btn" style="display:none;">&#8592; Character</button>
 			<span class="jrpg-sub-title"></span>
 		</div>
 		<div class="jrpg-sub-content">
 			<div class="jrpg-page" data-page="character">
 				<div class="jrpg-char-edit">
+
+					<div class="jrpg-bio-book-btn" role="button" tabindex="0" data-action="openBiography" aria-label="Biography and Journal">
+						<img src="systems/stryder/assets/ui/healerbook.png" class="jrpg-bio-book-img" alt="" />
+						<span class="jrpg-bio-book-label">Biography &amp; Journal</span>
+					</div>
 
 					<div class="jrpg-char-section">
 						<h3 class="jrpg-char-section-title">Identity</h3>
@@ -374,6 +382,18 @@
 
 				</div>
 			</div>
+			<div class="jrpg-page" data-page="biography">
+				<div class="jrpg-bio-screen">
+
+					<div class="jrpg-bio-section">
+						<h3 class="jrpg-bio-section-title">Biography</h3>
+						<div class="jrpg-bio-section-body">
+							<!-- Biography contents built out in a later pass -->
+						</div>
+					</div>
+
+				</div>
+			</div>
 			<div class="jrpg-page" data-page="stats"></div>
 			<div class="jrpg-page" data-page="battle">
 				{{#if (eq system.class.name "Summoner")}}
@@ -462,6 +482,7 @@
               <div class="sa-sum-row"><span class="sa-sum-label">Temper</span><span class="sa-sum-val">{{saSumTemper}}</span></div>
               <div class="sa-sum-row"><span class="sa-sum-label">Capacity</span><span class="sa-sum-val">{{saSumCapacity}}</span></div>
             </div>
+            <button type="button" class="sa-display-btn" data-action="displaySoulArmament" title="Post your Soul Armament's image, description, and features to chat"><i class="fas fa-share-square"></i> Display</button>
           </div>
         </div>
 

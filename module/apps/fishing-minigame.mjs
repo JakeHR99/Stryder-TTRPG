@@ -42,6 +42,7 @@ export class FishingMinigame extends Application {
     this.message           = '';
     this.fishingLevel      = this._readFishingLevel();
     this._rewardsCollected = false;
+    this._announcedStart   = false;
   }
 
   _readFishingLevel() {
@@ -140,6 +141,12 @@ export class FishingMinigame extends Application {
   // ── Game logic ────────────────────────────────────────────────────────────
 
   async _rollCasts() {
+    // Announce the start of a fishing session once (before the first roll)
+    if (!this._announcedStart) {
+      this._announcedStart = true;
+      this._announceStart();
+    }
+
     // Roll fish count
     const fishRoll = new Roll('1d6');
     await fishRoll.evaluate();
@@ -282,6 +289,60 @@ export class FishingMinigame extends Application {
     const pearls = this.fishCaught.filter(f => f.hasPearl).length;
     this.catchLog.push('—');
     this.catchLog.push(`Session ended: ${this.fishCaught.length}/${this.totalFish} fish caught.${pearls ? ` ${pearls} Pearl(s)!` : ''}`);
+    this._announceResults();
+  }
+
+  // ── Chat announcements ────────────────────────────────────────────────────
+
+  _chatActor() {
+    return this.fishingActor ?? this.partyActor ?? null;
+  }
+
+  _chatSpeaker() {
+    const actor = this._chatActor();
+    return actor ? ChatMessage.getSpeaker({ actor }) : ChatMessage.getSpeaker();
+  }
+
+  /** Shared card shell — uses the system's standard .chat-message-card so it
+   *  matches every other card AND is exempt from the plain-message bubble rule
+   *  (that rule forces dark text on any message lacking .chat-message-card). */
+  _fishCard(title, inner) {
+    return `<div class="chat-message-card">`
+      + `<div class="chat-message-header"><div class="chat-message-title">${title}</div></div>`
+      + `<div class="chat-message-content">${inner}</div>`
+      + `</div>`;
+  }
+
+  _announceStart() {
+    const who = this._chatActor()?.name ?? 'Someone';
+    const lvl = this.fishingLevel;
+    const body = `<b>${who}</b> casts a line at the Fishing Spot`
+      + (lvl ? ` <span style="color:var(--sty-text-2);">(Fishing Lv. ${lvl})</span>` : '')
+      + `&hellip;`;
+    ChatMessage.create({ content: this._fishCard('Fishing', body), speaker: this._chatSpeaker() });
+  }
+
+  _announceResults() {
+    const who   = this._chatActor()?.name ?? 'Someone';
+    const n     = this.fishCaught.filter(f => !f.isLarge).length;
+    const l     = this.fishCaught.filter(f => f.isLarge).length;
+    const p     = this.fishCaught.filter(f => f.hasPearl).length;
+    const total = this.fishCaught.length;
+    const castsUsed = Math.max(0, this.totalCasts - this.castsRemaining);
+
+    let body;
+    if (total === 0) {
+      body = `<b>${who}</b> packed up empty-handed &mdash; nothing was biting.`;
+    } else {
+      const rows = [];
+      if (n) rows.push(`<li>${n} Fish</li>`);
+      if (l) rows.push(`<li>${l} Large Fish</li>`);
+      if (p) rows.push(`<li style="color:var(--sty-cyan-bright);">${p} Mana Pearl${p > 1 ? 's' : ''}</li>`);
+      body = `<b>${who}</b> finished fishing with <b>${total}</b> catch${total !== 1 ? 'es' : ''}.`
+        + `<ul style="margin:7px 0 0;padding-left:18px;list-style:disc;">${rows.join('')}</ul>`
+        + `<div style="margin-top:7px;font-size:11px;color:var(--sty-text-2);letter-spacing:0.3px;">${castsUsed} cast${castsUsed !== 1 ? 's' : ''} used &middot; ${this.totalFish} fish were in the spot</div>`;
+    }
+    ChatMessage.create({ content: this._fishCard('Fishing Results', body), speaker: this._chatSpeaker() });
   }
 
   // ── Pearl reveal animations on complete screen ────────────────────────────
@@ -335,12 +396,12 @@ export class FishingMinigame extends Application {
       itemsToCreate.push({
         name: fish.isLarge ? 'Large Fish' : 'Fish',
         type: 'ingredient',
-        img:  `${SPRITE_PATH}${fish.sprite}.png`,
+        img:  'systems/stryder/assets/food/fish.png',
         system: {
           description: fish.isLarge
-            ? '<p>A powerful fish hauled ashore after a Mighty Reeling struggle.</p>'
-            : '<p>A fish caught at a Fishing Spot. A reliable source of protein.</p>',
-          ingredient_type: 'protein',
+            ? '<p>A powerful fish hauled ashore after a Mighty Reeling struggle. Prepare it as a Protein or a Base on its sheet.</p>'
+            : '<p>A fish caught at a Fishing Spot. Prepare it as a Protein or a Base on its sheet.</p>',
+          ingredient_type: 'fish',
           quality:         'good',
           quality_modifier: 0,
           is_enchanted: false,
@@ -376,15 +437,6 @@ export class FishingMinigame extends Application {
       let msg = `${fishCount} fish`;
       if (pearlCount) msg += ` and ${pearlCount} Mana Pearl${pearlCount > 1 ? 's' : ''}`;
       ui.notifications.info(`${msg} added to ${targetActor.name}.`);
-
-      const n = this.fishCaught.filter(f => !f.isLarge).length;
-      const l = this.fishCaught.filter(f => f.isLarge).length;
-      const p = this.fishCaught.filter(f => f.hasPearl).length;
-      let s = `<b>${targetActor.name}</b> finished fishing`;
-      if (n) s += `, caught <b>${n} Fish</b>`;
-      if (l) s += ` and <b>${l} Large Fish</b>`;
-      if (p) s += ` ✨ with ${p} Mana Pearl${p > 1 ? 's' : ''}`;
-      ChatMessage.create({ content: s + '.', speaker: ChatMessage.getSpeaker({ actor: targetActor }) });
     } catch(err) {
       console.error('Stryder | Fishing _collectReward failed:', err);
       ui.notifications.error('Failed to add fish to inventory — see console for details.');

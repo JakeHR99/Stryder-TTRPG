@@ -7324,6 +7324,65 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border: 2px solid rgba(140, 200, 255, 0.6) !important;
 }
 
+/* Portrait source toggle (Token / Character / Face Art) — hover-reveal */
+.jrpg-player-portrait-wrap { position: relative !important; }
+.jrpg-portrait-toggle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(5, 8, 22, 0.92);
+  border: 1px solid var(--sty-line-blue-strong);
+  color: var(--sty-cyan);
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;  /* parent .jrpg-player-card is pointer-events:none */
+  z-index: 6;
+  opacity: 0.8;
+  transition: opacity 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+}
+/* The button's OWN hover is the trigger, so the lit zone matches the button. */
+.jrpg-portrait-toggle:hover,
+.jrpg-portrait-toggle:focus {
+  opacity: 1;
+  transform: scale(1.12);
+  border-color: var(--sty-cyan);
+  color: var(--sty-cyan-bright);
+  box-shadow: 0 0 8px var(--sty-cyan-glow);
+}
+
+/* Current portrait-source label — appears under the portrait on hover */
+.jrpg-portrait-mode-label {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 8px;
+  border-radius: 8px;
+  background: rgba(5, 8, 22, 0.95);
+  border: 1px solid var(--sty-line-blue-strong);
+  color: var(--sty-cyan-bright);
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  z-index: 7;
+}
+.jrpg-player-portrait-wrap:hover .jrpg-portrait-mode-label,
+.jrpg-portrait-toggle:hover ~ .jrpg-portrait-mode-label { opacity: 1; }
+
 /* Name + level row */
 .jrpg-player-name {
   font-size: 15px !important;
@@ -7374,6 +7433,103 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   gap: 32px;
   max-width: 720px;
   padding: 8px 0;
+  position: relative;        /* anchor for the Biography book button */
+}
+
+/* ── Biography & Journal book button (top-right of Character page) ── */
+.jrpg-bio-book-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 6;
+  width: auto;
+  margin: 0;
+  padding: 2px !important;
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  line-height: 0;
+  cursor: pointer;
+}
+.jrpg-bio-book-btn:hover,
+.jrpg-bio-book-btn:focus,
+.jrpg-bio-book-btn:focus-visible,
+.jrpg-bio-book-btn:active {
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.jrpg-bio-book-img {
+  display: block;
+  width: 62px;
+  height: auto;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: none !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.55));
+  transition: filter 0.18s ease, transform 0.18s ease;
+}
+.jrpg-bio-book-btn:hover .jrpg-bio-book-img,
+.jrpg-bio-book-btn:focus-visible .jrpg-bio-book-img {
+  filter:
+    drop-shadow(0 0 5px rgba(150, 210, 255, 0.85))
+    drop-shadow(0 0 11px rgba(95, 217, 242, 0.55));
+  transform: translateY(-1px) scale(1.05);
+}
+.jrpg-bio-book-label {
+  position: absolute;
+  top: 100%;
+  right: 2px;
+  margin-top: 3px;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.7px;
+  white-space: nowrap;
+  color: var(--sty-cyan-bright);
+  text-shadow: 0 0 8px var(--sty-cyan-glow), 0 0 2px rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+.jrpg-bio-book-btn:hover .jrpg-bio-book-label,
+.jrpg-bio-book-btn:focus-visible .jrpg-bio-book-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Biography & Journal page ── */
+.jrpg-bio-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 760px;
+  padding: 8px 0;
+}
+.jrpg-bio-section-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  letter-spacing: 2px;
+  font-size: 15px;
+  color: var(--sty-cyan-bright);
+  text-shadow: 0 0 10px rgba(42, 112, 224, 0.45);
+  margin: 0 0 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--sty-line-blue);
+}
+.jrpg-bio-section-body {
+  color: var(--sty-text);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 60px;
 }
 
 .jrpg-char-section-title {
@@ -10575,6 +10731,33 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   border: 1px solid rgba(0, 155, 130, 0.15) !important;
   border-radius: 6px !important;
 }
+
+/* "Display" — post the Soul Armament to chat */
+.sa-display-btn {
+  margin-top: 8px;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: var(--sty-select-fill);
+  border: 1px solid var(--sty-line-blue-strong);
+  border-radius: 4px;
+  color: var(--sty-cyan-bright);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px var(--sty-cyan-glow);
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
+}
+.sa-display-btn:hover {
+  background: rgba(120, 200, 255, 0.22);
+  border-color: var(--sty-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 10px var(--sty-cyan-glow);
+}
 .sa-sum-row {
   display: flex !important;
   gap: 5px !important;
@@ -10786,91 +10969,97 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 /* Name input */
 .sa-name-input {
   font-size: 15.5px !important;
-  color: rgba(255, 245, 215, 0.92) !important;
-  border-bottom: 1px solid rgba(185, 145, 55, 0.28) !important;
+  color: var(--sty-text) !important;
+  text-shadow: 0 0 6px rgba(140, 200, 255, 0.35) !important;
+  border-bottom: 1px solid var(--sty-line-blue-strong) !important;
 }
-.sa-name-input::placeholder { color: rgba(165, 125, 45, 0.35) !important; }
-.sa-name-input:focus      { border-bottom-color: rgba(220, 175, 70, 0.60) !important; }
+.sa-name-input::placeholder { color: rgba(140, 200, 255, 0.35) !important; }
+.sa-name-input:focus      { border-bottom-color: var(--sty-cyan) !important; }
 
 /* Description textarea */
 .sa-desc-input {
   font-size: 11.3px !important;
-  color: rgba(240, 228, 195, 0.70) !important;
+  color: rgba(221, 238, 255, 0.88) !important;
   background: rgba(8, 8, 18, 0.50) !important;
-  border: 1px solid rgba(165, 125, 45, 0.18) !important;
+  border: 1px solid var(--sty-line-blue) !important;
 }
-.sa-desc-input::placeholder { color: rgba(155, 115, 40, 0.30) !important; }
-.sa-desc-input:focus        { border-color: rgba(205, 160, 65, 0.40) !important; }
+.sa-desc-input::placeholder { color: rgba(140, 200, 255, 0.30) !important; }
+.sa-desc-input:focus        { border-color: var(--sty-cyan) !important; }
 
 /* Identity summary block */
 .sa-summary {
   background: rgba(12, 10, 22, 0.55) !important;
-  border: 1px solid rgba(165, 125, 45, 0.15) !important;
+  border: 1px solid var(--sty-line-blue) !important;
 }
 .sa-sum-label {
   font-size: 9.3px !important;
-  color: rgba(190, 148, 60, 0.55) !important;
+  color: var(--sty-text-2) !important;
 }
 .sa-sum-val {
   font-size: 11.3px !important;
-  color: rgba(240, 228, 195, 0.80) !important;
+  color: var(--sty-text) !important;
+  text-shadow: 0 0 6px rgba(140, 200, 255, 0.30) !important;
 }
 
 /* Design Points tracker */
 .sa-dp-label {
   font-size: 10.3px !important;
-  color: rgba(190, 148, 60, 0.60) !important;
+  color: var(--sty-text-2) !important;
 }
 .sa-dp-track {
   background: rgba(30, 25, 60, 0.40) !important;
 }
 .sa-dp-fill {
-  background: linear-gradient(90deg, rgba(175, 135, 40, 0.90), rgba(220, 175, 65, 0.90)) !important;
+  background: linear-gradient(90deg, rgba(60, 120, 220, 0.90), rgba(110, 214, 245, 0.90)) !important;
 }
 .sa-dp-nums {
   font-size: 11.3px !important;
-  color: rgba(205, 160, 65, 0.85) !important;
+  color: var(--sty-cyan) !important;
+  text-shadow: 0 0 6px var(--sty-cyan-glow) !important;
 }
 
 /* Option section cards */
 .sa-section {
   background: rgba(8, 8, 18, 0.65) !important;
-  border: 1px solid rgba(145, 110, 38, 0.18) !important;
+  border: 1px solid var(--sty-line-blue) !important;
 }
 .sa-section-title {
   font-size: 10.3px !important;
-  color: rgba(205, 160, 65, 0.70) !important;
-  border-bottom: 1px solid rgba(165, 125, 45, 0.18) !important;
+  color: var(--sty-cyan-bright) !important;
+  text-shadow: 0 0 6px rgba(95, 217, 242, 0.30) !important;
+  border-bottom: 1px solid var(--sty-line-blue) !important;
 }
 .sa-section-note {
   font-size: 8.2px !important;
-  color: rgba(165, 125, 45, 0.40) !important;
+  color: var(--sty-text-dim) !important;
 }
 
 /* Option rows */
 .sa-option:hover {
-  background: rgba(165, 125, 45, 0.10) !important;
-  border-color: rgba(185, 145, 55, 0.22) !important;
+  background: var(--sty-select-fill) !important;
+  border-color: var(--sty-line-blue-strong) !important;
 }
 .sa-option.sa-selected {
-  background: rgba(175, 135, 40, 0.15) !important;
-  border-color: rgba(205, 160, 60, 0.55) !important;
+  background: var(--sty-select-fill) !important;
+  border-color: var(--sty-cyan) !important;
 }
 .sa-option.sa-selected .sa-opt-name {
-  color: rgba(255, 242, 200, 0.95) !important;
+  color: var(--sty-cyan-bright) !important;
+  text-shadow: 0 0 8px var(--sty-cyan-glow) !important;
 }
 
 /* Option labels */
 .sa-opt-name {
   font-size: 11.3px !important;
-  color: rgba(215, 195, 150, 0.65) !important;
+  color: var(--sty-text) !important;
 }
 .sa-opt-cost {
   font-size: 10.3px !important;
+  color: var(--sty-text-2) !important;
 }
 /* "Free" stays green so it reads differently from DP costs */
 .sa-opt-cost.sa-free {
-  color: rgba(120, 185, 100, 0.70) !important;
+  color: rgba(120, 195, 110, 0.90) !important;
 }
 
 /* ============================================================
@@ -16396,6 +16585,15 @@ li.chat-message.sty-grp-end {
   color: var(--sty-text);
   font-size: 13px;
   padding: 3px 6px;
+}
+
+/* Dropdown option list — dark blue so the text is readable (was browser-default white) */
+.fantasy-item-sheet select.secondary-input option,
+.fantasy-item-sheet select.tertiary-input option,
+.fantasy-item-sheet .dropdown-field select option,
+.fantasy-item-sheet .oi-extra-header select option {
+  background: #0d1830;
+  color: var(--sty-text);
 }
 
 /* ----- Description tab ----- */

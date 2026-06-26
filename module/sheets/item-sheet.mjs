@@ -87,7 +87,13 @@ export class StryderItemSheet extends ItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
-    // Roll handlers, click handlers, etc. would go here.
+    // Fish → permanently prepare it as a Protein or a Base.
+    html.on('click', '.ingr-fish-convert', async (ev) => {
+      const target = ev.currentTarget.dataset.target; // 'protein' | 'base'
+      if (target !== 'protein' && target !== 'base') return;
+      await this.item.update({ 'system.ingredient_type': target });
+      ui.notifications?.info(`${this.item.name} prepared as a ${target === 'protein' ? 'Protein' : 'Base'}.`);
+    });
 
     // Active Effect management
     html.on('click', '.effect-control', (ev) =>

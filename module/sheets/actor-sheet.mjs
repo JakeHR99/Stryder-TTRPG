@@ -1841,6 +1841,26 @@ export class StryderActorSheet extends ActorSheet {
       };
     }
 
+    // Home-menu portrait source toggle: Token Art (default) / Character Art /
+    // a manually-set Face Art. The diamond frame clips token art and shrinks it
+    // under Dynamic Token Rings, so players can pick a better-framed image.
+    {
+      const pmode   = actorData.flags?.stryder?.portraitMode ?? 'token';
+      const faceArt = actorData.flags?.stryder?.faceArt || '';
+      const tokenSrc = actorData.prototypeToken?.texture?.src || actorData.img || '';
+      context.portraitMode  = pmode;
+      context.portraitSrc   = pmode === 'character' ? (actorData.img || tokenSrc)
+                            : pmode === 'face'      ? (faceArt || actorData.img || tokenSrc)
+                            : tokenSrc;
+      context.portraitEdit  = pmode === 'character' ? 'img'
+                            : pmode === 'face'      ? 'flags.stryder.faceArt'
+                            : 'prototypeToken.texture.src';
+      context.portraitLabel = pmode === 'character' ? 'Character Art'
+                            : pmode === 'face'      ? 'Face Art' : 'Token Art';
+      context.portraitLabelShort = pmode === 'character' ? 'Character'
+                            : pmode === 'face'      ? 'Face' : 'Token';
+    }
+
     // Pre-compute resource bar percentages for the main-menu player card.
     // Baking these into the template at render time is more reliable than
     // setting them via querySelector in activateListeners (which can silently
@@ -2600,6 +2620,65 @@ export class StryderActorSheet extends ActorSheet {
       await this.actor.update({ [`system.${path}`]: Math.max(0, base + step) });
     });
 
+    // Soul Armament — post image, description, and chosen features to chat.
+    html.on('click', '.sa-display-btn', async (ev) => {
+      ev.preventDefault();
+      const sa = this.actor.system.soul_armament || {};
+      const f  = sa.form || {};
+      const formParts = [];
+      if (f.one_handed) formParts.push('1 Handed');
+      if (f.two_handed) formParts.push('Two Handed');
+      if (f.ingrained)  formParts.push('Ingrained');
+      if (f.attached)   formParts.push('Attached');
+      if (f.dual_wield) formParts.push('Dual Wield');
+      const formStr   = formParts.join(', ') || '—';
+      const rangeStr  = ({ range1:'Range 1', range2:'Range 2', range5:'Range 5', range8:'Range 8' })[sa.range ?? 'range1'] ?? 'Range 1';
+      const temperStr = ({ basic:'Basic', keen:'Keen', heavy:'Heavy' })[sa.temper ?? 'basic'] ?? 'Basic';
+      const capStr    = ({ slot1:'1 Slot', slot2:'2 Slots', slot3:'3 Slots', slot4:'4 Slots' })[sa.capacity ?? 'slot1'] ?? '1 Slot';
+      const name = (sa.name || '').trim() || 'Soul Armament';
+      const img  = sa.img || 'icons/svg/sword.svg';
+      const desc = (sa.description || '').trim();
+      const content = `<div class="chat-message-card">
+          <div class="chat-message-header"><h3 class="chat-message-title">${name}</h3></div>
+          <div class="chat-message-content">
+            <div style="text-align:center;margin:2px 0 8px;"><img src="${img}" width="84" height="84" style="border-radius:8px;object-fit:cover;border:1px solid rgba(205,160,65,0.5);" /></div>
+            ${desc ? `<p style="margin:0 0 8px;">${desc}</p>` : ''}
+            <div class="chat-message-details">
+              <div class="chat-message-detail-row"><span class="chat-message-detail-label">Form:</span> <span>${formStr}</span></div>
+              <div class="chat-message-detail-row"><span class="chat-message-detail-label">Range:</span> <span>${rangeStr}</span></div>
+              <div class="chat-message-detail-row"><span class="chat-message-detail-label">Temper:</span> <span>${temperStr}</span></div>
+              <div class="chat-message-detail-row"><span class="chat-message-detail-label">Capacity:</span> <span>${capStr}</span></div>
+            </div>
+          </div>
+        </div>`;
+      await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this.actor }), content });
+    });
+
+    // Home-menu portrait source toggle: cycle Token → Character → Face Art.
+    html.on('click', '.jrpg-portrait-toggle', async (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const order = ['token', 'character', 'face'];
+      const cur   = this.actor.getFlag('stryder', 'portraitMode') ?? 'token';
+      const next  = order[(order.indexOf(cur) + 1) % order.length];
+      await this.actor.setFlag('stryder', 'portraitMode', next);
+    });
+
+    // Click the home-menu portrait → pick an image for the CURRENT source
+    // (token texture, actor img, or the Face Art flag). Mode-aware so each
+    // toggle state edits its own image.
+    html.on('click', '.jrpg-player-portrait-img', (ev) => {
+      ev.preventDefault();
+      const field = ev.currentTarget.dataset.portraitField;
+      if (!field) return;
+      const FP = foundry.applications?.apps?.FilePicker?.implementation ?? FilePicker;
+      new FP({
+        type: 'image',
+        current: foundry.utils.getProperty(this.actor, field) || '',
+        callback: async (path) => { await this.actor.update({ [field]: path }); },
+      }).render(true);
+    });
+
     // Lordling: set a narrow default window size on first open
     if (this.actor.type === 'lordling') {
       setTimeout(() => this.setPosition({ width: 420, height: 555 }), 80);
@@ -3097,6 +3176,21 @@ export class StryderActorSheet extends ActorSheet {
 
     // JRPG Main Menu navigation — persist page across re-renders
     const _isTemperingSubPage = (t) => t === 'soul-armament' || t === 'growth';
+    const _isBiographyPage    = (t) => t === 'biography';
+
+    // Per-page scroll memory — survives re-renders while the sheet stays open,
+    // so editing inside Soul Armament / Growth no longer dumps you back to top.
+    if (!this._jrpgScroll) this._jrpgScroll = {};
+    const _subContentEl = () => html.find('.jrpg-sub-content')[0] || null;
+    const _restoreScroll = (page) => {
+      const y = this._jrpgScroll[page] ?? 0;
+      const apply = () => { const el = _subContentEl(); if (el) el.scrollTop = y; };
+      // Re-apply across a few layout ticks: Growth populates its height async,
+      // so a single synchronous set would clamp back toward the top.
+      apply();
+      requestAnimationFrame(apply);
+      setTimeout(apply, 80);
+    };
 
     const _showPage = (target, label) => {
       this._jrpgPage = target;
@@ -3109,11 +3203,22 @@ export class StryderActorSheet extends ActorSheet {
       html.find('.jrpg-sub-title').text(label);
       html.find('.jrpg-page').hide();
       html.find(`.jrpg-page[data-page="${target}"]`).show();
-      // Show "← Tempering" only on soul-armament / growth; hide main back btn
-      html.find('.jrpg-back-btn').toggle(!_isTemperingSubPage(target));
+      // Back-button routing: Tempering sub-pages → "← Tempering",
+      // Biography → "← Character", everything else → "← Main Menu".
+      html.find('.jrpg-back-btn').toggle(!_isTemperingSubPage(target) && !_isBiographyPage(target));
       html.find('.jrpg-back-to-tempering-btn').toggle(_isTemperingSubPage(target));
+      html.find('.jrpg-back-to-character-btn').toggle(_isBiographyPage(target));
       if (target === 'growth') this._buildGrowthPage(html);
+      _restoreScroll(target);
     };
+
+    // Track the active sub-page's scroll position as the user scrolls
+    const _subContentScroller = _subContentEl();
+    if (_subContentScroller) {
+      _subContentScroller.addEventListener('scroll', () => {
+        if (this._jrpgPage) this._jrpgScroll[this._jrpgPage] = _subContentScroller.scrollTop;
+      }, { passive: true });
+    }
 
     html.find('.jrpg-menu-btn').on('click', function() {
       _showPage($(this).data('target'), $(this).find('span').text());
@@ -3129,6 +3234,11 @@ export class StryderActorSheet extends ActorSheet {
     // Open Soul Armament page from Battle tab armament strip
     html.on('click', '[data-action="openSoulArmament"]', () => {
       _showPage('soul-armament', 'Soul Armament');
+    });
+
+    // Open Biography & Journal from the Character page book icon
+    html.on('click', '[data-action="openBiography"]', () => {
+      _showPage('biography', 'Biography & Journal');
     });
 
     // ── Battle Form Select ──
@@ -3448,6 +3558,10 @@ export class StryderActorSheet extends ActorSheet {
 
     html.find('.jrpg-back-to-tempering-btn').on('click', () => {
       _showPage('tempering', 'Tempering');
+    });
+
+    html.find('.jrpg-back-to-character-btn').on('click', () => {
+      _showPage('character', 'Character');
     });
 
     // Restore sub-page if a re-render happened while one was open

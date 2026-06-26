@@ -3,8 +3,8 @@
   "type": "ingredient",
   "img": "icons/consumables/fish/fish-teal-green.webp",
   "system": {
-    "description": "<p>A fish caught at a Fishing Spot. A reliable source of protein for camp cooking. Quality improves with the skill of the Fisher who caught it. Can be used in a variety of dishes.</p>",
-    "ingredient_type": "protein",
+    "description": "<p>A fish caught at a Fishing Spot. Quality improves with the skill of the Fisher who caught it. Prepare it as a Protein or a Base on its sheet before cooking.</p>",
+    "ingredient_type": "fish",
     "quality": "good",
     "quality_modifier": 0,
     "is_enchanted": false,
