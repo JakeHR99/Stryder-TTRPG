@@ -272,6 +272,89 @@
         "temper": "basic",
         "weaponWeightClass": 3,
         "capacity": "slot1"
+      },
+      "bio": {
+        "identity": {
+          "fullName": "",
+          "nicknames": "",
+          "titles": "",
+          "pronouns": "",
+          "age": "",
+          "profession": "",
+          "faith": "",
+          "faction": "",
+          "languages": "",
+          "atAGlance": ""
+        },
+        "appearance": {
+          "height": "",
+          "build": "",
+          "eyes": "",
+          "hair": "",
+          "marks": "",
+          "notableFeatures": "",
+          "attire": "",
+          "voiceMannerisms": "",
+          "description": ""
+        },
+        "personality": {
+          "traits": "",
+          "ideals": "",
+          "bonds": "",
+          "flaws": "",
+          "demeanor": "",
+          "fears": "",
+          "quirks": "",
+          "code": "",
+          "definingMoments": ""
+        },
+        "tastes": {
+          "likes": "",
+          "dislikes": "",
+          "savvies": "",
+          "ineptitudes": "",
+          "hobbies": ""
+        },
+        "motivations": {
+          "goals": "",
+          "drives": "",
+          "secrets": ""
+        },
+        "backstory": {
+          "text": ""
+        },
+        "beliefs": {
+          "culture": "",
+          "traditions": "",
+          "superstitions": ""
+        },
+        "immersion": {
+          "sigilImg": "",
+          "themeMusicUrl": "",
+          "colorScheme": ""
+        },
+        "visibility": {
+          "identity": "public",
+          "appearance": "public",
+          "personality": "party",
+          "tastes": "party",
+          "motivations": "gm",
+          "backstory": "party",
+          "beliefs": "party",
+          "secrets": "private",
+          "journal": "private",
+          "relationships": "party",
+          "quests": "party",
+          "gallery": "public"
+        }
+      },
+      "timeline": [],
+      "possessions": [],
+      "gallery": [],
+      "relationships": [],
+      "quests": [],
+      "journal": {
+        "entries": []
       }
     },
     "monster": {
