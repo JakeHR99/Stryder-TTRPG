@@ -2148,6 +2148,23 @@ export class StryderActorSheet extends ActorSheet {
       // Owner/GM get the visibility selectors on each section header.
       context.bioIsEditor = isGM || isOwner;
 
+      // 2b) Journal / Diary (Phase 2). Reuse can()/_enrich/isGM/isOwner above.
+      //     Each visible entry carries _idx (its index in the FULL system array,
+      //     so the ProseMirror body target hits the right element), its enriched
+      //     body, and a localized real-date label. Pinned first, then newest.
+      const _entries = this.actor.system.journal?.entries ?? [];
+      context.journalEntries = _entries
+        .map((e, i) => ({ ...e, _idx: i, _canSee: (isOwner || isGM) ? true : can(e.visibility ?? 'private') }))
+        .filter(e => e._canSee)
+        .sort((a, b) => (Number(b.pinned) - Number(a.pinned)) || ((b.realDate ?? 0) - (a.realDate ?? 0)));
+      await Promise.all(context.journalEntries.map(async (e) => {
+        e._bodyEnriched = await _enrich(e.body);
+        e._realDateLabel = e.realDate ? new Date(e.realDate).toLocaleDateString() : "";
+      }));
+      context.journalTags = [...new Set(_entries.flatMap(e => e.tags ?? []))].sort();
+      // Others see the Diary tab only if at least one entry is visible to them.
+      context.journalCanTab = isOwner || isGM || context.journalEntries.length > 0;
+
       // 3) One-time legacy migration: copy the old base `system.biography`
       //    string into bio.backstory.text if backstory is still empty. Guarded
       //    by a transient flag (the async update + re-render would otherwise
@@ -2163,6 +2180,53 @@ export class StryderActorSheet extends ActorSheet {
     }
 
     return context;
+  }
+
+  /** Route per-entry journal ProseMirror saves (target
+   *  `system.journal.entries.<n>.body`) through a whole-array write. The inline
+   *  {{editor}} submits that array-index dotted path on save; merging it raw is
+   *  unreliable and can corrupt sibling entries, so we rebuild the full array
+   *  from current data, set only the edited index, and hand a whole-array key to
+   *  super. All other form fields pass through untouched. (Bio & Journal, Phase 2) */
+  async _updateObject(event, formData) {
+    const bodyKey = /^system\.journal\.entries\.(\d+)\.body$/;
+    const bodyEdits = Object.keys(formData).filter(k => bodyKey.test(k));
+    if (bodyEdits.length && this.actor.type === 'character') {
+      const entries = foundry.utils.deepClone(this.actor.system.journal?.entries ?? []);
+      for (const k of bodyEdits) {
+        const idx = Number(k.match(bodyKey)[1]);
+        if (entries[idx]) entries[idx].body = formData[k];
+        delete formData[k];
+      }
+      formData['system.journal.entries'] = entries;
+    }
+    return super._updateObject(event, formData);
+  }
+
+  /** Mutate a character system array safely (whole-array write — never array-index
+   *  dotted paths, which merge unreliably). listPath is relative to system, e.g.
+   *  "journal.entries", "relationships", "quests". (Bio & Journal, Phase 2) */
+  async _bioListUpdate(listPath, mutator) {
+    const cur = foundry.utils.deepClone(foundry.utils.getProperty(this.actor.system, listPath) ?? []);
+    const next = mutator(cur) ?? cur;
+    return this.actor.update({ ['system.' + listPath]: next });
+  }
+
+  /** Default record for a bio dynamic list, keyed by data-list. New journal
+   *  entries inherit the Diary section's default visibility. The switch default
+   *  returns a bare id'd row so future lists work before their case exists. */
+  _bioDefaultRow(list) {
+    switch (list) {
+      case 'journal.entries':
+        return {
+          id: foundry.utils.randomID(), title: "", body: "", ic: true,
+          tags: [], inGameDate: "", realDate: Date.now(), mood: "",
+          pinned: false,
+          visibility: this.actor.system.bio?.visibility?.journal ?? "private"
+        };
+      default:
+        return { id: foundry.utils.randomID() };
+    }
   }
 
   _calculateGearSlotsUsed() {
@@ -3335,6 +3399,90 @@ export class StryderActorSheet extends ActorSheet {
       const sec = ev.currentTarget.dataset.section;
       if (!sec) return;
       this.actor.update({ ['system.bio.visibility.' + sec]: ev.currentTarget.value });
+    });
+
+    // ── Biography dynamic lists (Phase 2) ──
+    // Canonical CRUD for ALL bio system arrays (journal.entries, and in later
+    // phases relationships/quests/…). Every write goes through _bioListUpdate
+    // (whole-array writes — array-index dotted paths merge unreliably). Handlers
+    // are keyed by data-list so future lists only add a _bioDefaultRow case.
+    html.on('click', '[data-action="bioAddRow"]', (ev) => {
+      const list = ev.currentTarget.dataset.list;
+      if (!list) return;
+      this._bioListUpdate(list, (arr) => { arr.push(this._bioDefaultRow(list)); return arr; });
+    });
+
+    html.on('click', '[data-action="bioDelRow"]', async (ev) => {
+      const { list, id } = ev.currentTarget.dataset;
+      if (!list || !id) return;
+      const ok = await Dialog.confirm({
+        title: 'Delete Entry',
+        content: '<p>Delete this entry? This cannot be undone.</p>',
+        defaultYes: false
+      });
+      if (!ok) return;
+      this._bioListUpdate(list, (arr) => arr.filter(r => r.id !== id));
+    });
+
+    html.on('change', '[data-action="bioEditField"]', (ev) => {
+      const el = ev.currentTarget;
+      const { list, id, field, dtype } = el.dataset;
+      if (!list || !id || !field) return;
+      let val;
+      switch (dtype) {
+        case 'Boolean': val = el.checked; break;
+        case 'Number':  val = Number(el.value); break;
+        case 'Array':   val = el.value.split(',').map(s => s.trim()).filter(s => s !== ''); break;
+        default:        val = el.value;
+      }
+      this._bioListUpdate(list, (arr) => {
+        const r = arr.find(x => x.id === id);
+        if (r) foundry.utils.setProperty(r, field, val);
+        return arr;
+      });
+    });
+
+    html.on('click', '[data-action="bioToggleField"]', (ev) => {
+      const { list, id, field } = ev.currentTarget.dataset;
+      if (!list || !id || !field) return;
+      this._bioListUpdate(list, (arr) => {
+        const r = arr.find(x => x.id === id);
+        if (r) foundry.utils.setProperty(r, field, !foundry.utils.getProperty(r, field));
+        return arr;
+      });
+    });
+
+    // ── Diary filter/search (Phase 2, view-only) ── pure DOM, no persistence.
+    const _diaryApplyFilters = () => {
+      const panel = html.find('.jrpg-bio-panel[data-section="diary"]');
+      if (!panel.length) return;
+      const q = (panel.find('.jrpg-diary-search').val() || '').toString().trim().toLowerCase();
+      const mode = panel.find('.jrpg-diary-fmode.is-active').data('mode') || 'all';
+      const activeTags = panel.find('.jrpg-diary-tagchip.is-active')
+        .map((_, b) => String($(b).data('tag'))).get();
+      panel.find('.jrpg-diary-card').each((_, card) => {
+        const $c = $(card);
+        const text = ($c.text() || '').toLowerCase();
+        const isIc = String($c.attr('data-ic')) === 'true';
+        const tags = String($c.attr('data-tags') || '').trim().split(/\s+/).filter(Boolean);
+        let show = true;
+        if (q && !text.includes(q)) show = false;
+        if (show && mode === 'ic' && !isIc) show = false;
+        if (show && mode === 'ooc' && isIc) show = false;
+        if (show && activeTags.length && !activeTags.every(t => tags.includes(t))) show = false;
+        $c.toggle(show);
+      });
+    };
+    html.on('input', '.jrpg-diary-search', _diaryApplyFilters);
+    html.on('click', '.jrpg-diary-fmode', (ev) => {
+      const $b = $(ev.currentTarget);
+      $b.closest('.jrpg-diary-filter-modes').find('.jrpg-diary-fmode').removeClass('is-active');
+      $b.addClass('is-active');
+      _diaryApplyFilters();
+    });
+    html.on('click', '.jrpg-diary-tagchip', (ev) => {
+      $(ev.currentTarget).toggleClass('is-active');
+      _diaryApplyFilters();
     });
 
     // ── Battle Form Select ──
