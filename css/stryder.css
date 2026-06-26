@@ -17562,3 +17562,206 @@ li.chat-message.sty-grp-end {
   font-family: 'Rajdhani', sans-serif;
   font-size: 12px;
 }
+
+/* ===== BIOGRAPHY & JOURNAL — Phase 1 ===== */
+
+/* ── Internal section nav (Profile / Persona / Story · Journal) ── */
+.jrpg-bio-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: flex-end;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--sty-line-gold);
+}
+.jrpg-bio-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.jrpg-bio-nav-label {
+  font-family: var(--sty-font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  margin-right: 4px;
+}
+.jrpg-bio-nav-btn {
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-cyan-soft);
+  font-family: var(--sty-font-number);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.jrpg-bio-nav-btn:hover {
+  color: var(--sty-cyan-bright);
+  border-color: var(--sty-line-blue-strong);
+  background: var(--sty-select-fill);
+}
+.jrpg-bio-nav-btn.is-active {
+  color: var(--sty-gold);
+  border-color: var(--sty-line-gold-strong);
+  background: var(--sty-panel-deep);
+  text-shadow: 0 0 10px var(--sty-gold-muted);
+}
+.jrpg-bio-nav-btn.coming-soon,
+.jrpg-bio-nav-btn:disabled {
+  color: var(--sty-text-dim);
+  border-color: var(--sty-line-blue);
+  background: var(--sty-panel-nav);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ── Section panels: only the active one shows ── */
+.jrpg-bio-panel {
+  display: none;
+  flex-direction: column;
+  gap: 22px;
+}
+.jrpg-bio-panel.is-active {
+  display: flex;
+}
+
+/* ── Section blocks + headers (gold) ── */
+.jrpg-bio-block {
+  display: flex;
+  flex-direction: column;
+}
+.jrpg-bio-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--sty-line-gold);
+}
+.jrpg-bio-block-title {
+  font-family: var(--sty-font-display);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 14px;
+  color: var(--sty-gold);
+  text-shadow: 0 0 10px var(--sty-gold-muted);
+  margin: 0;
+}
+
+/* ── Visibility selector (gold chip) ── */
+.jrpg-bio-vis-select {
+  background: var(--sty-panel-deep);
+  border: 1px solid var(--sty-line-gold-strong);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-gold);
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+.jrpg-bio-vis-select:focus {
+  outline: none;
+  border-color: var(--sty-gold);
+}
+.jrpg-bio-vis-select option {
+  background: var(--sty-panel-nav);
+  color: var(--sty-text);
+}
+
+/* ── At-a-glance gets a touch of emphasis ── */
+.jrpg-bio-glance .jrpg-char-label {
+  color: var(--sty-gold-muted);
+}
+
+/* ── Stacked label + textarea (Persona) ── */
+.jrpg-bio-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.jrpg-bio-field-label {
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+}
+.jrpg-bio-textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 48px;
+  line-height: 1.5;
+  font-size: 14px !important; /* core-override: editor base sets 16px on .jrpg-char-input */
+}
+
+/* ── Collapsible "More" block ── */
+.jrpg-bio-more {
+  margin-top: 6px;
+  border-top: 1px solid var(--sty-line-blue);
+  padding-top: 10px;
+}
+.jrpg-bio-more-summary {
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sty-cyan-soft);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.jrpg-bio-more-summary::-webkit-details-marker { display: none; }
+.jrpg-bio-more-summary::before {
+  content: "\25B8"; /* ▸ */
+  display: inline-block;
+  margin-right: 8px;
+  transition: transform 0.15s;
+}
+.jrpg-bio-more[open] > .jrpg-bio-more-summary::before {
+  transform: rotate(90deg);
+}
+.jrpg-bio-more-summary:hover { color: var(--sty-cyan-bright); }
+.jrpg-bio-more-body { margin-top: 12px; }
+
+/* ── ProseMirror editors (appearance description, backstory) ── */
+.jrpg-bio-editor-label {
+  display: block;
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  margin: 8px 0 5px;
+}
+.jrpg-bio-editor {
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-card);
+  background: var(--sty-panel-deep);
+}
+.jrpg-bio-editor .editor,
+.jrpg-bio-editor .editor-content {
+  min-height: 140px;
+  color: var(--sty-text);
+}
+.jrpg-bio-editor .editor-content {
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+/* ===== End of Bio/Journal Phase 1 region ===== */

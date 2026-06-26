@@ -385,11 +385,221 @@
 			<div class="jrpg-page" data-page="biography">
 				<div class="jrpg-bio-screen">
 
-					<div class="jrpg-bio-section">
-						<h3 class="jrpg-bio-section-title">Biography</h3>
-						<div class="jrpg-bio-section-body">
-							<!-- Biography contents built out in a later pass -->
+					{{!-- ── Internal section nav (custom data-target, NOT Foundry tabs) ── --}}
+					<div class="jrpg-bio-nav">
+						<div class="jrpg-bio-nav-group">
+							<span class="jrpg-bio-nav-label">Biography</span>
+							<button type="button" class="jrpg-bio-nav-btn is-active" data-target="profile"><span>Profile</span></button>
+							<button type="button" class="jrpg-bio-nav-btn" data-target="persona"><span>Persona</span></button>
+							<button type="button" class="jrpg-bio-nav-btn" data-target="story"><span>Story</span></button>
 						</div>
+						<div class="jrpg-bio-nav-group">
+							<span class="jrpg-bio-nav-label">Journal</span>
+							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="diary" disabled title="Coming in a later phase"><span>Diary</span></button>
+							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="quests" disabled title="Coming in a later phase"><span>Quests</span></button>
+							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="people" disabled title="Coming in a later phase"><span>People</span></button>
+						</div>
+					</div>
+
+					{{!-- ── PROFILE (identity + appearance + at-a-glance) ── --}}
+					<div class="jrpg-bio-panel is-active" data-section="profile">
+
+						{{#if bioCan.identity}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Identity</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="identity" title="Who can see this section">
+									<option value="public"  {{#if (eq system.bio.visibility.identity "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq system.bio.visibility.identity "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq system.bio.visibility.identity "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq system.bio.visibility.identity "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{/if}}
+							</div>
+
+							<div class="jrpg-bio-glance jrpg-char-field">
+								<label class="jrpg-char-label">At a Glance</label>
+								<input type="text" name="system.bio.identity.atAGlance" value="{{system.bio.identity.atAGlance}}" class="jrpg-char-input jrpg-char-input-wide" placeholder="A short public first-impression blurb" />
+							</div>
+
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Full Name</label>
+								<input type="text" name="system.bio.identity.fullName" value="{{system.bio.identity.fullName}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Nicknames</label>
+								<input type="text" name="system.bio.identity.nicknames" value="{{system.bio.identity.nicknames}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Titles</label>
+								<input type="text" name="system.bio.identity.titles" value="{{system.bio.identity.titles}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Pronouns</label>
+								<input type="text" name="system.bio.identity.pronouns" value="{{system.bio.identity.pronouns}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Age</label>
+								<input type="text" name="system.bio.identity.age" value="{{system.bio.identity.age}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Profession</label>
+								<input type="text" name="system.bio.identity.profession" value="{{system.bio.identity.profession}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Faith</label>
+								<input type="text" name="system.bio.identity.faith" value="{{system.bio.identity.faith}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Faction</label>
+								<input type="text" name="system.bio.identity.faction" value="{{system.bio.identity.faction}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Languages</label>
+								<input type="text" name="system.bio.identity.languages" value="{{system.bio.identity.languages}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+						</div>
+						{{/if}}
+
+						{{#if bioCan.appearance}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Appearance</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="appearance" title="Who can see this section">
+									<option value="public"  {{#if (eq system.bio.visibility.appearance "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq system.bio.visibility.appearance "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq system.bio.visibility.appearance "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq system.bio.visibility.appearance "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{/if}}
+							</div>
+
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Height</label>
+								<input type="text" name="system.bio.appearance.height" value="{{system.bio.appearance.height}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Build</label>
+								<input type="text" name="system.bio.appearance.build" value="{{system.bio.appearance.build}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Eyes</label>
+								<input type="text" name="system.bio.appearance.eyes" value="{{system.bio.appearance.eyes}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Hair</label>
+								<input type="text" name="system.bio.appearance.hair" value="{{system.bio.appearance.hair}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Marks</label>
+								<input type="text" name="system.bio.appearance.marks" value="{{system.bio.appearance.marks}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Features</label>
+								<input type="text" name="system.bio.appearance.notableFeatures" value="{{system.bio.appearance.notableFeatures}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Attire</label>
+								<input type="text" name="system.bio.appearance.attire" value="{{system.bio.appearance.attire}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Voice</label>
+								<input type="text" name="system.bio.appearance.voiceMannerisms" value="{{system.bio.appearance.voiceMannerisms}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+
+							<label class="jrpg-bio-editor-label">Description</label>
+							<div class="jrpg-bio-editor">
+								{{editor bioEnriched.description target="system.bio.appearance.description" engine="prosemirror" button=true editable=editable}}
+							</div>
+						</div>
+						{{/if}}
+
+					</div>
+
+					{{!-- ── PERSONA (the D&D four + demeanor) ── --}}
+					<div class="jrpg-bio-panel" data-section="persona">
+						{{#if bioCan.personality}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Persona</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="personality" title="Who can see this section">
+									<option value="public"  {{#if (eq system.bio.visibility.personality "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq system.bio.visibility.personality "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq system.bio.visibility.personality "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq system.bio.visibility.personality "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{/if}}
+							</div>
+
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Traits</label>
+								<textarea name="system.bio.personality.traits" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.traits}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Ideals</label>
+								<textarea name="system.bio.personality.ideals" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.ideals}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Bonds</label>
+								<textarea name="system.bio.personality.bonds" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.bonds}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Flaws</label>
+								<textarea name="system.bio.personality.flaws" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.flaws}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Demeanor</label>
+								<textarea name="system.bio.personality.demeanor" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.demeanor}}</textarea>
+							</div>
+
+							<details class="jrpg-bio-more">
+								<summary class="jrpg-bio-more-summary">More</summary>
+								<div class="jrpg-bio-more-body">
+									<div class="jrpg-bio-stack">
+										<label class="jrpg-bio-field-label">Fears</label>
+										<textarea name="system.bio.personality.fears" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.fears}}</textarea>
+									</div>
+									<div class="jrpg-bio-stack">
+										<label class="jrpg-bio-field-label">Quirks</label>
+										<textarea name="system.bio.personality.quirks" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.quirks}}</textarea>
+									</div>
+									<div class="jrpg-bio-stack">
+										<label class="jrpg-bio-field-label">Code</label>
+										<textarea name="system.bio.personality.code" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.code}}</textarea>
+									</div>
+									<div class="jrpg-bio-stack">
+										<label class="jrpg-bio-field-label">Defining Moments</label>
+										<textarea name="system.bio.personality.definingMoments" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.definingMoments}}</textarea>
+									</div>
+								</div>
+							</details>
+						</div>
+						{{/if}}
+					</div>
+
+					{{!-- ── STORY (backstory rich text) ── --}}
+					<div class="jrpg-bio-panel" data-section="story">
+						{{#if bioCan.backstory}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Story</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="backstory" title="Who can see this section">
+									<option value="public"  {{#if (eq system.bio.visibility.backstory "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq system.bio.visibility.backstory "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq system.bio.visibility.backstory "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq system.bio.visibility.backstory "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-editor">
+								{{editor bioEnriched.backstory target="system.bio.backstory.text" engine="prosemirror" button=true editable=editable}}
+							</div>
+						</div>
+						{{/if}}
 					</div>
 
 				</div>
