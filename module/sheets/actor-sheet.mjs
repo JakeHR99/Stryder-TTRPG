@@ -2165,6 +2165,43 @@ export class StryderActorSheet extends ActorSheet {
       // Others see the Diary tab only if at least one entry is visible to them.
       context.journalCanTab = isOwner || isGM || context.journalEntries.length > 0;
 
+      // 2c) People / Relationships (Phase 3A). Same per-row visibility rule as
+      //     journal. Linked rows (actorUuid) resolve the live actor for display
+      //     fallbacks; backlinks count mentions in this character's own journal
+      //     only (cheap self-scan, no world crawl — Build Spec §6).
+      context.ATTITUDES = ['ally', 'friendly', 'neutral', 'wary', 'hostile', 'unknown'];
+      const _rels = this.actor.system.relationships ?? [];
+      const _esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      context.people = _rels
+        .map((rel, i) => {
+          const linkedActor = rel.actorUuid ? fromUuidSync(rel.actorUuid) : null;
+          return {
+            ...rel,
+            _idx: i,
+            _canSee: (isOwner || isGM) ? true : can(rel.visibility ?? 'party'),
+            _linked: !!linkedActor,
+            _actorUuid: rel.actorUuid ?? null,
+            _dispName: rel.name || linkedActor?.name || "",
+            _dispImg: rel.img || linkedActor?.img || ""
+          };
+        })
+        .filter(p => p._canSee);
+      await Promise.all(context.people.map(async (p) => {
+        p._notesEnriched = await _enrich(p.notes);
+        // Backlinks: count journal entries mentioning this person by uuid or name.
+        let nameRe = null;
+        if (p._dispName && p._dispName.trim() !== '') {
+          nameRe = new RegExp(`\\b${_esc(p._dispName.trim())}\\b`, 'i');
+        }
+        p._mentions = _entries.reduce((n, e) => {
+          const body = e.body ?? "";
+          const hit = (p._actorUuid && body.includes(p._actorUuid)) ||
+                      (nameRe && nameRe.test(body));
+          return n + (hit ? 1 : 0);
+        }, 0);
+      }));
+      context.peopleCanTab = isOwner || isGM || context.people.length > 0;
+
       // 3) One-time legacy migration: copy the old base `system.biography`
       //    string into bio.backstory.text if backstory is still empty. Guarded
       //    by a transient flag (the async update + re-render would otherwise
@@ -2182,23 +2219,32 @@ export class StryderActorSheet extends ActorSheet {
     return context;
   }
 
-  /** Route per-entry journal ProseMirror saves (target
-   *  `system.journal.entries.<n>.body`) through a whole-array write. The inline
-   *  {{editor}} submits that array-index dotted path on save; merging it raw is
-   *  unreliable and can corrupt sibling entries, so we rebuild the full array
-   *  from current data, set only the edited index, and hand a whole-array key to
-   *  super. All other form fields pass through untouched. (Bio & Journal, Phase 2) */
+  /** Route per-row ProseMirror saves on bio system arrays through whole-array
+   *  writes. The inline {{editor}} submits an array-index dotted path on save
+   *  (e.g. `system.journal.entries.2.body`, `system.relationships.0.notes`);
+   *  merging that raw is unreliable and can corrupt sibling rows, so we rebuild
+   *  each affected list from current data, set only the edited index/field, and
+   *  hand a single whole-array key per list to super. All other form fields pass
+   *  through untouched. (Bio & Journal — generalized in Phase 3A.) */
   async _updateObject(event, formData) {
-    const bodyKey = /^system\.journal\.entries\.(\d+)\.body$/;
-    const bodyEdits = Object.keys(formData).filter(k => bodyKey.test(k));
-    if (bodyEdits.length && this.actor.type === 'character') {
-      const entries = foundry.utils.deepClone(this.actor.system.journal?.entries ?? []);
-      for (const k of bodyEdits) {
-        const idx = Number(k.match(bodyKey)[1]);
-        if (entries[idx]) entries[idx].body = formData[k];
+    const richKey = /^system\.(journal\.entries|relationships|quests)\.(\d+)\.(body|notes)$/;
+    const matches = Object.keys(formData).filter(k => richKey.test(k));
+    if (matches.length && this.actor.type === 'character') {
+      const rebuilt = {}; // list path → cloned array (rebuilt once per list)
+      for (const k of matches) {
+        const [, list, idxStr, field] = k.match(richKey);
+        if (!rebuilt[list]) {
+          rebuilt[list] = foundry.utils.deepClone(
+            foundry.utils.getProperty(this.actor.system, list) ?? []
+          );
+        }
+        const idx = Number(idxStr);
+        if (rebuilt[list][idx]) rebuilt[list][idx][field] = formData[k];
         delete formData[k];
       }
-      formData['system.journal.entries'] = entries;
+      for (const [list, arr] of Object.entries(rebuilt)) {
+        formData['system.' + list] = arr;
+      }
     }
     return super._updateObject(event, formData);
   }
@@ -2223,6 +2269,12 @@ export class StryderActorSheet extends ActorSheet {
           tags: [], inGameDate: "", realDate: Date.now(), mood: "",
           pinned: false,
           visibility: this.actor.system.bio?.visibility?.journal ?? "private"
+        };
+      case 'relationships':
+        return {
+          id: foundry.utils.randomID(), actorUuid: null, name: "", role: "",
+          faction: "", attitude: "neutral", howKnown: "", firstMet: "", notes: "",
+          img: "", visibility: this.actor.system.bio?.visibility?.relationships ?? "party"
         };
       default:
         return { id: foundry.utils.randomID() };
