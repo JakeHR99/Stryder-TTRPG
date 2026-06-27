@@ -394,7 +394,9 @@
 							<button type="button" class="jrpg-bio-nav-btn" data-target="diary"><span>Diary</span></button>
 							{{/if}}
 							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="quests" disabled title="Coming in a later phase"><span>Quests</span></button>
-							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="people" disabled title="Coming in a later phase"><span>People</span></button>
+							{{#if peopleCanTab}}
+							<button type="button" class="jrpg-bio-nav-btn" data-target="people"><span>People</span></button>
+							{{/if}}
 						</div>
 					</div>
 
@@ -673,6 +675,102 @@
 							</article>
 							{{else}}
 							<div class="jrpg-diary-empty">No entries yet.{{#if bioIsEditor}} Click “+ New Entry” to start your journal.{{/if}}</div>
+							{{/each}}
+						</div>
+					</div>
+					{{!-- ── PEOPLE & BONDS (relationships — Phase 3A) ── --}}
+					<div class="jrpg-bio-panel jrpg-people-panel" data-section="people" data-view="bonds">
+						<div class="jrpg-bio-section-head">
+							<h3 class="jrpg-bio-section-title">People &amp; Bonds</h3>
+							{{#if bioIsEditor}}
+							<div class="jrpg-people-viewtoggle">
+								<button type="button" class="jrpg-people-view is-active" data-view="bonds">Bonds</button>
+								<button type="button" class="jrpg-people-view" data-view="dossier">Dossier</button>
+							</div>
+							<label class="jrpg-bio-vis-wrap" title="Default visibility for NEW people">
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="relationships">
+									<option value="public"  {{#if (eq bioVis.relationships "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.relationships "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.relationships "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.relationships "private")}}selected{{/if}}>Private</option>
+								</select>
+							</label>
+							<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="relationships">+ Add Person</button>
+							{{/if}}
+						</div>
+
+						{{#if bioIsEditor}}
+						<div class="jrpg-people-dropzone">Drag an Actor here to link them.</div>
+						{{/if}}
+
+						<div class="jrpg-people-list">
+							{{#each people}}
+							<article class="jrpg-people-card {{#if _linked}}is-linked{{/if}}" data-id="{{id}}" data-attitude="{{attitude}}">
+								<div class="jrpg-people-card-main">
+									<div class="jrpg-people-portrait">
+										{{#if _dispImg}}<img src="{{_dispImg}}" alt="{{_dispName}}" />{{/if}}
+										{{#if _linked}}<span class="jrpg-people-linkmark" title="Linked to an Actor">◈</span>{{/if}}
+									</div>
+									<div class="jrpg-people-headinfo">
+										{{#if ../bioIsEditor}}
+											<input class="jrpg-people-name jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="name" type="text" value="{{name}}" placeholder="{{#if _dispName}}{{_dispName}}{{else}}Name{{/if}}" />
+											<div class="jrpg-people-factrow">
+												<input class="jrpg-people-role jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="role" type="text" value="{{role}}" placeholder="Role" />
+												<input class="jrpg-people-faction jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="faction" type="text" value="{{faction}}" placeholder="Faction" />
+											</div>
+										{{else}}
+											<span class="jrpg-people-name-ro">{{_dispName}}</span>
+											<div class="jrpg-people-factrow-ro">{{role}}{{#if faction}} · {{faction}}{{/if}}</div>
+										{{/if}}
+										<div class="jrpg-people-chiprow">
+											<span class="jrpg-people-attitude jrpg-attitude-{{attitude}}">{{attitude}}</span>
+											{{#if _mentions}}<span class="jrpg-people-mentions" title="Mentions in this character's journal">Mentioned in {{_mentions}}</span>{{/if}}
+											{{#if _linked}}<button type="button" class="jrpg-people-open" data-action="bioOpenActor" data-uuid="{{_actorUuid}}" title="Open linked actor sheet">Open sheet</button>{{/if}}
+										</div>
+									</div>
+									{{#if ../bioIsEditor}}
+									<div class="jrpg-people-cardctl">
+										<select class="jrpg-bio-vis-select jrpg-people-attsel" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="attitude" title="Attitude">
+											<option value="ally"     {{#if (eq attitude "ally")}}selected{{/if}}>Ally</option>
+											<option value="friendly" {{#if (eq attitude "friendly")}}selected{{/if}}>Friendly</option>
+											<option value="neutral"  {{#if (eq attitude "neutral")}}selected{{/if}}>Neutral</option>
+											<option value="wary"     {{#if (eq attitude "wary")}}selected{{/if}}>Wary</option>
+											<option value="hostile"  {{#if (eq attitude "hostile")}}selected{{/if}}>Hostile</option>
+											<option value="unknown"  {{#if (eq attitude "unknown")}}selected{{/if}}>Unknown</option>
+										</select>
+										<select class="jrpg-bio-vis-select jrpg-people-vissel" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="visibility" title="Who can see this person">
+											<option value="public"  {{#if (eq visibility "public")}}selected{{/if}}>Public</option>
+											<option value="party"   {{#if (eq visibility "party")}}selected{{/if}}>Party</option>
+											<option value="gm"      {{#if (eq visibility "gm")}}selected{{/if}}>GM</option>
+											<option value="private" {{#if (eq visibility "private")}}selected{{/if}}>Private</option>
+										</select>
+										<button type="button" class="jrpg-diary-del jrpg-people-del" data-action="bioDelRow" data-list="relationships" data-id="{{id}}" title="Delete">🗙</button>
+									</div>
+									{{/if}}
+								</div>
+
+								<div class="jrpg-people-facts">
+									{{#if ../bioIsEditor}}
+										<label class="jrpg-people-factfield"><span>How Known</span><input class="jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="howKnown" type="text" value="{{howKnown}}" placeholder="How you know them" /></label>
+										<label class="jrpg-people-factfield"><span>First Met</span><input class="jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="firstMet" type="text" value="{{firstMet}}" placeholder="When / where" /></label>
+									{{else}}
+										{{#if howKnown}}<div class="jrpg-people-factro"><span>How Known</span> {{howKnown}}</div>{{/if}}
+										{{#if firstMet}}<div class="jrpg-people-factro"><span>First Met</span> {{firstMet}}</div>{{/if}}
+									{{/if}}
+								</div>
+
+								<div class="jrpg-people-notes">
+									{{#if ../bioIsEditor}}
+										<div class="jrpg-bio-editor jrpg-people-editor">
+											{{editor _notesEnriched target=(concat "system.relationships." _idx ".notes") engine="prosemirror" button=true editable=../editable}}
+										</div>
+									{{else}}
+										<div class="jrpg-diary-body">{{{_notesEnriched}}}</div>
+									{{/if}}
+								</div>
+							</article>
+							{{else}}
+							<div class="jrpg-diary-empty">No bonds yet.{{#if bioIsEditor}} Click “+ Add Person” or drag an Actor onto the dropzone.{{/if}}</div>
 							{{/each}}
 						</div>
 					</div>

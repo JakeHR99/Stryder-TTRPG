@@ -17964,3 +17964,259 @@ li.chat-message.sty-grp-end {
   border-radius: var(--sty-r-card);
 }
 /* ===== End of Bio/Journal Phase 2 region ===== */
+
+/* ===== BIOGRAPHY & JOURNAL — Phase 3A (People) ===== */
+
+/* View toggle (Bonds / Dossier) in the section head. */
+.jrpg-people-viewtoggle {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.jrpg-people-view {
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-cyan-soft);
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.jrpg-people-view:hover {
+  color: var(--sty-cyan-bright);
+  border-color: var(--sty-line-blue-strong);
+}
+.jrpg-people-view.is-active {
+  color: var(--sty-gold);
+  border-color: var(--sty-line-gold-strong);
+  background: var(--sty-panel-deep);
+}
+/* When the view toggle is present it claims the auto margin; keep the vis chip
+   and add button tight to the right of it. */
+.jrpg-people-panel .jrpg-bio-vis-wrap { margin-left: 8px; }
+
+/* Drop zone for linking actors. */
+.jrpg-people-dropzone {
+  border: 1px dashed var(--sty-line-blue);
+  border-radius: var(--sty-r-card);
+  background: var(--sty-panel-deep);
+  color: var(--sty-text-dim);
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 14px;
+  transition: all 0.15s ease;
+}
+.jrpg-people-dropzone.is-dragover {
+  border-color: var(--sty-line-gold-strong);
+  border-style: solid;
+  color: var(--sty-gold);
+  background: var(--sty-select-fill);
+}
+
+/* Card list. */
+.jrpg-people-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.jrpg-people-card {
+  background: var(--sty-panel);
+  border: 1px solid var(--sty-line-blue);
+  border-left: 3px solid var(--sty-line-blue-strong);
+  border-radius: var(--sty-r-card);
+  padding: 10px 14px;
+}
+.jrpg-people-card.is-linked {
+  border-left-color: var(--sty-cyan);
+}
+.jrpg-people-card-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.jrpg-people-portrait {
+  position: relative;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--sty-r-card);
+  border: 1px solid var(--sty-line-blue);
+  background: var(--sty-panel-deep);
+  overflow: hidden;
+}
+.jrpg-people-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.jrpg-people-linkmark {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 11px;
+  line-height: 1;
+  padding: 1px 2px;
+  color: var(--sty-cyan-bright);
+  background: var(--sty-panel-deep);
+  border-top-left-radius: var(--sty-r-bar);
+}
+.jrpg-people-headinfo {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.jrpg-people-name {
+  font-family: var(--sty-font-display);
+  font-size: 15px;
+  color: var(--sty-gold);
+}
+.jrpg-people-name-ro {
+  font-family: var(--sty-font-display);
+  font-size: 15px;
+  color: var(--sty-gold);
+}
+.jrpg-people-factrow {
+  display: flex;
+  gap: 6px;
+}
+.jrpg-people-factrow .jrpg-people-role,
+.jrpg-people-factrow .jrpg-people-faction {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 12px;
+}
+.jrpg-people-factrow-ro {
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  color: var(--sty-text-2);
+}
+.jrpg-people-chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Attitude chip voices. */
+.jrpg-people-attitude {
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--sty-r-bar);
+  border: 1px solid var(--sty-line-blue);
+  color: var(--sty-text-2);
+}
+.jrpg-attitude-ally,
+.jrpg-attitude-friendly {
+  color: var(--sty-gold);
+  border-color: var(--sty-line-gold);
+}
+.jrpg-attitude-neutral {
+  color: var(--sty-text-2);
+  border-color: var(--sty-line-blue);
+}
+.jrpg-attitude-wary,
+.jrpg-attitude-hostile {
+  color: var(--sty-crimson);
+  border-color: var(--sty-crimson-line);
+}
+.jrpg-attitude-unknown {
+  color: var(--sty-cyan-soft);
+  border-color: var(--sty-line-blue);
+}
+.jrpg-people-mentions {
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sty-cyan-soft);
+}
+.jrpg-people-open {
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-cyan);
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.jrpg-people-open:hover {
+  color: var(--sty-cyan-bright);
+  border-color: var(--sty-line-blue-strong);
+}
+.jrpg-people-cardctl {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.jrpg-people-attsel,
+.jrpg-people-vissel {
+  font-size: 11px;
+}
+
+/* Facts grid (How Known / First Met). */
+.jrpg-people-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.jrpg-people-factfield {
+  flex: 1 1 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.jrpg-people-factfield > span,
+.jrpg-people-factro > span {
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+}
+.jrpg-people-factro {
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  color: var(--sty-text);
+}
+.jrpg-people-notes {
+  margin-top: 8px;
+}
+.jrpg-people-editor .editor,
+.jrpg-people-editor .editor-content {
+  min-height: 90px;
+}
+
+/* Bonds vs Dossier emphasis — same cards, two presentations.
+   Bonds foregrounds attitude + notes, dims the facts grid.
+   Dossier foregrounds the facts grid. */
+.jrpg-people-panel[data-view="bonds"] .jrpg-people-facts {
+  opacity: 0.55;
+}
+.jrpg-people-panel[data-view="dossier"] .jrpg-people-facts {
+  opacity: 1;
+}
+.jrpg-people-panel[data-view="dossier"] .jrpg-people-notes {
+  opacity: 0.7;
+}
+/* ===== End of Bio/Journal Phase 3A region ===== */

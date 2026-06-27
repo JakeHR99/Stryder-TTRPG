@@ -3537,6 +3537,52 @@ export class StryderActorSheet extends ActorSheet {
       _diaryApplyFilters();
     });
 
+    // ── People: actor link drop + view toggle + open (Phase 3A) ──
+    // Drop an Actor onto the People panel to create a linked relationship row.
+    // Mirrors the inventory-grid dragover pattern; persistence via _bioListUpdate.
+    const _peoplePanel = () => html.find('.jrpg-bio-panel[data-section="people"]');
+    html.on('dragover', '.jrpg-people-dropzone', (ev) => {
+      ev.preventDefault();
+      $(ev.currentTarget).addClass('is-dragover');
+    });
+    html.on('dragleave', '.jrpg-people-dropzone', (ev) => {
+      $(ev.currentTarget).removeClass('is-dragover');
+    });
+    html.on('drop', '.jrpg-people-dropzone', async (ev) => {
+      ev.preventDefault();
+      $(ev.currentTarget).removeClass('is-dragover');
+      const data = TextEditor.getDragEventData(ev.originalEvent ?? ev);
+      if (data?.type !== 'Actor') return;
+      const a = await fromUuid(data.uuid);
+      if (!a) return;
+      if (a.uuid === this.actor.uuid) {
+        ui.notifications?.warn("You can't link a character to themselves.");
+        return;
+      }
+      this._bioListUpdate('relationships', (arr) => {
+        arr.push({ ...this._bioDefaultRow('relationships'), actorUuid: a.uuid, name: a.name, img: a.img });
+        return arr;
+      });
+    });
+
+    // View toggle (Bonds / Dossier) — view-only, like the diary filter.
+    html.on('click', '.jrpg-people-view', (ev) => {
+      const view = ev.currentTarget.dataset.view;
+      if (!view) return;
+      this._jrpgPeopleView = view;
+      const panel = _peoplePanel();
+      panel.find('.jrpg-people-view').removeClass('is-active');
+      $(ev.currentTarget).addClass('is-active');
+      panel.attr('data-view', view);
+    });
+
+    // Open a linked actor's sheet.
+    html.on('click', '[data-action="bioOpenActor"]', (ev) => {
+      const uuid = ev.currentTarget.dataset.uuid;
+      if (!uuid) return;
+      fromUuid(uuid).then(a => a?.sheet?.render(true));
+    });
+
     // ── Battle Form Select ──
     const FORM_LABELS = {
       one_handed: '1-Handed',
