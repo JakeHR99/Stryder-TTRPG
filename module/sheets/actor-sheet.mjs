@@ -2171,6 +2171,7 @@ export class StryderActorSheet extends ActorSheet {
       //     only (cheap self-scan, no world crawl — Build Spec §6).
       context.ATTITUDES = ['ally', 'friendly', 'neutral', 'wary', 'hostile', 'unknown'];
       const _rels = this.actor.system.relationships ?? [];
+      const _quests = this.actor.system.quests ?? [];
       const _esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       context.people = _rels
         .map((rel, i) => {
@@ -2188,19 +2189,61 @@ export class StryderActorSheet extends ActorSheet {
         .filter(p => p._canSee);
       await Promise.all(context.people.map(async (p) => {
         p._notesEnriched = await _enrich(p.notes);
-        // Backlinks: count journal entries mentioning this person by uuid or name.
+        // Backlinks: count journal entries + quest notes mentioning this person
+        // by uuid or whole-word name (Build Spec §6 — self-scan only).
         let nameRe = null;
         if (p._dispName && p._dispName.trim() !== '') {
           nameRe = new RegExp(`\\b${_esc(p._dispName.trim())}\\b`, 'i');
         }
-        p._mentions = _entries.reduce((n, e) => {
-          const body = e.body ?? "";
-          const hit = (p._actorUuid && body.includes(p._actorUuid)) ||
-                      (nameRe && nameRe.test(body));
-          return n + (hit ? 1 : 0);
-        }, 0);
+        const _hits = (txt) => {
+          const s = txt ?? "";
+          return (p._actorUuid && s.includes(p._actorUuid)) || (nameRe && nameRe.test(s));
+        };
+        const jHits = _entries.reduce((n, e) => n + (_hits(e.body) ? 1 : 0), 0);
+        const qHits = _quests.reduce((n, q) => n + (_hits(q.notes) ? 1 : 0), 0);
+        p._mentions = jHits + qHits;
       }));
       context.peopleCanTab = isOwner || isGM || context.people.length > 0;
+
+      // 2d) Quests (Phase 3B). Per-row visibility like journal/people, plus a
+      //     hard hidden gate: status==='hidden' is owner/GM-only regardless of
+      //     the visibility enum. Grouped by status for the log view.
+      context.questCats = ['main', 'side', 'personal'];
+      const _catRank = { main: 0, side: 1, personal: 2 };
+      context.quests = _quests
+        .map((q, i) => {
+          const objectives = q.objectives ?? [];
+          const done = objectives.filter(o => o.done).length;
+          const total = objectives.length;
+          const hiddenBlocked = q.status === 'hidden' && !(isOwner || isGM);
+          return {
+            ...q,
+            _idx: i,
+            _canSee: hiddenBlocked ? false
+              : (isOwner || isGM) ? true : can(q.visibility ?? 'party'),
+            _done: done,
+            _total: total,
+            _pct: total ? Math.round(100 * done / total) : 0,
+            _giver: q.giverUuid ? fromUuidSync(q.giverUuid) : null,
+            _location: q.locationUuid ? fromUuidSync(q.locationUuid) : null
+          };
+        })
+        .filter(q => q._canSee);
+      await Promise.all(context.quests.map(async (q) => {
+        q._notesEnriched = await _enrich(q.notes);
+        q._rewardsEnriched = await _enrich(q.rewards);
+        q._giverName = q._giver?.name ?? "";
+        q._locationName = q._location?.name ?? "";
+      }));
+      const _byStatus = { active: [], completed: [], failed: [], hidden: [] };
+      for (const q of context.quests) (_byStatus[q.status] ?? _byStatus.active).push(q);
+      for (const k of Object.keys(_byStatus)) {
+        _byStatus[k].sort((a, b) =>
+          (_catRank[a.category] ?? 9) - (_catRank[b.category] ?? 9) ||
+          (a.title || "").localeCompare(b.title || ""));
+      }
+      context.questsByStatus = _byStatus;
+      context.questsCanTab = isOwner || isGM || context.quests.length > 0;
 
       // 3) One-time legacy migration: copy the old base `system.biography`
       //    string into bio.backstory.text if backstory is still empty. Guarded
@@ -2275,6 +2318,12 @@ export class StryderActorSheet extends ActorSheet {
           id: foundry.utils.randomID(), actorUuid: null, name: "", role: "",
           faction: "", attitude: "neutral", howKnown: "", firstMet: "", notes: "",
           img: "", visibility: this.actor.system.bio?.visibility?.relationships ?? "party"
+        };
+      case 'quests':
+        return {
+          id: foundry.utils.randomID(), title: "", category: "side", status: "active",
+          giverUuid: null, locationUuid: null, objectives: [], rewards: "", notes: "",
+          visibility: this.actor.system.bio?.visibility?.quests ?? "party"
         };
       default:
         return { id: foundry.utils.randomID() };
@@ -3576,11 +3625,94 @@ export class StryderActorSheet extends ActorSheet {
       panel.attr('data-view', view);
     });
 
-    // Open a linked actor's sheet.
-    html.on('click', '[data-action="bioOpenActor"]', (ev) => {
+    // Open a linked document's sheet (Actor / Scene / JournalEntry — all expose
+    // .sheet). Generic: serves both the People (bioOpenActor) and Quest
+    // (bioOpenDoc) link buttons.
+    html.on('click', '[data-action="bioOpenActor"], [data-action="bioOpenDoc"]', (ev) => {
       const uuid = ev.currentTarget.dataset.uuid;
       if (!uuid) return;
-      fromUuid(uuid).then(a => a?.sheet?.render(true));
+      fromUuid(uuid).then(d => d?.sheet?.render(true));
+    });
+
+    // ── Quest objectives (Phase 3B) ── nested list; all writes via quests array.
+    const _questObj = (questId, fn) => this._bioListUpdate('quests', (arr) => {
+      const q = arr.find(x => x.id === questId);
+      if (q) { q.objectives = q.objectives ?? []; fn(q); }
+      return arr;
+    });
+    html.on('click', '[data-action="bioObjAdd"]', (ev) => {
+      const { questId } = ev.currentTarget.dataset;
+      if (!questId) return;
+      _questObj(questId, (q) => q.objectives.push({ id: foundry.utils.randomID(), text: "", done: false }));
+    });
+    html.on('click', '[data-action="bioObjDel"]', (ev) => {
+      const { questId, objId } = ev.currentTarget.dataset;
+      if (!questId || !objId) return;
+      _questObj(questId, (q) => { q.objectives = q.objectives.filter(o => o.id !== objId); });
+    });
+    html.on('click', '[data-action="bioObjToggle"]', (ev) => {
+      const { questId, objId } = ev.currentTarget.dataset;
+      if (!questId || !objId) return;
+      _questObj(questId, (q) => { const o = q.objectives.find(x => x.id === objId); if (o) o.done = !o.done; });
+    });
+    html.on('change', '[data-action="bioObjEdit"]', (ev) => {
+      const { questId, objId } = ev.currentTarget.dataset;
+      if (!questId || !objId) return;
+      const val = ev.currentTarget.value;
+      _questObj(questId, (q) => { const o = q.objectives.find(x => x.id === objId); if (o) o.text = val; });
+    });
+
+    // ── Quests: link drops + category filter (Phase 3B) ──
+    // Giver target accepts an Actor; Location target accepts a Scene or
+    // JournalEntry. Writes the dropped uuid into the quest via _bioListUpdate.
+    const _questPanel = () => html.find('.jrpg-bio-panel[data-section="quests"]');
+    const _questDropAccepts = { giverUuid: ['Actor'], locationUuid: ['Scene', 'JournalEntry'] };
+    html.on('dragover', '.jrpg-quest-drop', (ev) => {
+      ev.preventDefault();
+      $(ev.currentTarget).addClass('is-dragover');
+    });
+    html.on('dragleave', '.jrpg-quest-drop', (ev) => {
+      $(ev.currentTarget).removeClass('is-dragover');
+    });
+    html.on('drop', '.jrpg-quest-drop', async (ev) => {
+      ev.preventDefault();
+      $(ev.currentTarget).removeClass('is-dragover');
+      const { questId, field } = ev.currentTarget.dataset;
+      if (!questId || !field) return;
+      const data = TextEditor.getDragEventData(ev.originalEvent ?? ev);
+      const accepts = _questDropAccepts[field] ?? [];
+      if (!data?.type || !accepts.includes(data.type)) {
+        ui.notifications?.warn(`That target accepts: ${accepts.join(' or ')}.`);
+        return;
+      }
+      const doc = await fromUuid(data.uuid);
+      if (!doc) return;
+      this._bioListUpdate('quests', (arr) => {
+        const q = arr.find(x => x.id === questId);
+        if (q) q[field] = doc.uuid;
+        return arr;
+      });
+    });
+    html.on('click', '[data-action="bioQuestUnlink"]', (ev) => {
+      const { questId, field } = ev.currentTarget.dataset;
+      if (!questId || !field) return;
+      this._bioListUpdate('quests', (arr) => {
+        const q = arr.find(x => x.id === questId);
+        if (q) q[field] = null;
+        return arr;
+      });
+    });
+    // Category filter — view-only, like the diary/people view toggles.
+    html.on('click', '.jrpg-quest-cat', (ev) => {
+      const cat = ev.currentTarget.dataset.cat || 'all';
+      this._jrpgQuestCat = cat;
+      const panel = _questPanel();
+      panel.find('.jrpg-quest-cat').removeClass('is-active');
+      $(ev.currentTarget).addClass('is-active');
+      panel.find('.jrpg-quest-card').each((_, card) => {
+        const $c = $(card);
+        $c.toggle(cat === 'all' || String($c.attr('data-cat')) === cat);
+      });
     });
 
     // ── Battle Form Select ──
