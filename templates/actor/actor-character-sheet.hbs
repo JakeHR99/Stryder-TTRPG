@@ -393,7 +393,9 @@
 							{{#if journalCanTab}}
 							<button type="button" class="jrpg-bio-nav-btn" data-target="diary"><span>Diary</span></button>
 							{{/if}}
-							<button type="button" class="jrpg-bio-nav-btn coming-soon" data-target="quests" disabled title="Coming in a later phase"><span>Quests</span></button>
+							{{#if questsCanTab}}
+							<button type="button" class="jrpg-bio-nav-btn" data-target="quests"><span>Quests</span></button>
+							{{/if}}
 							{{#if peopleCanTab}}
 							<button type="button" class="jrpg-bio-nav-btn" data-target="people"><span>People</span></button>
 							{{/if}}
@@ -773,6 +775,143 @@
 							<div class="jrpg-diary-empty">No bonds yet.{{#if bioIsEditor}} Click “+ Add Person” or drag an Actor onto the dropzone.{{/if}}</div>
 							{{/each}}
 						</div>
+					</div>
+					{{!-- ── QUEST LOG (quests — Phase 3B) ── --}}
+					<div class="jrpg-bio-panel jrpg-quest-panel" data-section="quests">
+						<div class="jrpg-bio-section-head">
+							<h3 class="jrpg-bio-section-title">Quest Log</h3>
+							{{#if bioIsEditor}}
+							<div class="jrpg-quest-catfilter">
+								<button type="button" class="jrpg-quest-cat is-active" data-cat="all">All</button>
+								<button type="button" class="jrpg-quest-cat" data-cat="main">Main</button>
+								<button type="button" class="jrpg-quest-cat" data-cat="side">Side</button>
+								<button type="button" class="jrpg-quest-cat" data-cat="personal">Personal</button>
+							</div>
+							<label class="jrpg-bio-vis-wrap" title="Default visibility for NEW quests">
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="quests">
+									<option value="public"  {{#if (eq bioVis.quests "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.quests "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.quests "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.quests "private")}}selected{{/if}}>Private</option>
+								</select>
+							</label>
+							<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="quests">+ New Quest</button>
+							{{/if}}
+						</div>
+
+						{{#if quests.length}}
+							{{#each questsByStatus}}
+							{{#if this.length}}
+							<div class="jrpg-quest-group jrpg-quest-group-{{@key}}">
+								<div class="jrpg-quest-group-head">{{@key}}</div>
+								{{#each this}}
+								<article class="jrpg-quest-card jrpg-quest-status-{{status}}" data-id="{{id}}" data-cat="{{category}}" data-status="{{status}}">
+									<header class="jrpg-quest-card-head">
+										{{#if ../../bioIsEditor}}
+											<input class="jrpg-quest-title jrpg-char-input" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="title" type="text" value="{{title}}" placeholder="Untitled Quest" />
+										{{else}}<span class="jrpg-quest-title-ro">{{title}}</span>{{/if}}
+										<span class="jrpg-quest-cat-chip jrpg-quest-cat-{{category}}">{{category}}</span>
+										{{#if (eq status "hidden")}}<span class="jrpg-quest-hidden-badge">Hidden</span>{{/if}}
+										{{#if ../../bioIsEditor}}
+										<div class="jrpg-quest-headctl">
+											<select class="jrpg-bio-vis-select jrpg-quest-statussel" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="status" title="Status">
+												<option value="active"    {{#if (eq status "active")}}selected{{/if}}>Active</option>
+												<option value="completed" {{#if (eq status "completed")}}selected{{/if}}>Completed</option>
+												<option value="failed"    {{#if (eq status "failed")}}selected{{/if}}>Failed</option>
+												<option value="hidden"    {{#if (eq status "hidden")}}selected{{/if}}>Hidden</option>
+											</select>
+											<select class="jrpg-bio-vis-select jrpg-quest-catsel" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="category" title="Category">
+												<option value="main"     {{#if (eq category "main")}}selected{{/if}}>Main</option>
+												<option value="side"     {{#if (eq category "side")}}selected{{/if}}>Side</option>
+												<option value="personal" {{#if (eq category "personal")}}selected{{/if}}>Personal</option>
+											</select>
+											<select class="jrpg-bio-vis-select jrpg-quest-vissel" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="visibility" title="Who can see this quest">
+												<option value="public"  {{#if (eq visibility "public")}}selected{{/if}}>Public</option>
+												<option value="party"   {{#if (eq visibility "party")}}selected{{/if}}>Party</option>
+												<option value="gm"      {{#if (eq visibility "gm")}}selected{{/if}}>GM</option>
+												<option value="private" {{#if (eq visibility "private")}}selected{{/if}}>Private</option>
+											</select>
+											<button type="button" class="jrpg-diary-del jrpg-quest-del" data-action="bioDelRow" data-list="quests" data-id="{{id}}" title="Delete">🗙</button>
+										</div>
+										{{/if}}
+									</header>
+
+									<div class="jrpg-quest-progress" title="{{_done}} of {{_total}} objectives">
+										<div class="jrpg-quest-progress-track">
+											<div class="jrpg-quest-progress-fill" style="width: {{_pct}}%"></div>
+										</div>
+										<span class="jrpg-quest-progress-label">{{_done}}/{{_total}}</span>
+									</div>
+
+									<div class="jrpg-quest-objectives">
+										{{#each objectives}}
+										<div class="jrpg-quest-obj {{#if done}}is-done{{/if}}" data-obj-id="{{id}}">
+											{{#if ../../../bioIsEditor}}
+												<input type="checkbox" class="jrpg-quest-obj-check" data-action="bioObjToggle" data-quest-id="{{../id}}" data-obj-id="{{id}}" {{checked done}} />
+												<input type="text" class="jrpg-quest-obj-text jrpg-char-input" data-action="bioObjEdit" data-quest-id="{{../id}}" data-obj-id="{{id}}" value="{{text}}" placeholder="Objective" />
+												<button type="button" class="jrpg-diary-del jrpg-quest-obj-del" data-action="bioObjDel" data-quest-id="{{../id}}" data-obj-id="{{id}}" title="Remove objective">🗙</button>
+											{{else}}
+												<span class="jrpg-quest-obj-mark">{{#if done}}☑{{else}}☐{{/if}}</span>
+												<span class="jrpg-quest-obj-text-ro">{{text}}</span>
+											{{/if}}
+										</div>
+										{{/each}}
+										{{#if ../../bioIsEditor}}
+										<button type="button" class="jrpg-quest-obj-add" data-action="bioObjAdd" data-quest-id="{{id}}">+ Objective</button>
+										{{/if}}
+									</div>
+
+									<div class="jrpg-quest-links">
+										<div class="jrpg-quest-link">
+											<span class="jrpg-quest-link-label">Giver</span>
+											{{#if _giverName}}
+												<span class="jrpg-quest-link-name">{{_giverName}}</span>
+												<button type="button" class="jrpg-people-open" data-action="bioOpenDoc" data-uuid="{{giverUuid}}" title="Open">Open</button>
+												{{#if ../../bioIsEditor}}<button type="button" class="jrpg-quest-unlink" data-action="bioQuestUnlink" data-quest-id="{{id}}" data-field="giverUuid" title="Unlink">✕</button>{{/if}}
+											{{else if ../../bioIsEditor}}
+												<div class="jrpg-quest-drop" data-quest-id="{{id}}" data-field="giverUuid">Drop an Actor</div>
+											{{else}}
+												<span class="jrpg-quest-link-empty">—</span>
+											{{/if}}
+										</div>
+										<div class="jrpg-quest-link">
+											<span class="jrpg-quest-link-label">Location</span>
+											{{#if _locationName}}
+												<span class="jrpg-quest-link-name">{{_locationName}}</span>
+												<button type="button" class="jrpg-people-open" data-action="bioOpenDoc" data-uuid="{{locationUuid}}" title="Open">Open</button>
+												{{#if ../../bioIsEditor}}<button type="button" class="jrpg-quest-unlink" data-action="bioQuestUnlink" data-quest-id="{{id}}" data-field="locationUuid" title="Unlink">✕</button>{{/if}}
+											{{else if ../../bioIsEditor}}
+												<div class="jrpg-quest-drop" data-quest-id="{{id}}" data-field="locationUuid">Drop a Scene / Journal</div>
+											{{else}}
+												<span class="jrpg-quest-link-empty">—</span>
+											{{/if}}
+										</div>
+									</div>
+
+									<div class="jrpg-quest-rewards">
+										<span class="jrpg-quest-link-label">Rewards</span>
+										{{#if ../../bioIsEditor}}
+											<input type="text" class="jrpg-char-input" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="rewards" value="{{rewards}}" placeholder="Loot, XP, favors…" />
+										{{else}}<span class="jrpg-quest-rewards-ro">{{rewards}}</span>{{/if}}
+									</div>
+
+									<div class="jrpg-quest-notes">
+										{{#if ../../bioIsEditor}}
+											<div class="jrpg-bio-editor jrpg-quest-editor">
+												{{editor _notesEnriched target=(concat "system.quests." _idx ".notes") engine="prosemirror" button=true editable=../../editable}}
+											</div>
+										{{else}}
+											<div class="jrpg-diary-body">{{{_notesEnriched}}}</div>
+										{{/if}}
+									</div>
+								</article>
+								{{/each}}
+							</div>
+							{{/if}}
+							{{/each}}
+						{{else}}
+							<div class="jrpg-diary-empty">No quests yet.{{#if bioIsEditor}} Click “+ New Quest” to start your log.{{/if}}</div>
+						{{/if}}
 					</div>
 
 				</div>

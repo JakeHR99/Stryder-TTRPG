@@ -18220,3 +18220,298 @@ li.chat-message.sty-grp-end {
   opacity: 0.7;
 }
 /* ===== End of Bio/Journal Phase 3A region ===== */
+
+/* ===== BIOGRAPHY & JOURNAL — Phase 3B (Quests) ===== */
+
+/* Category filter in the section head. */
+.jrpg-quest-catfilter {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.jrpg-quest-cat {
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-cyan-soft);
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.jrpg-quest-cat:hover {
+  color: var(--sty-cyan-bright);
+  border-color: var(--sty-line-blue-strong);
+}
+.jrpg-quest-cat.is-active {
+  color: var(--sty-gold);
+  border-color: var(--sty-line-gold-strong);
+  background: var(--sty-panel-deep);
+}
+.jrpg-quest-panel .jrpg-bio-vis-wrap { margin-left: 8px; }
+
+/* Status groups. */
+.jrpg-quest-group {
+  margin-bottom: 16px;
+}
+.jrpg-quest-group-head {
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  border-bottom: 1px solid var(--sty-line-blue);
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+/* Quest cards. Status voice on the left border. */
+.jrpg-quest-card {
+  background: var(--sty-panel);
+  border: 1px solid var(--sty-line-blue);
+  border-left: 3px solid var(--sty-line-blue-strong);
+  border-radius: var(--sty-r-card);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+.jrpg-quest-status-active   { border-left-color: var(--sty-cyan); }
+.jrpg-quest-status-completed { border-left-color: var(--sty-gold); }
+.jrpg-quest-status-failed   { border-left-color: var(--sty-crimson); }
+.jrpg-quest-status-hidden {
+  border-left-color: var(--sty-text-dim);
+  border-left-style: dashed;
+  opacity: 0.85;
+}
+.jrpg-quest-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.jrpg-quest-title {
+  flex: 1 1 auto;
+  min-width: 120px;
+  font-family: var(--sty-font-display);
+  font-size: 15px;
+  color: var(--sty-gold);
+}
+.jrpg-quest-title-ro {
+  flex: 1 1 auto;
+  font-family: var(--sty-font-display);
+  font-size: 15px;
+  color: var(--sty-gold);
+}
+.jrpg-quest-cat-chip {
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--sty-r-bar);
+  border: 1px solid var(--sty-line-blue);
+  color: var(--sty-text-2);
+  flex: 0 0 auto;
+}
+.jrpg-quest-cat-main {
+  color: var(--sty-gold);
+  border-color: var(--sty-line-gold);
+}
+.jrpg-quest-cat-side {
+  color: var(--sty-cyan-soft);
+  border-color: var(--sty-line-blue);
+}
+.jrpg-quest-cat-personal {
+  color: var(--sty-text-2);
+  border-color: var(--sty-line-blue);
+}
+.jrpg-quest-hidden-badge {
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--sty-r-bar);
+  border: 1px dashed var(--sty-text-dim);
+  color: var(--sty-text-dim);
+  flex: 0 0 auto;
+}
+.jrpg-quest-headctl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.jrpg-quest-statussel,
+.jrpg-quest-catsel,
+.jrpg-quest-vissel {
+  font-size: 11px;
+}
+
+/* Progress bar. Fill width is the one allowed data-driven inline style. */
+.jrpg-quest-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.jrpg-quest-progress-track {
+  flex: 1 1 auto;
+  height: 8px;
+  background: var(--sty-panel-deep);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  overflow: hidden;
+}
+.jrpg-quest-progress-fill {
+  height: 100%;
+  background: var(--sty-gold-grad);
+}
+.jrpg-quest-progress-label {
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  color: var(--sty-text-2);
+  flex: 0 0 auto;
+}
+
+/* Objectives. */
+.jrpg-quest-objectives {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.jrpg-quest-obj {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.jrpg-quest-obj-check {
+  flex: 0 0 auto;
+}
+.jrpg-quest-obj-text {
+  flex: 1 1 auto;
+  font-size: 13px;
+}
+.jrpg-quest-obj.is-done .jrpg-quest-obj-text,
+.jrpg-quest-obj.is-done .jrpg-quest-obj-text-ro {
+  text-decoration: line-through;
+  color: var(--sty-text-dim);
+}
+.jrpg-quest-obj-text-ro {
+  flex: 1 1 auto;
+  font-size: 13px;
+  color: var(--sty-text);
+}
+.jrpg-quest-obj-mark {
+  flex: 0 0 auto;
+  color: var(--sty-cyan-soft);
+}
+.jrpg-quest-obj-add {
+  align-self: flex-start;
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-cyan-soft);
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.jrpg-quest-obj-add:hover {
+  color: var(--sty-cyan-bright);
+  border-color: var(--sty-line-blue-strong);
+}
+
+/* Giver / Location links. */
+.jrpg-quest-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.jrpg-quest-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 200px;
+}
+.jrpg-quest-link-label,
+.jrpg-quest-rewards .jrpg-quest-link-label {
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sty-text-2);
+  flex: 0 0 auto;
+}
+.jrpg-quest-link-name {
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  color: var(--sty-cyan);
+}
+.jrpg-quest-link-empty {
+  color: var(--sty-text-dim);
+}
+.jrpg-quest-drop {
+  flex: 1 1 auto;
+  border: 1px dashed var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  background: var(--sty-panel-deep);
+  color: var(--sty-text-dim);
+  font-family: var(--sty-font-number);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 4px 8px;
+  transition: all 0.15s ease;
+}
+.jrpg-quest-drop.is-dragover {
+  border-color: var(--sty-line-gold-strong);
+  border-style: solid;
+  color: var(--sty-gold);
+  background: var(--sty-select-fill);
+}
+.jrpg-quest-unlink {
+  background: transparent;
+  border: none;
+  color: var(--sty-text-dim);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 2px;
+  transition: color 0.15s ease;
+}
+.jrpg-quest-unlink:hover {
+  color: var(--sty-crimson);
+}
+
+/* Rewards + notes. */
+.jrpg-quest-rewards {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.jrpg-quest-rewards input {
+  flex: 1 1 auto;
+}
+.jrpg-quest-rewards-ro {
+  font-family: var(--sty-font-number);
+  font-size: 12px;
+  color: var(--sty-text);
+}
+.jrpg-quest-editor .editor,
+.jrpg-quest-editor .editor-content {
+  min-height: 90px;
+}
+/* ===== End of Bio/Journal Phase 3B region ===== */
