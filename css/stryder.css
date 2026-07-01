@@ -18515,3 +18515,21 @@ li.chat-message.sty-grp-end {
   min-height: 90px;
 }
 /* ===== End of Bio/Journal Phase 3B region ===== */
+
+/* ===== BIOGRAPHY & JOURNAL — Phase 4A (Persona completion + Visibility polish) ===== */
+
+/* ── Secrets space (owner/GM only) ── */
+.jrpg-bio-secrets {
+  border-left: 2px solid var(--sty-crimson-line);
+}
+.jrpg-bio-secrets .jrpg-bio-block-title {
+  color: var(--sty-crimson);
+}
+.jrpg-bio-secrets-note {
+  font-family: var(--sty-font-ui);
+  font-size: 11px;
+  color: var(--sty-text-dim);
+  letter-spacing: 0.5px;
+  margin: 2px 0 8px;
+}
+/* ===== End of Bio/Journal Phase 4A region ===== */

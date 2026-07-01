@@ -579,6 +579,112 @@
 							</details>
 						</div>
 						{{/if}}
+
+						{{!-- ── TASTES (Phase 4A) ── --}}
+						{{#if bioCan.tastes}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Tastes</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="tastes" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.tastes "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.tastes "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.tastes "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.tastes "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Likes</label>
+								<textarea name="system.bio.tastes.likes" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.likes}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Dislikes</label>
+								<textarea name="system.bio.tastes.dislikes" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.dislikes}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Savvies</label>
+								<textarea name="system.bio.tastes.savvies" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.savvies}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Ineptitudes</label>
+								<textarea name="system.bio.tastes.ineptitudes" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.ineptitudes}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Hobbies</label>
+								<textarea name="system.bio.tastes.hobbies" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.hobbies}}</textarea>
+							</div>
+						</div>
+						{{/if}}
+
+						{{!-- ── MOTIVATIONS (Phase 4A — secrets live in the Secrets space below) ── --}}
+						{{#if bioCan.motivations}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Motivations</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="motivations" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.motivations "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.motivations "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.motivations "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.motivations "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Goals</label>
+								<textarea name="system.bio.motivations.goals" class="jrpg-char-input jrpg-bio-textarea" rows="3">{{system.bio.motivations.goals}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Drives</label>
+								<textarea name="system.bio.motivations.drives" class="jrpg-char-input jrpg-bio-textarea" rows="3">{{system.bio.motivations.drives}}</textarea>
+							</div>
+						</div>
+						{{/if}}
+
+						{{!-- ── BELIEFS (Phase 4A) ── --}}
+						{{#if bioCan.beliefs}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Beliefs</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="beliefs" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.beliefs "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.beliefs "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.beliefs "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.beliefs "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Culture</label>
+								<textarea name="system.bio.beliefs.culture" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.beliefs.culture}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Traditions</label>
+								<textarea name="system.bio.beliefs.traditions" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.beliefs.traditions}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Superstitions</label>
+								<textarea name="system.bio.beliefs.superstitions" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.beliefs.superstitions}}</textarea>
+							</div>
+						</div>
+						{{/if}}
+
+						{{!-- ── SECRETS SPACE (Phase 4A — owner/GM only, hard gate) ── --}}
+						{{#if bioIsEditor}}
+						{{#if bioCan.secrets}}
+						<div class="jrpg-bio-block jrpg-bio-secrets">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Secrets</h3>
+							</div>
+							<div class="jrpg-bio-secrets-note">🔒 Visible only to you and the GM.</div>
+							<div class="jrpg-bio-stack">
+								<textarea name="system.bio.motivations.secrets" class="jrpg-char-input jrpg-bio-textarea" rows="4">{{system.bio.motivations.secrets}}</textarea>
+							</div>
+						</div>
+						{{/if}}
+						{{/if}}
 					</div>
 
 					{{!-- ── STORY (backstory rich text) ── --}}
