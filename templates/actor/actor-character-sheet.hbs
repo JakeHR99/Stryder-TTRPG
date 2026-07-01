@@ -400,6 +400,7 @@
 							<button type="button" class="jrpg-bio-nav-btn" data-target="people"><span>People</span></button>
 							{{/if}}
 						</div>
+						{{#if bioIsEditor}}<span class="jrpg-bio-vis-info" title="Visibility hides sections in the UI. It is reliable against non-owners, but anyone who co-owns this actor can technically inspect raw data. The GM always sees everything.">ⓘ</span>{{/if}}
 					</div>
 
 					{{!-- ── PROFILE (identity + appearance + at-a-glance) ── --}}
@@ -416,6 +417,9 @@
 									<option value="gm"      {{#if (eq bioVis.identity "gm")}}selected{{/if}}>GM</option>
 									<option value="private" {{#if (eq bioVis.identity "private")}}selected{{/if}}>Private</option>
 								</select>
+								{{#if isGM}}{{#unless (eq bioVis.identity "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="identity" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
 								{{/if}}
 							</div>
 
@@ -474,6 +478,9 @@
 									<option value="gm"      {{#if (eq bioVis.appearance "gm")}}selected{{/if}}>GM</option>
 									<option value="private" {{#if (eq bioVis.appearance "private")}}selected{{/if}}>Private</option>
 								</select>
+								{{#if isGM}}{{#unless (eq bioVis.appearance "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="appearance" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
 								{{/if}}
 							</div>
 
@@ -532,6 +539,9 @@
 									<option value="gm"      {{#if (eq bioVis.personality "gm")}}selected{{/if}}>GM</option>
 									<option value="private" {{#if (eq bioVis.personality "private")}}selected{{/if}}>Private</option>
 								</select>
+								{{#if isGM}}{{#unless (eq bioVis.personality "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="personality" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
 								{{/if}}
 							</div>
 
@@ -592,6 +602,9 @@
 									<option value="gm"      {{#if (eq bioVis.tastes "gm")}}selected{{/if}}>GM</option>
 									<option value="private" {{#if (eq bioVis.tastes "private")}}selected{{/if}}>Private</option>
 								</select>
+								{{#if isGM}}{{#unless (eq bioVis.tastes "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="tastes" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
 								{{/if}}
 							</div>
 							<div class="jrpg-bio-stack">
@@ -629,6 +642,9 @@
 									<option value="gm"      {{#if (eq bioVis.motivations "gm")}}selected{{/if}}>GM</option>
 									<option value="private" {{#if (eq bioVis.motivations "private")}}selected{{/if}}>Private</option>
 								</select>
+								{{#if isGM}}{{#unless (eq bioVis.motivations "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="motivations" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
 								{{/if}}
 							</div>
 							<div class="jrpg-bio-stack">
@@ -654,6 +670,9 @@
 									<option value="gm"      {{#if (eq bioVis.beliefs "gm")}}selected{{/if}}>GM</option>
 									<option value="private" {{#if (eq bioVis.beliefs "private")}}selected{{/if}}>Private</option>
 								</select>
+								{{#if isGM}}{{#unless (eq bioVis.beliefs "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="beliefs" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
 								{{/if}}
 							</div>
 							<div class="jrpg-bio-stack">
@@ -700,6 +719,9 @@
 									<option value="gm"      {{#if (eq bioVis.backstory "gm")}}selected{{/if}}>GM</option>
 									<option value="private" {{#if (eq bioVis.backstory "private")}}selected{{/if}}>Private</option>
 								</select>
+								{{#if isGM}}{{#unless (eq bioVis.backstory "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="backstory" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
 								{{/if}}
 							</div>
 							<div class="jrpg-bio-editor">

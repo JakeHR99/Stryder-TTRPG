@@ -1,4 +1,4 @@
-﻿/* Global styles */
+/* Global styles */
 .window-app {
   font-family: "Roboto", sans-serif;
 }
@@ -18531,5 +18531,28 @@ li.chat-message.sty-grp-end {
   color: var(--sty-text-dim);
   letter-spacing: 0.5px;
   margin: 2px 0 8px;
+}
+/* ── GM reveal-to-party + visibility info (Phase 4A commit 2) ── */
+.jrpg-bio-reveal {
+  background: transparent;
+  border: 1px solid var(--sty-line-gold);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-gold);
+  font-family: var(--sty-font-ui);
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+.jrpg-bio-reveal:hover {
+  border-color: var(--sty-line-gold-strong);
+  color: var(--sty-text);
+}
+.jrpg-bio-vis-info {
+  color: var(--sty-cyan-soft);
+  font-size: 12px;
+  cursor: help;
+  margin-left: 6px;
+  align-self: center;
 }
 /* ===== End of Bio/Journal Phase 4A region ===== */

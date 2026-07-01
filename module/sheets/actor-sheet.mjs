@@ -2147,6 +2147,8 @@ export class StryderActorSheet extends ActorSheet {
       context.bioVis = bioVis;
       // Owner/GM get the visibility selectors on each section header.
       context.bioIsEditor = isGM || isOwner;
+      // GM flag for GM-only affordances (reveal-to-party — Phase 4A).
+      context.isGM = isGM;
 
       // 2b) Journal / Diary (Phase 2). Reuse can()/_enrich/isGM/isOwner above.
       //     Each visible entry carries _idx (its index in the FULL system array,
@@ -3500,6 +3502,13 @@ export class StryderActorSheet extends ActorSheet {
       const sec = ev.currentTarget.dataset.section;
       if (!sec) return;
       this.actor.update({ ['system.bio.visibility.' + sec]: ev.currentTarget.value });
+    });
+
+    // ── GM: reveal a section to the party (Phase 4A) — flips enum to public ──
+    html.on('click', '[data-action="bioRevealSection"]', (ev) => {
+      const sec = ev.currentTarget.dataset.section;
+      if (!game.user.isGM || !sec) return;
+      this.actor.update({ ['system.bio.visibility.' + sec]: 'public' });
     });
 
     // ── Biography dynamic lists (Phase 2) ──
