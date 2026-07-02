@@ -19645,6 +19645,14 @@ li.chat-message.sty-grp-end {
 /* ===== MAIN MENU — Biography & Journal tome (bottom-left) ===== */
 .jrpg-main-screen { position: relative; }
 .jrpg-main-bio-btn {
+  /* The tome is painted with --tome-* vars that normally live on the bio
+     screen — redeclare them here so the book renders outside it too. */
+  --tome-ember: #d99a4e;
+  --tome-ember-hot: #f4bd72;
+  --tome-ember-dim: #8a6134;
+  --tome-bronze: #6e5638;
+  --tome-bronze-dark: #3d3123;
+  --tome-leather: #241811;
   position: absolute;
   left: 30px;
   bottom: 26px;
@@ -19656,6 +19664,7 @@ li.chat-message.sty-grp-end {
   z-index: 6;
   background: none;
   border: none;
+  white-space: nowrap;
 }
 .jrpg-main-bio-book {
   position: relative;
