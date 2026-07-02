@@ -177,7 +177,11 @@ async function setupOpenWorld(config) {
 
 // ── Place a pin marker token on a hex ─────────────────────
 async function placeMarkerToken(scene, hexKey, center, opts) {
-  const gs = canvas.grid.size;
+  // Hex cells are not square — use the grid's true cell box (sizeX/sizeY)
+  // so the half-size marker genuinely centers on its hex. The old square
+  // gs*0.25 offset drifted markers toward neighboring hexes.
+  const pxW = 0.5 * canvas.grid.sizeX;
+  const pxH = 0.5 * canvas.grid.sizeY;
 
   // Ensure marker actor exists
   let markerActor = game.actors.getName('Expedition Marker');
@@ -192,8 +196,8 @@ async function placeMarkerToken(scene, hexKey, center, opts) {
 
   const tokenData = {
     name: opts.name,
-    x: center.x - gs * 0.25,  // offset so 0.5-size token centers on hex
-    y: center.y - gs * 0.25,
+    x: center.x - pxW / 2,
+    y: center.y - pxH / 2,
     width: 0.5,
     height: 0.5,
     actorId: markerActor.id,
@@ -218,9 +222,10 @@ async function placeMarkerToken(scene, hexKey, center, opts) {
 
 // ── Main movement handler — called from stryder.mjs hook ──
 export async function handleOpenWorldMove(tokenDoc, scene) {
-  const gs = canvas.grid.size;
-  const tokenX = tokenDoc.x + gs / 2;
-  const tokenY = tokenDoc.y + gs / 2;
+  // True pixel center of the token (hex cells are not square, and the party
+  // token is not always 1×1) — the old gs/2 math read neighboring hexes.
+  const tokenX = tokenDoc.x + ((tokenDoc.width  ?? 1) * canvas.grid.sizeX) / 2;
+  const tokenY = tokenDoc.y + ((tokenDoc.height ?? 1) * canvas.grid.sizeY) / 2;
   const hexKey = getHexKey(scene, tokenX, tokenY);
   const center = getHexCenter(hexKey);
 
@@ -396,11 +401,14 @@ export async function clearOpenWorld() {
 }
 
 // ── Canvas click helper ───────────────────────────────────
+// Read the click's own canvas-local coordinates from the PIXI event.
+// (canvas.mousePosition is a cached value that can lag the actual click,
+// which snapped Home Base / designations into neighboring hexes.)
 function getCanvasClick() {
   return new Promise((resolve) => {
-    const handler = () => {
+    const handler = (event) => {
       canvas.stage.off('pointerdown', handler);
-      const pos = canvas.mousePosition;
+      const pos = event.getLocalPosition(canvas.stage);
       resolve({ x: pos.x, y: pos.y });
     };
     setTimeout(() => canvas.stage.on('pointerdown', handler), 300);
