@@ -19171,4 +19171,69 @@ li.chat-message.sty-grp-end {
   align-self: center;
 }
 
+/* ── Tome fix 2: out-rank the legacy core-override skins ── */
+/* the sub-screen sky is applied with !important (core-override at ~:8176) */
+.jrpg-sub-screen.is-biography {
+  background:
+    radial-gradient(ellipse 60% 38% at 10% 0%, rgba(140, 30, 18, 0.20), transparent 62%),
+    radial-gradient(ellipse 50% 34% at 92% 100%, rgba(120, 26, 14, 0.12), transparent 60%),
+    radial-gradient(ellipse 120% 90% at 50% 40%, #140d09, #0b0705 82%) !important;
+}
+.jrpg-sub-screen.is-biography .jrpg-sub-content { color: #d8c9ae; }
+
+/* wider plate + more air */
+.jrpg-sub-screen.is-biography .jrpg-bio-screen {
+  max-width: 1040px;
+  gap: 28px;
+}
+.jrpg-bio-screen .jrpg-bio-block { padding: 22px 28px 24px; }
+
+/* ink wells — the global .jrpg-char-input skin is all !important, match it */
+.jrpg-bio-screen .jrpg-char-input,
+.jrpg-bio-screen .jrpg-bio-textarea {
+  background: #0d0806 !important;
+  border: 1px solid #3d3123 !important;
+  border-left: 2px solid #6e5638 !important;
+  border-radius: 0 !important;
+  color: #d8c9ae !important;
+  font-family: "Arsenal", serif !important;
+  font-size: 14.5px !important;
+  font-weight: 400 !important;
+}
+.jrpg-bio-screen .jrpg-char-input:focus,
+.jrpg-bio-screen .jrpg-bio-textarea:focus {
+  border-color: #8a6134 !important;
+  box-shadow: 0 0 12px rgba(217, 154, 78, 0.15), inset 0 0 8px #000 !important;
+}
+.jrpg-bio-screen .jrpg-char-input::placeholder,
+.jrpg-bio-screen .jrpg-bio-textarea::placeholder {
+  color: rgba(154, 138, 110, 0.55) !important;
+}
+
+/* labels: parchment voice + room for the long ones (was 60px Rajdhani blue) */
+.jrpg-bio-screen .jrpg-char-label {
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #b7a583;
+  width: 120px;
+}
+.jrpg-bio-screen .jrpg-char-field {
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+/* visibility chips: Foundry's .window-content select skin outranks a bare class */
+.jrpg-bio-screen .jrpg-bio-vis-select {
+  background: #0d0806 !important;
+  border: 1px solid #6e5638 !important;
+  color: #c9b18c !important;
+  font-family: "Cinzel", serif !important;
+}
+.jrpg-bio-screen .jrpg-bio-vis-select option {
+  background: #17100b;
+  color: #d8c9ae;
+}
+
 /* ═══════════ End of TOME THEME region ═══════════ */
