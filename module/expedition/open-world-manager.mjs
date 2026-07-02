@@ -78,13 +78,15 @@ async function drawFiltered(table, scene) {
 // center via getCenterPoint(point). We never convert an offset back to pixels
 // — that reverse direction didn't round-trip on some hex grids, which is how
 // the marker and the stored key ended up one hex apart.
+// scene.grid (not canvas.grid) so exploration also resolves correctly when
+// the GM's client executes a player's move while viewing another scene.
 function getHexKey(scene, x, y) {
-  const offset = canvas.grid.getOffset({ x, y });
+  const offset = scene.grid.getOffset({ x, y });
   return `${offset.i},${offset.j}`;
 }
 
-function getHexCenterFromPoint(x, y) {
-  return canvas.grid.getCenterPoint({ x, y });
+function getHexCenterFromPoint(scene, x, y) {
+  return scene.grid.getCenterPoint({ x, y });
 }
 
 // ── Setup dialog ──────────────────────────────────────────
@@ -151,7 +153,7 @@ async function setupOpenWorld(config) {
   if (!click) return;
 
   const hexKey = getHexKey(scene, click.x, click.y);
-  const center = getHexCenterFromPoint(click.x, click.y);
+  const center = getHexCenterFromPoint(scene, click.x, click.y);
   console.log(`Stryder | home base stored as [${hexKey}] with marker center`, center);
 
   // Set scene flags
@@ -180,11 +182,11 @@ async function setupOpenWorld(config) {
 
 // ── Place a pin marker token on a hex ─────────────────────
 async function placeMarkerToken(scene, hexKey, center, opts) {
-  // Hex cells are not square — use the grid's true cell box (sizeX/sizeY)
-  // so the half-size marker genuinely centers on its hex. The old square
-  // gs*0.25 offset drifted markers toward neighboring hexes.
-  const pxW = 0.5 * canvas.grid.sizeX;
-  const pxH = 0.5 * canvas.grid.sizeY;
+  // Hex cells are not square — use the scene grid's true cell box so the
+  // marker genuinely centers on its hex.
+  const size = opts.scale ?? 0.5;
+  const pxW = size * scene.grid.sizeX;
+  const pxH = size * scene.grid.sizeY;
 
   // Ensure marker actor exists
   let markerActor = game.actors.getName('Expedition Marker');
@@ -201,14 +203,16 @@ async function placeMarkerToken(scene, hexKey, center, opts) {
     name: opts.name,
     x: center.x - pxW / 2,
     y: center.y - pxH / 2,
-    width: 0.5,
-    height: 0.5,
+    width: size,
+    height: size,
+    rotation: opts.rotation ?? 0,
+    alpha: opts.alpha ?? 1,
+    sort: -100,   // always beneath player/party tokens
     actorId: markerActor.id,
     actorLink: false,
     locked: true,
     displayName: CONST.TOKEN_DISPLAY_MODES.HOVER,
     texture: { src: opts.icon },
-    ring: { enabled: true, colors: { ring: opts.color, background: '#000000' }, subject: { scale: 0.8, texture: opts.icon } },
     disposition: CONST.TOKEN_DISPOSITIONS.NEUTRAL,
     flags: {
       [SYSTEM_ID]: {
@@ -218,6 +222,10 @@ async function placeMarkerToken(scene, hexKey, center, opts) {
       }
     }
   };
+  // Trail markings (explored hexes) render bare and faint; sites keep rings.
+  if (opts.ring !== false) {
+    tokenData.ring = { enabled: true, colors: { ring: opts.color, background: '#000000' }, subject: { scale: 0.8, texture: opts.icon } };
+  }
 
   const created = await scene.createEmbeddedDocuments('Token', [tokenData]);
   return created[0];
@@ -232,8 +240,8 @@ export async function handleOpenWorldMove(tokenDoc, scene, changes = null) {
   const destY = changes?.y ?? tokenDoc.y;
   const c = (typeof tokenDoc.getCenterPoint === 'function')
     ? tokenDoc.getCenterPoint({ x: destX, y: destY })
-    : { x: destX + ((tokenDoc.width  ?? 1) * canvas.grid.sizeX) / 2,
-        y: destY + ((tokenDoc.height ?? 1) * canvas.grid.sizeY) / 2 };
+    : { x: destX + ((tokenDoc.width  ?? 1) * scene.grid.sizeX) / 2,
+        y: destY + ((tokenDoc.height ?? 1) * scene.grid.sizeY) / 2 };
   const hexKey = getHexKey(scene, c.x, c.y);
   console.log('Stryder | OW move:', {
     changesX: changes?.x, changesY: changes?.y,
@@ -242,12 +250,20 @@ export async function handleOpenWorldMove(tokenDoc, scene, changes = null) {
     hexKey,
     lastHex: tokenDoc.getFlag(SYSTEM_ID, 'currentHex')
   });
-  const center = getHexCenterFromPoint(c.x, c.y);
+  const center = getHexCenterFromPoint(scene, c.x, c.y);
 
   // Check if hex has changed since last move
   const lastHex = tokenDoc.getFlag(SYSTEM_ID, 'currentHex');
   if (lastHex === hexKey) return; // same hex, no action
-  await tokenDoc.setFlag(SYSTEM_ID, 'currentHex', hexKey);
+  const lastCenter = tokenDoc.getFlag(SYSTEM_ID, 'lastCenter') ?? null;
+  await tokenDoc.update({
+    [`flags.${SYSTEM_ID}.currentHex`]: hexKey,
+    [`flags.${SYSTEM_ID}.lastCenter`]: { x: c.x, y: c.y }
+  });
+  // Travel direction for the trail markings (degrees, 0 = east, clockwise).
+  const trailRotation = lastCenter
+    ? Math.round(Math.atan2(c.y - lastCenter.y, c.x - lastCenter.x) * 180 / Math.PI)
+    : 0;
 
   // Get current hex state
   const hexStates = foundry.utils.duplicate(scene.getFlag(SYSTEM_ID, 'openWorldHexes') ?? {});
@@ -299,13 +315,18 @@ export async function handleOpenWorldMove(tokenDoc, scene, changes = null) {
 
   await scene.setFlag(SYSTEM_ID, 'openWorldHexes', hexStates);
 
-  // Place explored pin marker
+  // Leave faint trail markings on the explored hex, oriented along the
+  // party's travel direction — road marks on a map, not a big pin.
   const eventColor = getEventColor(eventName);
   await placeMarkerToken(scene, hexKey, center, {
     name: eventName,
     color: eventColor,
-    icon: 'systems/stryder/assets/tokens/site-explored.svg',
+    icon: 'systems/stryder/assets/tokens/site-trail.svg',
     state: 'explored',
+    ring: false,
+    alpha: 0.55,
+    rotation: trailRotation,
+    scale: 0.62,
   });
 
   // Swap party animation

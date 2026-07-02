@@ -2801,9 +2801,19 @@ Hooks.on('ready', () => {
     if (!actor) {
       return;
     }
-    
+
     await removeInfluencedCondition(actor);
     ui.notifications.info(`${requestingUser} removed Influenced from ${actorName}`);
+  });
+
+  // Open World exploration runs on the GM client — players lack permission to
+  // update scenes, draw from tables, or create marker tokens. Only the mover's
+  // client dispatches, so each move resolves exactly once.
+  socket.register("openWorldMove", async (tokenUuid, dest) => {
+    const tokenDoc = await fromUuid(tokenUuid);
+    const scene = tokenDoc?.parent;
+    if (!scene?.getFlag('stryder', 'isOpenWorld')) return;
+    await handleOpenWorldMove(tokenDoc, scene, dest);
   });
   
   // Store socket for use in request functions
@@ -2854,7 +2864,13 @@ Hooks.on('ready', () => {
     // Only respond to the party actor token
     const partyTokens = Array.from(scene.tokens).filter(t => t.actor?.type === 'party');
     if (partyTokens.length > 0 && tokenDoc.actor?.type !== 'party') return;
-    await handleOpenWorldMove(tokenDoc, scene, changes);
+    try {
+      await game.stryder.socket.executeAsGM('openWorldMove', tokenDoc.uuid,
+        { x: changes.x ?? tokenDoc.x, y: changes.y ?? tokenDoc.y });
+    } catch (err) {
+      ui.notifications.warn('Open World: a GM must be connected to explore new hexes.');
+      console.warn('Stryder | open world dispatch failed:', err);
+    }
   });
 
   // ── Open World: dropping a token onto the scene counts as entering its hex ──
@@ -2865,7 +2881,13 @@ Hooks.on('ready', () => {
     if (tokenDoc.getFlag('stryder', 'isOpenWorldMarker')) return;
     const partyTokens = Array.from(scene.tokens).filter(t => t.actor?.type === 'party');
     if (partyTokens.length > 0 && tokenDoc.actor?.type !== 'party') return;
-    await handleOpenWorldMove(tokenDoc, scene);
+    try {
+      await game.stryder.socket.executeAsGM('openWorldMove', tokenDoc.uuid,
+        { x: tokenDoc.x, y: tokenDoc.y });
+    } catch (err) {
+      ui.notifications.warn('Open World: a GM must be connected to explore new hexes.');
+      console.warn('Stryder | open world dispatch failed:', err);
+    }
   });
 });
 
