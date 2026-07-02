@@ -405,17 +405,23 @@ export async function clearOpenWorld() {
 }
 
 // ── Canvas click helper ───────────────────────────────────
-// Read the click's own canvas-local coordinates from the PIXI event.
-// (canvas.mousePosition is a cached value that can lag the actual click,
-// which snapped Home Base / designations into neighboring hexes.)
+// Capture the click on the DOM canvas element and convert through Foundry's
+// own client→canvas transform. Both canvas.mousePosition and PIXI
+// getLocalPosition delivered x-shifted points here (home base landed one
+// hex off), so we bypass the PIXI event pipeline entirely.
 function getCanvasClick() {
   return new Promise((resolve) => {
-    const handler = (event) => {
-      canvas.stage.off('pointerdown', handler);
-      const pos = event.getLocalPosition(canvas.stage);
+    const view = canvas.app.view;
+    const handler = (ev) => {
+      view.removeEventListener('pointerdown', handler);
+      const pos = canvas.canvasCoordinatesFromClient({ x: ev.clientX, y: ev.clientY });
+      console.log(
+        `Stryder | open-world click: client(${ev.clientX},${ev.clientY}) → world(${Math.round(pos.x)},${Math.round(pos.y)}) → offset`,
+        canvas.grid.getOffset(pos)
+      );
       resolve({ x: pos.x, y: pos.y });
     };
-    setTimeout(() => canvas.stage.on('pointerdown', handler), 300);
+    setTimeout(() => view.addEventListener('pointerdown', handler), 300);
   });
 }
 
