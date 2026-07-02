@@ -18747,3 +18747,396 @@ li.chat-message.sty-grp-end {
 }
 /* ===== End of Bio/Journal Phase 4B region ===== */
 
+
+/* ═══════════ BIOGRAPHY & JOURNAL — TOME THEME ═══════════
+   Re-voices the entire bio page as an illuminated dark-fantasy tome.
+   Strategy: remap the --sty-* tokens INSIDE .jrpg-bio-screen so every
+   earlier bio rule (Phases 1–4B) re-voices automatically, then style the
+   new realm covers + bookmark tab rails and re-plate the blocks.
+   The rest of the sheet keeps the FF7R voice untouched. */
+
+.jrpg-bio-screen {
+  /* tome palette */
+  --tome-void: #0b0705;
+  --tome-void-2: #140d09;
+  --tome-ember: #d99a4e;
+  --tome-ember-hot: #f4bd72;
+  --tome-ember-dim: #8a6134;
+  --tome-bronze: #6e5638;
+  --tome-bronze-dark: #3d3123;
+  --tome-parch: #c9b18c;
+  --tome-ink: #d8c9ae;
+  --tome-ink-dim: #9a8a6e;
+  --tome-leather: #241811;
+  /* token remap — bronze takes the blue voice, parchment takes the cyan
+     voice, ember takes gold; crimson stays crimson */
+  --sty-panel: rgba(30, 21, 14, 0.75);
+  --sty-panel-deep: rgba(17, 11, 7, 0.94);
+  --sty-panel-nav: rgba(23, 16, 11, 0.92);
+  --sty-row: rgba(217, 154, 78, 0.05);
+  --sty-line-blue: rgba(110, 86, 56, 0.30);
+  --sty-line-blue-strong: rgba(110, 86, 56, 0.55);
+  --sty-line-gold: rgba(217, 154, 78, 0.30);
+  --sty-line-gold-strong: rgba(217, 154, 78, 0.55);
+  --sty-gold: var(--tome-ember);
+  --sty-gold-bright: var(--tome-ember-hot);
+  --sty-gold-muted: rgba(217, 154, 78, 0.55);
+  --sty-cyan: var(--tome-ink);
+  --sty-cyan-soft: #b7a583;
+  --sty-cyan-bright: #e9dcc0;
+  --sty-cyan-glow: 0 0 10px rgba(217, 154, 78, 0.35);
+  --sty-text: var(--tome-ink);
+  --sty-text-dim: var(--tome-ink-dim);
+  --sty-text-2: rgba(201, 177, 140, 0.65);
+  --sty-select-fill: rgba(217, 154, 78, 0.10);
+  --sty-font-display: "Cinzel", serif;
+  --sty-font-ui: "Arsenal", serif;
+  --sty-font-number: "Cinzel", serif;
+
+  position: relative;
+  padding: 18px 18px 24px;
+  border: 1px solid var(--tome-bronze-dark);
+  outline: 1px solid rgba(0, 0, 0, 0.6);
+  outline-offset: 3px;
+  background:
+    radial-gradient(ellipse 60% 38% at 10% 0%, rgba(140, 30, 18, 0.22), transparent 62%),
+    radial-gradient(ellipse 50% 34% at 92% 100%, rgba(120, 26, 14, 0.14), transparent 60%),
+    radial-gradient(ellipse 120% 90% at 50% 40%, var(--tome-void-2), var(--tome-void) 82%);
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.75);
+}
+/* slow arcane breathing in the corner glow */
+.jrpg-bio-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 45% 28% at 8% 0%, rgba(150, 34, 20, 0.18), transparent 60%);
+  animation: tome-arcanebreath 9s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes tome-arcanebreath {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+/* ── Realm covers ── */
+.jrpg-bio-realms {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.jrpg-bio-realm {
+  position: relative;
+  min-height: 138px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  background:
+    linear-gradient(160deg, rgba(53, 36, 22, 0.38), transparent 55%),
+    linear-gradient(180deg, rgba(30, 21, 14, 0.9), rgba(23, 16, 11, 0.95) 70%);
+  border: 1px solid var(--tome-bronze-dark);
+  box-shadow: inset 0 0 34px rgba(0, 0, 0, 0.8), 0 5px 18px rgba(0, 0, 0, 0.65);
+  transition: border-color 0.4s, box-shadow 0.4s;
+  overflow: hidden;
+}
+.jrpg-bio-realm::before,
+.jrpg-bio-realm::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  width: 44px;
+  height: 43px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  opacity: 0.7;
+  filter: brightness(0.85) sepia(0.35) saturate(1.35);
+  transition: opacity 0.4s, filter 0.4s;
+}
+.jrpg-bio-realm::before { left: 4px;  background-image: url("systems/stryder/assets/ui/stryder_corner_tl.png"); }
+.jrpg-bio-realm::after  { right: 4px; background-image: url("systems/stryder/assets/ui/stryder_corner_tr.png"); }
+.jrpg-bio-realm:hover { border-color: var(--tome-bronze); }
+.jrpg-bio-realm.is-active {
+  border-color: var(--tome-ember-dim);
+  box-shadow: inset 0 0 34px rgba(0, 0, 0, 0.8), 0 5px 20px rgba(0, 0, 0, 0.65),
+              0 0 22px rgba(217, 154, 78, 0.13);
+}
+.jrpg-bio-realm.is-active::before,
+.jrpg-bio-realm.is-active::after {
+  opacity: 1;
+  filter: brightness(1.05) sepia(0.3) saturate(1.5) drop-shadow(0 0 4px rgba(217, 154, 78, 0.55));
+}
+.jrpg-bio-realm-emblem {
+  flex: 0 0 auto;
+  width: 86px;
+  height: 110px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Biography cover: the character's art in an iron frame, with a slow sheen */
+.jrpg-bio-realm-portrait {
+  border: 1px solid var(--tome-bronze);
+  outline: 1px solid #000;
+  outline-offset: 2px;
+  box-shadow: inset 0 0 20px #000, 0 0 16px rgba(217, 154, 78, 0.10);
+  overflow: hidden;
+  background: linear-gradient(180deg, #2c2119, #191009);
+}
+.jrpg-bio-realm-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  border: none;
+  filter: saturate(0.88) contrast(1.04);
+}
+.jrpg-bio-realm-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 42%, rgba(244, 189, 114, 0.10) 50%, transparent 58%);
+  transform: translateX(-110%);
+  animation: tome-portraitsheen 7s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes tome-portraitsheen {
+  0%, 60%, 100% { transform: translateX(-110%); }
+  78%           { transform: translateX(110%); }
+}
+/* Journal cover: a drifting leather tome bearing the Stryder emblem */
+.jrpg-bio-realm-bookwrap { animation: tome-bookdrift 6.5s ease-in-out infinite; }
+@keyframes tome-bookdrift {
+  0%, 100% { transform: translateY(0)    rotate(-3.2deg); }
+  50%      { transform: translateY(-7px) rotate(2.2deg); }
+}
+.jrpg-bio-tomebook {
+  position: relative;
+  width: 64px;
+  height: 84px;
+  background: linear-gradient(135deg, #3a2415, var(--tome-leather) 55%, #171009);
+  border: 1px solid var(--tome-bronze);
+  border-radius: 2px 6px 6px 2px;
+  box-shadow:
+    -5px 5px 0 -1px #241a10,
+    -5px 5px 0 0 var(--tome-bronze-dark),
+    0 12px 20px rgba(0, 0, 0, 0.85),
+    0 0 18px rgba(217, 154, 78, 0.12);
+}
+.jrpg-bio-tomebook::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--tome-bronze-dark) 0 2px, transparent 2px),
+    linear-gradient(0deg, transparent 9px, var(--tome-bronze-dark) 9px 11px, transparent 11px),
+    linear-gradient(0deg, transparent 70px, var(--tome-bronze-dark) 70px 72px, transparent 72px);
+  opacity: 0.9;
+}
+.jrpg-bio-tomebook::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 37px;
+  transform: translate(-50%, -50%);
+  background: url("systems/stryder/assets/ui/stryderemblem.png") center / contain no-repeat;
+  animation: tome-sigilpulse 4.5s ease-in-out infinite;
+}
+@keyframes tome-sigilpulse {
+  0%, 100% { opacity: 0.75; filter: invert(0.72) sepia(1) saturate(2.6) hue-rotate(-12deg) brightness(0.95) drop-shadow(0 0 4px rgba(217, 154, 78, 0.3)); }
+  50%      { opacity: 1;    filter: invert(0.72) sepia(1) saturate(2.6) hue-rotate(-12deg) brightness(1.15) drop-shadow(0 0 12px rgba(244, 189, 114, 0.65)); }
+}
+.jrpg-bio-mote {
+  position: absolute;
+  bottom: 0;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--tome-ember-hot);
+  opacity: 0;
+  animation: tome-moterise 5s linear infinite;
+  pointer-events: none;
+}
+.jrpg-bio-mote:nth-of-type(1) { left: 22%; animation-delay: 0s; }
+.jrpg-bio-mote:nth-of-type(2) { left: 55%; animation-delay: 1.7s; }
+.jrpg-bio-mote:nth-of-type(3) { left: 80%; animation-delay: 3.1s; width: 2px; height: 2px; }
+@keyframes tome-moterise {
+  0%   { transform: translateY(0)     translateX(0);    opacity: 0; }
+  12%  { opacity: 0.85; }
+  100% { transform: translateY(-95px) translateX(-7px); opacity: 0; }
+}
+.jrpg-bio-realm-label { flex: 1; min-width: 0; }
+.jrpg-bio-realm-title {
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--tome-parch);
+  text-shadow: 0 2px 3px #000;
+  margin: 0;
+  border: none;
+}
+.jrpg-bio-realm.is-active .jrpg-bio-realm-title {
+  color: var(--tome-ember-hot);
+  text-shadow: 0 0 14px rgba(217, 154, 78, 0.35), 0 2px 3px #000;
+}
+.jrpg-bio-realm-sub {
+  display: block;
+  font-family: "Arsenal", serif;
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--tome-ink-dim);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.jrpg-bio-screen .jrpg-bio-vis-info {
+  position: absolute;
+  right: 6px;
+  top: -14px;
+  color: var(--sty-cyan-soft);
+  font-size: 12px;
+  cursor: help;
+  margin: 0;
+}
+
+/* ── Bookmark tab rails ── */
+.jrpg-bio-tabrail {
+  display: none;
+  gap: 5px;
+  padding: 0 22px;
+  margin: -6px 0 -20px;
+  position: relative;
+  z-index: 2;
+}
+.jrpg-bio-tabrail.is-active { display: flex; }
+.jrpg-bio-screen .jrpg-bio-nav-btn {
+  position: relative;
+  padding: 8px 18px 11px;
+  cursor: pointer;
+  font-family: "Cinzel", serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--tome-ink-dim);
+  background: linear-gradient(180deg, #2a1c11, var(--tome-leather) 75%);
+  border: 1px solid var(--tome-bronze-dark);
+  border-bottom: none;
+  border-radius: 0;
+  clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 100%, 0 100%);
+  transform: translateY(4px);
+  transition: transform 0.28s, color 0.28s, background 0.28s;
+  box-shadow: none;
+}
+.jrpg-bio-screen .jrpg-bio-nav-btn::after {
+  content: "";
+  position: absolute;
+  inset: 4px 6px 2px;
+  border: 1px dashed rgba(110, 86, 56, 0.22);
+  border-bottom: none;
+  pointer-events: none;
+}
+.jrpg-bio-screen .jrpg-bio-nav-btn:hover {
+  color: var(--tome-parch);
+  transform: translateY(2px);
+  background: linear-gradient(180deg, #32210f, var(--tome-leather) 80%);
+}
+.jrpg-bio-screen .jrpg-bio-nav-btn.is-active {
+  color: var(--tome-ember-hot);
+  background: linear-gradient(180deg, #3b2817, #241811 80%);
+  border-color: var(--tome-ember-dim);
+  transform: translateY(0);
+  text-shadow: 0 0 10px rgba(217, 154, 78, 0.4);
+}
+.jrpg-bio-screen .jrpg-bio-nav-btn.is-active::before {
+  content: "";
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  top: 3px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tome-ember), transparent);
+}
+
+/* ── Block plates ── */
+.jrpg-bio-screen .jrpg-bio-block {
+  position: relative;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -10%, rgba(42, 29, 18, 0.20), transparent 60%),
+    linear-gradient(180deg, rgba(30, 21, 14, 0.92), rgba(23, 16, 11, 0.95) 220px);
+  border: 1px solid var(--tome-bronze-dark);
+  outline: 1px solid rgba(0, 0, 0, 0.65);
+  outline-offset: 2px;
+  box-shadow: inset 0 0 48px rgba(0, 0, 0, 0.6), 0 8px 26px rgba(0, 0, 0, 0.7);
+  padding: 18px 22px 20px;
+}
+.jrpg-bio-screen .jrpg-bio-block::before,
+.jrpg-bio-screen .jrpg-bio-block::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  width: 40px;
+  height: 39px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  opacity: 0.55;
+  filter: brightness(0.85) sepia(0.35) saturate(1.35);
+}
+.jrpg-bio-screen .jrpg-bio-block::before { left: 4px;  background-image: url("systems/stryder/assets/ui/stryder_corner_tl.png"); }
+.jrpg-bio-screen .jrpg-bio-block::after  { right: 4px; background-image: url("systems/stryder/assets/ui/stryder_corner_tr.png"); }
+.jrpg-bio-screen .jrpg-bio-block-header {
+  border-bottom: 1px solid rgba(110, 86, 56, 0.35);
+  padding-bottom: 8px;
+}
+.jrpg-bio-screen .jrpg-bio-block-title {
+  letter-spacing: 4px;
+  color: var(--tome-parch);
+  text-shadow: 0 0 14px rgba(217, 154, 78, 0.18), 0 2px 3px #000;
+}
+.jrpg-bio-screen .jrpg-bio-field-label {
+  font-family: "Cinzel", serif;
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--tome-ember-dim);
+}
+
+/* ── Ink wells (inputs inside the tome only) ── */
+.jrpg-bio-screen .jrpg-char-input,
+.jrpg-bio-screen .jrpg-bio-textarea {
+  background: #0d0806;
+  border: 1px solid var(--tome-bronze-dark);
+  border-left: 2px solid var(--tome-bronze);
+  color: var(--tome-ink);
+  font-family: "Arsenal", serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.jrpg-bio-screen .jrpg-char-input:focus,
+.jrpg-bio-screen .jrpg-bio-textarea:focus {
+  border-color: var(--tome-ember-dim);
+  box-shadow: 0 0 12px rgba(217, 154, 78, 0.15), inset 0 0 8px #000;
+}
+
+/* ── Illuminated drop cap on rendered rich text ── */
+.jrpg-bio-screen .jrpg-bio-editor .editor-content > p:first-of-type::first-letter {
+  font-family: "Cinzel Decorative", serif;
+  font-size: 38px;
+  line-height: 0.85;
+  float: left;
+  padding: 3px 8px 0 0;
+  color: var(--tome-ember);
+  text-shadow: 0 0 16px rgba(217, 154, 78, 0.45);
+}
+
+/* ── Secrets keeps the blood voice inside the tome ── */
+.jrpg-bio-screen .jrpg-bio-secrets { border-left: 2px solid var(--sty-crimson-line); }
+
+/* ═══════════ End of TOME THEME region ═══════════ */
