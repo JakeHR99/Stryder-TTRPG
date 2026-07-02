@@ -416,9 +416,15 @@ function getCanvasClick() {
     const view = canvas.app.view;
     const handler = (ev) => {
       view.removeEventListener('pointerdown', handler);
-      const pos = canvas.canvasCoordinatesFromClient({ x: ev.clientX, y: ev.clientY });
+      // Screen point relative to the canvas element, inverted through the
+      // stage's world transform: screen = world × M  ⇒  world = screen × M⁻¹.
+      // (canvasCoordinatesFromClient applied the transform the wrong way —
+      // click deltas came back multiplied by zoom instead of divided.)
+      const rect = view.getBoundingClientRect();
+      const local = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
+      const pos = canvas.stage.worldTransform.applyInverse(local);
       console.log(
-        `Stryder | open-world click: client(${ev.clientX},${ev.clientY}) → world(${Math.round(pos.x)},${Math.round(pos.y)}) → offset`,
+        `Stryder | open-world click: client(${ev.clientX},${ev.clientY}) local(${Math.round(local.x)},${Math.round(local.y)}) zoom(${canvas.stage.scale.x.toFixed(3)}) → world(${Math.round(pos.x)},${Math.round(pos.y)}) → offset`,
         canvas.grid.getOffset(pos)
       );
       resolve({ x: pos.x, y: pos.y });
