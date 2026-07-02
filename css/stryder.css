@@ -11552,8 +11552,8 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 /* Grid */
 .jrpg-inv-grid {
   display: grid !important;
-  grid-template-columns: repeat(11, 1fr) !important;
-  gap: 3px !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 6px !important;
 }
 
 /* Base slot */
@@ -11920,9 +11920,9 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 .jrpg-page[data-page="inventory"] .jrpg-inv-grid {
   display: grid !important;
-  grid-template-columns: repeat(11, 1fr) !important;
-  grid-template-rows: repeat(4, 1fr) !important;
-  gap: 3px !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  grid-template-rows: none !important;
+  gap: 6px !important;
   width: 100% !important;
   box-sizing: border-box !important;
 }
