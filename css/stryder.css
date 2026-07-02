@@ -19293,17 +19293,23 @@ li.chat-message.sty-grp-end {
 .inv-popup { position: relative; }
 .inv-popup-close {
   position: absolute;
-  top: -4px;
-  left: -4px;
-  width: 20px;
-  height: 20px;
-  line-height: 1;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
   padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   background: rgba(8, 14, 35, 0.9);
   border: 1px solid rgba(80, 160, 255, 0.35);
   border-radius: 50%;
   color: rgba(168, 212, 255, 0.75);
-  font-size: 10px;
+  font-family: "Arsenal", sans-serif;
+  font-size: 12px;
+  line-height: 0;
   cursor: pointer;
   z-index: 2;
   transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
