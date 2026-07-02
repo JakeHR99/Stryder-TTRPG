@@ -416,18 +416,23 @@ function getCanvasClick() {
     const view = canvas.app.view;
     const handler = (ev) => {
       view.removeEventListener('pointerdown', handler);
-      // Screen point relative to the canvas element, inverted through the
-      // stage's world transform: screen = world × M  ⇒  world = screen × M⁻¹.
-      // (canvasCoordinatesFromClient applied the transform the wrong way —
-      // click deltas came back multiplied by zoom instead of divided.)
+      // Trust core's own world-space cursor (canvas.mousePosition) — it is
+      // what Foundry uses for rulers, drags and targeting. Hand-rolled
+      // transforms kept landing in the wrong coordinate frame. We log the
+      // alternative conversions side-by-side for verification.
       const rect = view.getBoundingClientRect();
       const local = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
-      const pos = canvas.stage.worldTransform.applyInverse(local);
-      console.log(
-        `Stryder | open-world click: client(${ev.clientX},${ev.clientY}) local(${Math.round(local.x)},${Math.round(local.y)}) zoom(${canvas.stage.scale.x.toFixed(3)}) → world(${Math.round(pos.x)},${Math.round(pos.y)}) → offset`,
-        canvas.grid.getOffset(pos)
-      );
-      resolve({ x: pos.x, y: pos.y });
+      const viaMatrix = canvas.stage.worldTransform.applyInverse({ x: local.x, y: local.y });
+      const core = canvas.mousePosition;
+      const pos = { x: core.x, y: core.y };
+      console.log('Stryder | open-world click candidates:', {
+        local, zoom: canvas.stage.scale.x,
+        core: { x: Math.round(pos.x), y: Math.round(pos.y) },
+        coreOffset: canvas.grid.getOffset(pos),
+        matrix: { x: Math.round(viaMatrix.x), y: Math.round(viaMatrix.y) },
+        matrixOffset: canvas.grid.getOffset(viaMatrix)
+      });
+      resolve(pos);
     };
     setTimeout(() => view.addEventListener('pointerdown', handler), 300);
   });

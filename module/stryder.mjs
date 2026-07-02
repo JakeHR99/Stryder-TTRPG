@@ -2856,6 +2856,17 @@ Hooks.on('ready', () => {
     if (partyTokens.length > 0 && tokenDoc.actor?.type !== 'party') return;
     await handleOpenWorldMove(tokenDoc, scene);
   });
+
+  // ── Open World: dropping a token onto the scene counts as entering its hex ──
+  Hooks.on('createToken', async (tokenDoc, options, userId) => {
+    if (userId !== game.user.id) return;
+    const scene = tokenDoc.parent;
+    if (!scene?.getFlag('stryder', 'isOpenWorld')) return;
+    if (tokenDoc.getFlag('stryder', 'isOpenWorldMarker')) return;
+    const partyTokens = Array.from(scene.tokens).filter(t => t.actor?.type === 'party');
+    if (partyTokens.length > 0 && tokenDoc.actor?.type !== 'party') return;
+    await handleOpenWorldMove(tokenDoc, scene);
+  });
 });
 
 // ── Expedition: scene control buttons (GM only) ──────────
