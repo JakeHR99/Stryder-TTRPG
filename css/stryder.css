@@ -19236,4 +19236,47 @@ li.chat-message.sty-grp-end {
   color: #d8c9ae;
 }
 
+/* ── Tome fix 3: cover breathing room, portrait slot + picker, label force ── */
+.jrpg-bio-realm {
+  gap: 20px;
+  padding: 14px 22px 14px 20px;
+  min-height: 150px;
+}
+.jrpg-bio-realm-portrait {
+  position: relative;
+  overflow: hidden !important;
+}
+.jrpg-bio-realm-portrait img {
+  position: static !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  object-fit: cover;
+}
+.jrpg-bio-portrait-pick {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+  padding: 0;
+  background: rgba(13, 8, 6, 0.85);
+  border: 1px solid #6e5638;
+  color: #c9b18c;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s, border-color 0.25s;
+  z-index: 2;
+}
+.jrpg-bio-realm-portrait:hover .jrpg-bio-portrait-pick { opacity: 1; }
+.jrpg-bio-portrait-pick:hover { border-color: #d99a4e; color: #f4bd72; }
+/* legacy sub-screen skins tint labels lavender — force the parchment voice */
+.jrpg-bio-screen .jrpg-char-label {
+  font-family: "Cinzel", serif !important;
+  color: #b7a583 !important;
+  width: 130px !important;
+}
+
 /* ═══════════ End of TOME THEME region ═══════════ */

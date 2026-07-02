@@ -384,7 +384,10 @@
 					<div class="jrpg-bio-realms">
 						<div class="jrpg-bio-realm is-active" data-realm="biography">
 							<div class="jrpg-bio-realm-emblem jrpg-bio-realm-portrait">
-								<img src="{{actor.img}}" alt="{{actor.name}}" />
+								<img src="{{bioPortrait}}" alt="{{actor.name}}" />
+								{{#if bioIsEditor}}
+								<button type="button" class="jrpg-bio-portrait-pick" data-action="bioPickImage" data-target="system.bio.portrait" title="Choose a biography portrait (separate from sheet art)">✎</button>
+								{{/if}}
 							</div>
 							<div class="jrpg-bio-realm-label">
 								<h3 class="jrpg-bio-realm-title">Biography</h3>

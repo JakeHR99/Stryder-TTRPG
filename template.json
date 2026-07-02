@@ -333,6 +333,7 @@
           "themeMusicUrl": "",
           "colorScheme": ""
         },
+        "portrait": "",
         "visibility": {
           "identity": "public",
           "appearance": "public",

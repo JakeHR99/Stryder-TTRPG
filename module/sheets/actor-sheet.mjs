@@ -2255,6 +2255,8 @@ export class StryderActorSheet extends ActorSheet {
       context.galleryCanTab = isOwner || isGM ||
         ((this.actor.system.gallery ?? []).length > 0 && context.bioCan.gallery);
       context.immersion = this.actor.system.bio?.immersion ?? {};
+      // Tome cover portrait — its own art slot, falling back to the sheet art.
+      context.bioPortrait = this.actor.system.bio?.portrait || this.actor.img;
 
       // 3) One-time legacy migration: copy the old base `system.biography`
       //    string into bio.backstory.text if backstory is still empty. Guarded
@@ -3627,6 +3629,7 @@ export class StryderActorSheet extends ActorSheet {
     //    scalar actor path (data-target, e.g. the immersion sigil). Mirrors
     //    the defensive FilePicker pattern used by the token-art picker.
     html.on('click', '[data-action="bioPickImage"]', (ev) => {
+      ev.stopPropagation(); // pick buttons can sit inside clickable realm covers
       const { list, id, target } = ev.currentTarget.dataset;
       const FP = foundry.applications?.apps?.FilePicker?.implementation ?? FilePicker;
       new FP({
