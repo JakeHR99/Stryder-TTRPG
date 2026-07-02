@@ -18855,8 +18855,8 @@ li.chat-message.sty-grp-end {
   filter: brightness(0.85) sepia(0.35) saturate(1.35);
   transition: opacity 0.4s, filter 0.4s;
 }
-.jrpg-bio-realm::before { left: 4px;  background-image: url("systems/stryder/assets/ui/stryder_corner_tl.png"); }
-.jrpg-bio-realm::after  { right: 4px; background-image: url("systems/stryder/assets/ui/stryder_corner_tr.png"); }
+.jrpg-bio-realm::before { left: 4px;  background-image: url("../assets/ui/stryder_corner_tl.png"); }
+.jrpg-bio-realm::after  { right: 4px; background-image: url("../assets/ui/stryder_corner_tr.png"); }
 .jrpg-bio-realm:hover { border-color: var(--tome-bronze); }
 .jrpg-bio-realm.is-active {
   border-color: var(--tome-ember-dim);
@@ -18945,7 +18945,7 @@ li.chat-message.sty-grp-end {
   width: 40px;
   height: 37px;
   transform: translate(-50%, -50%);
-  background: url("systems/stryder/assets/ui/stryderemblem.png") center / contain no-repeat;
+  background: url("../assets/ui/stryderemblem.png") center / contain no-repeat;
   animation: tome-sigilpulse 4.5s ease-in-out infinite;
 }
 @keyframes tome-sigilpulse {
@@ -19090,8 +19090,8 @@ li.chat-message.sty-grp-end {
   opacity: 0.55;
   filter: brightness(0.85) sepia(0.35) saturate(1.35);
 }
-.jrpg-bio-screen .jrpg-bio-block::before { left: 4px;  background-image: url("systems/stryder/assets/ui/stryder_corner_tl.png"); }
-.jrpg-bio-screen .jrpg-bio-block::after  { right: 4px; background-image: url("systems/stryder/assets/ui/stryder_corner_tr.png"); }
+.jrpg-bio-screen .jrpg-bio-block::before { left: 4px;  background-image: url("../assets/ui/stryder_corner_tl.png"); }
+.jrpg-bio-screen .jrpg-bio-block::after  { right: 4px; background-image: url("../assets/ui/stryder_corner_tr.png"); }
 .jrpg-bio-screen .jrpg-bio-block-header {
   border-bottom: 1px solid rgba(110, 86, 56, 0.35);
   padding-bottom: 8px;
@@ -19138,5 +19138,37 @@ li.chat-message.sty-grp-end {
 
 /* ── Secrets keeps the blood voice inside the tome ── */
 .jrpg-bio-screen .jrpg-bio-secrets { border-left: 2px solid var(--sty-crimson-line); }
+
+/* ── Biography page takes over the whole sub-screen (kills the blue) ── */
+.jrpg-sub-screen.is-biography {
+  background:
+    radial-gradient(ellipse 60% 38% at 10% 0%, rgba(140, 30, 18, 0.20), transparent 62%),
+    radial-gradient(ellipse 50% 34% at 92% 100%, rgba(120, 26, 14, 0.12), transparent 60%),
+    radial-gradient(ellipse 120% 90% at 50% 40%, #140d09, #0b0705 82%);
+}
+.jrpg-sub-screen.is-biography .jrpg-sub-title {
+  font-family: "Cinzel", serif;
+  color: #c9b18c;
+  text-shadow: 0 0 18px rgba(217, 154, 78, 0.25), 0 2px 3px #000;
+}
+.jrpg-sub-screen.is-biography .jrpg-back-to-character-btn {
+  background: linear-gradient(180deg, #2a1c11, #241811 75%);
+  border: 1px solid #3d3123;
+  color: #b7a583;
+  font-family: "Cinzel", serif;
+  letter-spacing: 2px;
+}
+.jrpg-sub-screen.is-biography .jrpg-back-to-character-btn:hover {
+  border-color: #8a6134;
+  color: #f4bd72;
+}
+.jrpg-sub-screen.is-biography .jrpg-bio-screen { margin: 0 auto; }
+
+/* ── Reveal chip must not stretch across the block header ── */
+.jrpg-bio-screen .jrpg-bio-reveal {
+  flex: 0 0 auto;
+  width: auto;
+  align-self: center;
+}
 
 /* ═══════════ End of TOME THEME region ═══════════ */

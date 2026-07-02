@@ -3443,6 +3443,7 @@ export class StryderActorSheet extends ActorSheet {
       subScreen.show();
       subScreen.toggleClass('is-tempering', target === 'tempering' || _isTemperingSubPage(target));
       subScreen.toggleClass('is-growth', target === 'growth');
+      subScreen.toggleClass('is-biography', _isBiographyPage(target));
       html.find('.jrpg-sub-title').text(label);
       html.find('.jrpg-page').hide();
       html.find(`.jrpg-page[data-page="${target}"]`).show();
