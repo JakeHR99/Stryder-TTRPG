@@ -3527,6 +3527,13 @@ export class StryderActorSheet extends ActorSheet {
     html.on('click', '[data-action="openBiography"]', () => {
       _showPage('biography', 'Biography & Journal');
     });
+    // The main-menu tome lives among animated/overlapping menu layers — bind
+    // directly too, in case an intermediate layer swallows the bubbled click.
+    html.find('.jrpg-main-bio-btn').on('click', (ev) => {
+      ev.stopPropagation();
+      console.log('Stryder | main-menu tome clicked');
+      _showPage('biography', 'Biography & Journal');
+    });
 
     // ── Biography internal section nav (Phase 1) ──
     // Custom data-target show/hide scoped within the bio page (NOT Foundry

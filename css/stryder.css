@@ -19667,6 +19667,8 @@ li.chat-message.sty-grp-end {
   border: none;
   white-space: nowrap;
 }
+/* the button itself is the sole click target — its animated innards are inert */
+.jrpg-main-bio-btn * { pointer-events: none; }
 .jrpg-main-bio-book {
   position: relative;
   width: 64px;
