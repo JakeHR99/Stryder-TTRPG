@@ -155,14 +155,15 @@
       <div class="ps-page" data-page="inventory">
         <div class="ps-interior">
           <div class="ps-interior-header">🎒 Shared Inventory</div>
-          <div class="ps-interior-hint">Items carried by the party. Drag items onto this sheet to add them.</div>
+          <div class="ps-interior-hint">Items carried by the party. Drag items onto this sheet to stash them — drag a row onto your character sheet (or click the hand) to take one.</div>
           <ol class="ps-item-list">
             {{#each inventory as |item|}}
             <li class="ps-item" data-item-id="{{item.id}}">
               <img class="ps-item-img" src="{{item.img}}" title="{{item.name}}" />
-              <span class="ps-item-name">{{item.name}}</span>
+              <span class="ps-item-name">{{item.name}}{{#if (gt item.system.quantity 1)}} <span class="ps-item-qty">×{{item.system.quantity}}</span>{{/if}}</span>
               <span class="ps-item-type">{{item.type}}</span>
               <div class="ps-item-controls">
+                <a class="ps-item-take" title="Take to my character"><i class="fas fa-hand-holding"></i></a>
                 <a class="ps-item-delete" title="Delete"><i class="fas fa-trash"></i></a>
               </div>
             </li>

@@ -7145,7 +7145,19 @@ export class StryderActorSheet extends ActorSheet {
       foundry.utils.setProperty(itemData, 'flags.stryder.invSlot', dropSlot);
     }
 
-    return this.actor.createEmbeddedDocuments('Item', [itemData]);
+    const created = await this.actor.createEmbeddedDocuments('Item', [itemData]);
+
+    // Party hand-off: dragging out of the shared inventory MOVES the item.
+    if (item.parent?.type === 'party' && created?.length) {
+      if (item.parent.isOwner) {
+        await item.delete();
+        ui.notifications.info(`${item.name} taken from the party inventory.`);
+      } else {
+        ui.notifications.warn('Taken as a copy — you lack permission to remove it from the party sheet.');
+      }
+    }
+
+    return created;
   }
 
   /**

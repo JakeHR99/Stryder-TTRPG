@@ -181,6 +181,34 @@ export class StryderPartySheet extends ActorSheet {
       await this.actor.items.get(li.dataset.itemId)?.delete();
     });
 
+    // ── Shared inventory: take to my character + drag rows out ────────────
+    html.find('.ps-item-take').on('click', async (ev) => {
+      const li = ev.currentTarget.closest('.ps-item');
+      const item = this.actor.items.get(li.dataset.itemId);
+      if (!item) return;
+      const target = game.user.character;
+      if (!target) {
+        return ui.notifications.warn('Assign your user a character (Player Configuration) to take items.');
+      }
+      const [created] = await target.createEmbeddedDocuments('Item', [item.toObject()]);
+      if (created) {
+        await item.delete();
+        ui.notifications.info(`${item.name} taken by ${target.name}.`);
+      }
+    });
+
+    // Rows drag out to character sheets; the character sheet's drop handler
+    // deletes the party copy, so a drag is a move — not a duplicate.
+    html.find('.ps-item[data-item-id]').each((i, el) => {
+      el.setAttribute('draggable', 'true');
+      el.querySelectorAll('img').forEach(img => img.setAttribute('draggable', 'false'));
+      el.addEventListener('dragstart', (ev) => {
+        const item = this.actor.items.get(el.dataset.itemId);
+        if (!item) { ev.preventDefault(); return; }
+        ev.dataTransfer.setData('text/plain', JSON.stringify(item.toDragData()));
+      }, false);
+    });
+
     // ── Challenges — launch mini-game ─────────────────────────────────────
     const self = this;
     html.find('.ch-play-btn[data-challenge]').on('click', async (ev) => {
@@ -323,6 +351,9 @@ export class StryderPartySheet extends ActorSheet {
   async _onDropItem(event, data) {
     const item = await Item.fromDropData(data);
     if (!item) return;
+
+    // Re-dropping one of our own items back onto the sheet must not duplicate it.
+    if (item.parent?.id === this.actor.id) return;
 
     // Copy item to party actor
     const itemData = item.toObject();
