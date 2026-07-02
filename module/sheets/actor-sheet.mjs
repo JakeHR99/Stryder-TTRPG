@@ -2382,30 +2382,23 @@ export class StryderActorSheet extends ActorSheet {
 
     const COLS  = 11;
     const TOTAL = 44;
-    const grid  = [];
+    const cells = new Array(TOTAL).fill(null);
+    const placements = {};   // itemId → start index (used by the drag handlers)
 
-    let col = 0;
-
-    for (const item of gearItems) {
-      // Use system.size if set; fall back to legacy inventory_size field
+    const _size = (item) => {
       const rawSize = item.system?.size ?? item.system?.inventory_size ?? 1;
-      const size    = Math.max(1, Math.min(rawSize, COLS));
-
-      // Bump to next row if item doesn't fit remaining columns
-      if (col + size > COLS) {
-        while (col < COLS) {
-          grid.push({ empty: true, id: `empty-${grid.length}` });
-          col++;
-        }
-        col = 0;
-      }
-
-      // Hard stop at 44 slots
-      if (grid.length >= TOTAL) break;
-
-      // Place item across `size` cells
+      return Math.max(1, Math.min(rawSize, COLS));
+    };
+    // An item fits at `start` if it stays inside one row and its cells are free.
+    const _fits = (start, size) => {
+      if (!Number.isInteger(start) || start < 0 || start + size > TOTAL) return false;
+      if ((start % COLS) + size > COLS) return false;
+      for (let i = start; i < start + size; i++) if (cells[i]) return false;
+      return true;
+    };
+    const _place = (item, start, size) => {
       for (let i = 0; i < size; i++) {
-        grid.push({
+        cells[start + i] = {
           empty:     false,
           itemId:    item._id,
           itemName:  item.name,
@@ -2420,18 +2413,35 @@ export class StryderActorSheet extends ActorSheet {
           showIcon:  i === 0,
           clickable: i === 0,
           id:        `${item._id}-${i}`
-        });
+        };
       }
-      col += size;
-      if (col >= COLS) col = 0;
+      placements[item._id] = start;
+    };
+
+    // Pass 1 — items pinned to a slot (flags.stryder.invSlot) that still fit there.
+    const loose = [];
+    for (const item of gearItems) {
+      const size   = _size(item);
+      const pinned = item.flags?.stryder?.invSlot;
+      if (Number.isInteger(pinned) && _fits(pinned, size)) _place(item, pinned, size);
+      else loose.push(item);
+    }
+    // Pass 2 — everything else auto-packs into the first run that fits.
+    for (const item of loose) {
+      const size = _size(item);
+      let start = -1;
+      for (let s = 0; s <= TOTAL - size; s++) { if (_fits(s, size)) { start = s; break; } }
+      if (start < 0) continue; // grid full — matches the old hard stop
+      _place(item, start, size);
     }
 
-    // Pad remainder to exactly 44 cells
-    while (grid.length < TOTAL) {
-      grid.push({ empty: true, id: `empty-${grid.length}` });
-    }
+    // Rendered placements for the slot-move handlers (swap/collision checks).
+    this._invPlacements = placements;
 
-    return grid;
+    // Fill gaps + expose each cell's index for drop targeting.
+    return cells.map((c, idx) =>
+      c ? { ...c, slotIndex: idx }
+        : { empty: true, id: `empty-${idx}`, slotIndex: idx });
   }
 
 	/**
@@ -5430,8 +5440,80 @@ export class StryderActorSheet extends ActorSheet {
           const itemId = el.dataset.itemId;
           const item = this.actor.items.get(itemId);
           if (!item) { ev.preventDefault(); return; }
+          this._invDragItemId = itemId; // internal slot-move tracking
           ev.dataTransfer.setData('text/plain', JSON.stringify(item.toDragData()));
         }, false);
+        el.addEventListener('dragend', () => { this._invDragItemId = null; }, false);
+      });
+
+      // ── Inventory grid: drag-to-slot placement (internal moves + swaps) ──
+      // External drags (compendium/world/party) never set _invDragItemId, so
+      // they fall through to the core drop pipeline untouched.
+      const _invGrid = html.find('.jrpg-inv-grid');
+      _invGrid.on('dragover', '.inv-slot', (ev) => {
+        if (!this._invDragItemId) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.currentTarget.classList.add('inv-drop-hint');
+      });
+      _invGrid.on('dragleave', '.inv-slot', (ev) => {
+        ev.currentTarget.classList.remove('inv-drop-hint');
+      });
+      _invGrid.on('drop', '.inv-slot', async (ev) => {
+        const dragId = this._invDragItemId;
+        if (!dragId) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.currentTarget.classList.remove('inv-drop-hint');
+        this._invDragItemId = null;
+
+        const cell = ev.currentTarget;
+        const item = this.actor.items.get(dragId);
+        if (!item) return;
+        const COLS = 11, TOTAL = 44;
+        const _sz = (it) => Math.max(1, Math.min(it?.system?.size ?? it?.system?.inventory_size ?? 1, COLS));
+        const size = _sz(item);
+        const placements = this._invPlacements ?? {};
+
+        // Overlap check against every rendered item except the movers.
+        const occupied = (start, sz, ignore) => {
+          for (const [id, s] of Object.entries(placements)) {
+            if (ignore.has(id)) continue;
+            const osz = _sz(this.actor.items.get(id));
+            if (start < s + osz && s < start + sz) return true;
+          }
+          return false;
+        };
+        const fits = (start, sz, ignore) =>
+          Number.isInteger(start) && start >= 0 && start + sz <= TOTAL &&
+          (start % COLS) + sz <= COLS && !occupied(start, sz, ignore);
+
+        const targetItemId = cell.dataset.itemId;
+        if (targetItemId && targetItemId !== dragId) {
+          // Dropped onto another item — swap homes if both fit.
+          const other = this.actor.items.get(targetItemId);
+          if (!other) return;
+          const aStart = placements[dragId];
+          const bStart = placements[targetItemId];
+          const both = new Set([dragId, targetItemId]);
+          if (!fits(bStart, size, both) || !fits(aStart, _sz(other), both)) {
+            return ui.notifications.warn('Those items cannot swap — the sizes do not fit.');
+          }
+          await item.setFlag('stryder', 'invSlot', bStart);
+          await other.setFlag('stryder', 'invSlot', aStart);
+          return;
+        }
+
+        // Empty cell (or the item's own cells) — place at the drop index,
+        // nudged left when the item would spill past the end of the row.
+        let start = Number(cell.dataset.slotIndex);
+        if (!Number.isInteger(start)) return;
+        const col = start % COLS;
+        if (col + size > COLS) start -= (col + size - COLS);
+        if (!fits(start, size, new Set([dragId]))) {
+          return ui.notifications.warn('That spot cannot hold this item.');
+        }
+        await item.setFlag('stryder', 'invSlot', start);
       });
     }
 
@@ -7053,6 +7135,14 @@ export class StryderActorSheet extends ActorSheet {
     if (!itemData.system) itemData.system = {};
     if (itemData.system.size === undefined || itemData.system.size === null) {
       itemData.system.size = 1;
+    }
+
+    // Pin the item to the exact grid cell it was dropped on (if any). Invalid
+    // pins (occupied / row spill) fall back to auto-pack in the grid builder.
+    const dropCell = event?.target?.closest?.('.inv-slot');
+    const dropSlot = Number(dropCell?.dataset?.slotIndex);
+    if (Number.isInteger(dropSlot)) {
+      foundry.utils.setProperty(itemData, 'flags.stryder.invSlot', dropSlot);
     }
 
     return this.actor.createEmbeddedDocuments('Item', [itemData]);
