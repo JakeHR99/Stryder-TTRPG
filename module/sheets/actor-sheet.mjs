@@ -1993,6 +1993,9 @@ export class StryderActorSheet extends ActorSheet {
       // Equipment figure image — player-chosen, falls back to bio portrait/sheet art.
       context.equipImg = this.actor.flags?.stryder?.equipImg
         || this.actor.system.bio?.portrait || this.actor.img;
+      context.equipImgScale = Math.max(50, Math.min(250,
+        Number(this.actor.flags?.stryder?.equipImgScale) || 100));
+      context.equipImgScaleCss = context.equipImgScale / 100;
 
       // Inventory grid context (all item types → 44-slot visual grid)
       context.inventoryGrid = this._buildInventoryGrid(context.items || []);
@@ -5584,6 +5587,14 @@ export class StryderActorSheet extends ActorSheet {
       _equipPanel.on('click', '.equip-slot.equip-filled', (ev) => {
         const id = ev.currentTarget.dataset.itemId;
         this.actor.items.get(id)?.sheet?.render(true);
+      });
+      // Figure size slider — live preview while sliding, persist on release.
+      _equipPanel.on('input', '.equip-figure-scale', (ev) => {
+        const img = html.find('.equip-figure-img')[0];
+        if (img) img.style.transform = `scale(${Number(ev.currentTarget.value) / 100})`;
+      });
+      _equipPanel.on('change', '.equip-figure-scale', async (ev) => {
+        await this.actor.setFlag('stryder', 'equipImgScale', Number(ev.currentTarget.value));
       });
       // Worn pieces drag back to the grid (the grid drop clears the slot flag).
       html.find('.equip-slot.equip-filled[data-item-id]').each((i, el) => {

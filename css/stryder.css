@@ -19583,4 +19583,19 @@ li.chat-message.sty-grp-end {
   opacity: 0;
 }
 .jrpg-equip-figure:hover .equip-figure-pick { opacity: 1; }
+/* figure zoom: clip the scaled art, scale from mid-torso */
+.jrpg-equip-figure { overflow: hidden; }
+.equip-figure-img { transform-origin: 50% 42%; }
+.equip-figure-scale {
+  position: absolute;
+  left: 8px;
+  right: 40px;
+  bottom: 8px;
+  height: 4px;
+  accent-color: var(--sty-gold);
+  opacity: 0;
+  transition: opacity 0.25s;
+  cursor: pointer;
+}
+.jrpg-equip-figure:hover .equip-figure-scale { opacity: 1; }
 /* ===== End of Equipment loadout region ===== */

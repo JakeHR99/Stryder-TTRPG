@@ -44,9 +44,10 @@
     <div class="jrpg-equip-title">EQUIPMENT</div>
     <div class="jrpg-equip-body">
       <div class="jrpg-equip-figure">
-        <img class="equip-figure-img" src="{{equipImg}}" alt="{{actor.name}}" />
+        <img class="equip-figure-img" src="{{equipImg}}" alt="{{actor.name}}" style="transform: scale({{equipImgScaleCss}});" />
         {{#if bioIsEditor}}
         <button type="button" class="jrpg-bio-portrait-pick equip-figure-pick" data-action="bioPickImage" data-target="flags.stryder.equipImg" title="Choose the figure image for this panel">✎</button>
+        <input type="range" class="equip-figure-scale" min="50" max="250" step="5" value="{{equipImgScale}}" title="Figure size" />
         {{/if}}
       </div>
       <div class="equip-rail">
