@@ -3589,6 +3589,39 @@ export class StryderActorSheet extends ActorSheet {
       });
     });
 
+    // ── Image picker (Phase 4B) — gallery rows (data-list + data-id) or a
+    //    scalar actor path (data-target, e.g. the immersion sigil). Mirrors
+    //    the defensive FilePicker pattern used by the token-art picker.
+    html.on('click', '[data-action="bioPickImage"]', (ev) => {
+      const { list, id, target } = ev.currentTarget.dataset;
+      const FP = foundry.applications?.apps?.FilePicker?.implementation ?? FilePicker;
+      new FP({
+        type: 'image',
+        callback: (path) => {
+          if (list && id) {
+            this._bioListUpdate(list, (arr) => {
+              const r = arr.find(x => x.id === id);
+              if (r) r.img = path;
+              return arr;
+            });
+          } else if (target) {
+            this.actor.update({ [target]: path });
+          }
+        }
+      }).render(true);
+    });
+
+    // ── Image lightbox (Phase 4B) — v13 namespaced ImagePopout (ApplicationV2
+    //    options signature) with legacy-global fallback.
+    html.on('click', '[data-action="bioViewImage"]', (ev) => {
+      const src = ev.currentTarget.dataset.src;
+      if (!src) return;
+      const title = ev.currentTarget.dataset.caption || this.actor.name;
+      const IPv2 = foundry.applications?.apps?.ImagePopout;
+      if (IPv2) new IPv2({ src, window: { title } }).render(true);
+      else new ImagePopout(src, { title }).render(true);
+    });
+
     // ── Diary filter/search (Phase 2, view-only) ── pure DOM, no persistence.
     const _diaryApplyFilters = () => {
       const panel = html.find('.jrpg-bio-panel[data-section="diary"]');

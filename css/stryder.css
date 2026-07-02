@@ -18556,3 +18556,194 @@ li.chat-message.sty-grp-end {
   align-self: center;
 }
 /* ===== End of Bio/Journal Phase 4A region ===== */
+/* ===== BIOGRAPHY & JOURNAL — Phase 4B (Timeline · Gallery · Immersion) ===== */
+
+/* ── Timeline (Story panel) ── */
+.jrpg-timeline-list {
+  position: relative;
+  padding-left: 18px;
+}
+.jrpg-timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--sty-line-gold);
+}
+.jrpg-timeline-row {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 6px 0;
+}
+.jrpg-timeline-node {
+  position: absolute;
+  left: -17px;
+  top: 14px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--sty-panel-deep);
+  border: 1px solid var(--sty-line-gold-strong);
+}
+.jrpg-timeline-fields {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 6px;
+}
+.jrpg-timeline-fields .jrpg-bio-textarea {
+  grid-column: 1 / -1;
+}
+.jrpg-timeline-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.jrpg-timeline-move,
+.jrpg-timeline-del {
+  background: transparent;
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-cyan-soft);
+  font-size: 9px;
+  padding: 1px 6px;
+  cursor: pointer;
+}
+.jrpg-timeline-move:hover {
+  border-color: var(--sty-line-blue-strong);
+  color: var(--sty-cyan-bright);
+}
+.jrpg-timeline-del {
+  border-color: var(--sty-crimson-line);
+  color: var(--sty-crimson);
+}
+.jrpg-timeline-view {
+  flex: 1;
+}
+.jrpg-timeline-datechip {
+  font-family: var(--sty-font-number);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--sty-gold);
+  border: 1px solid var(--sty-line-gold);
+  border-radius: var(--sty-r-bar);
+  padding: 1px 8px;
+  margin-right: 8px;
+}
+.jrpg-timeline-viewtitle {
+  font-family: var(--sty-font-display);
+  color: var(--sty-text);
+}
+.jrpg-timeline-viewtext {
+  font-size: 12px;
+  color: var(--sty-text-dim);
+  margin-top: 2px;
+}
+
+/* ── Gallery ── */
+.jrpg-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+.jrpg-gallery-card {
+  background: var(--sty-panel-deep);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.jrpg-gallery-img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border: 1px solid var(--sty-line-gold);
+  border-radius: var(--sty-r-bar);
+  cursor: zoom-in;
+}
+.jrpg-gallery-img:hover {
+  border-color: var(--sty-line-gold-strong);
+}
+.jrpg-gallery-placeholder {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-text-dim);
+  font-size: 11px;
+}
+.jrpg-gallery-cap {
+  font-size: 12px;
+  color: var(--sty-text);
+}
+.jrpg-gallery-credit {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: var(--sty-cyan-soft);
+}
+.jrpg-gallery-controls {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+/* ── Immersion kit ── */
+.jrpg-immersion-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: start;
+}
+.jrpg-immersion-sigil {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.jrpg-immersion-sigil-img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border: 1px solid var(--sty-line-gold);
+  border-radius: var(--sty-r-bar);
+  cursor: zoom-in;
+}
+.jrpg-immersion-sigil-empty {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  color: var(--sty-text-dim);
+  font-size: 10px;
+}
+.jrpg-immersion-audio {
+  width: 100%;
+  height: 28px;
+}
+
+/* ── Accent scheme (re-weights existing voices only — no new colors) ── */
+.jrpg-bio-screen[data-bio-theme="gold"] .jrpg-bio-block-title,
+.jrpg-bio-screen[data-bio-theme="gold"] .jrpg-bio-nav-btn.is-active span {
+  color: var(--sty-gold);
+}
+.jrpg-bio-screen[data-bio-theme="cyan"] .jrpg-bio-block-title,
+.jrpg-bio-screen[data-bio-theme="cyan"] .jrpg-bio-nav-btn.is-active span {
+  color: var(--sty-cyan-bright);
+}
+.jrpg-bio-screen[data-bio-theme="crimson"] .jrpg-bio-block-title,
+.jrpg-bio-screen[data-bio-theme="crimson"] .jrpg-bio-nav-btn.is-active span {
+  color: var(--sty-crimson);
+}
+/* ===== End of Bio/Journal Phase 4B region ===== */
+

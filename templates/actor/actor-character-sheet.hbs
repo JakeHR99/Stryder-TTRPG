@@ -378,7 +378,7 @@
 				</div>
 			</div>
 			<div class="jrpg-page" data-page="biography">
-				<div class="jrpg-bio-screen">
+				<div class="jrpg-bio-screen" data-bio-theme="{{immersion.colorScheme}}">
 
 					{{!-- ── Internal section nav (custom data-target, NOT Foundry tabs) ── --}}
 					<div class="jrpg-bio-nav">
@@ -387,6 +387,9 @@
 							<button type="button" class="jrpg-bio-nav-btn is-active" data-target="profile"><span>Profile</span></button>
 							<button type="button" class="jrpg-bio-nav-btn" data-target="persona"><span>Persona</span></button>
 							<button type="button" class="jrpg-bio-nav-btn" data-target="story"><span>Story</span></button>
+							{{#if galleryCanTab}}
+							<button type="button" class="jrpg-bio-nav-btn" data-target="gallery"><span>Gallery</span></button>
+							{{/if}}
 						</div>
 						<div class="jrpg-bio-nav-group">
 							<span class="jrpg-bio-nav-label">Journal</span>
@@ -520,6 +523,48 @@
 							<label class="jrpg-bio-editor-label">Description</label>
 							<div class="jrpg-bio-editor">
 								{{editor bioEnriched.description target="system.bio.appearance.description" engine="prosemirror" button=true editable=editable}}
+							</div>
+						</div>
+						{{/if}}
+
+						{{!-- ── IMMERSION KIT (Phase 4B — sigil, theme music, accent scheme) ── --}}
+						{{#if bioCan.identity}}
+						<div class="jrpg-bio-block jrpg-immersion">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Immersion</h3>
+							</div>
+							<div class="jrpg-immersion-grid">
+								<div class="jrpg-immersion-sigil">
+									<label class="jrpg-bio-field-label">Sigil</label>
+									{{#if immersion.sigilImg}}
+									<img src="{{immersion.sigilImg}}" class="jrpg-immersion-sigil-img" alt="Sigil" data-action="bioViewImage" data-src="{{immersion.sigilImg}}" data-caption="Sigil" />
+									{{else}}
+									<div class="jrpg-immersion-sigil-empty">No sigil</div>
+									{{/if}}
+									{{#if bioIsEditor}}
+									<button type="button" class="jrpg-bio-add-btn" data-action="bioPickImage" data-target="system.bio.immersion.sigilImg">Browse…</button>
+									{{/if}}
+								</div>
+								<div class="jrpg-immersion-music">
+									<label class="jrpg-bio-field-label">Theme Music</label>
+									{{#if bioIsEditor}}
+									<input class="jrpg-char-input" name="system.bio.immersion.themeMusicUrl" type="text" value="{{system.bio.immersion.themeMusicUrl}}" placeholder="Audio URL (.mp3, .ogg…)" />
+									{{/if}}
+									{{#if immersion.themeMusicUrl}}
+									<audio controls preload="none" src="{{immersion.themeMusicUrl}}" class="jrpg-immersion-audio"></audio>
+									{{/if}}
+								</div>
+								{{#if bioIsEditor}}
+								<div class="jrpg-immersion-scheme">
+									<label class="jrpg-bio-field-label">Accent Scheme</label>
+									<select class="jrpg-bio-vis-select" name="system.bio.immersion.colorScheme">
+										<option value=""        {{#if (eq immersion.colorScheme "")}}selected{{/if}}>Default</option>
+										<option value="gold"    {{#if (eq immersion.colorScheme "gold")}}selected{{/if}}>Gold</option>
+										<option value="cyan"    {{#if (eq immersion.colorScheme "cyan")}}selected{{/if}}>Cyan</option>
+										<option value="crimson" {{#if (eq immersion.colorScheme "crimson")}}selected{{/if}}>Crimson</option>
+									</select>
+								</div>
+								{{/if}}
 							</div>
 						</div>
 						{{/if}}
@@ -762,6 +807,59 @@
 								</div>
 								{{else}}
 								<div class="jrpg-diary-empty">No events recorded.{{#if bioIsEditor}} Click “+ Add Event” to start the timeline.{{/if}}</div>
+								{{/each}}
+							</div>
+						</div>
+						{{/if}}
+					</div>
+
+					{{!-- ── GALLERY (Phase 4B — media, artist credit) ── --}}
+					<div class="jrpg-bio-panel" data-section="gallery">
+						{{#if bioCan.gallery}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Gallery</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="gallery" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.gallery "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.gallery "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.gallery "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.gallery "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.gallery "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="gallery" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="gallery">+ Add Image</button>
+								{{/if}}
+							</div>
+							<div class="jrpg-gallery-grid">
+								{{#each galleryImages}}
+								<div class="jrpg-gallery-card" data-id="{{id}}">
+									{{#if img}}
+									<img src="{{img}}" class="jrpg-gallery-img" alt="{{caption}}" data-action="bioViewImage" data-src="{{img}}" data-caption="{{caption}}" loading="lazy" />
+									{{else}}
+									<div class="jrpg-gallery-placeholder">No image</div>
+									{{/if}}
+									{{#if ../bioIsEditor}}
+									<div class="jrpg-gallery-edit">
+										<button type="button" class="jrpg-bio-add-btn" data-action="bioPickImage" data-list="gallery" data-id="{{id}}">Browse…</button>
+										<input class="jrpg-char-input jrpg-gallery-caption" data-action="bioEditField" data-list="gallery" data-id="{{id}}" data-field="caption" type="text" value="{{caption}}" placeholder="Caption" />
+										<input class="jrpg-char-input jrpg-gallery-artist" data-action="bioEditField" data-list="gallery" data-id="{{id}}" data-field="artist" type="text" value="{{artist}}" placeholder="Artist credit" />
+										<div class="jrpg-gallery-controls">
+											<button type="button" class="jrpg-timeline-move" data-action="bioMoveRow" data-list="gallery" data-id="{{id}}" data-dir="up" title="Move up">▲</button>
+											<button type="button" class="jrpg-timeline-move" data-action="bioMoveRow" data-list="gallery" data-id="{{id}}" data-dir="down" title="Move down">▼</button>
+											<button type="button" class="jrpg-timeline-del" data-action="bioDelRow" data-list="gallery" data-id="{{id}}" title="Delete image">✕</button>
+										</div>
+									</div>
+									{{else}}
+									<div class="jrpg-gallery-meta">
+										{{#if caption}}<div class="jrpg-gallery-cap">{{caption}}</div>{{/if}}
+										{{#if artist}}<div class="jrpg-gallery-credit">Art: {{artist}}</div>{{/if}}
+									</div>
+									{{/if}}
+								</div>
+								{{else}}
+								<div class="jrpg-diary-empty">No images yet.{{#if bioIsEditor}} Click “+ Add Image” to begin the gallery.{{/if}}</div>
 								{{/each}}
 							</div>
 						</div>
