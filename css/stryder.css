@@ -19662,7 +19662,7 @@ li.chat-message.sty-grp-end {
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  z-index: 6;
+  z-index: 12; /* .jrpg-sidebar is a z-10 flex item spanning this corner — sit above it */
   background: none;
   border: none;
   white-space: nowrap;
