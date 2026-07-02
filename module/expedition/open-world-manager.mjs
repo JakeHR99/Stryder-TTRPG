@@ -230,7 +230,7 @@ export async function handleOpenWorldMove(tokenDoc, scene) {
   // resolving neighbor hexes because hex bounding boxes differ between
   // row/column orientations.
   const c = (typeof tokenDoc.getCenterPoint === 'function')
-    ? tokenDoc.getCenterPoint()
+    ? tokenDoc.getCenterPoint({ x: tokenDoc.x, y: tokenDoc.y }) // explicit destination — no-arg reads the still-animating sprite (one hex behind)
     : { x: tokenDoc.x + ((tokenDoc.width  ?? 1) * canvas.grid.sizeX) / 2,
         y: tokenDoc.y + ((tokenDoc.height ?? 1) * canvas.grid.sizeY) / 2 };
   const hexKey = getHexKey(scene, c.x, c.y);
