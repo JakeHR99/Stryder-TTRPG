@@ -1969,13 +1969,18 @@ export class StryderActorSheet extends ActorSheet {
         bonusesApplied:  actorData.system.folk.bonuses_applied ?? false
       } : null;
 
-      // Equipment loadout (flags.stryder.equipSlot) — one item per slot; worn
-      // items leave the grid and render on the silhouette panel instead.
-      const EQUIP_SLOTS = ['head', 'back', 'arms', 'legs', 'gems', 'aegiscore', 'legacies'];
+      // Equipment loadout (flags.stryder.equipSlot) — slot instances per the
+      // rulebook chart: Head 1 · Torso 1 · Arms 2 · Gems 2 · Legs 1.
+      // Slot key → wearable item type (the Torso slot wears the 'back' type).
+      const EQUIP_SLOT_TYPES = {
+        head: 'head', torso: 'back', arms1: 'arms', arms2: 'arms',
+        gems1: 'gems', gems2: 'gems', legs: 'legs'
+      };
+      const EQUIP_SLOTS = Object.keys(EQUIP_SLOT_TYPES);
       context.equipment = Object.fromEntries(EQUIP_SLOTS.map(s => [s, null]));
       for (const i of (context.items || [])) {
         const slot = i.flags?.stryder?.equipSlot;
-        if (EQUIP_SLOTS.includes(slot) && i.type === slot && !context.equipment[slot]) {
+        if (EQUIP_SLOTS.includes(slot) && i.type === EQUIP_SLOT_TYPES[slot] && !context.equipment[slot]) {
           context.equipment[slot] = i;
         }
       }
@@ -5542,7 +5547,7 @@ export class StryderActorSheet extends ActorSheet {
         const dragId = this._invDragItemId;
         if (!dragId) return;
         const item = this.actor.items.get(dragId);
-        if (!item || item.type !== ev.currentTarget.dataset.equipSlot) return; // wrong type — not a target
+        if (!item || item.type !== ev.currentTarget.dataset.equipType) return; // wrong type — not a target
         ev.preventDefault();
         ev.stopPropagation();
         ev.currentTarget.classList.add('equip-drop-hint');
@@ -5559,7 +5564,7 @@ export class StryderActorSheet extends ActorSheet {
         this._invDragItemId = null;
         const item = this.actor.items.get(dragId);
         const slot = ev.currentTarget.dataset.equipSlot;
-        if (!item || item.type !== slot) {
+        if (!item || item.type !== ev.currentTarget.dataset.equipType) {
           return ui.notifications.warn('That does not fit this equipment slot.');
         }
         // One item per slot — swap out the current occupant if present.

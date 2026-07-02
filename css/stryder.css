@@ -19460,65 +19460,104 @@ li.chat-message.sty-grp-end {
 }
 .equip-total-phys { color: var(--sty-gold); }
 .equip-total-mag  { color: var(--sty-cyan-soft); }
-/* ── v2: BotW ratios + glowing on-body circles ── */
-.jrpg-equip-panel { flex: 0 0 clamp(250px, 36%, 360px); gap: 12px; }
-.jrpg-equip-figure { height: 356px; }
+/* ── v3: soft-glow anatomical silhouette + labeled slot rail ── */
+.jrpg-equip-panel { flex: 0 0 clamp(250px, 34%, 350px); gap: 12px; }
+.jrpg-equip-body {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.jrpg-equip-figure {
+  position: relative;
+  flex: 1 1 auto;
+  height: 388px;
+}
+/* blurred layered shapes melt into one translucent body */
 .equip-silhouette {
-  width: 150px;
-  height: 336px;
-  top: 6px;
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 130px;
+  height: 368px;
+  transform: translateX(-50%);
+  filter: blur(4px) drop-shadow(0 0 14px rgba(100, 170, 240, 0.25));
+  pointer-events: none;
 }
-.sil-head  { width: 48px; height: 48px; }
-.sil-torso { top: 54px; width: 76px; height: 120px; border-radius: 20px 20px 12px 12px; }
-.sil-arm   { top: 62px; width: 18px; height: 98px; border-radius: 9px; }
-.sil-arm-l { left: 12px; }
-.sil-arm-r { right: 12px; }
-.sil-leg   { top: 178px; width: 24px; height: 150px; border-radius: 11px 11px 8px 8px; }
-/* slots become soft breathing glow-circles sitting ON the body */
+.equip-silhouette > div {
+  position: absolute;
+  background: radial-gradient(ellipse at 50% 35%, rgba(140, 195, 250, 0.34), rgba(90, 140, 220, 0.20) 70%);
+  border-radius: 50%;
+  border: none;
+}
+.sil-head   { left: 50%; top: 0;     width: 44px; height: 54px; transform: translateX(-50%); }
+.sil-neck   { left: 50%; top: 50px;  width: 18px; height: 20px; transform: translateX(-50%); border-radius: 7px; }
+.sil-torso  { left: 50%; top: 64px;  width: 88px; height: 132px; transform: translateX(-50%); border-radius: 44px 44px 28px 28px; }
+.sil-arm    { top: 70px; width: 23px; height: 124px; border-radius: 12px; }
+.sil-arm-l  { left: 0;   transform: rotate(8deg); }
+.sil-arm-r  { right: 0;  transform: rotate(-8deg); }
+.sil-hand   { top: 192px; width: 17px; height: 26px; }
+.sil-hand-l { left: 6px; }
+.sil-hand-r { right: 6px; }
+.sil-pelvis { left: 50%; top: 184px; width: 80px; height: 44px; transform: translateX(-50%); border-radius: 24px; }
+.sil-leg    { top: 212px; width: 30px; height: 148px; border-radius: 15px 15px 11px 11px; }
+.sil-leg-l  { left: 50%; transform: translateX(-104%); }
+.sil-leg-r  { left: 50%; transform: translateX(4%); }
+/* labeled slot rail — top to bottom beside the figure */
+.equip-rail {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  justify-content: center;
+}
+.equip-box-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
 .equip-slot {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(111, 214, 245, 0.16) 0%, rgba(80, 120, 220, 0.07) 55%, transparent 78%);
-  border: 1px solid rgba(111, 214, 245, 0.35);
-  animation: equip-breathe 3.6s ease-in-out infinite;
-  transform: translate(-50%, -50%);
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--sty-r-bar);
+  background: rgba(8, 14, 35, 0.75);
+  border: 1px solid var(--sty-line-blue-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: none;
+  animation: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
-@keyframes equip-breathe {
-  0%, 100% { box-shadow: 0 0 8px rgba(111, 214, 245, 0.16), inset 0 0 8px rgba(111, 214, 245, 0.08); }
-  50%      { box-shadow: 0 0 16px rgba(111, 214, 245, 0.38), inset 0 0 12px rgba(111, 214, 245, 0.16); }
+.equip-box-label {
+  font-family: var(--sty-font-number);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--sty-text-dim);
 }
-/* circle centers anchored to body parts (figure coordinates) */
-.equip-pos-head { top: 30px;  left: 50%;               right: auto; bottom: auto; }
-.equip-pos-back { top: 90px;  left: calc(50% - 46px);  right: auto; bottom: auto; }
-.equip-pos-arms { top: 120px; left: calc(50% + 54px);  right: auto; bottom: auto; }
-.equip-pos-legs { top: 252px; left: 50%;               right: auto; bottom: auto; }
-/* v2 drops the connector lines and visible labels — hover tooltips carry the info */
-.equip-pos-head::before, .equip-pos-back::before,
-.equip-pos-arms::before, .equip-pos-legs::before { display: none; }
-.equip-slot-label { display: none; }
 .equip-slot img {
-  width: 78%;
-  height: 78%;
-  border-radius: 50%;
-  object-fit: cover;
+  width: 74%;
+  height: 74%;
+  border-radius: 2px;
+  object-fit: contain;
+  border: none;
 }
 .equip-slot.equip-filled {
   border-color: var(--sty-line-gold-strong);
-  background: radial-gradient(circle, rgba(20, 24, 46, 0.95) 58%, rgba(244, 192, 48, 0.10) 100%);
+  background: rgba(20, 24, 46, 0.9);
+  box-shadow: 0 0 8px rgba(244, 192, 48, 0.18);
+  cursor: grab;
   animation: none;
-  box-shadow: 0 0 10px rgba(244, 192, 48, 0.28);
 }
+.equip-slot.equip-filled:active { cursor: grabbing; }
 .equip-slot.equip-drop-hint {
   animation: none;
   border-color: var(--sty-cyan-bright);
-  box-shadow: 0 0 18px rgba(111, 214, 245, 0.6), inset 0 0 12px rgba(111, 214, 245, 0.25);
+  background: rgba(120, 200, 255, 0.12);
+  box-shadow: 0 0 14px rgba(111, 214, 245, 0.5), inset 0 0 8px rgba(111, 214, 245, 0.2);
 }
-/* sockets: smaller circles flowing in their row */
-.jrpg-equip-sockets .equip-slot {
-  width: 38px;
-  height: 38px;
-  transform: none;
-}
-.equip-unequip { top: -4px; right: -4px; }
+.equip-unequip { top: -6px; right: -6px; }
 /* ===== End of Equipment loadout region ===== */
