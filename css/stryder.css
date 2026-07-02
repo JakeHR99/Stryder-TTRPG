@@ -19572,7 +19572,7 @@ li.chat-message.sty-grp-end {
   width: 100%;
   min-height: 400px;
   object-fit: contain;
-  object-position: center top;
+  object-position: center center;
   border: none;
   filter: drop-shadow(0 0 16px rgba(80, 120, 220, 0.25));
 }
@@ -19583,9 +19583,21 @@ li.chat-message.sty-grp-end {
   opacity: 0;
 }
 .jrpg-equip-figure:hover .equip-figure-pick { opacity: 1; }
-/* figure zoom: clip the scaled art, scale from mid-torso */
+/* figure zoom: clip the scaled art, scale in place from true center */
 .jrpg-equip-figure { overflow: hidden; }
-.equip-figure-img { transform-origin: 50% 42%; }
+.equip-figure-img { transform-origin: 50% 50%; }
+.equip-figure-ypos {
+  position: absolute;
+  left: 8px;
+  right: 40px;
+  bottom: 22px;
+  height: 4px;
+  accent-color: var(--sty-cyan-soft);
+  opacity: 0;
+  transition: opacity 0.25s;
+  cursor: pointer;
+}
+.jrpg-equip-figure:hover .equip-figure-ypos { opacity: 1; }
 .equip-figure-scale {
   position: absolute;
   left: 8px;
