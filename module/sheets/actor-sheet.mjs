@@ -3510,6 +3510,39 @@ export class StryderActorSheet extends ActorSheet {
       setTimeout(apply, 80);
     });
 
+    // ── Tome realm covers (Biography / Journal) ── the two-level nav shell.
+    // Realm = f(section), so re-renders restore both from _jrpgBioSection alone.
+    const _bioRealmOf = (section) =>
+      ['diary', 'quests', 'people'].includes(section) ? 'journal' : 'biography';
+    const _bioApplyRealm = (realm) => {
+      html.find('.jrpg-bio-realm').removeClass('is-active')
+          .filter(`[data-realm="${realm}"]`).addClass('is-active');
+      html.find('.jrpg-bio-tabrail').removeClass('is-active')
+          .filter(`[data-realm="${realm}"]`).addClass('is-active');
+    };
+    html.on('click', '.jrpg-bio-realm', (ev) => {
+      const realm = ev.currentTarget.dataset.realm;
+      if (!realm || ev.currentTarget.classList.contains('is-active')) return;
+      _bioApplyRealm(realm);
+      // Enter the realm on its remembered section, else its first tab.
+      const rail = html.find(`.jrpg-bio-tabrail[data-realm="${realm}"]`);
+      const remembered = rail.find(`.jrpg-bio-nav-btn[data-target="${this._jrpgBioSection}"]`);
+      const btn = remembered.length ? remembered : rail.find('.jrpg-bio-nav-btn').first();
+      btn.trigger('click');
+    });
+    // Restore realm + active section after a re-render (every actor.update
+    // re-renders the sheet; without this the page snaps back to Profile).
+    {
+      const section = this._jrpgBioSection || 'profile';
+      _bioApplyRealm(_bioRealmOf(section));
+      if (section !== 'profile') {
+        html.find('.jrpg-bio-nav-btn').removeClass('is-active')
+            .filter(`[data-target="${section}"]`).addClass('is-active');
+        html.find('.jrpg-bio-panel').removeClass('is-active')
+            .filter(`[data-section="${section}"]`).addClass('is-active');
+      }
+    }
+
     // ── Biography section visibility (Phase 1) ── owner/GM only selectors
     html.on('change', '[data-action="bioSetVisibility"]', (ev) => {
       const sec = ev.currentTarget.dataset.section;

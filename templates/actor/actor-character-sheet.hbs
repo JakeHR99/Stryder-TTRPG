@@ -380,30 +380,47 @@
 			<div class="jrpg-page" data-page="biography">
 				<div class="jrpg-bio-screen" data-bio-theme="{{immersion.colorScheme}}">
 
-					{{!-- ── Internal section nav (custom data-target, NOT Foundry tabs) ── --}}
-					<div class="jrpg-bio-nav">
-						<div class="jrpg-bio-nav-group">
-							<span class="jrpg-bio-nav-label">Biography</span>
-							<button type="button" class="jrpg-bio-nav-btn is-active" data-target="profile"><span>Profile</span></button>
-							<button type="button" class="jrpg-bio-nav-btn" data-target="persona"><span>Persona</span></button>
-							<button type="button" class="jrpg-bio-nav-btn" data-target="story"><span>Story</span></button>
-							{{#if galleryCanTab}}
-							<button type="button" class="jrpg-bio-nav-btn" data-target="gallery"><span>Gallery</span></button>
-							{{/if}}
+					{{!-- ── Tome realm covers + bookmark tab rails (custom data-target, NOT Foundry tabs) ── --}}
+					<div class="jrpg-bio-realms">
+						<div class="jrpg-bio-realm is-active" data-realm="biography">
+							<div class="jrpg-bio-realm-emblem jrpg-bio-realm-portrait">
+								<img src="{{actor.img}}" alt="{{actor.name}}" />
+							</div>
+							<div class="jrpg-bio-realm-label">
+								<h3 class="jrpg-bio-realm-title">Biography</h3>
+								<span class="jrpg-bio-realm-sub">Profile · Persona · Story{{#if galleryCanTab}} · Gallery{{/if}}</span>
+							</div>
 						</div>
-						<div class="jrpg-bio-nav-group">
-							<span class="jrpg-bio-nav-label">Journal</span>
-							{{#if journalCanTab}}
-							<button type="button" class="jrpg-bio-nav-btn" data-target="diary"><span>Diary</span></button>
-							{{/if}}
-							{{#if questsCanTab}}
-							<button type="button" class="jrpg-bio-nav-btn" data-target="quests"><span>Quests</span></button>
-							{{/if}}
-							{{#if peopleCanTab}}
-							<button type="button" class="jrpg-bio-nav-btn" data-target="people"><span>People</span></button>
-							{{/if}}
+						<div class="jrpg-bio-realm" data-realm="journal">
+							<div class="jrpg-bio-realm-emblem jrpg-bio-realm-bookwrap">
+								<div class="jrpg-bio-tomebook"></div>
+								<span class="jrpg-bio-mote"></span><span class="jrpg-bio-mote"></span><span class="jrpg-bio-mote"></span>
+							</div>
+							<div class="jrpg-bio-realm-label">
+								<h3 class="jrpg-bio-realm-title">Journal</h3>
+								<span class="jrpg-bio-realm-sub">{{#if journalCanTab}}Diary{{/if}}{{#if questsCanTab}} · Quests{{/if}}{{#if peopleCanTab}} · People{{/if}}</span>
+							</div>
 						</div>
 						{{#if bioIsEditor}}<span class="jrpg-bio-vis-info" title="Visibility hides sections in the UI. It is reliable against non-owners, but anyone who co-owns this actor can technically inspect raw data. The GM always sees everything.">ⓘ</span>{{/if}}
+					</div>
+					<div class="jrpg-bio-tabrail is-active" data-realm="biography">
+						<button type="button" class="jrpg-bio-nav-btn is-active" data-target="profile"><span>Profile</span></button>
+						<button type="button" class="jrpg-bio-nav-btn" data-target="persona"><span>Persona</span></button>
+						<button type="button" class="jrpg-bio-nav-btn" data-target="story"><span>Story</span></button>
+						{{#if galleryCanTab}}
+						<button type="button" class="jrpg-bio-nav-btn" data-target="gallery"><span>Gallery</span></button>
+						{{/if}}
+					</div>
+					<div class="jrpg-bio-tabrail" data-realm="journal">
+						{{#if journalCanTab}}
+						<button type="button" class="jrpg-bio-nav-btn" data-target="diary"><span>Diary</span></button>
+						{{/if}}
+						{{#if questsCanTab}}
+						<button type="button" class="jrpg-bio-nav-btn" data-target="quests"><span>Quests</span></button>
+						{{/if}}
+						{{#if peopleCanTab}}
+						<button type="button" class="jrpg-bio-nav-btn" data-target="people"><span>People</span></button>
+						{{/if}}
 					</div>
 
 					{{!-- ── PROFILE (identity + appearance + at-a-glance) ── --}}
