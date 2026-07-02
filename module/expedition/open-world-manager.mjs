@@ -222,11 +222,15 @@ async function placeMarkerToken(scene, hexKey, center, opts) {
 
 // ── Main movement handler — called from stryder.mjs hook ──
 export async function handleOpenWorldMove(tokenDoc, scene) {
-  // True pixel center of the token (hex cells are not square, and the party
-  // token is not always 1×1) — the old gs/2 math read neighboring hexes.
-  const tokenX = tokenDoc.x + ((tokenDoc.width  ?? 1) * canvas.grid.sizeX) / 2;
-  const tokenY = tokenDoc.y + ((tokenDoc.height ?? 1) * canvas.grid.sizeY) / 2;
-  const hexKey = getHexKey(scene, tokenX, tokenY);
+  // Let core compute the token's grid-aware center from DOCUMENT data (the
+  // final destination, not the mid-animation sprite). Manual size math kept
+  // resolving neighbor hexes because hex bounding boxes differ between
+  // row/column orientations.
+  const c = (typeof tokenDoc.getCenterPoint === 'function')
+    ? tokenDoc.getCenterPoint()
+    : { x: tokenDoc.x + ((tokenDoc.width  ?? 1) * canvas.grid.sizeX) / 2,
+        y: tokenDoc.y + ((tokenDoc.height ?? 1) * canvas.grid.sizeY) / 2 };
+  const hexKey = getHexKey(scene, c.x, c.y);
   const center = getHexCenter(hexKey);
 
   // Check if hex has changed since last move
