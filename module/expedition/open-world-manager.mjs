@@ -73,16 +73,18 @@ async function drawFiltered(table, scene) {
   return result;
 }
 
-// ── Hex key from pixel position ───────────────────────────
+// ── Hex identity from a pixel point ───────────────────────
+// EVERYTHING derives from pixel points: the key via getOffset(point) and the
+// center via getCenterPoint(point). We never convert an offset back to pixels
+// — that reverse direction didn't round-trip on some hex grids, which is how
+// the marker and the stored key ended up one hex apart.
 function getHexKey(scene, x, y) {
   const offset = canvas.grid.getOffset({ x, y });
   return `${offset.i},${offset.j}`;
 }
 
-function getHexCenter(hexKey) {
-  const [i, j] = hexKey.split(',').map(Number);
-  // Convert grid offset back to pixel center
-  return canvas.grid.getCenterPoint({ i, j });
+function getHexCenterFromPoint(x, y) {
+  return canvas.grid.getCenterPoint({ x, y });
 }
 
 // ── Setup dialog ──────────────────────────────────────────
@@ -149,7 +151,8 @@ async function setupOpenWorld(config) {
   if (!click) return;
 
   const hexKey = getHexKey(scene, click.x, click.y);
-  const center = getHexCenter(hexKey);
+  const center = getHexCenterFromPoint(click.x, click.y);
+  console.log(`Stryder | home base stored as [${hexKey}] with marker center`, center);
 
   // Set scene flags
   await scene.setFlag(SYSTEM_ID, 'isOpenWorld', true);
@@ -231,7 +234,7 @@ export async function handleOpenWorldMove(tokenDoc, scene) {
     : { x: tokenDoc.x + ((tokenDoc.width  ?? 1) * canvas.grid.sizeX) / 2,
         y: tokenDoc.y + ((tokenDoc.height ?? 1) * canvas.grid.sizeY) / 2 };
   const hexKey = getHexKey(scene, c.x, c.y);
-  const center = getHexCenter(hexKey);
+  const center = getHexCenterFromPoint(c.x, c.y);
 
   // Check if hex has changed since last move
   const lastHex = tokenDoc.getFlag(SYSTEM_ID, 'currentHex');
@@ -349,9 +352,8 @@ export async function designateHexPrompt() {
   const click = await getCanvasClick();
   if (!click) return;
 
-  const gs = canvas.grid.size;
   const hexKey = getHexKey(scene, click.x, click.y);
-  const center = getHexCenter(hexKey);
+  const center = getHexCenterFromPoint(click.x, click.y);
 
   const desig = DESIGNATION_TYPES[desigType.type] ?? DESIGNATION_TYPES.custom;
   const displayLabel = desigType.label || desig.label;
