@@ -3531,7 +3531,6 @@ export class StryderActorSheet extends ActorSheet {
     // directly too, in case an intermediate layer swallows the bubbled click.
     html.find('.jrpg-main-bio-btn').on('click', (ev) => {
       ev.stopPropagation();
-      console.log('Stryder | main-menu tome clicked');
       _showPage('biography', 'Biography & Journal');
     });
 

@@ -154,7 +154,6 @@ async function setupOpenWorld(config) {
 
   const hexKey = getHexKey(scene, click.x, click.y);
   const center = getHexCenterFromPoint(scene, click.x, click.y);
-  console.log(`Stryder | home base stored as [${hexKey}] with marker center`, center);
 
   // Set scene flags
   await scene.setFlag(SYSTEM_ID, 'isOpenWorld', true);
@@ -243,13 +242,6 @@ export async function handleOpenWorldMove(tokenDoc, scene, changes = null) {
     : { x: destX + ((tokenDoc.width  ?? 1) * scene.grid.sizeX) / 2,
         y: destY + ((tokenDoc.height ?? 1) * scene.grid.sizeY) / 2 };
   const hexKey = getHexKey(scene, c.x, c.y);
-  console.log('Stryder | OW move:', {
-    changesX: changes?.x, changesY: changes?.y,
-    docX: tokenDoc.x, docY: tokenDoc.y,
-    center: { x: Math.round(c.x), y: Math.round(c.y) },
-    hexKey,
-    lastHex: tokenDoc.getFlag(SYSTEM_ID, 'currentHex')
-  });
   const center = getHexCenterFromPoint(scene, c.x, c.y);
 
   // Check if hex has changed since last move
@@ -449,19 +441,8 @@ function getCanvasClick() {
       // what Foundry uses for rulers, drags and targeting. Hand-rolled
       // transforms kept landing in the wrong coordinate frame. We log the
       // alternative conversions side-by-side for verification.
-      const rect = view.getBoundingClientRect();
-      const local = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
-      const viaMatrix = canvas.stage.worldTransform.applyInverse({ x: local.x, y: local.y });
       const core = canvas.mousePosition;
-      const pos = { x: core.x, y: core.y };
-      console.log('Stryder | open-world click candidates:', {
-        local, zoom: canvas.stage.scale.x,
-        core: { x: Math.round(pos.x), y: Math.round(pos.y) },
-        coreOffset: canvas.grid.getOffset(pos),
-        matrix: { x: Math.round(viaMatrix.x), y: Math.round(viaMatrix.y) },
-        matrixOffset: canvas.grid.getOffset(viaMatrix)
-      });
-      resolve(pos);
+      resolve({ x: core.x, y: core.y });
     };
     setTimeout(() => view.addEventListener('pointerdown', handler), 300);
   });
