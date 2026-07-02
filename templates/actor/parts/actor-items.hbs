@@ -11,7 +11,7 @@
   </div>
 
   <div class="jrpg-inv-body">
-  <div class="jrpg-inv-grid" data-drop-zone="inventory" style="display:grid !important;grid-template-columns:repeat(7,1fr);gap:6px;flex:1 1 auto;min-width:0;align-content:start;box-sizing:border-box;">
+  <div class="jrpg-inv-grid" data-drop-zone="inventory" style="display:grid !important;grid-template-columns:repeat(8,1fr);gap:6px;flex:1 1 auto;min-width:0;align-content:start;box-sizing:border-box;">
     {{#each inventoryGrid}}
       {{#if this.empty}}
         <div class="inv-slot inv-empty" data-slot-id="{{this.id}}" data-slot-index="{{this.slotIndex}}" data-action="addItemFromSlot" style="cursor:pointer;aspect-ratio:1/1;min-width:0;overflow:hidden;background:rgba(8,14,35,0.6);border:1px solid rgba(60,90,160,0.18);border-radius:5px;display:flex;align-items:center;justify-content:center;transition:background 0.18s ease,border-color 0.18s ease,box-shadow 0.18s ease;"></div>

@@ -2007,7 +2007,7 @@ export class StryderActorSheet extends ActorSheet {
         .filter(i => INVENTORY_COUNT_TYPES.has(i.type) && !this._equippedIds.has(i._id))
         .reduce((sum, i) => {
           const s = i.system?.size ?? i.system?.inventory_size ?? 1;
-          return sum + Math.max(1, Math.min(s, 7));
+          return sum + Math.max(1, Math.min(s, 8));
         }, 0);
       context.inventoryUsed = Math.min(44, usedSlots);
       context.inventoryMax  = 44;
@@ -2410,7 +2410,7 @@ export class StryderActorSheet extends ActorSheet {
     const INVENTORY_TYPES = new Set(['loot','gear','consumable','component','elixir','miscellaneous','ingredient','head','back','arms','legs','gems','aegiscore','legacies']);
     const gearItems = items.filter(i => INVENTORY_TYPES.has(i.type));
 
-    const COLS  = 7;   // chunky BotW-style cells — 6 full rows + a short one
+    const COLS  = 8;   // chunky BotW-style cells — 5 full rows + a short one
     const TOTAL = 44;
     const cells = new Array(TOTAL).fill(null);
     const placements = {};   // itemId → start index (used by the drag handlers)
@@ -5501,7 +5501,7 @@ export class StryderActorSheet extends ActorSheet {
         const cell = ev.currentTarget;
         const item = this.actor.items.get(dragId);
         if (!item) return;
-        const COLS = 7, TOTAL = 44;
+        const COLS = 8, TOTAL = 44;
         const _sz = (it) => Math.max(1, Math.min(it?.system?.size ?? it?.system?.inventory_size ?? 1, COLS));
         const size = _sz(item);
         const placements = this._invPlacements ?? {};
