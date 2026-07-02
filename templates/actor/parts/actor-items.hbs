@@ -51,27 +51,27 @@
         <div class="sil-leg sil-leg-l"></div>
         <div class="sil-leg sil-leg-r"></div>
       </div>
-      <div class="equip-slot equip-pos-head {{#if equipment.head}}equip-filled{{/if}}" data-equip-slot="head" {{#if equipment.head}}data-item-id="{{equipment.head._id}}"{{/if}} title="{{#if equipment.head}}{{equipment.head.name}}{{else}}Head — drag headgear here{{/if}}">
+      <div class="equip-slot equip-pos-head {{#if equipment.head}}equip-filled{{/if}}" data-equip-slot="head" {{#if equipment.head}}data-item-id="{{equipment.head._id}}"{{/if}} data-tooltip="{{#if equipment.head}}Head — {{equipment.head.name}}{{else}}Head — empty{{/if}}">
         {{#if equipment.head}}<img src="{{equipment.head.img}}" alt="" /><button type="button" class="equip-unequip" title="Unequip">✕</button>{{else}}<span class="equip-slot-label">Head</span>{{/if}}
       </div>
-      <div class="equip-slot equip-pos-back {{#if equipment.back}}equip-filled{{/if}}" data-equip-slot="back" {{#if equipment.back}}data-item-id="{{equipment.back._id}}"{{/if}} title="{{#if equipment.back}}{{equipment.back.name}}{{else}}Back — drag a cloak or pack here{{/if}}">
+      <div class="equip-slot equip-pos-back {{#if equipment.back}}equip-filled{{/if}}" data-equip-slot="back" {{#if equipment.back}}data-item-id="{{equipment.back._id}}"{{/if}} data-tooltip="{{#if equipment.back}}Back — {{equipment.back.name}}{{else}}Back — empty{{/if}}">
         {{#if equipment.back}}<img src="{{equipment.back.img}}" alt="" /><button type="button" class="equip-unequip" title="Unequip">✕</button>{{else}}<span class="equip-slot-label">Back</span>{{/if}}
       </div>
-      <div class="equip-slot equip-pos-arms {{#if equipment.arms}}equip-filled{{/if}}" data-equip-slot="arms" {{#if equipment.arms}}data-item-id="{{equipment.arms._id}}"{{/if}} title="{{#if equipment.arms}}{{equipment.arms.name}}{{else}}Arms — drag arm gear here{{/if}}">
+      <div class="equip-slot equip-pos-arms {{#if equipment.arms}}equip-filled{{/if}}" data-equip-slot="arms" {{#if equipment.arms}}data-item-id="{{equipment.arms._id}}"{{/if}} data-tooltip="{{#if equipment.arms}}Arms — {{equipment.arms.name}}{{else}}Arms — empty{{/if}}">
         {{#if equipment.arms}}<img src="{{equipment.arms.img}}" alt="" /><button type="button" class="equip-unequip" title="Unequip">✕</button>{{else}}<span class="equip-slot-label">Arms</span>{{/if}}
       </div>
-      <div class="equip-slot equip-pos-legs {{#if equipment.legs}}equip-filled{{/if}}" data-equip-slot="legs" {{#if equipment.legs}}data-item-id="{{equipment.legs._id}}"{{/if}} title="{{#if equipment.legs}}{{equipment.legs.name}}{{else}}Legs — drag leg gear here{{/if}}">
+      <div class="equip-slot equip-pos-legs {{#if equipment.legs}}equip-filled{{/if}}" data-equip-slot="legs" {{#if equipment.legs}}data-item-id="{{equipment.legs._id}}"{{/if}} data-tooltip="{{#if equipment.legs}}Legs — {{equipment.legs.name}}{{else}}Legs — empty{{/if}}">
         {{#if equipment.legs}}<img src="{{equipment.legs.img}}" alt="" /><button type="button" class="equip-unequip" title="Unequip">✕</button>{{else}}<span class="equip-slot-label">Legs</span>{{/if}}
       </div>
     </div>
     <div class="jrpg-equip-sockets">
-      <div class="equip-slot equip-socket {{#if equipment.gems}}equip-filled{{/if}}" data-equip-slot="gems" {{#if equipment.gems}}data-item-id="{{equipment.gems._id}}"{{/if}} title="{{#if equipment.gems}}{{equipment.gems.name}}{{else}}Gem socket{{/if}}">
+      <div class="equip-slot equip-socket {{#if equipment.gems}}equip-filled{{/if}}" data-equip-slot="gems" {{#if equipment.gems}}data-item-id="{{equipment.gems._id}}"{{/if}} data-tooltip="{{#if equipment.gems}}Gem — {{equipment.gems.name}}{{else}}Gem socket — empty{{/if}}">
         {{#if equipment.gems}}<img src="{{equipment.gems.img}}" alt="" /><button type="button" class="equip-unequip" title="Unequip">✕</button>{{else}}<span class="equip-slot-label">Gem</span>{{/if}}
       </div>
-      <div class="equip-slot equip-socket {{#if equipment.aegiscore}}equip-filled{{/if}}" data-equip-slot="aegiscore" {{#if equipment.aegiscore}}data-item-id="{{equipment.aegiscore._id}}"{{/if}} title="{{#if equipment.aegiscore}}{{equipment.aegiscore.name}}{{else}}Aegis Core{{/if}}">
+      <div class="equip-slot equip-socket {{#if equipment.aegiscore}}equip-filled{{/if}}" data-equip-slot="aegiscore" {{#if equipment.aegiscore}}data-item-id="{{equipment.aegiscore._id}}"{{/if}} data-tooltip="{{#if equipment.aegiscore}}Aegis Core — {{equipment.aegiscore.name}}{{else}}Aegis Core — empty{{/if}}">
         {{#if equipment.aegiscore}}<img src="{{equipment.aegiscore.img}}" alt="" /><button type="button" class="equip-unequip" title="Unequip">✕</button>{{else}}<span class="equip-slot-label">Core</span>{{/if}}
       </div>
-      <div class="equip-slot equip-socket {{#if equipment.legacies}}equip-filled{{/if}}" data-equip-slot="legacies" {{#if equipment.legacies}}data-item-id="{{equipment.legacies._id}}"{{/if}} title="{{#if equipment.legacies}}{{equipment.legacies.name}}{{else}}Legacy{{/if}}">
+      <div class="equip-slot equip-socket {{#if equipment.legacies}}equip-filled{{/if}}" data-equip-slot="legacies" {{#if equipment.legacies}}data-item-id="{{equipment.legacies._id}}"{{/if}} data-tooltip="{{#if equipment.legacies}}Legacy — {{equipment.legacies.name}}{{else}}Legacy — empty{{/if}}">
         {{#if equipment.legacies}}<img src="{{equipment.legacies.img}}" alt="" /><button type="button" class="equip-unequip" title="Unequip">✕</button>{{else}}<span class="equip-slot-label">Legacy</span>{{/if}}
       </div>
     </div>

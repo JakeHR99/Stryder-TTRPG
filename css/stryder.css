@@ -19460,4 +19460,65 @@ li.chat-message.sty-grp-end {
 }
 .equip-total-phys { color: var(--sty-gold); }
 .equip-total-mag  { color: var(--sty-cyan-soft); }
+/* ── v2: BotW ratios + glowing on-body circles ── */
+.jrpg-equip-panel { flex: 0 0 clamp(250px, 36%, 360px); gap: 12px; }
+.jrpg-equip-figure { height: 356px; }
+.equip-silhouette {
+  width: 150px;
+  height: 336px;
+  top: 6px;
+}
+.sil-head  { width: 48px; height: 48px; }
+.sil-torso { top: 54px; width: 76px; height: 120px; border-radius: 20px 20px 12px 12px; }
+.sil-arm   { top: 62px; width: 18px; height: 98px; border-radius: 9px; }
+.sil-arm-l { left: 12px; }
+.sil-arm-r { right: 12px; }
+.sil-leg   { top: 178px; width: 24px; height: 150px; border-radius: 11px 11px 8px 8px; }
+/* slots become soft breathing glow-circles sitting ON the body */
+.equip-slot {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(111, 214, 245, 0.16) 0%, rgba(80, 120, 220, 0.07) 55%, transparent 78%);
+  border: 1px solid rgba(111, 214, 245, 0.35);
+  animation: equip-breathe 3.6s ease-in-out infinite;
+  transform: translate(-50%, -50%);
+}
+@keyframes equip-breathe {
+  0%, 100% { box-shadow: 0 0 8px rgba(111, 214, 245, 0.16), inset 0 0 8px rgba(111, 214, 245, 0.08); }
+  50%      { box-shadow: 0 0 16px rgba(111, 214, 245, 0.38), inset 0 0 12px rgba(111, 214, 245, 0.16); }
+}
+/* circle centers anchored to body parts (figure coordinates) */
+.equip-pos-head { top: 30px;  left: 50%;               right: auto; bottom: auto; }
+.equip-pos-back { top: 90px;  left: calc(50% - 46px);  right: auto; bottom: auto; }
+.equip-pos-arms { top: 120px; left: calc(50% + 54px);  right: auto; bottom: auto; }
+.equip-pos-legs { top: 252px; left: 50%;               right: auto; bottom: auto; }
+/* v2 drops the connector lines and visible labels — hover tooltips carry the info */
+.equip-pos-head::before, .equip-pos-back::before,
+.equip-pos-arms::before, .equip-pos-legs::before { display: none; }
+.equip-slot-label { display: none; }
+.equip-slot img {
+  width: 78%;
+  height: 78%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.equip-slot.equip-filled {
+  border-color: var(--sty-line-gold-strong);
+  background: radial-gradient(circle, rgba(20, 24, 46, 0.95) 58%, rgba(244, 192, 48, 0.10) 100%);
+  animation: none;
+  box-shadow: 0 0 10px rgba(244, 192, 48, 0.28);
+}
+.equip-slot.equip-drop-hint {
+  animation: none;
+  border-color: var(--sty-cyan-bright);
+  box-shadow: 0 0 18px rgba(111, 214, 245, 0.6), inset 0 0 12px rgba(111, 214, 245, 0.25);
+}
+/* sockets: smaller circles flowing in their row */
+.jrpg-equip-sockets .equip-slot {
+  width: 38px;
+  height: 38px;
+  transform: none;
+}
+.equip-unequip { top: -4px; right: -4px; }
 /* ===== End of Equipment loadout region ===== */
