@@ -2854,7 +2854,7 @@ Hooks.on('ready', () => {
     // Only respond to the party actor token
     const partyTokens = Array.from(scene.tokens).filter(t => t.actor?.type === 'party');
     if (partyTokens.length > 0 && tokenDoc.actor?.type !== 'party') return;
-    await handleOpenWorldMove(tokenDoc, scene);
+    await handleOpenWorldMove(tokenDoc, scene, changes);
   });
 
   // ── Open World: dropping a token onto the scene counts as entering its hex ──

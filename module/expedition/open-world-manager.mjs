@@ -224,16 +224,24 @@ async function placeMarkerToken(scene, hexKey, center, opts) {
 }
 
 // ── Main movement handler — called from stryder.mjs hook ──
-export async function handleOpenWorldMove(tokenDoc, scene) {
-  // Let core compute the token's grid-aware center from DOCUMENT data (the
-  // final destination, not the mid-animation sprite). Manual size math kept
-  // resolving neighbor hexes because hex bounding boxes differ between
-  // row/column orientations.
+export async function handleOpenWorldMove(tokenDoc, scene, changes = null) {
+  // Use the update payload's destination when available — under v13's
+  // movement system the document/sprite readings proved one move stale at
+  // hook time, but `changes.x/y` IS the committed destination by definition.
+  const destX = changes?.x ?? tokenDoc.x;
+  const destY = changes?.y ?? tokenDoc.y;
   const c = (typeof tokenDoc.getCenterPoint === 'function')
-    ? tokenDoc.getCenterPoint({ x: tokenDoc.x, y: tokenDoc.y }) // explicit destination — no-arg reads the still-animating sprite (one hex behind)
-    : { x: tokenDoc.x + ((tokenDoc.width  ?? 1) * canvas.grid.sizeX) / 2,
-        y: tokenDoc.y + ((tokenDoc.height ?? 1) * canvas.grid.sizeY) / 2 };
+    ? tokenDoc.getCenterPoint({ x: destX, y: destY })
+    : { x: destX + ((tokenDoc.width  ?? 1) * canvas.grid.sizeX) / 2,
+        y: destY + ((tokenDoc.height ?? 1) * canvas.grid.sizeY) / 2 };
   const hexKey = getHexKey(scene, c.x, c.y);
+  console.log('Stryder | OW move:', {
+    changesX: changes?.x, changesY: changes?.y,
+    docX: tokenDoc.x, docY: tokenDoc.y,
+    center: { x: Math.round(c.x), y: Math.round(c.y) },
+    hexKey,
+    lastHex: tokenDoc.getFlag(SYSTEM_ID, 'currentHex')
+  });
   const center = getHexCenterFromPoint(c.x, c.y);
 
   // Check if hex has changed since last move
