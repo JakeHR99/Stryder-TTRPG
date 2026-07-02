@@ -19289,6 +19289,30 @@ li.chat-message.sty-grp-end {
   border-color: rgba(111, 214, 245, 0.55) !important;
   box-shadow: 0 0 10px rgba(111, 214, 245, 0.35), inset 0 0 8px rgba(111, 214, 245, 0.15) !important;
 }
+/* ── Item popup close ✕ (top-left, sheet blue voice — not crimson) ── */
+.inv-popup { position: relative; }
+.inv-popup-close {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+  padding: 0;
+  background: rgba(8, 14, 35, 0.9);
+  border: 1px solid rgba(80, 160, 255, 0.35);
+  border-radius: 50%;
+  color: rgba(168, 212, 255, 0.75);
+  font-size: 10px;
+  cursor: pointer;
+  z-index: 2;
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.inv-popup-close:hover {
+  border-color: rgba(120, 200, 255, 0.7);
+  color: #c8e8ff;
+  box-shadow: 0 0 10px rgba(111, 214, 245, 0.35);
+}
 /* ===== End of Inventory slot DnD region ===== */
 
 /* ===== PARTY — shared inventory flesh-out ===== */

@@ -7279,6 +7279,7 @@ export class StryderActorSheet extends ActorSheet {
 
     const content = `
       <div class="inv-popup">
+        <button type="button" class="inv-popup-close" data-action="closePopup" title="Close">✕</button>
         <!-- Icon + slot -->
         <div class="inv-popup-img-row">
           <div class="inv-popup-img-wrap" data-action="changeIcon">
@@ -7349,6 +7350,9 @@ export class StryderActorSheet extends ActorSheet {
             });
           }
         });
+
+        // Close ✕ (top-left corner)
+        html.find('[data-action="closePopup"]').on('click', () => dialog.close());
 
         // Icon click → icon picker
         html.find('[data-action="changeIcon"], .inv-popup-img-wrap').on('click', () => {
