@@ -1969,12 +1969,29 @@ export class StryderActorSheet extends ActorSheet {
         bonusesApplied:  actorData.system.folk.bonuses_applied ?? false
       } : null;
 
+      // Equipment loadout (flags.stryder.equipSlot) — one item per slot; worn
+      // items leave the grid and render on the silhouette panel instead.
+      const EQUIP_SLOTS = ['head', 'back', 'arms', 'legs', 'gems', 'aegiscore', 'legacies'];
+      context.equipment = Object.fromEntries(EQUIP_SLOTS.map(s => [s, null]));
+      for (const i of (context.items || [])) {
+        const slot = i.flags?.stryder?.equipSlot;
+        if (EQUIP_SLOTS.includes(slot) && i.type === slot && !context.equipment[slot]) {
+          context.equipment[slot] = i;
+        }
+      }
+      this._equippedIds = new Set(
+        EQUIP_SLOTS.map(s => context.equipment[s]?._id).filter(Boolean));
+      context.equipTotals = {
+        phys:    EQUIP_SLOTS.reduce((n, s) => n + Number(context.equipment[s]?.system?.physical_reduction_bonus ?? 0), 0),
+        magykal: EQUIP_SLOTS.reduce((n, s) => n + Number(context.equipment[s]?.system?.magykal_reduction_bonus ?? 0), 0)
+      };
+
       // Inventory grid context (all item types → 44-slot visual grid)
       context.inventoryGrid = this._buildInventoryGrid(context.items || []);
       // Only count types that actually appear in the grid — same set as _buildInventoryGrid
       const INVENTORY_COUNT_TYPES = new Set(['loot','gear','consumable','component','elixir','miscellaneous','ingredient','head','back','arms','legs','gems','aegiscore','legacies']);
       const usedSlots = (context.items || [])
-        .filter(i => INVENTORY_COUNT_TYPES.has(i.type))
+        .filter(i => INVENTORY_COUNT_TYPES.has(i.type) && !this._equippedIds.has(i._id))
         .reduce((sum, i) => {
           const s = i.system?.size ?? i.system?.inventory_size ?? 1;
           return sum + Math.max(1, Math.min(s, 11));
@@ -2421,6 +2438,7 @@ export class StryderActorSheet extends ActorSheet {
     // Pass 1 — items pinned to a slot (flags.stryder.invSlot) that still fit there.
     const loose = [];
     for (const item of gearItems) {
+      if (this._equippedIds?.has(item._id)) continue; // worn — lives on the silhouette
       const size   = _size(item);
       const pinned = item.flags?.stryder?.invSlot;
       if (Number.isInteger(pinned) && _fits(pinned, size)) _place(item, pinned, size);
@@ -5514,6 +5532,62 @@ export class StryderActorSheet extends ActorSheet {
           return ui.notifications.warn('That spot cannot hold this item.');
         }
         await item.setFlag('stryder', 'invSlot', start);
+        // Returning a worn piece to the grid unequips it.
+        if (item.getFlag('stryder', 'equipSlot')) await item.unsetFlag('stryder', 'equipSlot');
+      });
+
+      // ── Equipment loadout: slot drop zones, unequip, drag-back ──
+      const _equipPanel = html.find('.jrpg-equip-panel');
+      _equipPanel.on('dragover', '.equip-slot', (ev) => {
+        const dragId = this._invDragItemId;
+        if (!dragId) return;
+        const item = this.actor.items.get(dragId);
+        if (!item || item.type !== ev.currentTarget.dataset.equipSlot) return; // wrong type — not a target
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.currentTarget.classList.add('equip-drop-hint');
+      });
+      _equipPanel.on('dragleave', '.equip-slot', (ev) => {
+        ev.currentTarget.classList.remove('equip-drop-hint');
+      });
+      _equipPanel.on('drop', '.equip-slot', async (ev) => {
+        const dragId = this._invDragItemId;
+        if (!dragId) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.currentTarget.classList.remove('equip-drop-hint');
+        this._invDragItemId = null;
+        const item = this.actor.items.get(dragId);
+        const slot = ev.currentTarget.dataset.equipSlot;
+        if (!item || item.type !== slot) {
+          return ui.notifications.warn('That does not fit this equipment slot.');
+        }
+        // One item per slot — swap out the current occupant if present.
+        const prev = this.actor.items.find(i =>
+          i.id !== item.id && i.flags?.stryder?.equipSlot === slot);
+        if (prev) await prev.unsetFlag('stryder', 'equipSlot');
+        await item.setFlag('stryder', 'equipSlot', slot);
+      });
+      _equipPanel.on('click', '.equip-unequip', async (ev) => {
+        ev.stopPropagation();
+        const id = ev.currentTarget.closest('.equip-slot')?.dataset.itemId;
+        await this.actor.items.get(id)?.unsetFlag('stryder', 'equipSlot');
+      });
+      _equipPanel.on('click', '.equip-slot.equip-filled', (ev) => {
+        const id = ev.currentTarget.dataset.itemId;
+        this.actor.items.get(id)?.sheet?.render(true);
+      });
+      // Worn pieces drag back to the grid (the grid drop clears the slot flag).
+      html.find('.equip-slot.equip-filled[data-item-id]').each((i, el) => {
+        el.setAttribute('draggable', 'true');
+        el.querySelectorAll('img').forEach(img => img.setAttribute('draggable', 'false'));
+        el.addEventListener('dragstart', (ev) => {
+          const item = this.actor.items.get(el.dataset.itemId);
+          if (!item) { ev.preventDefault(); return; }
+          this._invDragItemId = el.dataset.itemId;
+          ev.dataTransfer.setData('text/plain', JSON.stringify(item.toDragData()));
+        }, false);
+        el.addEventListener('dragend', () => { this._invDragItemId = null; }, false);
       });
     }
 

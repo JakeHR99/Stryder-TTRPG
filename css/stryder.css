@@ -19310,3 +19310,154 @@ li.chat-message.sty-grp-end {
   text-shadow: var(--sty-cyan-glow);
 }
 /* ===== End of Party shared inventory region ===== */
+/* ===== EQUIPMENT LOADOUT — CSS silhouette + typed slots ===== */
+.jrpg-inv-body {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.jrpg-equip-panel {
+  flex: 0 0 232px;
+  background: var(--sty-panel-deep);
+  border: 1px solid var(--sty-line-blue);
+  border-radius: var(--sty-r-bar);
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.jrpg-equip-title {
+  font-family: var(--sty-font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--sty-cyan-soft);
+  text-align: center;
+  border-bottom: 1px solid var(--sty-line-blue);
+  padding-bottom: 6px;
+}
+/* ── figure area ── */
+.jrpg-equip-figure {
+  position: relative;
+  height: 264px;
+}
+.equip-silhouette {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 96px;
+  height: 244px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px rgba(80, 120, 220, 0.18));
+}
+.equip-silhouette > div {
+  position: absolute;
+  background: linear-gradient(180deg, rgba(111, 214, 245, 0.10), rgba(80, 120, 220, 0.05));
+  border: 1px solid var(--sty-line-blue);
+}
+.sil-head  { left: 50%; top: 0; width: 34px; height: 34px; border-radius: 50%; transform: translateX(-50%); }
+.sil-torso { left: 50%; top: 38px; width: 52px; height: 86px; border-radius: 14px 14px 9px 9px; transform: translateX(-50%); }
+.sil-arm   { top: 44px; width: 13px; height: 70px; border-radius: 7px; }
+.sil-arm-l { left: 6px;  transform: rotate(13deg); }
+.sil-arm-r { right: 6px; transform: rotate(-13deg); }
+.sil-leg   { top: 128px; width: 17px; height: 92px; border-radius: 8px 8px 6px 6px; }
+.sil-leg-l { left: 50%; transform: translateX(-110%); }
+.sil-leg-r { left: 50%; transform: translateX(10%); }
+/* ── slots anchored around the figure ── */
+.equip-slot {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: rgba(8, 14, 35, 0.75);
+  border: 1px solid var(--sty-line-blue-strong);
+  border-radius: var(--sty-r-bar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.equip-pos-head { top: 0;     right: 4px; }
+.equip-pos-back { top: 52px;  left: 4px; }
+.equip-pos-arms { top: 116px; right: 4px; }
+.equip-pos-legs { bottom: 4px; left: 4px; }
+/* faint connector lines from slot to figure */
+.equip-pos-head::before, .equip-pos-back::before,
+.equip-pos-arms::before, .equip-pos-legs::before {
+  content: "";
+  position: absolute;
+  height: 1px;
+  width: 26px;
+  background: linear-gradient(90deg, var(--sty-line-blue-strong), transparent);
+  top: 50%;
+}
+.equip-pos-head::before, .equip-pos-arms::before { right: 100%; }
+.equip-pos-back::before, .equip-pos-legs::before { left: 100%; transform: scaleX(-1); }
+.equip-slot-label {
+  font-family: var(--sty-font-number);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--sty-text-dim);
+}
+.equip-slot img {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
+  border: none;
+}
+.equip-slot.equip-filled {
+  border-color: var(--sty-line-gold-strong);
+  background: rgba(20, 24, 46, 0.9);
+  cursor: grab;
+  box-shadow: 0 0 8px rgba(244, 192, 48, 0.12);
+}
+.equip-slot.equip-filled:active { cursor: grabbing; }
+.equip-slot.equip-drop-hint {
+  border-color: var(--sty-cyan-bright);
+  background: rgba(120, 200, 255, 0.12);
+  box-shadow: 0 0 12px rgba(111, 214, 245, 0.45), inset 0 0 8px rgba(111, 214, 245, 0.18);
+}
+.equip-unequip {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 16px;
+  height: 16px;
+  line-height: 1;
+  padding: 0;
+  font-size: 9px;
+  background: var(--sty-panel-nav);
+  border: 1px solid var(--sty-crimson-line);
+  border-radius: 50%;
+  color: var(--sty-crimson);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.equip-slot:hover .equip-unequip { opacity: 1; }
+/* ── sockets + totals ── */
+.jrpg-equip-sockets {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.jrpg-equip-sockets .equip-slot {
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+.jrpg-equip-totals {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sty-font-number);
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: var(--sty-text-dim);
+  border-top: 1px solid var(--sty-line-blue);
+  padding-top: 7px;
+}
+.equip-total-phys { color: var(--sty-gold); }
+.equip-total-mag  { color: var(--sty-cyan-soft); }
+/* ===== End of Equipment loadout region ===== */
