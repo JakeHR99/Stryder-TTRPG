@@ -2247,6 +2247,15 @@ export class StryderActorSheet extends ActorSheet {
       context.questsByStatus = _byStatus;
       context.questsCanTab = isOwner || isGM || context.quests.length > 0;
 
+      // 2e) Timeline + Gallery + Immersion (Phase 4B). Timeline gates under the
+      //     Story section (bioCan.backstory) — no per-row visibility (spec §2);
+      //     order is manual (bioMoveRow), so no sorting here.
+      context.timeline = (this.actor.system.timeline ?? []).map((t, i) => ({ ...t, _idx: i }));
+      context.galleryImages = (this.actor.system.gallery ?? []).map((g, i) => ({ ...g, _idx: i }));
+      context.galleryCanTab = isOwner || isGM ||
+        ((this.actor.system.gallery ?? []).length > 0 && context.bioCan.gallery);
+      context.immersion = this.actor.system.bio?.immersion ?? {};
+
       // 3) One-time legacy migration: copy the old base `system.biography`
       //    string into bio.backstory.text if backstory is still empty. Guarded
       //    by a transient flag (the async update + re-render would otherwise
@@ -2327,6 +2336,10 @@ export class StryderActorSheet extends ActorSheet {
           giverUuid: null, locationUuid: null, objectives: [], rewards: "", notes: "",
           visibility: this.actor.system.bio?.visibility?.quests ?? "party"
         };
+      case 'timeline':
+        return { id: foundry.utils.randomID(), date: "", title: "", text: "" };
+      case 'gallery':
+        return { id: foundry.utils.randomID(), img: "", caption: "", artist: "" };
       default:
         return { id: foundry.utils.randomID() };
     }
@@ -3558,6 +3571,20 @@ export class StryderActorSheet extends ActorSheet {
       this._bioListUpdate(list, (arr) => {
         const r = arr.find(x => x.id === id);
         if (r) foundry.utils.setProperty(r, field, !foundry.utils.getProperty(r, field));
+        return arr;
+      });
+    });
+
+    // ── Generic row reorder (Phase 4B) — timeline order is manual because
+    //    dates are free text (no calendar source, Build Spec §9 Q4).
+    html.on('click', '[data-action="bioMoveRow"]', (ev) => {
+      const { list, id, dir } = ev.currentTarget.dataset;
+      if (!list || !id) return;
+      this._bioListUpdate(list, (arr) => {
+        const i = arr.findIndex(r => r.id === id);
+        const j = dir === 'up' ? i - 1 : i + 1;
+        if (i < 0 || j < 0 || j >= arr.length) return arr;
+        [arr[i], arr[j]] = [arr[j], arr[i]];
         return arr;
       });
     });

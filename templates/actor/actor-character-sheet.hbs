@@ -728,6 +728,43 @@
 								{{editor bioEnriched.backstory target="system.bio.backstory.text" engine="prosemirror" button=true editable=editable}}
 							</div>
 						</div>
+
+						{{!-- ── TIMELINE (Phase 4B — manual order, free-text dates) ── --}}
+						<div class="jrpg-bio-block jrpg-timeline">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Timeline</h3>
+								{{#if bioIsEditor}}
+								<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="timeline">+ Add Event</button>
+								{{/if}}
+							</div>
+							<div class="jrpg-timeline-list">
+								{{#each timeline}}
+								<div class="jrpg-timeline-row" data-id="{{id}}">
+									<div class="jrpg-timeline-node"></div>
+									{{#if ../bioIsEditor}}
+									<div class="jrpg-timeline-fields">
+										<input class="jrpg-timeline-date jrpg-char-input" data-action="bioEditField" data-list="timeline" data-id="{{id}}" data-field="date" type="text" value="{{date}}" placeholder="e.g. Spring, Year 3" />
+										<input class="jrpg-timeline-evtitle jrpg-char-input" data-action="bioEditField" data-list="timeline" data-id="{{id}}" data-field="title" type="text" value="{{title}}" placeholder="Event" />
+										<textarea class="jrpg-char-input jrpg-bio-textarea" data-action="bioEditField" data-list="timeline" data-id="{{id}}" data-field="text" rows="2" placeholder="What happened?">{{text}}</textarea>
+									</div>
+									<div class="jrpg-timeline-controls">
+										<button type="button" class="jrpg-timeline-move" data-action="bioMoveRow" data-list="timeline" data-id="{{id}}" data-dir="up" title="Move up">▲</button>
+										<button type="button" class="jrpg-timeline-move" data-action="bioMoveRow" data-list="timeline" data-id="{{id}}" data-dir="down" title="Move down">▼</button>
+										<button type="button" class="jrpg-timeline-del" data-action="bioDelRow" data-list="timeline" data-id="{{id}}" title="Delete event">✕</button>
+									</div>
+									{{else}}
+									<div class="jrpg-timeline-view">
+										{{#if date}}<span class="jrpg-timeline-datechip">{{date}}</span>{{/if}}
+										<span class="jrpg-timeline-viewtitle">{{title}}</span>
+										{{#if text}}<div class="jrpg-timeline-viewtext">{{text}}</div>{{/if}}
+									</div>
+									{{/if}}
+								</div>
+								{{else}}
+								<div class="jrpg-diary-empty">No events recorded.{{#if bioIsEditor}} Click “+ Add Event” to start the timeline.{{/if}}</div>
+								{{/each}}
+							</div>
+						</div>
 						{{/if}}
 					</div>
 
