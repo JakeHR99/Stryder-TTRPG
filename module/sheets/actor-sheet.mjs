@@ -1990,6 +1990,9 @@ export class StryderActorSheet extends ActorSheet {
         phys:    EQUIP_SLOTS.reduce((n, s) => n + Number(context.equipment[s]?.system?.physical_reduction_bonus ?? 0), 0),
         magykal: EQUIP_SLOTS.reduce((n, s) => n + Number(context.equipment[s]?.system?.magykal_reduction_bonus ?? 0), 0)
       };
+      // Equipment figure image — player-chosen, falls back to bio portrait/sheet art.
+      context.equipImg = this.actor.flags?.stryder?.equipImg
+        || this.actor.system.bio?.portrait || this.actor.img;
 
       // Inventory grid context (all item types → 44-slot visual grid)
       context.inventoryGrid = this._buildInventoryGrid(context.items || []);
@@ -1999,7 +2002,7 @@ export class StryderActorSheet extends ActorSheet {
         .filter(i => INVENTORY_COUNT_TYPES.has(i.type) && !this._equippedIds.has(i._id))
         .reduce((sum, i) => {
           const s = i.system?.size ?? i.system?.inventory_size ?? 1;
-          return sum + Math.max(1, Math.min(s, 11));
+          return sum + Math.max(1, Math.min(s, 8));
         }, 0);
       context.inventoryUsed = Math.min(44, usedSlots);
       context.inventoryMax  = 44;
@@ -2402,7 +2405,7 @@ export class StryderActorSheet extends ActorSheet {
     const INVENTORY_TYPES = new Set(['loot','gear','consumable','component','elixir','miscellaneous','ingredient','head','back','arms','legs','gems','aegiscore','legacies']);
     const gearItems = items.filter(i => INVENTORY_TYPES.has(i.type));
 
-    const COLS  = 11;
+    const COLS  = 8;   // chunky BotW-style cells — 5 full rows + a short one
     const TOTAL = 44;
     const cells = new Array(TOTAL).fill(null);
     const placements = {};   // itemId → start index (used by the drag handlers)
@@ -5493,7 +5496,7 @@ export class StryderActorSheet extends ActorSheet {
         const cell = ev.currentTarget;
         const item = this.actor.items.get(dragId);
         if (!item) return;
-        const COLS = 11, TOTAL = 44;
+        const COLS = 8, TOTAL = 44;
         const _sz = (it) => Math.max(1, Math.min(it?.system?.size ?? it?.system?.inventory_size ?? 1, COLS));
         const size = _sz(item);
         const placements = this._invPlacements ?? {};

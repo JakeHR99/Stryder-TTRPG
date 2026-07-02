@@ -19560,4 +19560,27 @@ li.chat-message.sty-grp-end {
   box-shadow: 0 0 14px rgba(111, 214, 245, 0.5), inset 0 0 8px rgba(111, 214, 245, 0.2);
 }
 .equip-unequip { top: -6px; right: -6px; }
+
+/* ── v4: player-chosen figure image (silhouette removed) ── */
+.jrpg-equip-panel { flex: 0 0 clamp(240px, 30%, 320px); }
+.jrpg-equip-figure {
+  height: auto;
+  min-height: 400px;
+  display: flex;
+}
+.equip-figure-img {
+  width: 100%;
+  min-height: 400px;
+  object-fit: contain;
+  object-position: center top;
+  border: none;
+  filter: drop-shadow(0 0 16px rgba(80, 120, 220, 0.25));
+}
+.equip-figure-pick {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  opacity: 0;
+}
+.jrpg-equip-figure:hover .equip-figure-pick { opacity: 1; }
 /* ===== End of Equipment loadout region ===== */
