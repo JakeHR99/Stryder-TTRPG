@@ -3491,10 +3491,10 @@ export class StryderActorSheet extends ActorSheet {
       html.find('.jrpg-page').hide();
       html.find(`.jrpg-page[data-page="${target}"]`).show();
       // Back-button routing: Tempering sub-pages → "← Tempering",
-      // Biography → "← Character", everything else → "← Main Menu".
-      html.find('.jrpg-back-btn').toggle(!_isTemperingSubPage(target) && !_isBiographyPage(target));
+      // everything else (incl. Biography, now a main-menu page) → "← Main Menu".
+      html.find('.jrpg-back-btn').toggle(!_isTemperingSubPage(target));
       html.find('.jrpg-back-to-tempering-btn').toggle(_isTemperingSubPage(target));
-      html.find('.jrpg-back-to-character-btn').toggle(_isBiographyPage(target));
+      html.find('.jrpg-back-to-character-btn').toggle(false);
       if (target === 'growth') this._buildGrowthPage(html);
       _restoreScroll(target);
     };

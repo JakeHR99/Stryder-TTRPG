@@ -19641,3 +19641,46 @@ li.chat-message.sty-grp-end {
 }
 .jrpg-equip-figure:hover .equip-figure-scale { opacity: 1; }
 /* ===== End of Equipment loadout region ===== */
+
+/* ===== MAIN MENU — Biography & Journal tome (bottom-left) ===== */
+.jrpg-main-screen { position: relative; }
+.jrpg-main-bio-btn {
+  position: absolute;
+  left: 30px;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  z-index: 6;
+  background: none;
+  border: none;
+}
+.jrpg-main-bio-book {
+  position: relative;
+  width: 64px;
+  height: 92px;
+}
+.jrpg-main-bio-label {
+  font-family: var(--sty-font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #e6e2f8;
+  text-shadow: 0 0 10px rgba(190, 180, 255, 0.55), 0 0 22px rgba(140, 150, 255, 0.30);
+  transition: color 0.25s, text-shadow 0.25s;
+}
+.jrpg-main-bio-btn:hover .jrpg-main-bio-label {
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(210, 200, 255, 0.85), 0 0 26px rgba(244, 192, 48, 0.35);
+}
+.jrpg-main-bio-btn:hover .jrpg-bio-tomebook {
+  box-shadow:
+    -5px 5px 0 -1px #241a10,
+    -5px 5px 0 0 #3d3123,
+    0 12px 22px rgba(0, 0, 0, 0.85),
+    0 0 30px rgba(200, 190, 255, 0.35);
+}
+/* ===== End of Main menu tome region ===== */
