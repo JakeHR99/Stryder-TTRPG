@@ -20,7 +20,7 @@
       "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
-  "version": "0.2.10",
+  "version": "0.3.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
@@ -31,7 +31,9 @@
   ],
   "styles": [
     "css/stryder-tokens.css",
-    "css/stryder.css"
+    "css/stryder.css",
+    "css/cooking-minigame.css",
+    "css/elixir-brewing.css"
   ],
   "languages": [
     {

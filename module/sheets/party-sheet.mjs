@@ -3,6 +3,8 @@
 // ============================================================
 import { STRYDER } from '../helpers/config.mjs';
 import { FishingMinigame } from '../apps/fishing-minigame.mjs';
+import { CookingMinigame } from '../apps/cooking-minigame.mjs';
+import { BrewingMinigame } from '../apps/elixir-brewing-mgame.mjs';
 
 export class StryderPartySheet extends ActorSheet {
   static get defaultOptions() {
@@ -181,6 +183,14 @@ export class StryderPartySheet extends ActorSheet {
       await this.actor.items.get(li.dataset.itemId)?.delete();
     });
 
+    // Click an item (image, name, or the open control) to open its sheet — same
+    // as a player's inventory. Lets Fish be converted, meals used, etc.
+    html.find('.ps-item-open').on('click', (ev) => {
+      ev.preventDefault();
+      const li = ev.currentTarget.closest('.ps-item');
+      this.actor.items.get(li?.dataset.itemId)?.sheet?.render(true);
+    });
+
     // ── Shared inventory: take to my character + drag rows out ────────────
     html.find('.ps-item-take').on('click', async (ev) => {
       const li = ev.currentTarget.closest('.ps-item');
@@ -228,14 +238,20 @@ export class StryderPartySheet extends ActorSheet {
       }
 
       // ── JRPG-style member picker ────────────────────────────────────────────
-      const challengeLabel = { fishing: 'Fishing', foraging: 'Foraging', mining: 'Mining' }[challengeId] ?? challengeId;
-      const challengeIcon  = { fishing: '🎣', foraging: '🌿', mining: '⛏' }[challengeId] ?? '✦';
+      const challengeLabel = { fishing: 'Fishing', cooking: 'Cooking', brewing: 'Elixir Brewing', foraging: 'Foraging', mining: 'Mining' }[challengeId] ?? challengeId;
+      const challengeIcon  = { fishing: '🎣', cooking: '🍲', brewing: '⚗', foraging: '🌿', mining: '⛏' }[challengeId] ?? '✦';
 
       const memberCards = memberActors.map((a, i) => {
         let statBadge = '';
         if (challengeId === 'fishing') {
           const lvl = parseInt(a.system?.life?.fishing?.value) || 0;
           statBadge = `<span style="font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:.06em;color:rgba(130,200,160,0.75);background:rgba(30,80,50,0.5);border:1px solid rgba(60,160,90,0.3);border-radius:3px;padding:1px 5px;">Lv. ${lvl} Fishing</span>`;
+        } else if (challengeId === 'cooking') {
+          const lvl = parseInt(a.system?.life?.cooking?.value) || 0;
+          statBadge = `<span style="font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:.06em;color:rgba(217,180,91,0.8);background:rgba(80,64,24,0.5);border:1px solid rgba(217,180,91,0.3);border-radius:3px;padding:1px 5px;">Lv. ${lvl} Cooking</span>`;
+        } else if (challengeId === 'brewing') {
+          const lvl = parseInt(a.system?.life?.elixirbrewing?.value) || 0;
+          statBadge = `<span style="font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:.06em;color:rgba(169,125,255,0.85);background:rgba(50,36,80,0.5);border:1px solid rgba(169,125,255,0.3);border-radius:3px;padding:1px 5px;">Lv. ${lvl} Brewing</span>`;
         }
         return `
           <label class="ch-member-card" style="
@@ -316,6 +332,10 @@ export class StryderPartySheet extends ActorSheet {
   _launchChallenge(id, actor, partyActor) {
     if (id === 'fishing') {
       FishingMinigame.open(actor, partyActor);
+    } else if (id === 'cooking') {
+      CookingMinigame.open(actor, partyActor);
+    } else if (id === 'brewing') {
+      BrewingMinigame.open(actor, partyActor);
     } else {
       ui.notifications.info(`${id.charAt(0).toUpperCase() + id.slice(1)} is coming soon!`);
     }

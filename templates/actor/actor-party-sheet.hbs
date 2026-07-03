@@ -134,6 +134,20 @@
             <button class="ch2-play-btn ch-play-btn" data-challenge="fishing" type="button">▶ Play</button>
           </div>
 
+          {{!-- Cooking — active --}}
+          <div class="ch2-card ch2-active" data-challenge="cooking">
+            <img class="ch2-sprite" src="systems/stryder/assets/life-cooking.svg" alt="Cooking" />
+            <div class="ch2-title">Cooking</div>
+            <button class="ch2-play-btn ch-play-btn" data-challenge="cooking" type="button">▶ Play</button>
+          </div>
+
+          {{!-- Elixir Brewing — active --}}
+          <div class="ch2-card ch2-active" data-challenge="brewing">
+            <img class="ch2-sprite" src="systems/stryder/assets/elixirs/Icon1.png" alt="Elixir Brewing" />
+            <div class="ch2-title">Brewing</div>
+            <button class="ch2-play-btn ch-play-btn" data-challenge="brewing" type="button">▶ Play</button>
+          </div>
+
           {{!-- Locked activities --}}
           <div class="ch2-locked-row">
             <div class="ch2-card ch2-locked">
@@ -159,10 +173,11 @@
           <ol class="ps-item-list">
             {{#each inventory as |item|}}
             <li class="ps-item" data-item-id="{{item.id}}">
-              <img class="ps-item-img" src="{{item.img}}" title="{{item.name}}" />
-              <span class="ps-item-name">{{item.name}}{{#if (gt item.system.quantity 1)}} <span class="ps-item-qty">×{{item.system.quantity}}</span>{{/if}}</span>
+              <img class="ps-item-img ps-item-open" src="{{item.img}}" title="Open {{item.name}}" style="cursor:pointer;" />
+              <span class="ps-item-name ps-item-open" title="Open {{item.name}}" style="cursor:pointer;">{{item.name}}{{#if (gt item.system.quantity 1)}} <span class="ps-item-qty">×{{item.system.quantity}}</span>{{/if}}</span>
               <span class="ps-item-type">{{item.type}}</span>
               <div class="ps-item-controls">
+                <a class="ps-item-open" title="Open / interact"><i class="fas fa-up-right-from-square"></i></a>
                 <a class="ps-item-take" title="Take to my character"><i class="fas fa-hand-holding"></i></a>
                 <a class="ps-item-delete" title="Delete"><i class="fas fa-trash"></i></a>
               </div>

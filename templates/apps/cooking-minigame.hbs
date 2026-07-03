@@ -1,0 +1,179 @@
+<div class="ck-root">
+  <div class="ck-stars"></div>
+
+  <div class="ck-panel">
+    <div class="ck-titlebar">
+      <h1 class="ck-title">🍲 Cooking</h1>
+      <div class="ck-who">Chef <b>{{cookName}}</b><span class="ck-lvl-badge">Cooking Lv. {{cookingLevel}}</span></div>
+    </div>
+
+    <div class="ck-stage">
+
+      {{!-- ══════════ PREP / COOKING (shared top: servings + pot) ══════════ --}}
+      {{#unless isNaming}}
+      <div class="ck-topbar">
+        <div class="ck-ctl">Cooking for
+          {{#if isPrep}}
+          <span class="ck-stepper">
+            <span class="ck-serv-step" data-step="-1">−</span>
+            <span class="ck-step-val">{{servings}}</span>
+            <span class="ck-serv-step" data-step="1">+</span>
+          </span>
+          {{else}}<span class="ck-step-val">{{servings}}</span>{{/if}}
+          {{#if (eq servings 1)}}person{{else}}people{{/if}}
+        </div>
+        <div class="ck-need">Need <b>{{need}}</b> &middot; filled <b>{{filled}}/{{need}}</b></div>
+      </div>
+
+      {{!-- main slots --}}
+      <div class="ck-slots-label">The Pot — {{need}} ingredient{{#unless (eq need 1)}}s{{/unless}} (any mix of Base / Protein / Spice, doubles ok)</div>
+      <div class="ck-slots">
+        {{#each mainSlots as |s|}}
+          {{#if s.filled}}
+          <div class="ck-slot filled" data-clear="{{s.idx}}" title="Remove">
+            <span class="ck-clear-x">✕</span>
+            <img class="ck-ing-img" src="{{s.img}}" />
+            <span class="ck-ing-cat">{{s.catLabel}}</span>
+            <span class="ck-ing-q {{s.qClass}}">{{s.qLabel}} {{s.qMod}}</span>
+          </div>
+          {{else}}
+          <div class="ck-slot empty"><span class="ck-plus">+</span><span class="ck-hint">1d6 + rarity</span></div>
+          {{/if}}
+        {{/each}}
+      </div>
+
+      {{!-- extras: sauce + monster part --}}
+      <div class="ck-extras">
+        {{#if sauceSel}}
+        <div class="ck-extra sauce filled">
+          <span class="ck-clear-sauce ck-clear-x">✕</span>
+          <img class="ck-ex-img" src="{{sauceSel.img}}" />
+          <div class="ck-ex-info"><span class="ck-badge sauce">Sauce</span><br>
+            <span class="ck-ex-sub {{sauceSel.qClass}}">{{sauceSel.qLabel}} · flat {{sauceSel.qMod}}</span></div>
+        </div>
+        {{else}}
+        <div class="ck-extra sauce"><span class="ck-ex-ph">🫙</span>
+          <div class="ck-ex-info"><span class="ck-badge sauce">Sauce</span><br><span class="ck-ex-sub muted">optional · flat rarity bonus</span></div></div>
+        {{/if}}
+
+        {{#if monsterSel}}
+        <div class="ck-extra monster filled">
+          <span class="ck-clear-mon ck-clear-x">✕</span>
+          <img class="ck-ex-img" src="{{monsterSel.img}}" />
+          <div class="ck-ex-info"><span class="ck-badge monster">{{monsterSel.label}} · Rank {{monsterSel.rank}}</span><br>
+            <span class="ck-ex-sub muted">Enchants → “{{monsterSel.prefix}}” (Good+ or poison)</span></div>
+        </div>
+        {{else}}
+        <div class="ck-extra monster"><span class="ck-ex-ph">✦</span>
+          <div class="ck-ex-info"><span class="ck-badge monster">Monster Part</span><br><span class="ck-ex-sub muted">optional · enchants the meal</span></div></div>
+        {{/if}}
+      </div>
+
+      {{!-- pot --}}
+      <div class="ck-pot-wrap">
+        <div class="ck-steam {{#if isCooking}}on{{/if}}"><span></span><span></span><span></span></div>
+        <div class="ck-cauldron {{#if isCooking}}cooking{{/if}}"><div class="ck-rim"></div><div class="ck-brew"></div></div>
+        <div class="ck-fire"><div class="ck-flame"></div><div class="ck-flame"></div><div class="ck-flame"></div></div>
+      </div>
+      <div class="ck-dice"></div>
+      <div class="ck-tally">{{#unless isCooking}}Fill the pot, then light the fire.{{/unless}}</div>
+
+      {{#if isPrep}}
+      <div class="ck-controls">
+        <button type="button" class="ck-btn ck-btn-primary ck-cook-btn" {{#unless canCook}}disabled{{/unless}}>🔥 Cook!</button>
+        <button type="button" class="ck-btn ck-btn-ghost ck-empty-btn">Empty Pot</button>
+      </div>
+
+      {{!-- pantry --}}
+      <div class="ck-pantry">
+        <h2>Pantry</h2>
+        <div class="ck-pantry-sub">Ingredients are generic — only rarity matters. Click to add to the pot.</div>
+
+        <div class="ck-pgroup"><div class="ck-glabel main">Ingredients</div>
+          <div class="ck-chips">
+            {{#each mainStacks as |st|}}
+            <div class="ck-chip ck-add {{#if st.disabled}}disabled{{/if}}" data-add="{{st.addId}}">
+              <img class="ck-chip-img" src="{{st.img}}" />
+              <span class="ck-chip-cat">{{st.catLabel}}</span>
+              <span class="ck-chip-q {{st.qClass}}">{{st.qLabel}} {{st.qMod}}</span>
+              <span class="ck-qty">×{{st.count}}</span>
+            </div>
+            {{else}}<span class="ck-none">— no Bases / Proteins / Spices in the party inventory —</span>{{/each}}
+          </div>
+        </div>
+
+        <div class="ck-pgroup"><div class="ck-glabel sauce">Sauces <span class="ck-tag">(bonus)</span></div>
+          <div class="ck-chips">
+            {{#each sauceStacks as |st|}}
+            <div class="ck-chip ck-add-sauce {{#if st.disabled}}disabled{{/if}}" data-add="{{st.addId}}">
+              <img class="ck-chip-img" src="{{st.img}}" />
+              <span class="ck-chip-q {{st.qClass}}">{{st.qLabel}} {{st.qMod}}</span>
+              <span class="ck-qty">×{{st.count}}</span>
+            </div>
+            {{else}}<span class="ck-none">— none —</span>{{/each}}
+          </div>
+        </div>
+
+        <div class="ck-pgroup"><div class="ck-glabel monster">Monster Parts <span class="ck-tag">(enchant)</span></div>
+          <div class="ck-chips">
+            {{#each monsterStacks as |st|}}
+            <div class="ck-chip monster ck-add-mon {{#if st.disabled}}disabled{{/if}}" data-add="{{st.addId}}">
+              <img class="ck-chip-img" src="{{st.img}}" />
+              <span class="ck-chip-cat">{{st.label}}</span>
+              <span class="ck-chip-q ck-rank">R{{st.rank}}</span>
+              <span class="ck-qty">×{{st.count}}</span>
+            </div>
+            {{else}}<span class="ck-none">— none —</span>{{/each}}
+          </div>
+        </div>
+      </div>
+      {{/if}}
+      {{/unless}}
+
+      {{!-- ══════════ NAMING / RESULT ══════════ --}}
+      {{#if isNaming}}
+      {{#with result}}
+      <div class="ck-result">
+        <div class="ck-plate {{#if delicious}}delicious{{/if}}">
+          <div class="ck-ring"></div>
+          {{#if delicious}}<span class="ck-spark s1">✨</span><span class="ck-spark s2">✨</span><span class="ck-spark s3">⭐</span>{{/if}}
+          {{#if poison}}<div class="ck-dish">{{dishIcon}}</div>{{else}}<div class="ck-dish"><img class="ck-dish-img" src="{{dishImg}}" /></div>{{/if}}
+        </div>
+        <div class="ck-quality-badge {{qualityCls}}">{{qualityLabel}} · {{servings}} serving{{#unless (eq servings 1)}}s{{/unless}}</div>
+        {{#if poison}}
+        <div class="ck-poison-line">☠ {{effect}}</div>
+        {{else if effect}}
+        <div class="ck-effect-line">{{effect}}</div>
+        {{/if}}
+        <div class="ck-breakdown">
+          {{dice}} dice{{#if hasSauce}} <span class="op">+</span> sauce {{sauceMod}}{{/if}}
+          <span class="op">+</span> Cooking Lv. +{{cookingLevel}} <span class="op">=</span> <b class="ck-total">{{total}}</b>
+          <br><span class="op">÷ {{servings}} serving{{#unless (eq servings 1)}}s{{/unless}} =</span> <b class="{{perClass}}">{{per}}</b> per serving
+        </div>
+
+        <div class="ck-name-box">
+          <h3>Name your dish</h3>
+          <input type="text" class="ck-name-input" placeholder="e.g. {{prefix}}Hearty Camp Stew" value="{{prefix}}" {{#if served}}disabled{{/if}} />
+          {{#unless served}}
+          <div class="ck-cookbook">
+            <div class="ck-cb-label">Or pick from your cookbook</div>
+            <div class="ck-cb-chips">
+              {{#each ../cookbook as |n|}}<span class="ck-cb-chip" data-name="{{n}}">{{n}}</span>{{/each}}
+              {{#unless ../cookbook.length}}<span class="ck-none">— your cookbook is empty; name one to start it —</span>{{/unless}}
+            </div>
+          </div>
+          {{/unless}}
+          {{#if served}}<div class="ck-toast">✔ Served and added to inventory.</div>{{/if}}
+          <div class="ck-controls" style="justify-content:flex-start;margin-top:14px;">
+            {{#unless served}}<button type="button" class="ck-btn ck-btn-cyan ck-serve-btn">🎁 Serve &amp; Add to Inventory</button>{{/unless}}
+            <button type="button" class="ck-btn ck-btn-primary ck-again-btn">Cook Again</button>
+            {{#if served}}<button type="button" class="ck-btn ck-btn-ghost ck-done-btn">Done</button>{{/if}}
+          </div>
+        </div>
+      </div>
+      {{/with}}
+      {{/if}}
+
+    </div>
+  </div>
+</div>

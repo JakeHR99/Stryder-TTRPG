@@ -332,7 +332,7 @@ export async function resolveAspectAttack(item, actor, { speaker, rollMode, meth
 // ============================================================
 // 2. resolveFocusedAttack — Baked-in Focused Attack button
 // ============================================================
-export async function resolveFocusedAttack(actor, { speaker, rollMode, quick = false } = {}) {
+export async function resolveFocusedAttack(actor, { speaker, rollMode, quick = false, adjust = null } = {}) {
   const { sa, saName, saTemper, weaponWC, saForm, saRange, temperDisp } = getSAContext(actor);
   const augDoubleDmg = actor.getFlag?.('stryder', 'augDoubleExcellentDamage') ?? false;
 
@@ -372,7 +372,8 @@ export async function resolveFocusedAttack(actor, { speaker, rollMode, quick = f
     }
   } catch(_) {}
 
-  const bonus = getAttackBonus(actor, { saTemper, weaponWC, methodAtkMod: stillBreathsBonus + warlockAtkBonus + behemothBonus });
+  const adjustAtkBonus = (adjust && adjust.attackBonus) ? (Number(adjust.attackBonus) || 0) : 0;
+  const bonus = getAttackBonus(actor, { saTemper, weaponWC, methodAtkMod: stillBreathsBonus + warlockAtkBonus + behemothBonus + adjustAtkBonus });
   const formula = buildFormula(bonus.total);
   const roll = new Roll(formula);
   await roll.evaluate({ async: true });
@@ -380,7 +381,11 @@ export async function resolveFocusedAttack(actor, { speaker, rollMode, quick = f
   let { quality, multiplier } = resolveQuality(roll.total, actor, augDoubleDmg);
   ({ quality, multiplier } = await checkUnbreakableDowngrade(quality, multiplier, targetActor, speaker, rollMode));
 
-  const soulVal = actor.system.abilities?.Soul?.value ?? 0;
+  // Player Confirm/Adjust popup: optional base-damage override + flat bonus.
+  if (adjust && adjust.bonusDamage) brutalMods.damageMod += Number(adjust.bonusDamage) || 0;
+  const soulVal = (adjust && adjust.baseDamage != null && adjust.baseDamage !== '')
+    ? (Number(adjust.baseDamage) || 0)
+    : (actor.system.abilities?.Soul?.value ?? 0);
   let totalDamage = calcDamage(soulVal, multiplier, quality, brutalMods.damageMod);
   // Heavy temper damage bonus on Focused attacks
   if (saTemper === 'heavy') totalDamage += Math.max(0, weaponWC - 2);

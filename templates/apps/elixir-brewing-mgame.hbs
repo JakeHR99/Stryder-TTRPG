@@ -1,0 +1,113 @@
+<div class="bw-root">
+  <div class="bw-stars"></div>
+  <div class="bw-panel">
+    <div class="bw-titlebar">
+      <h1 class="bw-title">⚗ Elixir Brewing</h1>
+      <div class="bw-who">Alchemist <b>{{brewerName}}</b><span class="bw-badge">Brewing Lv. {{brewingLevel}}</span></div>
+    </div>
+
+    <div class="bw-stage">
+
+      {{!-- ══════════ SELECT ══════════ --}}
+      {{#if isSelect}}
+      <div class="bw-topbar">
+        <div class="bw-ctl">◆ Essence <b>{{essence}}</b></div>
+        <div class="bw-ctl">{{dicePool}} Alchemy Dice</div>
+      </div>
+      <div class="bw-sec-label">Choose a recipe you know</div>
+      {{#if hasRecipes}}
+      <div class="bw-recipes">
+        {{#each recipes as |r|}}
+        <div class="bw-recipe {{#unless r.affordable}}disabled{{/unless}}" data-recipe="{{r.id}}" style="--bw-rc:{{r.color}};">
+          <img class="bw-r-img" src="{{r.img}}" />
+          <div class="bw-r-info">
+            <div class="bw-r-name">{{r.name}}</div>
+            <div class="bw-r-band">Success <span class="succ">{{r.success}}</span> · Perfection <span class="perf">{{r.perfection}}</span></div>
+            <div class="bw-r-cost">◆ {{r.cost}} Essence{{#if r.offensive}} · <span class="bw-off">Offensive</span>{{/if}}</div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+      {{else}}
+      <div class="bw-empty">No elixir recipes found.<br><span class="bw-empty-sub">Run the elixir recipe populate macro (as GM) to fill the elixir compendium, then reopen.</span></div>
+      {{/if}}
+      {{/if}}
+
+      {{!-- ══════════ BREW ══════════ --}}
+      {{#if isBrew}}
+      <div class="bw-brew" style="--bw-rc:{{color}};">
+        <div class="bw-flask-stage">
+          <div class="bw-flask {{#if perfState}}perfect{{/if}} {{#if overState}}over{{/if}}">
+            <div class="bw-overflow">💥</div>
+            <div class="bw-cork"></div>
+            <div class="bw-neck"></div>
+            <div class="bw-body">
+              <div class="bw-brew-liquid" style="height:{{fillPct}}%;">
+                <span class="bw-bub" style="left:26%;animation-delay:.2s;"></span>
+                <span class="bw-bub" style="left:54%;animation-delay:1s;"></span>
+                <span class="bw-bub" style="left:72%;animation-delay:1.7s;"></span>
+              </div>
+              <div class="bw-shine"></div>
+            </div>
+          </div>
+          <div class="bw-flask-shadow"></div>
+        </div>
+
+        <div class="bw-right">
+          <div class="bw-head"><img class="bw-r-img sm" src="{{recipeImg}}" /><div class="bw-r-name">{{recipeName}}</div></div>
+          <div class="bw-sum-line"><span class="bw-sum" style="color:{{statusColor}};">{{sum}}</span>
+            <span class="bw-sum-of">/ {{perfection}} Perfection · Success {{success}}</span></div>
+          <div class="bw-status" style="color:{{statusColor}};">{{statusMsg}}</div>
+
+          <div class="bw-gauge">
+            <div class="bw-gauge-band" style="left:{{gaugeBandLeft}}%;width:{{gaugeBandWidth}}%;"></div>
+            <div class="bw-gauge-fill {{#if overState}}over{{/if}}" style="width:{{gaugeFill}}%;"></div>
+          </div>
+          <div class="bw-gauge-marks"><span>0</span><span class="succ">▲ Success {{success}}</span><span class="perf">Perfection {{perfection}} ▲</span></div>
+
+          <div class="bw-pool-row">Alchemy Dice: <b>{{pool}}</b> left
+            <span class="bw-pips">{{#each pips as |p|}}<span class="bw-pip {{#if p.spent}}spent{{/if}}"></span>{{/each}}</span></div>
+
+          <div class="bw-tray">
+            {{#if hasDice}}{{#each dice as |d|}}<div class="bw-die" data-remove="{{d.i}}">{{d.v}}<span class="bw-rm" title="Remove (costs 1 die)">✕</span></div>{{/each}}
+            {{else}}<span class="bw-tray-empty">No dice rolled yet — roll your first Alchemy Die.</span>{{/if}}
+          </div>
+
+          <div class="bw-actions">
+            <button type="button" class="bw-btn bw-btn-cyan bw-roll-btn" {{#unless canRoll}}disabled{{/unless}}>🎲 Roll a Die (−1)</button>
+            <button type="button" class="bw-btn bw-btn-gold bw-finish-btn" {{#unless canFinish}}disabled{{/unless}}>Finish Brewing</button>
+          </div>
+          <div class="bw-hint">Hover a die and click ✕ to remove it (also costs 1 die). Don't exceed Perfection.</div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{!-- ══════════ RESULT ══════════ --}}
+      {{#if isResult}}
+      {{#with res}}
+      <div class="bw-result" style="--bw-rc:{{../color}};">
+        <div class="bw-flask-stage" style="height:250px;">
+          <div class="bw-flask {{#if delicious}}perfect{{/if}}" style="animation:none;">
+            {{#if delicious}}<span class="bw-spark s1">✨</span><span class="bw-spark s2">✨</span><span class="bw-spark s3">⭐</span>{{/if}}
+            <div class="bw-cork"></div>
+            <div class="bw-neck"></div>
+            <div class="bw-body"><div class="bw-brew-liquid" style="height:{{resFill}}%;{{#if ruined}}background:#5a4a2a;filter:none;{{/if}}"></div><div class="bw-shine"></div></div>
+          </div>
+          <div class="bw-flask-shadow"></div>
+        </div>
+        <div class="bw-res-title {{cls}}">{{title}}</div>
+        <div class="bw-res-sub">{{sub}}</div>
+        {{#if vials}}<div class="bw-vials" style="--bw-rc:{{../color}};">{{#each ../vialArr}}<div class="bw-vial"></div>{{/each}}</div>{{/if}}
+        {{#if served}}<div class="bw-toast">✔ Bottled and added to inventory.</div>{{/if}}
+        <div class="bw-actions" style="justify-content:center;margin-top:14px;">
+          {{#unless served}}<button type="button" class="bw-btn bw-btn-cyan bw-serve-btn">🎁 Bottle &amp; Keep</button>{{/unless}}
+          <button type="button" class="bw-btn bw-btn-gold bw-again-btn">Brew Again</button>
+          {{#if served}}<button type="button" class="bw-btn bw-btn-ghost bw-done-btn">Done</button>{{/if}}
+        </div>
+      </div>
+      {{/with}}
+      {{/if}}
+
+    </div>
+  </div>
+</div>

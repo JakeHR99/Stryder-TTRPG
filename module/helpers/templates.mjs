@@ -34,6 +34,8 @@ export const preloadHandlebarsTemplates = async function () {
 	'systems/stryder/templates/combat/dialog-first-turn.hbs',
 	// Mini-games & challenges
 	'systems/stryder/templates/apps/fishing-minigame.hbs',
+	'systems/stryder/templates/apps/cooking-minigame.hbs',
+	'systems/stryder/templates/apps/elixir-brewing-mgame.hbs',
 	'systems/stryder/templates/apps/challenges-hub.hbs',
 	'systems/stryder/templates/sidebar/challenges-tab.hbs',
   ]);

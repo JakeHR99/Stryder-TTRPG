@@ -19340,6 +19340,7 @@ li.chat-message.sty-grp-end {
   text-shadow: var(--sty-cyan-glow);
 }
 /* ===== End of Party shared inventory region ===== */
+
 /* ===== EQUIPMENT LOADOUT — CSS silhouette + typed slots ===== */
 .jrpg-inv-body {
   display: flex;

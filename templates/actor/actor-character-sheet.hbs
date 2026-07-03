@@ -156,7 +156,7 @@
 				<i class="fas fa-cog"></i>
 			</button>
 			<div class="jrpg-portrait-frame">
-				<img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+				<img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" style="transform: translate({{portraitImgX}}%, {{portraitImgY}}%) scale({{portraitImgScaleCss}}) !important; transform-origin: center 35% !important;" />
 			</div>
 			<div class="jrpg-player-card-wrap">
 				<div class="jrpg-player-card">
@@ -165,7 +165,15 @@
 							<img src="{{portraitSrc}}" class="jrpg-player-portrait-img" data-portrait-field="{{portraitEdit}}" title="{{portraitLabel}} — click to set the image" />
 						</div>
 						<button type="button" class="jrpg-portrait-toggle" data-action="cyclePortrait" title="Portrait source: {{portraitLabel}}. Click to cycle Token / Character / Face Art."><i class="fas fa-sync-alt"></i></button>
+							{{#if bioIsEditor}}<button type="button" class="jrpg-portrait-adjust-toggle" title="Frame the character art (move / resize)" style="position:absolute;bottom:-22px;right:0;width:20px;height:20px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(8,14,35,0.85);border:1px solid rgba(100,180,255,0.5);border-radius:4px;color:rgba(160,205,255,0.95);cursor:pointer;font-size:10px;z-index:16;pointer-events:auto;"><i class="fas fa-sliders"></i></button>{{/if}}
 						<span class="jrpg-portrait-mode-label">{{portraitLabelShort}}</span>
+							{{#if bioIsEditor}}
+							<div class="jrpg-portrait-adjust" title="Frame the character art" style="display:none;position:fixed;flex-direction:column;gap:4px;width:132px;padding:8px;background:rgba(8,14,35,0.97);border:1px solid rgba(100,180,255,0.45);border-radius:6px;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,0.6);pointer-events:auto;">
+								<label class="jrpg-portrait-slider" style="display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(150,185,235,0.8);"><span class="jpa-ic">↔</span><input type="range" class="portrait-xpos" min="-60" max="60" step="1" value="{{portraitImgX}}" title="Move horizontally" style="flex:1;min-width:0;height:12px;accent-color:#7dd4f0;" /></label>
+								<label class="jrpg-portrait-slider" style="display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(150,185,235,0.8);"><span class="jpa-ic">↕</span><input type="range" class="portrait-ypos" min="-60" max="60" step="1" value="{{portraitImgY}}" title="Move vertically" style="flex:1;min-width:0;height:12px;accent-color:#7dd4f0;" /></label>
+								<label class="jrpg-portrait-slider" style="display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(150,185,235,0.8);"><span class="jpa-ic">⤢</span><input type="range" class="portrait-scale" min="50" max="250" step="5" value="{{portraitImgScale}}" title="Resize" style="flex:1;min-width:0;height:12px;accent-color:#7dd4f0;" /></label>
+							</div>
+							{{/if}}
 					</div>
 					<div class="jrpg-player-info">
 						<div class="jrpg-player-name">
@@ -310,7 +318,10 @@
 								<div class="jrpg-res-compact-inputs">
 									<input type="number" name="system.mana.value" value="{{system.mana.value}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
 									<span class="jrpg-char-divider">/</span>
-									<input type="number" name="system.mana.max" value="{{system.mana.max}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
+									<span class="jrpg-res-max-display mp-label" title="Base max MP (by level)">{{system.mana.max}}</span>
+									<span class="jrpg-res-bonus-sep">+</span>
+									<input type="number" name="system.mana.bonus" value="{{system.mana.bonus}}" data-dtype="Number" class="jrpg-char-input jrpg-res-bonus-input" placeholder="0" title="Bonus max MP" min="0" />
+									<button type="button" class="jrpg-reset-btn resource-button" data-action="resetMpMax" title="Remove bonus MP">↺</button>
 								</div>
 								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar mp-fill" style="width:{{mpPct}}%"></div></div>
 							</div>

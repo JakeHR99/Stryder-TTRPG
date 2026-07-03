@@ -161,6 +161,38 @@
 
 	</div>
 
+	{{!-- MOVEMENT & EXPERTISE --}}
+	<div class="jrpg-explore-col jrpg-movement-section" style="margin-top:8px;">
+		<div class="jrpg-explore-col-header">Movement &amp; Expertise</div>
+		<div class="jrpg-move-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
+			<div class="jrpg-move-item" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(12,22,42,0.4);border:1px solid rgba(120,170,235,0.18);border-radius:6px;padding:7px 4px;">
+				<span class="jrpg-explore-label" style="font-size:11px;">Running</span>
+				<input type="number" name="system.attributes.move.running.value" value="{{system.attributes.move.running.value}}" data-dtype="Number" style="width:46px;text-align:center;background:rgba(6,14,28,0.7);border:1px solid rgba(120,170,235,0.3);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:3px;" />
+				<label style="display:flex;align-items:center;gap:4px;font-size:10px;color:#8aa6cc;cursor:pointer;" title="Movement Expertise"><input type="checkbox" name="system.attributes.move.running.expertise" {{checked system.attributes.move.running.expertise}} /> Expertise</label>
+			</div>
+			<div class="jrpg-move-item" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(12,22,42,0.4);border:1px solid rgba(120,170,235,0.18);border-radius:6px;padding:7px 4px;">
+				<span class="jrpg-explore-label" style="font-size:11px;">Climbing</span>
+				<input type="number" name="system.attributes.move.climbing.value" value="{{system.attributes.move.climbing.value}}" data-dtype="Number" style="width:46px;text-align:center;background:rgba(6,14,28,0.7);border:1px solid rgba(120,170,235,0.3);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:3px;" />
+				<label style="display:flex;align-items:center;gap:4px;font-size:10px;color:#8aa6cc;cursor:pointer;" title="Movement Expertise"><input type="checkbox" name="system.attributes.move.climbing.expertise" {{checked system.attributes.move.climbing.expertise}} /> Expertise</label>
+			</div>
+			<div class="jrpg-move-item" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(12,22,42,0.4);border:1px solid rgba(120,170,235,0.18);border-radius:6px;padding:7px 4px;">
+				<span class="jrpg-explore-label" style="font-size:11px;">Crawling</span>
+				<input type="number" name="system.attributes.move.crawling.value" value="{{system.attributes.move.crawling.value}}" data-dtype="Number" style="width:46px;text-align:center;background:rgba(6,14,28,0.7);border:1px solid rgba(120,170,235,0.3);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:3px;" />
+				<label style="display:flex;align-items:center;gap:4px;font-size:10px;color:#8aa6cc;cursor:pointer;" title="Movement Expertise"><input type="checkbox" name="system.attributes.move.crawling.expertise" {{checked system.attributes.move.crawling.expertise}} /> Expertise</label>
+			</div>
+			<div class="jrpg-move-item" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(12,22,42,0.4);border:1px solid rgba(120,170,235,0.18);border-radius:6px;padding:7px 4px;">
+				<span class="jrpg-explore-label" style="font-size:11px;">Marching</span>
+				<input type="number" name="system.attributes.move.marching.value" value="{{system.attributes.move.marching.value}}" data-dtype="Number" style="width:46px;text-align:center;background:rgba(6,14,28,0.7);border:1px solid rgba(120,170,235,0.3);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:3px;" />
+				<label style="display:flex;align-items:center;gap:4px;font-size:10px;color:#8aa6cc;cursor:pointer;" title="Movement Expertise"><input type="checkbox" name="system.attributes.move.marching.expertise" {{checked system.attributes.move.marching.expertise}} /> Expertise</label>
+			</div>
+			<div class="jrpg-move-item" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(12,22,42,0.4);border:1px solid rgba(120,170,235,0.18);border-radius:6px;padding:7px 4px;">
+				<span class="jrpg-explore-label" style="font-size:11px;">Swimming</span>
+				<input type="number" name="system.attributes.move.swimming.value" value="{{system.attributes.move.swimming.value}}" data-dtype="Number" style="width:46px;text-align:center;background:rgba(6,14,28,0.7);border:1px solid rgba(120,170,235,0.3);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:3px;" />
+				<label style="display:flex;align-items:center;gap:4px;font-size:10px;color:#8aa6cc;cursor:pointer;" title="Movement Expertise"><input type="checkbox" name="system.attributes.move.swimming.expertise" {{checked system.attributes.move.swimming.expertise}} /> Expertise</label>
+			</div>
+		</div>
+	</div>
+
 	{{!-- CHALLENGES --}}
 	<div class="jrpg-explore-col jrpg-challenges-section">
 		<div class="jrpg-explore-col-header">Challenges</div>

@@ -103,4 +103,12 @@
   </div>
   </div>
 
+  {{!-- ── Essence currency (brewing) — placeholder tracker; move to a real currency bar later ── --}}
+  <div class="jrpg-inv-currency" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:2px;padding:8px 14px;background:rgba(8,14,35,0.6);border:1px solid rgba(60,90,160,0.25);border-radius:6px;box-sizing:border-box;">
+    <span style="width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 36% 32%, #bfe0ff, #2f7ff0 62%, #184fb0);box-shadow:0 0 8px rgba(90,160,255,0.6);flex-shrink:0;"></span>
+    <span style="font-family:'Rajdhani',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#a9b6d6;">Essence</span>
+    <input type="number" name="system.essence" value="{{system.essence}}" data-dtype="Number" min="0" placeholder="0"
+      style="width:84px;text-align:center;background:rgba(6,14,28,0.8);border:1px solid rgba(120,170,235,0.35);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;padding:4px 6px;" />
+  </div>
+
 </div>

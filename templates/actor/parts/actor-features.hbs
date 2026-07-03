@@ -1,5 +1,17 @@
 {{!-- Battle Tab --}}
-<div class="jrpg-battle-wrap">
+<div class="jrpg-battle-wrap" style="position:relative;">
+
+  {{#if bioIsEditor}}
+  <button type="button" class="jrpg-battle-gear-btn" title="Combat adjustments — Movement, Resistance, Damage Reduction" style="position:absolute;top:6px;right:6px;width:24px;height:24px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(8,14,35,0.85);border:1px solid rgba(120,170,235,0.4);border-radius:5px;color:rgba(160,205,255,0.95);cursor:pointer;font-size:12px;z-index:25;pointer-events:auto;"><i class="fas fa-cog"></i></button>
+  <div class="jrpg-battle-gear-pop" style="display:none;position:fixed;flex-direction:column;gap:7px;width:214px;padding:12px;background:rgba(8,14,35,0.97);border:1px solid rgba(120,170,235,0.45);border-radius:8px;z-index:10000;box-shadow:0 8px 22px rgba(0,0,0,0.6);pointer-events:auto;">
+    <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#f0d488;margin-bottom:2px;">Combat Adjustments</div>
+    <label style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#cfe0f5;">Movement <input type="number" class="bhud-ovr" data-field="system.attributes.move.running.value" value="{{system.attributes.move.running.value}}" data-dtype="Number" style="width:64px;text-align:center;background:rgba(6,14,28,0.8);border:1px solid rgba(120,170,235,0.35);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:4px;" /></label>
+    <label style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#cfe0f5;">Physical Resist <input type="number" class="bhud-ovr" data-field="system.physical_resist_mod" value="{{system.physical_resist_mod}}" data-dtype="Number" style="width:64px;text-align:center;background:rgba(6,14,28,0.8);border:1px solid rgba(120,170,235,0.35);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:4px;" /></label>
+    <label style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#cfe0f5;">Magykal Resist <input type="number" class="bhud-ovr" data-field="system.magykal_resist_mod" value="{{system.magykal_resist_mod}}" data-dtype="Number" style="width:64px;text-align:center;background:rgba(6,14,28,0.8);border:1px solid rgba(120,170,235,0.35);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:4px;" /></label>
+    <label style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#cfe0f5;">Physical Reduction <input type="number" class="bhud-ovr" data-field="system.physical_reduction" value="{{system.physical_reduction}}" data-dtype="Number" style="width:64px;text-align:center;background:rgba(6,14,28,0.8);border:1px solid rgba(120,170,235,0.35);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:4px;" /></label>
+    <label style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#cfe0f5;">Magykal Reduction <input type="number" class="bhud-ovr" data-field="system.magykal_reduction" value="{{system.magykal_reduction}}" data-dtype="Number" style="width:64px;text-align:center;background:rgba(6,14,28,0.8);border:1px solid rgba(120,170,235,0.35);border-radius:4px;color:#cfe0f5;font-family:'Rajdhani',sans-serif;font-weight:700;padding:4px;" /></label>
+  </div>
+  {{/if}}
 
   {{!-- TOP RESOURCE STRIP --}}
   <div class="jrpg-battle-top">

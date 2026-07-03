@@ -1999,6 +1999,16 @@ export class StryderActorSheet extends ActorSheet {
       context.equipImgY = Math.max(-40, Math.min(60,
         Number(this.actor.flags?.stryder?.equipImgY) || 0));
 
+      // Home player-card portrait framing — player-adjustable X/Y position + scale
+      // within the diamond frame. Default scale 110 preserves the baseline scale(1.1).
+      context.portraitImgScale = Math.max(50, Math.min(250,
+        Number(this.actor.flags?.stryder?.portraitImgScale) || 150));
+      context.portraitImgScaleCss = context.portraitImgScale / 100;
+      context.portraitImgX = Math.max(-60, Math.min(60,
+        Number(this.actor.flags?.stryder?.portraitImgX) || 0));
+      context.portraitImgY = Math.max(-60, Math.min(60,
+        Number(this.actor.flags?.stryder?.portraitImgY) || 0));
+
       // Inventory grid context (all item types → 44-slot visual grid)
       context.inventoryGrid = this._buildInventoryGrid(context.items || []);
       // Only count types that actually appear in the grid — same set as _buildInventoryGrid
@@ -2578,7 +2588,8 @@ export class StryderActorSheet extends ActorSheet {
       - bloodlossReduction - sacrificeReduction - burningReduction - wytchRiseReduction
     );
     const maxStamina = (STRYDER_STAMINA_BY_LEVEL[clamped] ?? 3) + augStaminaBonus;
-    const maxMana    = STRYDER_MANA_BY_LEVEL[clamped]    ?? 4;
+    const manaBonus  = actorData.system.mana?.bonus ?? 0;
+    const maxMana    = (STRYDER_MANA_BY_LEVEL[clamped] ?? 4) + manaBonus;
 
     return { maxHealth, maxStamina, maxMana };
   }
@@ -4787,6 +4798,36 @@ export class StryderActorSheet extends ActorSheet {
 			  const rollMode = game.settings.get('core', 'rollMode');
 			  const { resolveFocusedAttack, resolveTwinAttack } = await import('../helpers/aspect-attack.mjs');
 
+			  // Confirm-or-Adjust popup — tweak base damage and/or add a flat bonus before rolling.
+			  const defaultBase = actor.system.abilities?.Soul?.value ?? 0;
+			  const adjust = await new Promise((resolve) => {
+				new Dialog({
+				  title: 'Focused Attack',
+				  content: `<div style="font-family:'Rajdhani',sans-serif;color:#cfe0f5;padding:6px 2px;">
+					<p style="margin:0 0 10px;font-size:12px;color:#8aa6cc;">Confirm the attack, or adjust the roll, base damage, and a bonus.</p>
+					<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
+					  <label>Attack Roll +</label>
+					  <input type="number" id="fa-atk" value="0" style="width:72px;text-align:center;" />
+					</div>
+					<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
+					  <label>Base Damage</label>
+					  <input type="number" id="fa-base" value="${defaultBase}" style="width:72px;text-align:center;" />
+					</div>
+					<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+					  <label>Bonus Damage</label>
+					  <input type="number" id="fa-bonus" value="0" style="width:72px;text-align:center;" />
+					</div>
+				  </div>`,
+				  buttons: {
+					confirm: { icon: '<i class="fas fa-check"></i>', label: 'Confirm', callback: () => resolve({ baseDamage: null, bonusDamage: 0, attackBonus: 0 }) },
+					adjust:  { icon: '<i class="fas fa-sliders-h"></i>', label: 'Attack (Adjusted)', callback: (dlg) => resolve({ baseDamage: Number(dlg.find('#fa-base').val()), bonusDamage: Number(dlg.find('#fa-bonus').val()) || 0, attackBonus: Number(dlg.find('#fa-atk').val()) || 0 }) },
+				  },
+				  default: 'confirm',
+				  close: () => resolve(undefined),
+				}, { classes: ['dialog','stryder-stat-popup'], width: 320 }).render(true);
+			  });
+			  if (adjust === undefined) return;   // cancelled
+
 			  // Check if Dual Wield is active → ask for twin attack
 			  const activeBattleForm = actor.getFlag(SYSTEM_ID, 'activeBattleForm');
 			  const isDualWield = activeBattleForm === 'dual_wield' && actor.system.soul_armament?.form?.dual_wield;
@@ -4803,7 +4844,7 @@ export class StryderActorSheet extends ActorSheet {
 				}
 			  }
 
-			  return await resolveFocusedAttack(actor, { speaker, rollMode });
+			  return await resolveFocusedAttack(actor, { speaker, rollMode, adjust });
 			}
 
 			case 'battleEngage': {
@@ -5033,6 +5074,12 @@ export class StryderActorSheet extends ActorSheet {
 		  case 'resetHpMax': {
 			await this.actor.update({ 'system.health.bonus': 0 });
 			ui.notifications.info(`${this.actor.name}: Bonus HP removed.`);
+			return;
+		  }
+
+		  case 'resetMpMax': {
+			await this.actor.update({ 'system.mana.bonus': 0 });
+			ui.notifications.info(`${this.actor.name}: Bonus MP removed.`);
 			return;
 		  }
 
@@ -5611,6 +5658,88 @@ export class StryderActorSheet extends ActorSheet {
       _equipPanel.on('change', '.equip-figure-ypos', async (ev) => {
         await this.actor.setFlag('stryder', 'equipImgY', Number(ev.currentTarget.value));
       });
+
+      // Home player-card portrait framing (X / Y / scale). The card has
+      // overflow:hidden + backdrop-filter (and .jrpg-center a transform), which
+      // clip the popover and break position:fixed — so relocate the popover to
+      // <body> and wire its controls directly (delegation won't reach it there).
+      document.querySelectorAll('body > .stryder-portrait-pop').forEach(el => el.remove()); // clear stale from prior renders
+      const _ppanel = html.find('.jrpg-portrait-adjust')[0];
+      if (_ppanel) {
+        _ppanel.classList.add('stryder-portrait-pop');
+        document.body.appendChild(_ppanel);
+        const _xEl = _ppanel.querySelector('.portrait-xpos');
+        const _yEl = _ppanel.querySelector('.portrait-ypos');
+        const _sEl = _ppanel.querySelector('.portrait-scale');
+        const _applyPortrait = () => {
+          const pimg = html.find('.profile-img')[0];
+          if (!pimg) return;
+          const s = Number(_sEl?.value ?? 150) / 100;
+          const x = Number(_xEl?.value ?? 0);
+          const y = Number(_yEl?.value ?? 0);
+          pimg.style.setProperty('transform', `translate(${x}%, ${y}%) scale(${s})`, 'important');
+        };
+        [_xEl, _yEl, _sEl].forEach(el => el && el.addEventListener('input', _applyPortrait));
+        _xEl?.addEventListener('change', () => this.actor.update({ 'flags.stryder.portraitImgX': Number(_xEl.value) }, { render: false }));
+        _yEl?.addEventListener('change', () => this.actor.update({ 'flags.stryder.portraitImgY': Number(_yEl.value) }, { render: false }));
+        _sEl?.addEventListener('change', () => this.actor.update({ 'flags.stryder.portraitImgScale': Number(_sEl.value) }, { render: false }));
+      }
+      // Small button beneath the swap icon toggles the framing-sliders popover.
+      html.on('click', '.jrpg-portrait-adjust-toggle', (ev) => {
+        ev.preventDefault(); ev.stopPropagation();
+        if (!_ppanel) return;
+        if (_ppanel.style.display === 'flex') { _ppanel.style.display = 'none'; return; }
+        const btn = ev.currentTarget;
+        const r = btn.getBoundingClientRect();
+        const pw = 150, ph = 100;
+        let left = r.right + 6, top = r.top - 4;
+        if (left + pw > window.innerWidth)  left = r.left - pw - 6;
+        if (top + ph > window.innerHeight)  top = window.innerHeight - ph - 8;
+        _ppanel.style.left = `${Math.round(Math.max(4, left))}px`;
+        _ppanel.style.top  = `${Math.round(Math.max(4, top))}px`;
+        _ppanel.style.display = 'flex';
+        const _away = (e) => {
+          if (_ppanel.contains(e.target) || btn.contains(e.target)) return;
+          _ppanel.style.display = 'none';
+          document.removeEventListener('mousedown', _away, true);
+        };
+        setTimeout(() => document.addEventListener('mousedown', _away, true), 0);
+      });
+
+      // Battle-tab gear menu — combat override boxes (Movement / Resist / Reduction).
+      // Relocate to <body> (same clip/backdrop-filter reasons as the portrait popover)
+      // and own the saves directly since the inputs then leave the sheet's <form>.
+      document.querySelectorAll('body > .stryder-gear-pop').forEach(el => el.remove());
+      const _gpop = html.find('.jrpg-battle-gear-pop')[0];
+      if (_gpop) {
+        _gpop.classList.add('stryder-gear-pop');
+        document.body.appendChild(_gpop);
+        _gpop.querySelectorAll('.bhud-ovr[data-field]').forEach(inp => {
+          inp.addEventListener('change', () => {
+            this.actor.update({ [inp.dataset.field]: Number(inp.value) || 0 }, { render: false });
+          });
+        });
+      }
+      html.on('click', '.jrpg-battle-gear-btn', (ev) => {
+        ev.preventDefault(); ev.stopPropagation();
+        if (!_gpop) return;
+        if (_gpop.style.display === 'flex') { _gpop.style.display = 'none'; return; }
+        const btn = ev.currentTarget;
+        const r = btn.getBoundingClientRect();
+        const pw = 226, ph = 230;
+        let left = r.right - pw, top = r.bottom + 6;
+        if (top + ph > window.innerHeight) top = r.top - ph - 6;
+        _gpop.style.left = `${Math.round(Math.max(4, left))}px`;
+        _gpop.style.top  = `${Math.round(Math.max(4, top))}px`;
+        _gpop.style.display = 'flex';
+        const _gaway = (e) => {
+          if (_gpop.contains(e.target) || btn.contains(e.target)) return;
+          _gpop.style.display = 'none';
+          document.removeEventListener('mousedown', _gaway, true);
+        };
+        setTimeout(() => document.addEventListener('mousedown', _gaway, true), 0);
+      });
+
       // Worn pieces drag back to the grid (the grid drop clears the slot flag).
       html.find('.equip-slot.equip-filled[data-item-id]').each((i, el) => {
         el.setAttribute('draggable', 'true');
