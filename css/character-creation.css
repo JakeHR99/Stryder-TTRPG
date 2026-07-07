@@ -1,0 +1,445 @@
+/* =====================================================================
+   Stryder — Character Creation (protocharacter first-run)
+   Holographic interactive cards, adapted from Simey's Pokémon-card work
+   (https://codepen.io/simeydotme). Scoped under .sty-cc, CSS nesting
+   flattened, external textures dropped so it renders offline in Foundry.
+
+   Two views, toggled by [data-view] on the root:
+     browse  — big card carousel (1–2 cards visible), click to inspect
+     reveal  — the chosen card enlarged + its Folk details, Choose / Back
+   ===================================================================== */
+
+.sty-cc {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-from-center: 0;
+  --pointer-from-top: 0.5;
+  --pointer-from-left: 0.5;
+  --card-opacity: 0;
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --background-x: 50%;
+  --background-y: 50%;
+
+  --sunpillar-1: hsl(2, 100%, 73%);
+  --sunpillar-2: hsl(53, 100%, 69%);
+  --sunpillar-3: hsl(93, 100%, 69%);
+  --sunpillar-4: hsl(176, 100%, 76%);
+  --sunpillar-5: hsl(228, 100%, 74%);
+  --sunpillar-6: hsl(283, 100%, 73%);
+
+  --cc-gold: #e8c66b;
+  --cc-cyan: #4fd6e6;
+  --cc-ink: #dfe6f5;
+  --cc-muted: #8b93ad;
+  --cc-backing: #090d18;
+  --card-radius: 5.5% / 4%;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  max-height: 96vh;
+  min-height: 520px;
+  padding: 16px 20px 18px;
+  overflow: hidden;
+  color: var(--cc-ink);
+  background: radial-gradient(120% 90% at 50% -10%, #15213f 0%, #0a0f1e 45%, #05070f 100%);
+  font-family: "Signika", "Segoe UI", sans-serif;
+}
+
+.sty-cc-bg {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  filter: blur(60px) saturate(1.4);
+  background:
+    radial-gradient(35% 45% at 30% 30%, #00ffaa33 0%, #073aff00 70%),
+    radial-gradient(40% 45% at 75% 25%, #00c1ff33 0%, #073aff00 75%),
+    conic-gradient(from 124deg at 50% 60%, #c137ff22 0%, #07c6ff22 40%, #07c6ff22 60%, #c137ff22 100%);
+  animation: sty-cc-drift 18s ease-in-out infinite alternate;
+}
+@keyframes sty-cc-drift {
+  0%   { transform: translate3d(-3%, -2%, 0) scale(1.05); }
+  100% { transform: translate3d(3%, 2%, 0) scale(1.15); }
+}
+
+/* ---------- header ---------- */
+.sty-cc-header { position: relative; z-index: 2; text-align: center; flex: 0 0 auto; }
+.sty-cc-steps {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 0;
+}
+.sty-cc-steps li {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  border-radius: 50%;
+  color: var(--cc-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+.sty-cc-steps li.is-done { color: #0a0f1e; background: var(--cc-cyan); border-color: var(--cc-cyan); }
+.sty-cc-steps li.is-current {
+  color: #0a0f1e;
+  background: var(--cc-gold);
+  border-color: var(--cc-gold);
+  box-shadow: 0 0 14px -2px var(--cc-gold);
+}
+.sty-cc-title {
+  margin: 2px 0 0;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  border: 0;
+  background: linear-gradient(to bottom, #ffffff, #aab6dd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sty-cc-subtitle { margin: 2px 0 0; color: var(--cc-muted); font-size: 13px; }
+
+/* ============================================================
+   CARD (shared by browse + reveal)
+   ============================================================ */
+.sty-cc-card {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  transition: transform 0.8s ease, box-shadow 0.4s ease;
+  transform: translate3d(0, 0, 0.1px) rotateX(0deg) rotateY(0deg);
+  box-shadow: rgba(0, 0, 0, 0.8)
+    calc((var(--pointer-from-left) * 10px) - 3px)
+    calc((var(--pointer-from-top) * 20px) - 6px) 22px -6px;
+  background-color: var(--cc-backing);
+}
+.sty-cc-card.active {
+  transition: none;
+  transform: translate3d(0, 0, 0.1px) rotateX(var(--rotate-y)) rotateY(var(--rotate-x));
+}
+.sty-cc-card > * {
+  grid-area: 1 / -1;
+  border-radius: var(--card-radius);
+  pointer-events: none;
+}
+
+.sty-cc-inside { z-index: 0; background: var(--cc-backing); }
+
+/* art — full-bleed illustration on an opaque backing (folk PNGs are
+   transparent; the backing stops the holo gradient bleeding through) */
+.sty-cc-art { z-index: 1; overflow: hidden; background: var(--cc-backing); }
+.sty-cc-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: inherit;
+}
+.sty-cc-art.is-contain img { object-fit: contain; }
+
+/* holographic shine sheet */
+.sty-cc-shine {
+  --space: 5%;
+  --angle: -45deg;
+  z-index: 3;
+  overflow: hidden;
+  mix-blend-mode: color-dodge;
+  opacity: 0.4;
+  filter: brightness(0.66) contrast(1.33) saturate(0.45);
+  transition: filter 0.6s ease, opacity 0.4s ease;
+  background-size: 500% 500%, 300% 300%, 200% 200%;
+  background-position: 0% var(--background-y), var(--background-x) var(--background-y), center;
+  background-blend-mode: color, hard-light;
+  background-image:
+    repeating-linear-gradient(0deg,
+      var(--sunpillar-1) calc(var(--space) * 1),
+      var(--sunpillar-2) calc(var(--space) * 2),
+      var(--sunpillar-3) calc(var(--space) * 3),
+      var(--sunpillar-4) calc(var(--space) * 4),
+      var(--sunpillar-5) calc(var(--space) * 5),
+      var(--sunpillar-6) calc(var(--space) * 6),
+      var(--sunpillar-1) calc(var(--space) * 7)),
+    repeating-linear-gradient(var(--angle),
+      #0e152e 0%, hsl(180, 10%, 60%) 3.8%, hsl(180, 29%, 66%) 4.5%,
+      hsl(180, 10%, 60%) 5.2%, #0e152e 10%, #0e152e 12%),
+    radial-gradient(farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(0, 0%, 0%, 0.1) 12%, hsla(0, 0%, 0%, 0.15) 20%, hsla(0, 0%, 0%, 0.25) 120%);
+}
+.sty-cc-holo:hover .sty-cc-shine,
+.sty-cc-holo.is-holo .sty-cc-shine {
+  opacity: 0.8;
+  filter: brightness(0.85) contrast(1.5) saturate(0.6);
+}
+
+/* glare */
+.sty-cc-glare {
+  z-index: 4;
+  overflow: hidden;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  filter: brightness(0.8) contrast(1.2);
+  transition: opacity 0.4s ease;
+  background-image:
+    radial-gradient(farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsl(248, 25%, 80%) 12%, hsla(207, 40%, 30%, 0.8) 90%);
+}
+.sty-cc-holo:hover .sty-cc-glare,
+.sty-cc-holo.is-holo .sty-cc-glare { opacity: 0.85; }
+
+/* name plate */
+.sty-cc-cap {
+  z-index: 5;
+  align-self: end;
+  text-align: center;
+  padding: 1.8em 0.6em 0.75em;
+  background: linear-gradient(to top,
+    rgba(2, 4, 10, 0.92) 10%, rgba(2, 4, 10, 0.55) 55%, rgba(2, 4, 10, 0) 100%);
+}
+.sty-cc-cap h3 {
+  margin: 0 0 0.4em;
+  font-size: 1.15em;
+  font-weight: 700;
+  border: 0;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+.sty-cc-cap p {
+  display: inline-block;
+  margin: 0;
+  padding: 0.22em 1em;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #cdd6ea;
+  border-radius: 2em;
+  background: rgba(20, 24, 40, 0.9);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.sty-cc-carddesc { display: none; }
+
+/* the glow halo behind a holo element */
+.sty-cc-holo { position: relative; touch-action: none; }
+.sty-cc-holo::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  z-index: -1;
+  transition: filter 0.5s ease, transform 0.5s ease, opacity 0.4s ease;
+  filter: contrast(2) saturate(2) blur(28px);
+  transform: scale(0.82);
+  opacity: var(--card-opacity);
+  background-size: 100% 100%;
+  background-position: 0 0, 0 0, 50% 50%, 0 0;
+  background-image:
+    radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),
+      hsla(266, 100%, 90%, var(--card-opacity)) 4%,
+      hsla(266, 50%, 80%, calc(var(--card-opacity) * 0.75)) 12%,
+      hsla(266, 25%, 70%, calc(var(--card-opacity) * 0.5)) 50%,
+      hsla(266, 0%, 60%, 0) 100%),
+    radial-gradient(35% 52% at 55% 20%, #00ffaac4 0%, #073aff00 100%),
+    radial-gradient(100% 100% at 50% 50%, #00c1ffff 1%, #073aff00 76%),
+    conic-gradient(from 124deg at 50% 50%, #c137ffff 0%, #07c6ffff 40%, #07c6ffff 60%, #c137ffff 100%);
+}
+.sty-cc-holo:hover, .sty-cc-holo.is-holo { --card-opacity: 1; }
+
+/* ============================================================
+   BROWSE VIEW — carousel
+   ============================================================ */
+.sty-cc-stage {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: safe center;
+  gap: 34px;
+  padding: 20px 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  perspective: 1400px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.sty-cc-cardwrap {
+  flex: 0 0 auto;
+  height: min(60vh, 452px);
+  aspect-ratio: 0.718;
+  perspective: 700px;
+  scroll-snap-align: center;
+  cursor: pointer;
+  transform: scale(1);
+  transition: transform 0.4s ease;
+}
+.sty-cc-cardwrap:hover { transform: scale(1.04); z-index: 5; }
+
+/* ============================================================
+   REVEAL VIEW — chosen card + details
+   ============================================================ */
+.sty-cc-reveal {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  padding: 14px 10px;
+}
+.sty-cc-reveal-card {
+  flex: 0 0 auto;
+  height: min(66vh, 476px);
+  aspect-ratio: 0.718;
+  perspective: 800px;
+}
+.sty-cc-reveal-info {
+  flex: 0 1 440px;
+  align-self: stretch;
+  max-height: 76vh;
+  overflow-y: auto;
+  padding: 20px 22px;
+  border-radius: 14px;
+  border: 1px solid rgba(79, 214, 230, 0.2);
+  background: rgba(8, 13, 26, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.sty-cc-reveal-title {
+  margin: 0 0 4px;
+  font-size: 26px;
+  border: 0;
+  color: var(--cc-gold);
+}
+.sty-cc-reveal-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 11px;
+  color: var(--cc-cyan);
+  margin-bottom: 12px;
+}
+.sty-cc-reveal-desc { font-size: 14px; line-height: 1.55; }
+.sty-cc-reveal-desc p { margin: 0 0 8px; }
+
+/* ---------- inline allocator (choice folk) ---------- */
+.sty-cc-reveal-alloc { margin-top: 14px; display: flex; flex-direction: column; gap: 16px; }
+.sty-cc-alloc-note {
+  font-size: 12.5px; color: var(--cc-muted); font-style: italic;
+  padding: 10px 12px; border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.03);
+}
+.sty-cc-alloc-block { display: flex; flex-direction: column; gap: 8px; }
+.sty-cc-alloc-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--cc-cyan); display: flex; align-items: baseline; gap: 8px;
+}
+.sty-cc-alloc-remain {
+  font-size: 11px; letter-spacing: normal; text-transform: none;
+  color: var(--cc-gold); font-weight: 600;
+}
+.sty-cc-alloc-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.sty-cc-alloc-pick {
+  appearance: none; cursor: pointer;
+  padding: 0.4em 0.9em; font-size: 13px; color: var(--cc-ink);
+  border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04); transition: all 0.15s ease;
+}
+.sty-cc-alloc-pick:hover { background: rgba(255, 255, 255, 0.1); }
+.sty-cc-alloc-pick.is-sel {
+  color: #06121a; border-color: transparent; font-weight: 600;
+  background: linear-gradient(135deg, var(--cc-cyan), #7ef0d0);
+}
+.sty-cc-alloc-opts.is-stacked { flex-direction: column; }
+.sty-cc-alloc-opts.is-stacked .sty-cc-alloc-pick {
+  width: 100%; text-align: left; display: flex; flex-direction: column; gap: 2px;
+}
+.sty-cc-pick-name { font-weight: 600; font-size: 13px; }
+.sty-cc-pick-desc { font-size: 11px; line-height: 1.35; color: var(--cc-muted); }
+.sty-cc-alloc-pick.is-sel .sty-cc-pick-desc { color: rgba(6, 18, 26, 0.78); }
+.sty-cc-alloc-steppers { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+.sty-cc-alloc-stepper { display: flex; align-items: center; gap: 8px; }
+.sty-cc-alloc-stepper label { flex: 1; font-size: 13px; color: var(--cc-ink); }
+.sty-cc-step {
+  appearance: none; cursor: pointer; width: 24px; height: 24px;
+  display: grid; place-items: center; line-height: 1;
+  border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05); color: var(--cc-ink); font-size: 15px;
+}
+.sty-cc-step:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); }
+.sty-cc-step:disabled { opacity: 0.3; cursor: default; }
+.sty-cc-step-n { min-width: 18px; text-align: center; font-weight: 700; color: var(--cc-gold); }
+.sty-cc-alloc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sty-cc-alloc-chip {
+  appearance: none; cursor: pointer; text-align: left;
+  padding: 8px 10px; border-radius: 8px; color: var(--cc-ink);
+  border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.03);
+  display: flex; flex-direction: column; gap: 3px; transition: all 0.15s ease;
+}
+.sty-cc-alloc-chip:hover { background: rgba(255, 255, 255, 0.08); }
+.sty-cc-alloc-chip.is-sel {
+  border-color: var(--cc-cyan); background: rgba(79, 214, 230, 0.14);
+  box-shadow: 0 0 0 1px var(--cc-cyan) inset;
+}
+.sty-cc-alloc-chip.is-disabled { opacity: 0.35; cursor: default; }
+.sty-cc-chip-name { font-size: 12.5px; font-weight: 600; }
+.sty-cc-chip-desc { font-size: 10.5px; line-height: 1.35; color: var(--cc-muted); }
+
+/* ---------- view toggling ---------- */
+.sty-cc[data-view="browse"] .sty-cc-reveal,
+.sty-cc[data-view="browse"] [data-action="back-list"],
+.sty-cc[data-view="browse"] [data-action="choose"] { display: none; }
+.sty-cc[data-view="reveal"] .sty-cc-stage,
+.sty-cc[data-view="reveal"] [data-action="back-step"],
+.sty-cc[data-view="reveal"] .sty-cc-hint { display: none; }
+
+/* ---------- footer ---------- */
+.sty-cc-footer {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+}
+.sty-cc-hint { color: var(--cc-muted); font-size: 12px; font-style: italic; }
+.sty-cc-btn {
+  appearance: none;
+  min-width: 130px;
+  padding: 0.6em 1.4em;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--cc-ink);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sty-cc-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.28); }
+.sty-cc-btn:disabled { opacity: 0.4; cursor: default; }
+.sty-cc-btn-primary {
+  color: #06121a;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--cc-cyan), #7ef0d0);
+  box-shadow: 0 6px 18px -6px var(--cc-cyan);
+}
+.sty-cc-btn-primary:hover:not(:disabled) { filter: brightness(1.08); }

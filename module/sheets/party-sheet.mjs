@@ -5,6 +5,8 @@ import { STRYDER } from '../helpers/config.mjs';
 import { FishingMinigame } from '../apps/fishing-minigame.mjs';
 import { CookingMinigame } from '../apps/cooking-minigame.mjs';
 import { BrewingMinigame } from '../apps/elixir-brewing-mgame.mjs';
+import { ScavengingMinigame } from '../apps/scavenging-minigame.mjs';
+import { TamingMinigame } from '../apps/taming-minigame.mjs';
 
 export class StryderPartySheet extends ActorSheet {
   static get defaultOptions() {
@@ -14,7 +16,7 @@ export class StryderPartySheet extends ActorSheet {
       width: 920,
       height: 640,
       resizable: true,
-      scrollY: ['.ps-content'],
+      scrollY: ['.ps-interior', '.ps-page .ch2-wrap'],
       dragDrop: [{ dragSelector: '.ps-item', dropSelector: null }]
     });
   }
@@ -120,8 +122,9 @@ export class StryderPartySheet extends ActorSheet {
       const totalPages   = totalMembers > 4 ? 2 : 1;
 
       const slideCarousel = () => {
-        const wrapW = html.find('.ps-carousel-wrap').width() || 0;
-        grid.style.transform = `translateX(-${this._carouselPage * wrapW}px)`;
+        // Percentage-based so the offset stays correct when the window is resized
+        // (the grid's own width always equals the carousel wrapper's width).
+        grid.style.transform = `translateX(-${this._carouselPage * 100}%)`;
         leftBtn.toggle(this._carouselPage > 0);
         rightBtn.toggle(this._carouselPage < totalPages - 1);
       };
@@ -238,8 +241,8 @@ export class StryderPartySheet extends ActorSheet {
       }
 
       // ── JRPG-style member picker ────────────────────────────────────────────
-      const challengeLabel = { fishing: 'Fishing', cooking: 'Cooking', brewing: 'Elixir Brewing', foraging: 'Foraging', mining: 'Mining' }[challengeId] ?? challengeId;
-      const challengeIcon  = { fishing: '🎣', cooking: '🍲', brewing: '⚗', foraging: '🌿', mining: '⛏' }[challengeId] ?? '✦';
+      const challengeLabel = { fishing: 'Fishing', cooking: 'Cooking', brewing: 'Elixir Brewing', scavenging: 'Scavenging', taming: 'Taming', mining: 'Mining' }[challengeId] ?? challengeId;
+      const challengeIcon  = { fishing: '🎣', cooking: '🍲', brewing: '⚗', scavenging: '🌿', taming: '🍄', mining: '⛏' }[challengeId] ?? '✦';
 
       const memberCards = memberActors.map((a, i) => {
         let statBadge = '';
@@ -252,6 +255,12 @@ export class StryderPartySheet extends ActorSheet {
         } else if (challengeId === 'brewing') {
           const lvl = parseInt(a.system?.life?.elixirbrewing?.value) || 0;
           statBadge = `<span style="font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:.06em;color:rgba(169,125,255,0.85);background:rgba(50,36,80,0.5);border:1px solid rgba(169,125,255,0.3);border-radius:3px;padding:1px 5px;">Lv. ${lvl} Brewing</span>`;
+        } else if (challengeId === 'scavenging') {
+          const lvl = parseInt(a.system?.life?.scavenging?.value) || 0;
+          statBadge = `<span style="font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:.06em;color:rgba(130,200,160,0.8);background:rgba(24,60,40,0.5);border:1px solid rgba(90,180,120,0.3);border-radius:3px;padding:1px 5px;">Lv. ${lvl} Scavenging</span>`;
+        } else if (challengeId === 'taming') {
+          const lvl = parseInt(a.system?.life?.taming?.value) || 0;
+          statBadge = `<span style="font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:.06em;color:rgba(232,163,76,0.85);background:rgba(70,48,22,0.5);border:1px solid rgba(232,163,76,0.3);border-radius:3px;padding:1px 5px;">Lv. ${lvl} Taming</span>`;
         }
         return `
           <label class="ch-member-card" style="
@@ -336,6 +345,10 @@ export class StryderPartySheet extends ActorSheet {
       CookingMinigame.open(actor, partyActor);
     } else if (id === 'brewing') {
       BrewingMinigame.open(actor, partyActor);
+    } else if (id === 'scavenging') {
+      ScavengingMinigame.open(actor, partyActor);
+    } else if (id === 'taming') {
+      TamingMinigame.open(actor, partyActor);
     } else {
       ui.notifications.info(`${id.charAt(0).toUpperCase() + id.slice(1)} is coming soon!`);
     }
@@ -348,7 +361,7 @@ export class StryderPartySheet extends ActorSheet {
     if (data.type === 'Actor') {
       const dropped = await fromUuid(data.uuid);
       if (!dropped) return;
-      if (!['character', 'npc', 'lordling', 'familiar', 'pet'].includes(dropped.type)) {
+      if (!['character', 'protocharacter', 'npc', 'lordling', 'familiar', 'pet'].includes(dropped.type)) {
         return ui.notifications.warn("Only character actors can be added as party members.");
       }
       const current = foundry.utils.duplicate(this.actor.system.members ?? []);

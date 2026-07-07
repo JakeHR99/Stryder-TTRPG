@@ -1,0 +1,112 @@
+<div class="sv-wrap">
+
+  {{!-- ═══ TOP BAR ═══ --}}
+  <div class="sv-topbar">
+    <div class="sv-who">
+      {{#unless isSelect}}<button type="button" class="sv-back" title="Choose a different activity">‹</button>{{/unless}}
+      Scavenger <b>{{scavName}}</b>
+      <span class="sv-badge">Scavenging Lv. {{level}}</span>
+    </div>
+    <label class="sv-tog" title="Never scavenged this Region/Area before — the next find roll takes −2">
+      <input type="checkbox" class="sv-first" {{#if firstTime}}checked{{/if}} />
+      <span class="sv-box"></span>
+      <span class="sv-lab">First time in this area (−2 find roll)</span>
+    </label>
+  </div>
+
+  {{#if isSelect}}
+  {{!-- ═══ MODE SELECT ═══ --}}
+  <div class="sv-sec-label">Choose what to search for</div>
+  <div class="sv-modes">
+    <div class="sv-mode" data-mode="forage">
+      <div class="sv-mode-ico">🌳</div>
+      <div class="sv-mode-name">Forage for Food</div>
+      <div class="sv-mode-desc">Choose Base or Spice, then search the Region. The Food Roll decides how many you find; the Quality Roll how good they are. Watch out for the rotten.</div>
+      <div class="sv-mode-dice">Quantity: 2d6 + Lv &nbsp;·&nbsp; Quality: 4d6 −2 + Lv</div>
+    </div>
+    <div class="sv-mode" data-mode="supplies">
+      <div class="sv-mode-ico">🎒</div>
+      <div class="sv-mode-name">Scavenge for Supplies</div>
+      <div class="sv-mode-desc">Pick over a Camping Site, Treasure Site or ruin for bandages, essence, ingredients, elixirs — maybe even a Cache left by another Stryder.</div>
+      <div class="sv-mode-dice">Find: 4d6 + Lv &nbsp;·&nbsp; Quality: 4d6 −4 + Lv</div>
+      <div class="sv-mode-gate">Camping / Treasure Site or World Master prompt only</div>
+    </div>
+  </div>
+
+  {{else}}
+  {{!-- ═══ PLAY ═══ --}}
+  <div class="sv-play">
+
+    <div class="sv-scene">
+      <div class="sv-scene-cap">{{mode.cap}}</div>
+      <div class="sv-penalty-chip" {{#unless firstTime}}style="display:none;"{{/unless}}>unexplored — first find roll at −2</div>
+      <div class="sv-glow"></div>
+      <div class="sv-foliage">
+        {{#unless isForage}}<div class="sv-crate"></div>{{/unless}}
+        <div class="sv-shrub s-left"><i></i><i></i><i></i></div>
+        {{#if isForage}}<div class="sv-shrub s-main"><i></i><i></i><i></i><i></i></div>{{/if}}
+        <div class="sv-shrub s-right"><i></i><i></i><i></i></div>
+        <div class="sv-grass" style="left:6%;height:12px"></div>
+        <div class="sv-grass" style="left:24%"></div>
+        <div class="sv-grass" style="left:37%;height:14px"></div>
+        <div class="sv-grass" style="left:63%"></div>
+        <div class="sv-grass" style="left:79%;height:15px"></div>
+        <div class="sv-grass" style="left:92%;height:12px"></div>
+      </div>
+      <div class="sv-ground"></div>
+    </div>
+
+    <div class="sv-right">
+      {{#if isForage}}
+      <div class="sv-type-row">Searching for
+        <button type="button" class="sv-type-btn {{#if forageTypeBase}}on{{/if}}" data-type="base">🥔 Base</button>
+        <button type="button" class="sv-type-btn {{#unless forageTypeBase}}on{{/unless}}" data-type="spice">🌶 Spice</button>
+      </div>
+      {{/if}}
+
+      <div class="sv-roll-block">
+        <div class="sv-roll-title"><span>1 · {{mode.findLabel}}</span><span class="sv-roll-math sv-find-math">{{findMath}}</span></div>
+        <div class="sv-track sv-find-track">
+          {{#each mode.bands as |b|}}
+          <div class="seg" style="--sc:{{b.color}}"><span class="s-name">{{b.icon}} {{b.name}}</span><span class="s-range">{{b.range}}</span></div>
+          {{/each}}
+        </div>
+        <div class="sv-tray sv-find-tray"><span class="sv-tray-empty">{{mode.findDice}}d6 waiting…</span></div>
+      </div>
+
+      <div class="sv-roll-block">
+        <div class="sv-roll-title"><span>2 · Quality Roll — how good is it?</span><span class="sv-roll-math sv-qual-math">{{qualMath}}</span></div>
+        <div class="sv-track sv-qual-track">
+          {{#each mode.quality as |b|}}
+          <div class="seg" style="--sc:{{b.color}}"><span class="s-name">{{b.name}}</span><span class="s-range">{{b.range}}</span></div>
+          {{/each}}
+        </div>
+        <div class="sv-tray sv-qual-tray"><span class="sv-tray-empty">4d6 waiting…</span></div>
+      </div>
+
+      <div class="sv-result">
+        <span class="sv-res-idle">Click {{mode.verb}} to search — finds are stashed with {{stashName}}.</span>
+      </div>
+
+      <div class="sv-actions">
+        <button type="button" class="sv-go">▶ {{mode.verb}}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sv-satchel">
+    <div class="sv-satchel-head">
+      <span>🎒 Found this session</span>
+      <span class="sv-satchel-count">{{satchelCount}} finds</span>
+    </div>
+    <div class="sv-satchel-list">
+      {{#each satchel as |c|}}
+      <div class="sv-loot" style="color:{{c.color}};border-color:{{c.color}}55;background:{{c.color}}12">
+        {{#if c.img}}<img class="sv-loot-img" src="{{c.img}}" />{{else}}<span>{{c.icon}}</span>{{/if}}{{c.text}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+</div>

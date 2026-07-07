@@ -751,7 +751,7 @@ export class StryderCombat extends Combat {
     }
 
     static showTurnsFor(combatant) {
-        if (game.user?.isGM || combatant.actor.isOwner || combatant.actor.type === 'character') return true;
+        if (game.user?.isGM || combatant.actor.isOwner || combatant.actor.type === 'character' || combatant.actor.type === 'protocharacter') return true;
         const showTurnsMode = game.settings.get(SYSTEM_ID, 'optionCombatHudShowNPCTurnsLeftMode');
         return showTurnsMode !== 'never';
     }

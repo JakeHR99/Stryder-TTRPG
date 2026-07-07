@@ -1,0 +1,145 @@
+/* ════════════════════════════════════════════════════════════════════
+   TAMING MINIGAME — "The Gentle Hand"
+   Warm amber/earth variant of the challenge-app look. All classes tm-.
+   Mushroom sprite: 320×160 sheet, 10×5 grid of 32px frames.
+   ════════════════════════════════════════════════════════════════════ */
+
+.taming-scene-app .window-content {
+  background: radial-gradient(900px 500px at 50% -10%, #33261a 0%, #241a10 42%, #120e1c 100%);
+  padding: 0;
+  overflow: hidden;
+  color: #cfe0f5;
+}
+.tm-shell { padding: 14px 18px 6px; font-family: 'Arsenal', sans-serif; }
+.tm-footnote { text-align: center; font-size: 10px; color: #5f79a0; font-family: 'Rajdhani', sans-serif; letter-spacing: .08em; padding: 8px 0 10px; text-transform: uppercase; }
+.tm-green { color: #79d18a; }
+.tm-crimson { color: #e2586a; }
+
+/* ── top bar ── */
+.tm-topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  background: rgba(30,20,14,0.55); border: 1px solid rgba(235,180,120,0.22); border-radius: 10px;
+  padding: 8px 14px; margin-bottom: 12px;
+}
+.tm-who { font-family: 'Rajdhani', sans-serif; font-size: 13px; color: #8aa6cc; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tm-who b { color: #7dd4f0; }
+.tm-badge { font-family: 'Rajdhani', sans-serif; font-size: 11px; color: #d9b45b; background: rgba(217,180,91,.1); border: 1px solid rgba(217,180,91,.3); border-radius: 4px; padding: 2px 8px; }
+.tm-ctls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.tm-ctl { display: flex; align-items: center; gap: 7px; font-family: 'Rajdhani', sans-serif; font-size: 11px; letter-spacing: .05em; color: #8aa6cc; text-transform: uppercase; }
+.tm-ctl select { background: rgba(30,20,14,.8); border: 1px solid rgba(235,180,120,0.22); color: #fff; border-radius: 6px; font-family: 'Rajdhani', sans-serif; font-size: 13px; padding: 2px 6px; width: auto; }
+.tm-tog { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+.tm-tog input { display: none; }
+.tm-tog .box { width: 15px; height: 15px; border-radius: 4px; border: 1px solid rgba(125,212,240,.5); background: rgba(125,212,240,.08); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #7dd4f0; }
+.tm-tog input:checked + .box::after { content: '✓'; }
+.tm-tog .lab { font-family: 'Rajdhani', sans-serif; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: #7dd4f0; }
+
+/* ── duel layout ── */
+.tm-duel { display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: start; }
+.tm-scene {
+  position: relative; height: 270px; border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(235,180,120,0.22);
+  background: linear-gradient(180deg, #2a3d2200 40%, #26381f 100%), radial-gradient(480px 250px at 50% -30%, #3d5426 0%, #1d2a14 70%);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.tm-ground { position: absolute; bottom: 0; left: 0; right: 0; height: 52px; background: linear-gradient(180deg, #2e401f, #1c2a12); border-top: 1px solid rgba(190,220,140,.15); }
+.tm-scene-cap { position: absolute; top: 12px; left: 0; right: 0; text-align: center; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #8aa6cc; z-index: 3; }
+.tm-temper-chip { position: absolute; top: 32px; left: 0; right: 0; text-align: center; font-family: 'Rajdhani', sans-serif; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #e8a34c; z-index: 3; }
+.tm-ap-wrap { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; z-index: 3; }
+.tm-ap-pip { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(232,163,76,.6); background: rgba(232,163,76,.75); box-shadow: 0 0 8px rgba(232,163,76,.5); }
+.tm-ap-pip.spent { background: transparent; box-shadow: none; border-color: rgba(232,163,76,.25); }
+
+/* ── mushroom sprite ── */
+.tm-beast { position: relative; z-index: 2; width: 170px; height: 170px; margin-bottom: 30px; display: flex; align-items: flex-end; justify-content: center; transition: transform .25s; }
+.tm-beast.hit { animation: tmBhit .4s; }
+@keyframes tmBhit { 0% { transform: translateX(0); } 25% { transform: translateX(-9px) rotate(-3deg); } 60% { transform: translateX(7px) rotate(2deg); } 100% { transform: translateX(0); } }
+.tm-mush {
+  width: 32px; height: 32px; background-repeat: no-repeat; background-position: 0 0;
+  image-rendering: pixelated; transform: scale(5); transform-origin: bottom center;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.55)); border: none;
+}
+.tm-mush.a-idle { animation: tmIdle .9s steps(4) infinite; }
+@keyframes tmIdle { from { background-position: 0 0; } to { background-position: -128px 0; } }
+.tm-mush.a-hearts { animation: tmHearts .8s steps(4) infinite; }
+@keyframes tmHearts { from { background-position: -192px 0; } to { background-position: -320px 0; } }
+.tm-mush.a-hop { animation: tmHop 1s steps(9) infinite; }
+@keyframes tmHop { from { background-position: 0 -32px; } to { background-position: -288px -32px; } }
+.tm-mush.a-attack { animation: tmAtk .8s steps(10); }
+.tm-mush.a-attack-loop { animation: tmAtk .8s steps(10) infinite; }
+@keyframes tmAtk { from { background-position: 0 -96px; } to { background-position: -320px -96px; } }
+.tm-mush.a-squash { animation: tmSquash .8s steps(8) forwards; }
+@keyframes tmSquash { from { background-position: 0 -128px; } to { background-position: -256px -128px; } }
+.tm-snack-fly { position: absolute; left: 12%; bottom: 70px; font-size: 22px; z-index: 5; pointer-events: none; animation: tmSnackArc .7s cubic-bezier(.3,.5,.6,1) forwards; }
+@keyframes tmSnackArc { 0% { transform: translate(0,0) rotate(0); } 50% { transform: translate(70px,-70px) rotate(180deg); } 100% { transform: translate(140px,-6px) rotate(340deg); opacity: .9; } }
+
+/* ── phase panel ── */
+.tm-phase-box { background: rgba(30,20,14,0.5); border: 1px solid rgba(235,180,120,0.22); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+.tm-phase-title { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #f0d488; margin-bottom: 8px; }
+.tm-phase-desc { font-size: 12.5px; color: #8aa6cc; line-height: 1.5; margin-bottom: 10px; }
+.tm-row { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
+.tm-note { font-family: 'Rajdhani', sans-serif; font-size: 11px; color: #5f79a0; letter-spacing: .03em; margin-top: 8px; }
+.tm-outcome { font-family: 'Rajdhani', sans-serif; font-size: 13px; margin-top: 8px; min-height: 18px; }
+.tm-oc-good { color: #79d18a; } .tm-oc-bad { color: #e2586a; } .tm-oc-meh { color: #8aa6cc; }
+
+.tm-btn {
+  font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 12px;
+  padding: 9px 16px; border-radius: 8px; cursor: pointer; transition: .16s; border: 1px solid; background: none; width: auto;
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+}
+.tm-btn.sm { font-size: 10px; padding: 6px 10px; }
+.tm-btn.amber { border-color: #e8a34c; color: #e8a34c; background: linear-gradient(180deg, rgba(232,163,76,.2), rgba(232,163,76,.06)); }
+.tm-btn.amber:hover { background: linear-gradient(180deg, rgba(232,163,76,.35), rgba(232,163,76,.12)); box-shadow: 0 0 18px rgba(232,163,76,.3); }
+.tm-btn.cyan { border-color: #7dd4f0; color: #7dd4f0; background: linear-gradient(180deg, rgba(125,212,240,.18), rgba(125,212,240,.05)); }
+.tm-btn.cyan:hover { background: linear-gradient(180deg, rgba(125,212,240,.3), rgba(125,212,240,.1)); }
+.tm-btn.ghost { border-color: #5f79a0; color: #8aa6cc; }
+.tm-btn.ghost:hover { border-color: #7dd4f0; color: #7dd4f0; }
+.tm-btn:disabled { opacity: .32; cursor: not-allowed; box-shadow: none; }
+
+/* ── dice ── */
+.tm-pool-label { font-family: 'Rajdhani', sans-serif; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #5f79a0; display: flex; justify-content: space-between; align-items: baseline; }
+.tm-pool-label b { color: #cfe0f5; font-size: 14px; }
+.tm-dice-row { display: flex; flex-wrap: wrap; gap: 8px; min-height: 46px; align-items: center; margin: 6px 0; }
+.tm-tdie {
+  width: 42px; height: 42px; border-radius: 8px; background: linear-gradient(160deg, #eaf3ff, #a9c4e8); color: #122038;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 21px; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,.5); border: 2px solid #7f9fc8; cursor: pointer; transition: transform .12s, box-shadow .12s;
+}
+.tm-tdie:hover { transform: translateY(-3px); }
+.tm-tdie.sel { border-color: #e8a34c; box-shadow: 0 0 14px rgba(232,163,76,.65); transform: translateY(-3px); }
+.tm-bdie {
+  position: relative; width: 46px; height: 56px; border-radius: 8px; cursor: pointer; transition: transform .15s, box-shadow .15s;
+  background: linear-gradient(160deg, #4a2e20, #31200f); border: 2px solid #6b4a2a;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  font-family: 'Rajdhani', sans-serif; box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+.tm-bdie:hover { transform: translateY(-3px); }
+.tm-bdie .b-num { font-size: 9px; letter-spacing: .08em; color: rgba(240,200,140,.6); text-transform: uppercase; }
+.tm-bdie .b-val { font-weight: 700; font-size: 20px; color: #f5d9a8; }
+.tm-bdie.hidden-val .b-val { color: rgba(245,217,168,.45); }
+.tm-bdie.revealed { border-color: #7dd4f0; box-shadow: 0 0 12px rgba(125,212,240,.4); }
+.tm-bdie.targeted { opacity: .55; }
+.tm-bdie.removed { opacity: .3; cursor: default; }
+.tm-bdie.removed:hover { transform: none; }
+.tm-bdie.shootable { border-color: #e8a34c; box-shadow: 0 0 12px rgba(232,163,76,.5); }
+.tm-bdie.buffed .b-val { color: #e2586a; }
+
+/* ── log + banner ── */
+.tm-log { max-height: 96px; overflow-y: auto; background: rgba(20,14,10,.55); border: 1px solid rgba(235,180,120,0.22); border-radius: 8px; padding: 7px 11px; font-family: 'Rajdhani', sans-serif; font-size: 12px; color: #8aa6cc; display: flex; flex-direction: column-reverse; gap: 3px; }
+.tm-log div b { color: #fff; }
+.tm-banner { text-align: center; padding: 16px 10px 6px; }
+.tm-banner .b-title { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.tm-banner .b-sub { font-family: 'Rajdhani', sans-serif; font-size: 14px; color: #8aa6cc; margin-top: 6px; }
+.tm-banner.win .b-title { color: #79d18a; text-shadow: 0 0 24px rgba(121,209,138,.6); }
+.tm-banner.lose .b-title { color: #e2586a; text-shadow: 0 0 24px rgba(226,88,106,.5); }
+
+/* ── animated mushroom card sprite on the Challenges select ── */
+.ch2-sprite.ch2-mush-wrap { display: flex; align-items: flex-end; justify-content: center; overflow: visible; }
+.ch2-mush {
+  width: 32px; height: 32px; image-rendering: pixelated; border: none;
+  background: url('../assets/taming/Mushroom_Reg.png') no-repeat 0 0;
+  transform: scale(3); transform-origin: bottom center;
+  filter: drop-shadow(0 4px 16px rgba(40,160,255,0.35));
+  animation: ch2MushIdle .9s steps(4) infinite;
+}
+@keyframes ch2MushIdle { from { background-position: 0 0; } to { background-position: -128px 0; } }
+.ch2-card.ch2-active:hover .ch2-mush { animation: ch2MushHop 1s steps(9) infinite; }
+@keyframes ch2MushHop { from { background-position: 0 -32px; } to { background-position: -288px -32px; } }

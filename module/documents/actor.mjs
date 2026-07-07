@@ -84,7 +84,7 @@ export class StryderActor extends Actor {
 		}, data);
 	  }
 	  // For character type
-	  if (data.type === 'character') {
+	  if (data.type === 'character' || data.type === 'protocharacter') {
 		data = foundry.utils.mergeObject({
 		  prototypeToken: {
 			actorLink: true
@@ -148,7 +148,7 @@ export class StryderActor extends Actor {
    * Prepare Character type specific data
    */
 	_prepareCharacterData(actorData) {
-	  if (actorData.type !== 'character' && actorData.type !== 'lordling') return;
+	  if (actorData.type !== 'character' && actorData.type !== 'protocharacter' && actorData.type !== 'lordling') return;
 
 	  const systemData = actorData.system;
 
@@ -358,7 +358,7 @@ export class StryderActor extends Actor {
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.type !== 'character') return;
+    if (this.type !== 'character' && this.type !== 'protocharacter') return;
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.

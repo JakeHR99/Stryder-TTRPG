@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc", "monster", "lordling", "familiar", "pet", "spirit-beast", "party"],
+    "types": ["character", "protocharacter", "npc", "monster", "lordling", "familiar", "pet", "spirit-beast", "party"],
     "templates": {
       "base": {
         "health": {
@@ -66,6 +66,298 @@
         "physical_resist_mod": 0,
         "magykal_resist_mod": 0,
         "biography": ""
+      }
+    },
+    "protocharacter": {
+      "templates": ["base"],
+      "booleans": {
+        "hasPracticedForm": false,
+        "usingUnboundLeap": false,
+        "hasFantastic": false
+      },
+      "grail": 0,
+      "essence": 0,
+      "guild_tokens": 0,
+      "class": {
+        "name": "",
+        "base_hp": 0,
+        "hp_per_level": 0
+      },
+      "folk": {
+        "name": "",
+        "subfolk": "",
+        "size_choice": "",
+        "colossus_stat_choice": "",
+        "traveler_boon": "",
+        "wildkin_adaptations": [],
+        "talent_free_points": {},
+        "sense_free_choices": [],
+        "bonuses_applied": false
+      },
+      "life": {
+        "cooking": {
+          "value": 0
+        },
+        "elixirbrewing": {
+          "value": 0
+        },
+        "fishing": {
+          "value": 0
+        },
+        "hunting": {
+          "value": 0
+        },
+        "performing": {
+          "value": 0
+        },
+        "scavenging": {
+          "value": 0
+        },
+        "cursebreaking": {
+          "value": 0
+        },
+        "coercing": {
+          "value": 0
+        },
+        "dueling": {
+          "value": 0
+        },
+        "taming": {
+          "value": 0
+        }
+      },
+      "attributes": {
+        "mastery": 0,
+        "creature_size": "1",
+        "weight_class": 4,
+        "horizontal_leap": {
+          "mod": 0
+        },
+        "vertical_leap": {
+          "mod": 0
+        },
+        "physical_potency": {
+          "value": 0,
+          "mod": 0
+        },
+        "magykal_potency": {
+          "value": 0,
+          "mod": 0
+        },
+        "level": {
+          "value": 1
+        },
+        "xp": {
+          "value": 3,
+          "max": 99
+        },
+        "move": {
+          "running": {
+            "value": 7,
+            "expertise": false
+          },
+          "climbing": {
+            "value": 3,
+            "expertise": false
+          },
+          "crawling": {
+            "value": 2,
+            "expertise": false
+          },
+          "marching": {
+            "value": 4,
+            "expertise": false
+          },
+          "swimming": {
+            "value": 4,
+            "expertise": false
+          },
+          "max": 7
+        },
+        "sense": {
+          "sight": {
+            "value": 0
+          },
+          "hearing": {
+            "value": 0
+          },
+          "smell": {
+            "value": 0
+          },
+          "arcane": {
+            "value": 0
+          },
+          "touch": {
+            "value": 0
+          }
+        },
+        "talent": {
+          "endurance": {
+            "value": 0
+          },
+          "nimbleness": {
+            "value": 0
+          },
+          "finesse": {
+            "value": 0
+          },
+          "strength": {
+            "value": 0
+          },
+          "survival": {
+            "value": 0
+          },
+          "charm": {
+            "value": 0
+          },
+          "wit": {
+            "value": 0
+          },
+          "wisdom": {
+            "value": 0
+          },
+          "deceit": {
+            "value": 0
+          },
+          "diplomacy": {
+            "value": 0
+          },
+          "intimacy": {
+            "value": 0
+          },
+          "aggression": {
+            "value": 0
+          }
+        }
+      },
+      "abilities": {
+        "Soul": {
+          "value": 0
+        },
+        "Reflex": {
+          "value": 0
+        },
+        "Grit": {
+          "value": 0
+        },
+        "Arcana": {
+          "value": 0
+        },
+        "Intuition": {
+          "value": 0
+        },
+        "Will": {
+          "value": 0
+        }
+      },
+      "checks": {
+        "Physical": {
+          "mod": 0
+        },
+        "Magykal": {
+          "mod": 0
+        }
+      },
+      "gloryToken": false,
+      "soul_armament": {
+        "name": "",
+        "description": "",
+        "img": "icons/svg/sword.svg",
+        "form": {
+          "one_handed": true,
+          "two_handed": false,
+          "ingrained": false,
+          "attached": false,
+          "dual_wield": false
+        },
+        "range": "range1",
+        "temper": "basic",
+        "weaponWeightClass": 3,
+        "capacity": "slot1"
+      },
+      "bio": {
+        "identity": {
+          "fullName": "",
+          "nicknames": "",
+          "titles": "",
+          "pronouns": "",
+          "age": "",
+          "profession": "",
+          "faith": "",
+          "faction": "",
+          "languages": "",
+          "atAGlance": ""
+        },
+        "appearance": {
+          "height": "",
+          "build": "",
+          "eyes": "",
+          "hair": "",
+          "marks": "",
+          "notableFeatures": "",
+          "attire": "",
+          "voiceMannerisms": "",
+          "description": ""
+        },
+        "personality": {
+          "traits": "",
+          "ideals": "",
+          "bonds": "",
+          "flaws": "",
+          "demeanor": "",
+          "fears": "",
+          "quirks": "",
+          "code": "",
+          "definingMoments": ""
+        },
+        "tastes": {
+          "likes": "",
+          "dislikes": "",
+          "savvies": "",
+          "ineptitudes": "",
+          "hobbies": ""
+        },
+        "motivations": {
+          "goals": "",
+          "drives": "",
+          "secrets": ""
+        },
+        "backstory": {
+          "text": ""
+        },
+        "beliefs": {
+          "culture": "",
+          "traditions": "",
+          "superstitions": ""
+        },
+        "immersion": {
+          "sigilImg": "",
+          "themeMusicUrl": "",
+          "colorScheme": ""
+        },
+        "portrait": "",
+        "visibility": {
+          "identity": "public",
+          "appearance": "public",
+          "personality": "party",
+          "tastes": "party",
+          "motivations": "gm",
+          "backstory": "party",
+          "beliefs": "party",
+          "secrets": "private",
+          "journal": "private",
+          "relationships": "party",
+          "quests": "party",
+          "gallery": "public"
+        }
+      },
+      "timeline": [],
+      "possessions": [],
+      "gallery": [],
+      "relationships": [],
+      "quests": [],
+      "journal": {
+        "entries": []
       }
     },
     "character": {
@@ -803,7 +1095,9 @@
     "party": {
       "templates": [],
       "members": [],
-      "description": ""
+      "description": "",
+      "grail": 0,
+      "essence": 0
     }
   },
   "Item": {

@@ -13,6 +13,18 @@
         <input class="ps-name-input" name="name" type="text" value="{{actor.name}}" placeholder="Party Name" />
         <div class="ps-name-sub">Party · {{members.length}} Members</div>
       </div>
+      <div class="ps-currency">
+        <label class="ps-cur ps-cur-grail" title="Party Grail — shared funds">
+          <span class="ps-cur-ic">🪙</span>
+          <input type="number" name="system.grail" value="{{system.grail}}" data-dtype="Number" min="0" />
+          <span class="ps-cur-lab">Grail</span>
+        </label>
+        <label class="ps-cur ps-cur-essence" title="Party Essence — shared pool">
+          <span class="ps-cur-ic">💠</span>
+          <input type="number" name="system.essence" value="{{system.essence}}" data-dtype="Number" min="0" />
+          <span class="ps-cur-lab">Essence</span>
+        </label>
+      </div>
     </header>
 
     {{!-- ═══ CONTENT AREA (pages swap here) ═══ --}}
@@ -136,7 +148,7 @@
 
           {{!-- Cooking — active --}}
           <div class="ch2-card ch2-active" data-challenge="cooking">
-            <img class="ch2-sprite" src="systems/stryder/assets/life-cooking.svg" alt="Cooking" />
+            <img class="ch2-sprite" src="systems/stryder/assets/food/roast-drumstick.png" alt="Cooking" />
             <div class="ch2-title">Cooking</div>
             <button class="ch2-play-btn ch-play-btn" data-challenge="cooking" type="button">▶ Play</button>
           </div>
@@ -148,13 +160,22 @@
             <button class="ch2-play-btn ch-play-btn" data-challenge="brewing" type="button">▶ Play</button>
           </div>
 
+          {{!-- Scavenging — active --}}
+          <div class="ch2-card ch2-active" data-challenge="scavenging">
+            <img class="ch2-sprite" src="systems/stryder/assets/ui/coin-pouch.png" alt="Scavenging" />
+            <div class="ch2-title">Scavenging</div>
+            <button class="ch2-play-btn ch-play-btn" data-challenge="scavenging" type="button">▶ Play</button>
+          </div>
+
+          {{!-- Taming — active (animated mushroom sprite) --}}
+          <div class="ch2-card ch2-active" data-challenge="taming">
+            <div class="ch2-sprite ch2-mush-wrap"><div class="ch2-mush"></div></div>
+            <div class="ch2-title">Taming</div>
+            <button class="ch2-play-btn ch-play-btn" data-challenge="taming" type="button">▶ Play</button>
+          </div>
+
           {{!-- Locked activities --}}
           <div class="ch2-locked-row">
-            <div class="ch2-card ch2-locked">
-              <div class="ch2-lock-icon">🔒</div>
-              <div class="ch2-lock-name">Foraging</div>
-              <div class="ch2-soon">Coming Soon</div>
-            </div>
             <div class="ch2-card ch2-locked">
               <div class="ch2-lock-icon">🔒</div>
               <div class="ch2-lock-name">Mining</div>

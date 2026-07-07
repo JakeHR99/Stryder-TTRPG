@@ -74,7 +74,7 @@ function abilityIsEmpty(html) {
 // ── Helpers ───────────────────────────────────────────────────
 
 export function isSummoner(actor) {
-  return actor?.type === 'character' && actor.system?.class?.name === 'Summoner';
+  return (actor?.type === 'character' || actor?.type === 'protocharacter') && actor.system?.class?.name === 'Summoner';
 }
 
 export function maxSpirits(actor) {

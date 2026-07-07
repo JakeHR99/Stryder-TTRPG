@@ -5,6 +5,12 @@ import {
   prepareActiveEffectCategories,
 } from '../helpers/effects.mjs';
 
+import {
+  isCreationComplete,
+  getCreationContext,
+  activateCreationListeners,
+} from '../creation/character-creation.mjs';
+
 // ---------------------------------------------------------------------------
 // Stryder level-up tables
 // ---------------------------------------------------------------------------
@@ -1729,6 +1735,9 @@ export class StryderActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
+    if (this.actor.type === 'protocharacter' && !isCreationComplete(this.actor)) {
+      return 'systems/stryder/templates/actor/actor-protocharacter-creation.hbs';
+    }
     return `systems/stryder/templates/actor/actor-${this.actor.type}-sheet.hbs`;
   }
 
@@ -1757,6 +1766,13 @@ export class StryderActorSheet extends ActorSheet {
 
     // Use a safe clone of the actor data for further operations.
     const actorData = context.data;
+
+    // ── Character Creation gate: an uncreated protocharacter renders the
+    //    creation flow instead of the normal sheet, so skip the heavy prep.
+    if (this.actor.type === 'protocharacter' && !isCreationComplete(this.actor)) {
+      context.creation = await getCreationContext(this);
+      return context;
+    }
 
 	// Calculate jump distances
 	const talent = actorData.system.attributes?.talent;
@@ -1912,11 +1928,11 @@ export class StryderActorSheet extends ActorSheet {
 
       context.tpPct = _pct(actorData.system.tactics?.value, actorData.system.tactics?.max);
       context.linkedCharacterName = linkedId ? (game.actors.get(linkedId)?.name ?? '') : '';
-      context.characters = game.actors.filter(a => a.type === 'character').map(a => ({ id: a.id, name: a.name }));
+      context.characters = game.actors.filter(a => a.type === 'character' || a.type === 'protocharacter').map(a => ({ id: a.id, name: a.name }));
     }
 
     // Prepare character data and items.
-    if (actorData.type == 'character') {
+    if (actorData.type == 'character' || actorData.type == 'protocharacter') {
       this._prepareItems(context);
       this._prepareCharacterData(context);
       const computed = this._calcMaxStats(actorData);
@@ -2031,7 +2047,7 @@ export class StryderActorSheet extends ActorSheet {
     if (actorData.type == 'lordling') {
       this._prepareItems(context);
       this._prepareCharacterData(context);
-		context.characters = game.actors.filter(a => a.type === 'character').map(a => ({
+		context.characters = game.actors.filter(a => a.type === 'character' || a.type === 'protocharacter').map(a => ({
 			id: a.id,
 			name: a.name
 		}));
@@ -2106,7 +2122,7 @@ export class StryderActorSheet extends ActorSheet {
     context.isBangleless = isActorBangleless(this.actor);
 
     // Soul Armament derived data
-    if (actorData.type === 'character') {
+    if (actorData.type === 'character' || actorData.type === 'protocharacter') {
       const sa = actorData.system.soul_armament || {};
       const saForm = sa.form || {};
       const saFormCosts   = { ingrained: 2, attached: 2, one_handed: 0, two_handed: 1, dual_wield: 2 };
@@ -2142,7 +2158,7 @@ export class StryderActorSheet extends ActorSheet {
     // ── Biography & Journal (Phase 1) ──
     // Only the character sheet carries the bio spine this phase; guard so other
     // actor types that share this sheet class don't pay for (or break on) it.
-    if (this.actor.type === 'character') {
+    if (this.actor.type === 'character' || this.actor.type === 'protocharacter') {
       // 1) Enriched rich text (appearance description + backstory). Matches the
       //    TextEditor.enrichHTML precedent in module/documents/item.mjs:520.
       const _enrich = (s) => TextEditor.enrichHTML(s ?? "", {
@@ -2325,7 +2341,7 @@ export class StryderActorSheet extends ActorSheet {
   async _updateObject(event, formData) {
     const richKey = /^system\.(journal\.entries|relationships|quests)\.(\d+)\.(body|notes)$/;
     const matches = Object.keys(formData).filter(k => richKey.test(k));
-    if (matches.length && this.actor.type === 'character') {
+    if (matches.length && (this.actor.type === 'character' || this.actor.type === 'protocharacter')) {
       const rebuilt = {}; // list path → cloned array (rebuilt once per list)
       for (const k of matches) {
         const [, list, idxStr, field] = k.match(richKey);
@@ -2600,7 +2616,7 @@ export class StryderActorSheet extends ActorSheet {
    * Called fire-and-forget (no await) at the end of activateListeners.
    */
   async _syncComputedStats() {
-    if (this.actor.type !== 'character') return;
+    if (this.actor.type !== 'character' && this.actor.type !== 'protocharacter') return;
     const computed = this._calcMaxStats(this.actor);
     const sys = this.actor.system;
     const updates = {};
@@ -2886,6 +2902,12 @@ export class StryderActorSheet extends ActorSheet {
   /** @override */
   activateListeners(html) {
     super.activateListeners(html);
+
+    // Uncreated protocharacter: wire only the creation flow, skip normal sheet.
+    if (this.actor.type === 'protocharacter' && !isCreationComplete(this.actor)) {
+      activateCreationListeners(this, html);
+      return;
+    }
 
     // Talent / sense +/- steppers. Adjusts the SOURCE (base) value only — the
     // player's own points. The Folk/effect layer is applied on top during
@@ -5495,7 +5517,7 @@ export class StryderActorSheet extends ActorSheet {
     // Talent manual-override: when the player edits a talent input, store the
     // value in the managed "Player Talents" UPGRADE effect so it wins over any
     // OVERRIDE effects from folk/passive abilities.
-    if (this.actor.type === 'character' || this.actor.type === 'lordling') {
+    if (this.actor.type === 'character' || this.actor.type === 'protocharacter' || this.actor.type === 'lordling') {
       html.find('input[name^="system.attributes.talent."][name$=".value"]').on('change', async (ev) => {
         const input = ev.currentTarget;
         const m = input.name.match(/^system\.attributes\.talent\.(\w+)\.value$/);
@@ -5907,7 +5929,7 @@ export class StryderActorSheet extends ActorSheet {
 	});
 
 	// ── Stat stepper buttons (Character page) ──────────────────────────────
-	if (this.actor.type === 'character') {
+	if (this.actor.type === 'character' || this.actor.type === 'protocharacter') {
 	  const STAT_KEYS  = ['Soul', 'Reflex', 'Grit', 'Will'];
 	  const MAX_NORMAL = 5;
 	  const MAX_AUG    = 7;
@@ -6978,6 +7000,139 @@ export class StryderActorSheet extends ActorSheet {
   }
 
   /**
+   * Character-creation helper: resolve a display folk name (from the creation
+   * card, e.g. "Descendant") to its STRYDER_FOLK_DATA key (e.g. "Descendants")
+   * and report whether that folk needs interactive choices.
+   */
+  _folkChoiceInfo(displayName) {
+    const keys = Object.keys(STRYDER_FOLK_DATA);
+    const lc = String(displayName ?? '').trim().toLowerCase();
+    const key =
+         keys.find(k => k.toLowerCase() === lc)
+      || keys.find(k => k.toLowerCase() === `${lc}s`)
+      || keys.find(k => `${k.toLowerCase()}s` === lc)
+      || keys.find(k => k.toLowerCase().startsWith(lc) || lc.startsWith(k.toLowerCase()))
+      || null;
+    const data = key ? STRYDER_FOLK_DATA[key] : null;
+    const needsChoices = !!(data && (
+      data.freePoints || data.statChoice || data.sizeChoices ||
+      data.originFolkPicker || (data.subfolks && data.subfolks.length) ||
+      (data.adaptations && data.adaptations.length)
+    ));
+    return { key, data, needsChoices };
+  }
+
+  /**
+   * Character-creation helper: derive a serialisable allocation-control spec for
+   * a folk's interactive choices (stat pick, subfolk/boon, size, free talent /
+   * sense point pools, adaptations). The collected values map straight onto the
+   * `choices` object that _applyFolkChoices consumes.
+   */
+  _folkAllocatorSpec(folkKey) {
+    const d = STRYDER_FOLK_DATA[folkKey];
+    if (!d) return [];
+    const ALL_TALENTS = ['Endurance', 'Nimbleness', 'Finesse', 'Strength', 'Survival', 'Charm', 'Wit', 'Wisdom', 'Deceit', 'Diplomacy', 'Intimacy', 'Aggression'];
+    const ALL_SENSES  = ['Sight', 'Hearing', 'Smell', 'Arcane', 'Touch'];
+    const controls = [];
+
+    if (d.statChoice) {
+      controls.push({ kind: 'pick', key: 'colossusStat', label: 'Primary Talent (+3; the other gets +1)',
+        options: [{ value: 'Strength', label: 'Strength' }, { value: 'Endurance', label: 'Endurance' }] });
+    }
+    if (Array.isArray(d.subfolks) && d.subfolks.length) {
+      const isTraveler = folkKey === 'Traveler';
+      controls.push({ kind: 'pick', key: isTraveler ? 'travelerBoon' : 'subfolk',
+        label: isTraveler ? 'Boon' : 'Subfolk',
+        options: d.subfolks.map(s => ({ value: s, label: s })) });
+    }
+    if (Array.isArray(d.sizeChoices) && d.sizeChoices.length) {
+      controls.push({ kind: 'pick', key: 'size', label: 'Size',
+        options: d.sizeChoices.map(s => ({ value: s, label: s })) });
+    }
+    if (d.freePoints) {
+      const fp = d.freePoints;
+      if (fp.talentPool) {
+        const targets = fp.talentTargets || ALL_TALENTS;
+        controls.push({ kind: 'pool', key: 'talentPoints', format: 'map', label: 'Talent Points',
+          pool: fp.talentPool, cap: fp.talentCap || fp.talentPool,
+          options: targets.map(t => ({ value: t, label: t })) });
+      }
+      if (fp.sensePool) {
+        controls.push({ kind: 'pool', key: 'senseChoices', format: 'array', label: 'Sense Points (different senses)',
+          pool: fp.sensePool, cap: 1, options: ALL_SENSES.map(s => ({ value: s, label: s })) });
+      }
+      if (Array.isArray(fp.senseChoice) && fp.senseChoice.length) {
+        controls.push({ kind: 'pick', key: 'senseOneChoice', label: 'Heightened Sense (+2)',
+          options: fp.senseChoice.map(s => ({ value: s, label: s })) });
+      }
+    }
+    if (Array.isArray(d.adaptations) && d.adaptations.length) {
+      const count = d.freePoints?.adaptationCount || 3;
+      controls.push({ kind: 'multi', key: 'adaptations', max: count, label: `Adaptations (choose ${count})`,
+        options: d.adaptations.map(a => ({ value: a.name, label: a.name, desc: a.description })) });
+    }
+    if (d.originFolkPicker) {
+      const others = Object.keys(STRYDER_FOLK_DATA).filter(f => f !== folkKey);
+      controls.push({ kind: 'pick', key: 'subfolk', label: 'Origin Folk (appearance & size only)',
+        options: others.map(f => ({ value: f, label: f })) });
+    }
+    if (d.afflictionPicker) {
+      controls.push({ kind: 'pick', key: 'affliction', label: 'Affliction — which part the Other corrupted',
+        options: Object.entries(STRYDER_OUMEN_AFFLICTIONS).map(([name, aff]) => ({ value: name, label: name, desc: aff.summary })) });
+    }
+    return controls;
+  }
+
+  /**
+   * Character-creation helper: fully undo folk selection — remove the folk
+   * bonus ActiveEffect, any granted folk items, and reset the stored folk
+   * fields. Used when re-picking a folk or navigating back off the folk step.
+   */
+  async _clearCreationFolk() {
+    for (const e of [...this.actor.effects].filter(e => e.flags?.stryder?.isFolkBonus)) await e.delete();
+    for (const i of [...this.actor.items].filter(i => i.flags?.stryder?.isFolkAbility)) await i.delete();
+    await this.actor.update({
+      'system.folk.name': '',
+      'system.folk.bonuses_applied': false,
+      'system.folk.subfolk': '',
+      'system.folk.size_choice': '',
+      'system.folk.colossus_stat_choice': '',
+      'system.folk.traveler_boon': '',
+      'system.folk.wildkin_adaptations': [],
+      'system.folk.talent_free_points': {},
+      'system.folk.sense_free_choices': [],
+    });
+  }
+
+  async _applyCreationFolk(displayName, choices = null) {
+    const info = this._folkChoiceInfo(displayName);
+
+    // Clear any previously applied folk first, so re-picking never stacks.
+    await this._clearCreationFolk();
+
+    // Oumen takes its size (appearance) from the chosen origin folk.
+    if (info.key === 'Oumen' && choices && choices.subfolk) {
+      const originSize = STRYDER_FOLK_DATA[choices.subfolk]?.size;
+      if (originSize) choices.size = originSize;
+    }
+
+    // Fixed folk (no choices) OR a choice folk with its allocations supplied.
+    if (info.key && (choices || !info.needsChoices)) {
+      await this._applyFolkChoices(info.key, choices || {});
+      const t = Object.entries(info.data.talents || {}).map(([k, v]) => `${k} +${v}`).join(', ');
+      const s = Object.entries(info.data.senses  || {}).map(([k, v]) => `${k} +${v}`).join(', ');
+      return { applied: true, key: info.key, summary: [t, s].filter(Boolean).join(' · ') };
+    }
+
+    // Choice folk (or unrecognised name): record the name only for now.
+    await this.actor.update({
+      'system.folk.name': info.key || displayName,
+      'system.folk.bonuses_applied': false,
+    });
+    return { applied: false, needsChoices: info.needsChoices, unknown: !info.key, key: info.key };
+  }
+
+  /**
    * Show the folk assignment popup for the given folk.
    * Fixed-bonus folk get a read-only confirmation; complex folk get pickers.
    */
@@ -7725,7 +7880,7 @@ const CLASS_STARTING_XP = { Warrior: 2 };
 Hooks.on('updateActor', async (actor, changes) => {
   const newClass = changes?.system?.class?.name;
   if (!newClass || !CLASS_STARTING_XP[newClass]) return;
-  if (actor.type !== 'character') return;
+  if (actor.type !== 'character' && actor.type !== 'protocharacter') return;
   if ((actor.system.attributes?.level?.value ?? 1) !== 1) return;
   const flagKey = `startingXpGranted_${newClass}`;
   if (actor.getFlag('stryder', flagKey)) return; // already granted
@@ -7744,7 +7899,7 @@ Hooks.on('updateActor', async (actor, changes) => {
 Hooks.on('deleteItem', async (item, options, userId) => {
   if (game.user.id !== userId) return;                 // only the deleting client acts
   const actor = item.parent;
-  if (!actor || actor.type !== 'character') return;
+  if (!actor || (actor.type !== 'character' && actor.type !== 'protocharacter')) return;
   if (!item.flags?.stryder?.aspectName) return;        // only react to aspect items
   const activeAspect = actor.getFlag('stryder', 'activeAspect');
   if (!activeAspect) return;

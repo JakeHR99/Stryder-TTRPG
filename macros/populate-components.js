@@ -1,32 +1,14 @@
 // Stryder Component Compendium Populator — run once as GM.
-// Deletes the 20 old graded-name component entries from stryder-loot,
-// then creates the 20 canon-named entries (4 types × 5 ranks).
+// FULL WIPE: deletes EVERYTHING in stryder-loot, then creates the 20 canon
+// component entries (Bones / Eyes / Mana Veins / Heart × Rank 4/3/2/1/Mythic).
+// The pack holds components and nothing else — anything not in the canon 20
+// is fluff by definition.
 // Uses keepId since all new IDs are exactly 16 alphanumeric chars.
 
 const LOOT_PACK = "stryder.stryder-loot";
 const SRC       = "systems/stryder/_source/stryder-loot";
 
-// Old names to purge (graded-adjective AI-invented names)
-const OLD_NAMES = [
-  // Bones
-  "Brittle Bones", "Common Bones", "Solid Bones", "Prime Bones", "Mythic Bones",
-  // Eyes
-  "Clouded Eye", "Common Eye", "Keen Eye", "Vivid Eye", "Mythic Eye",
-  // Mana Veins
-  "Frayed Mana Vein", "Common Mana Vein", "Intact Mana Vein", "Pulsing Mana Vein", "Mythic Mana Vein",
-  // Hearts (old singular/plural mix)
-  "Withered Heart", "Common Heart", "Vigorous Heart", "Potent Heart", "Mythic Heart",
-];
-
-// Old IDs to purge by ID (in case they were renamed in the DB)
-const OLD_IDS = [
-  "CmpBoneG4", "CmpBoneG3", "CmpBoneG2", "CmpBoneG1", "CmpBoneMythic",
-  "CmpEyeG4",  "CmpEyeG3",  "CmpEyeG2",  "CmpEyeG1",  "CmpEyeMythic",
-  "CmpVeinG4", "CmpVeinG3", "CmpVeinG2", "CmpVeinG1", "CmpVeinMythic",
-  "CmpHrtG4",  "CmpHrtG3",  "CmpHrtG2",  "CmpHrtG1",  "CmpHrtMythic",
-];
-
-// New canon source filenames (20 files, 4 types × 5 ranks)
+// Canon source filenames (20 files, 4 types × 5 ranks)
 const NEW_FILES = [
   "Bones_Rank4_CmpBnR400000001.json",
   "Bones_Rank3_CmpBnR300000001.json",
@@ -66,45 +48,32 @@ async function fetchSource(filename) {
     const pack = game.packs.get(LOOT_PACK);
     if (!pack) return ui.notifications.error(`Pack not found: ${LOOT_PACK}`);
 
+    // Confirm the full wipe before touching anything
+    const index = await pack.getIndex();
+    const preNames = index.map(e => e.name).sort().join(", ") || "(empty)";
+    const confirmed = await Dialog.confirm({
+      title: "Rebuild Components Compendium?",
+      content: `<p>This will <strong>delete ALL ${index.size}</strong> item(s) currently in the pack:</p>
+        <p style="font-size:11px;color:#888;">${preNames}</p>
+        <p>…and replace them with the <strong>20 canon components</strong> (Bones, Eyes, Mana Veins, Heart × Rank 4–1 + Mythic).</p>`,
+      yes: () => true, no: () => false, defaultYes: false,
+    });
+    if (!confirmed) return;
+
     const wasLocked = pack.locked;
     await pack.configure({ locked: false });
 
-    // ── 1. Delete old items by name and by legacy ID ──────────────
-    const index = await pack.getIndex();
-    const oldNameSet = new Set(OLD_NAMES);
-    const oldIdSet   = new Set(OLD_IDS);
-    const staleIds   = new Set();
-    for (const entry of index) {
-      if (oldNameSet.has(entry.name) || oldIdSet.has(entry._id)) staleIds.add(entry._id);
-    }
-    // Also delete by new names in case a prior run partially populated
-    const newNames = new Set(NEW_FILES.map(f => {
-      // Extract name from filename: e.g. "Bones_Rank4_..." → look it up after fetch isn't ideal;
-      // we'll handle new-name dedup below alongside creation.
-    }));
-    if (staleIds.size) {
-      await Item.deleteDocuments([...staleIds], { pack: LOOT_PACK });
-      console.log(`[Stryder] populate-components: deleted ${staleIds.size} old component(s).`);
+    // ── 1. Full wipe ───────────────────────────────────────────────
+    const staleIds = index.map(e => e._id);
+    if (staleIds.length) {
+      await Item.deleteDocuments(staleIds, { pack: LOOT_PACK });
+      console.log(`[Stryder] populate-components: wiped ${staleIds.length} existing item(s).`);
     }
 
-    // ── 2. Fetch all 20 new source docs ───────────────────────────
+    // ── 2. Fetch all 20 canon source docs ──────────────────────────
     const datas = await Promise.all(NEW_FILES.map(fetchSource));
 
-    // ── 3. Dedup new names in case of re-run ─────────────────────
-    const reIndex   = await pack.getIndex(); // refreshed after deletion
-    const existIds  = new Set();
-    const newNameSet = new Set(datas.map(d => d.name));
-    for (const entry of reIndex) {
-      if (newNameSet.has(entry.name) || datas.some(d => d._id === entry._id)) {
-        existIds.add(entry._id);
-      }
-    }
-    if (existIds.size) {
-      await Item.deleteDocuments([...existIds], { pack: LOOT_PACK });
-      console.log(`[Stryder] populate-components: removed ${existIds.size} prior canon copies for clean re-create.`);
-    }
-
-    // ── 4. Create all 20 with keepId ─────────────────────────────
+    // ── 3. Create all 20 with keepId ───────────────────────────────
     const keepers = datas.filter(d => idOk(d._id));
     const fresh   = datas.filter(d => !idOk(d._id)).map(({ _id, ...rest }) => {
       console.warn(`[Stryder] ${rest.name}: id "${_id}" not 16 chars — creating with fresh id`);
@@ -122,10 +91,10 @@ async function fetchSource(filename) {
 
     await pack.configure({ locked: wasLocked });
 
-    // ── 5. Report ─────────────────────────────────────────────────
-    const idTable = datas.map(d => `  ${d._id.padEnd(18)} ${d.name}`).join('\n');
+    // ── 4. Report ───────────────────────────────────────────────────
+    const idTable = datas.map(d => `  ${d._id.padEnd(18)} ${d.name}`).join("\n");
     console.log(`[Stryder] populate-components: created ${datas.length} components.\n${idTable}`);
-    ui.notifications.info(`Components imported: ${datas.length} canon items (4 types × 5 ranks) — old graded names purged.`);
+    ui.notifications.info(`Components rebuilt: pack wiped, ${datas.length} canon items created (4 types × 5 ranks).`);
 
   } catch (err) {
     console.error(err);

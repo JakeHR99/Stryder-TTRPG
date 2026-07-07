@@ -18,7 +18,7 @@ export class StryderCombatant extends Combatant {
         // Check actor type first - this is more reliable than token disposition
         const actorType = this.actor?.type;
         if (actorType === 'monster') return ENEMY;
-        if (actorType === 'character' || actorType === 'npc') return ALLIED;
+        if (actorType === 'character' || actorType === 'protocharacter' || actorType === 'npc') return ALLIED;
         
         // Fallback to token disposition
         const token = this.token;

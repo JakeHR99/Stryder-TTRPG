@@ -1,3 +1,8 @@
+/* @import must precede all other rules. Loads minigame styles even if the
+   system.json styles-list change hasn't been picked up by a relaunch yet. */
+@import url("scavenging-minigame.css");
+@import url("taming-minigame.css");
+
 /* Global styles */
 .window-app {
   font-family: "Roboto", sans-serif;
@@ -13322,244 +13327,9 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 
 
 /* ============================================================
-   CHALLENGES HUB WINDOW
+   CHALLENGES — party-sheet tab (the old standalone hub was removed;
+   .ch-play-btn remains as the shared launch-button class)
    ============================================================ */
-
-.challenges-hub-app .window-content {
-  background: #120a00;
-  padding: 0;
-}
-
-.challenges-hub-content {
-  background: #120a00;
-  color: #e8c87a;
-  font-family: 'Palatino Linotype', Palatino, Georgia, serif;
-  display: flex;
-  flex-direction: column;
-}
-
-.challenges-hub-header {
-  padding: 10px 14px 6px;
-  border-bottom: 1px solid #2a1a08;
-}
-
-.challenges-intro {
-  margin: 0;
-  font-size: 11px;
-  color: #7a6040;
-  font-style: italic;
-  text-align: center;
-}
-
-.challenges-list {
-  list-style: none;
-  padding: 10px;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.challenge-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #0d0600;
-  border: 1px solid #3a2810;
-  border-radius: 6px;
-  padding: 10px 12px;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.challenge-card:hover {
-  border-color: #6a4820;
-  background: #130900;
-}
-
-.challenge-thumb {
-  font-size: 36px;
-  flex-shrink: 0;
-  width: 48px;
-  text-align: center;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-}
-
-.challenge-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.challenge-name {
-  font-size: 15px;
-  font-weight: bold;
-  color: #e8c87a;
-  margin-bottom: 3px;
-}
-
-.challenge-desc {
-  font-size: 11px;
-  color: #9a8060;
-  line-height: 1.45;
-  margin-bottom: 4px;
-}
-
-.challenge-flavor {
-  font-size: 10px;
-  color: #5a4030;
-  font-style: italic;
-  display: block;
-  margin-bottom: 5px;
-}
-
-.challenge-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-}
-
-.challenge-tag {
-  font-size: 9px;
-  background: #1a0e00;
-  border: 1px solid #3a2810;
-  border-radius: 3px;
-  padding: 1px 5px;
-  color: #7a6040;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.challenge-actions { flex-shrink: 0; }
-
-.challenge-launch-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  background: linear-gradient(180deg, #1a6b8a 0%, #0d4f6b 100%);
-  border: 1px solid #2196a3;
-  border-radius: 6px;
-  color: #e0f4ff;
-  font-family: inherit;
-  font-size: 11px;
-  padding: 8px 14px;
-  cursor: pointer;
-  transition: all 0.15s;
-  min-width: 52px;
-}
-
-.challenge-launch-btn i { font-size: 14px; }
-
-.challenge-launch-btn:hover {
-  background: linear-gradient(180deg, #2196a3 0%, #1a6b8a 100%);
-  box-shadow: 0 0 10px rgba(33,150,163,0.45);
-  transform: translateY(-1px);
-}
-
-.challenges-hub-footer {
-  padding: 8px 14px;
-  border-top: 1px solid #2a1a08;
-  text-align: center;
-}
-
-.challenges-hub-footer p {
-  margin: 0;
-  font-size: 10px;
-  color: #4a3020;
-  font-style: italic;
-}
-
-
-/* ============================================================
-   CHALLENGES HUB WINDOW
-   ============================================================ */
-
-.challenges-hub-app .window-content {
-  background: #120a00;
-  padding: 0;
-}
-
-.ch-hub-wrap {
-  background: #120a00;
-  color: #e8c87a;
-  font-family: 'Palatino Linotype', Palatino, Georgia, serif;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.ch-hub-intro {
-  font-size: 11px;
-  color: #7a6040;
-  font-style: italic;
-  text-align: center;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #2a1a08;
-}
-
-.ch-hub-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.ch-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: #0d0600;
-  border: 1px solid #3a2810;
-  border-radius: 8px;
-  padding: 12px 14px;
-  transition: border-color 0.15s;
-}
-
-.ch-card:not(.ch-locked):hover { border-color: #6a4820; }
-.ch-locked { opacity: 0.45; }
-
-.ch-card-icon {
-  font-size: 38px;
-  flex-shrink: 0;
-  width: 52px;
-  text-align: center;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-}
-
-.ch-card-body { flex: 1; min-width: 0; }
-
-.ch-card-name {
-  font-size: 15px;
-  font-weight: bold;
-  color: #e8c87a;
-  margin-bottom: 3px;
-}
-
-.ch-card-desc {
-  font-size: 11px;
-  color: #9a8060;
-  line-height: 1.45;
-  margin-bottom: 4px;
-}
-
-.ch-card-flavor {
-  font-size: 10px;
-  color: #5a4030;
-  font-style: italic;
-  margin-bottom: 6px;
-}
-
-.ch-card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-
-.ch-tag {
-  font-size: 9px;
-  background: #1a0e00;
-  border: 1px solid #3a2810;
-  border-radius: 3px;
-  padding: 1px 5px;
-  color: #7a6040;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
 
 .ch-play-btn {
   flex-shrink: 0;
@@ -13583,9 +13353,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .ch-play-btn:hover:not(:disabled) { background: linear-gradient(180deg, #2196a3 0%, #1a6b8a 100%); box-shadow: 0 0 10px rgba(33,150,163,0.4); }
 .ch-play-btn.ch-soon { background: #0a0600; border-color: #2a1a08; color: #2a1a08; cursor: default; }
 
-/* ── Challenges Hub v2 — sleek redesign ── */
-.challenges-hub-app .window-content { background: var(--sty-bg-deep) !important; padding: 0 !important; }
-
+/* ── Challenges cards (ch2) — used by the party-sheet Challenges tab ── */
 .ch2-wrap {
   display: flex;
   flex-direction: column;
@@ -13622,6 +13390,11 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   box-shadow: 0 0 24px rgba(40,140,220,0.15), inset 0 0 20px rgba(40,120,200,0.05);
 }
 
+.ch2-sprite.ch2-emoji {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 64px; line-height: 1;
+  filter: drop-shadow(0 4px 16px rgba(40,160,255,0.35));
+}
 .ch2-sprite {
   width: 96px;
   height: 96px;
@@ -14369,6 +14142,23 @@ details.stryder-section:not([open]) .stryder-section-chevron {
   text-shadow: 0 0 10px rgba(210, 170, 40, 0.35);
 }
 
+/* ── Party currency (Grail / Essence) ─────────────────────────────── */
+.ps-currency { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+.ps-cur {
+  display: flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 8px;
+  background: rgba(6,14,30,0.6); border: 1px solid rgba(80,120,220,0.2); cursor: text;
+}
+.ps-cur-ic { font-size: 13px; }
+.ps-cur input {
+  width: 56px; background: transparent; border: none; color: #fff;
+  font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 15px;
+  text-align: right; padding: 0;
+}
+.ps-cur input:focus { outline: none; box-shadow: none; }
+.ps-cur-lab { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; }
+.ps-cur-grail  .ps-cur-lab { color: rgba(240,200,80,0.7); }
+.ps-cur-essence .ps-cur-lab { color: rgba(125,212,240,0.7); }
+
 /* ── Content area ─────────────────────────────────────────────────── */
 .ps-content-area {
   position: relative;
@@ -14634,6 +14424,7 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 /* ── Interior pages (Camping, Challenges, Inventory, Expedition) ──── */
 .ps-interior {
   flex: 1;
+  min-height: 0; /* REQUIRED — without this the flex item grows past the page and overflow-y never engages */
   display: flex;
   flex-direction: column;
   padding: 18px 22px;
@@ -14670,15 +14461,11 @@ details.stryder-section:not([open]) .stryder-section-chevron {
 .inv-slot.inv-item[draggable="true"] { cursor: grab !important; }
 .inv-slot.inv-item[draggable="true"]:active { cursor: grabbing !important; }
 
-.ps-interior-placeholder { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 50px 24px; background: rgba(10,18,50,0.75); backdrop-filter: blur(8px); margin: 10px 14px 8px; border-radius: 10px; border: 1px solid rgba(80,120,220,0.2); }
+.ps-interior-placeholder { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 50px 24px; background: rgba(10,18,50,0.75); backdrop-filter: blur(8px); margin: 10px 14px 8px; border-radius: 10px; border: 1px solid rgba(80,120,220,0.2); }
 .ps-ph-icon { font-size: 50px; opacity: 0.45; }
 .ps-ph-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; color: #f0c040; letter-spacing: 2.5px; text-transform: uppercase; }
 .ps-ph-body { font-size: 13px; color: rgba(160,200,255,0.55); max-width: 300px; line-height: 1.65; }
 .ps-ph-badge { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(200,160,40,0.65); border: 1px solid rgba(200,160,40,0.28); padding: 4px 14px; border-radius: 14px; margin-top: 6px; }
-
-/* Challenges inside interior */
-.ps-interior .ch-hub-wrap { padding: 0; }
-.ps-interior .ch-card { margin-bottom: 10px; }
 
 /* ── Bottom nav — dark bar, gold floating text ────────────────────── */
 .ps-bottom-nav {
@@ -14889,6 +14676,58 @@ form.monster-sheet {
 /* Clip at the inner form level only — never at window-content or .app */
 .sheet.actor.party .ps-form { overflow: hidden; }
 .sheet.actor.party .ps-sheet-wrap { overflow: hidden; }
+
+/* ── Party sheet resize hardening ─────────────────────────────────── */
+/* Minimum usable size — below this the 4-card grid and nav collapse */
+.app.sheet.actor.party {
+  min-width: 720px;
+  min-height: 480px;
+}
+
+/* Constrain window-content so the flex/scroll chain actually holds.
+   This overrides the generic `.stryder .window-content { overflow: visible }`
+   rule (same specificity, later in file wins). Without it the form spills
+   past the window frame when the inventory grows and nothing can scroll.
+   Same pattern as the monster-sheet fix — the resize handle is a child of
+   .app, not .window-content, so clipping here does not hide it. */
+.app.sheet.actor.party .window-content {
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.app.sheet.actor.party .window-content > .ps-form {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* Party name must not force horizontal overflow on narrow widths */
+.ps-title-text { flex: 1; min-width: 0; }
+.ps-name-input { width: 100%; max-width: 320px; }
+
+/* ── Challenges page — match the interior panels of the other tabs ── */
+/* Same inset margin/border/backdrop as .ps-interior so every tab
+   presents the same content footprint, and scrolls instead of clipping */
+.ps-page .ch2-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 10px 14px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(80, 120, 220, 0.2);
+  background: rgba(10, 18, 50, 0.75);
+  backdrop-filter: blur(8px);
+  /* JRPG-select layout — the three activity cards sit side by side with the
+     locked row spanning underneath. Row 1 can never shrink below its content
+     (min-content), so cards keep their full sprite + title + Play button;
+     if the window is too short the wrap scrolls instead of clipping. */
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: minmax(min-content, 1fr) auto;
+  gap: 10px;
+}
+.ps-page .ch2-wrap .ch2-locked-row {
+  grid-column: 1 / -1;
+}
 
 
 /* ================================================================

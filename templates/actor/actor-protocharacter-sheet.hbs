@@ -1,0 +1,1451 @@
+﻿<form class="{{cssClass}} {{actor.type}} jrpg-sheet" autocomplete="off">
+	<script>
+		function adjustElixirSickness(change) {
+			const elixirInput = document.querySelector('input[name="system.elixir_sickness.value"]');
+			let currentValue = parseInt(elixirInput.value);
+
+			// Calculate new value within the bounds of 0 to 5
+			const newValue = Math.min(5, Math.max(0, currentValue + change));
+
+			// Set the new value back to the input
+			elixirInput.value = newValue;
+
+			// Update the actor data
+			// Assume actor is globally available or retrieved via some other means
+			const actorId = elixirInput.getAttribute('data-actor-id'); // Ensure this attribute is set on the input element if using this method
+			const actor = game.actors.get(actorId);
+			actor.update({ 'system.elixir_sickness.value': newValue });
+		}
+
+		// Enhanced sheen clipping function
+		function updateSheenClipping() {
+			// Health bar
+			const hpBar = document.querySelector('.hp-bar');
+			if (hpBar) {
+				const hpFillPercent = (hpBar.value / hpBar.max) * 100;
+				const hpSheenWrapper = document.querySelector('.hp-sheen-wrapper');
+				if (hpSheenWrapper) {
+					hpSheenWrapper.style.width = `${hpFillPercent}%`;
+				}
+			}
+
+			// Mana bar
+			const mpBar = document.querySelector('.mp-bar');
+			if (mpBar) {
+				const mpFillPercent = (mpBar.value / mpBar.max) * 100;
+				const mpSheenWrapper = document.querySelector('.mp-sheen-wrapper');
+				if (mpSheenWrapper) {
+					mpSheenWrapper.style.width = `${mpFillPercent}%`;
+				}
+			}
+
+			// Stamina bar
+			const staminaBar = document.querySelector('.stamina-bar');
+			if (staminaBar) {
+				const staminaFillPercent = (staminaBar.value / staminaBar.max) * 100;
+				const staminaSheenWrapper = document.querySelector('.stamina-sheen-wrapper');
+				if (staminaSheenWrapper) {
+					staminaSheenWrapper.style.width = `${staminaFillPercent}%`;
+				}
+			}
+		}
+
+		// Wait for DOM to be ready with multiple fallbacks
+		function initializeSheenClipping() {
+			// Try multiple times to ensure elements are loaded
+			let attempts = 0;
+			const maxAttempts = 10;
+
+			function tryUpdate() {
+				attempts++;
+				const hpBar = document.querySelector('.hp-bar');
+				const mpBar = document.querySelector('.mp-bar');
+				const staminaBar = document.querySelector('.stamina-bar');
+
+				if (hpBar && mpBar && staminaBar) {
+					updateSheenClipping();
+				} else if (attempts < maxAttempts) {
+					setTimeout(tryUpdate, 100);
+				}
+			}
+
+			tryUpdate();
+		}
+
+		// Multiple event listeners for better coverage
+		document.addEventListener('DOMContentLoaded', initializeSheenClipping);
+
+		// Foundry VTT specific events
+		document.addEventListener('renderActorSheet', function () {
+			setTimeout(initializeSheenClipping, 100);
+		});
+
+		// Update on any form changes
+		document.addEventListener('change', function (e) {
+			if (e.target.name && (
+				e.target.name.includes('health') ||
+				e.target.name.includes('mana') ||
+				e.target.name.includes('stamina')
+			)) {
+				setTimeout(updateSheenClipping, 50);
+			}
+		});
+
+		// Update on input events for real-time changes
+		document.addEventListener('input', function (e) {
+			if (e.target.name && (
+				e.target.name.includes('health') ||
+				e.target.name.includes('mana') ||
+				e.target.name.includes('stamina')
+			)) {
+				setTimeout(updateSheenClipping, 50);
+			}
+		});
+
+		// Fallback: Update every 2 seconds to catch any missed updates
+		setInterval(function () {
+			const hpBar = document.querySelector('.hp-bar');
+			if (hpBar) {
+				updateSheenClipping();
+			}
+		}, 2000);
+	</script>
+
+	<div class="jrpg-bg"></div>
+	<div class="jrpg-particles"></div>
+
+	<!-- ====== SCREEN 1: MAIN MENU ====== -->
+	<div class="jrpg-main-screen">
+		<div class="jrpg-sidebar">
+			<div class="jrpg-sheet-title">
+				<span class="jrpg-title-text">Main Menu</span>
+			</div>
+			<nav class="jrpg-nav">
+				<button type="button" class="jrpg-menu-btn" data-target="character">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/stryderfvtt_title.png" /></div>
+					<span>Character</span>
+				</button>
+<button type="button" class="jrpg-menu-btn" data-target="battle">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/turn-start.svg" /></div>
+					<span>Battle</span>
+				</button>
+				<button type="button" class="jrpg-menu-btn" data-target="exploration">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/movement-speeds.svg" /></div>
+					<span>Roleplay</span>
+				</button>
+<button type="button" class="jrpg-menu-btn" data-target="inventory">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/spring-of-life.svg" /></div>
+					<span>Inventory</span>
+				</button>
+				<button type="button" class="jrpg-menu-btn" data-target="tempering">
+					<div class="jrpg-nav-icon-box"><img src="systems/stryder/assets/legend.svg" /></div>
+					<span>Tempering</span>
+				</button>
+			</nav>
+		</div>
+		{{!-- ── Biography & Journal — the drifting tome (bottom-left of the screen) ── --}}
+		<div class="jrpg-main-bio-btn" role="button" tabindex="0" data-action="openBiography" aria-label="Biography and Journal">
+			<div class="jrpg-main-bio-book jrpg-bio-realm-bookwrap">
+				<div class="jrpg-bio-tomebook"></div>
+				<span class="jrpg-bio-mote"></span><span class="jrpg-bio-mote"></span><span class="jrpg-bio-mote"></span>
+			</div>
+			<span class="jrpg-main-bio-label">Biography &amp; Journal</span>
+		</div>
+		<div class="jrpg-center">
+			<button type="button" class="jrpg-effects-btn" data-target="effects" title="Effects">
+				<i class="fas fa-cog"></i>
+			</button>
+			<div class="jrpg-portrait-frame">
+				<img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" style="transform: translate({{portraitImgX}}%, {{portraitImgY}}%) scale({{portraitImgScaleCss}}) !important; transform-origin: center 35% !important;" />
+			</div>
+			<div class="jrpg-player-card-wrap">
+				<div class="jrpg-player-card">
+					<div class="jrpg-player-portrait-wrap">
+						<div class="jrpg-player-portrait-diamond">
+							<img src="{{portraitSrc}}" class="jrpg-player-portrait-img" data-portrait-field="{{portraitEdit}}" title="{{portraitLabel}} — click to set the image" />
+						</div>
+						<button type="button" class="jrpg-portrait-toggle" data-action="cyclePortrait" title="Portrait source: {{portraitLabel}}. Click to cycle Token / Character / Face Art."><i class="fas fa-sync-alt"></i></button>
+							{{#if bioIsEditor}}<button type="button" class="jrpg-portrait-adjust-toggle" title="Frame the character art (move / resize)" style="position:absolute;bottom:-22px;right:0;width:20px;height:20px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(8,14,35,0.85);border:1px solid rgba(100,180,255,0.5);border-radius:4px;color:rgba(160,205,255,0.95);cursor:pointer;font-size:10px;z-index:16;pointer-events:auto;"><i class="fas fa-sliders"></i></button>{{/if}}
+						<span class="jrpg-portrait-mode-label">{{portraitLabelShort}}</span>
+							{{#if bioIsEditor}}
+							<div class="jrpg-portrait-adjust" title="Frame the character art" style="display:none;position:fixed;flex-direction:column;gap:4px;width:132px;padding:8px;background:rgba(8,14,35,0.97);border:1px solid rgba(100,180,255,0.45);border-radius:6px;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,0.6);pointer-events:auto;">
+								<label class="jrpg-portrait-slider" style="display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(150,185,235,0.8);"><span class="jpa-ic">↔</span><input type="range" class="portrait-xpos" min="-60" max="60" step="1" value="{{portraitImgX}}" title="Move horizontally" style="flex:1;min-width:0;height:12px;accent-color:#7dd4f0;" /></label>
+								<label class="jrpg-portrait-slider" style="display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(150,185,235,0.8);"><span class="jpa-ic">↕</span><input type="range" class="portrait-ypos" min="-60" max="60" step="1" value="{{portraitImgY}}" title="Move vertically" style="flex:1;min-width:0;height:12px;accent-color:#7dd4f0;" /></label>
+								<label class="jrpg-portrait-slider" style="display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(150,185,235,0.8);"><span class="jpa-ic">⤢</span><input type="range" class="portrait-scale" min="50" max="250" step="5" value="{{portraitImgScale}}" title="Resize" style="flex:1;min-width:0;height:12px;accent-color:#7dd4f0;" /></label>
+							</div>
+							{{/if}}
+					</div>
+					<div class="jrpg-player-info">
+						<div class="jrpg-player-name">
+							{{actor.name}}<span class="jrpg-player-level-sep"> · </span><span class="jrpg-player-level">Lv. {{system.attributes.level.value}}</span>
+						</div>
+						<div class="jrpg-player-class-folk">{{system.class.name}}{{#if system.folk.name}} · {{system.folk.name}}{{/if}}</div>
+						<div class="jrpg-player-stat-row">
+							<span class="jrpg-pstat-label hp-label">HP</span>
+							<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar hp-pfill" style="width:{{hpPct}}%"></div></div>
+							<span class="jrpg-pstat-values hp-label">{{system.health.value}}<span class="jrpg-pstat-sep">/</span>{{system.health.max}}</span>
+						</div>
+						<div class="jrpg-player-stat-row">
+							<span class="jrpg-pstat-label mp-label">MP</span>
+							<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar mp-pfill" style="width:{{mpPct}}%"></div></div>
+							<span class="jrpg-pstat-values mp-label">{{system.mana.value}}<span class="jrpg-pstat-sep">/</span>{{system.mana.max}}</span>
+						</div>
+						<div class="jrpg-player-stat-row">
+							<span class="jrpg-pstat-label sp-label">STA</span>
+							<div class="jrpg-pstat-bar-track"><div class="jrpg-pstat-bar sp-pfill" style="width:{{staPct}}%"></div></div>
+							<span class="jrpg-pstat-values sp-label">{{system.stamina.value}}<span class="jrpg-pstat-sep">/</span>{{system.stamina.max}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="jrpg-recovery-buttons">
+					<button type="button" class="jrpg-recovery-btn" data-action="springOfLife">Spring of Life</button>
+					<button type="button" class="jrpg-recovery-btn" data-action="resting">Rest</button>
+					<button type="button" class="jrpg-recovery-btn jrpg-reset-char-btn" data-action="resetCharacter" title="Reset this character to a blank Level 1 (for testing). Keeps name, art, biography, and inventory.">⟲ Reset</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ====== SCREEN 2: SUB-PAGES ====== -->
+	<div class="jrpg-sub-screen" style="display:none;">
+		<div class="jrpg-sub-header">
+			<button type="button" class="jrpg-back-btn">&#8592; Main Menu</button>
+			<button type="button" class="jrpg-back-to-tempering-btn" style="display:none;">&#8592; Tempering</button>
+			<button type="button" class="jrpg-back-to-character-btn" style="display:none;">&#8592; Character</button>
+			<span class="jrpg-sub-title"></span>
+		</div>
+		<div class="jrpg-sub-content">
+			<div class="jrpg-page" data-page="character">
+				<div class="jrpg-char-edit">
+
+					<div class="jrpg-char-section">
+						<h3 class="jrpg-char-section-title">Identity</h3>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Name</label>
+							<input type="text" name="name" value="{{actor.name}}" class="jrpg-char-input jrpg-char-input-wide" />
+						</div>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Level</label>
+							<input type="number" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number" class="jrpg-char-input jrpg-char-input-small" />
+						</div>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Class</label>
+							<select name="system.class.name" class="jrpg-char-select jrpg-class-select" data-dtype="String">
+								<option value="" {{#unless system.class.name}}selected{{/unless}}>— Choose Class —</option>
+								<option value="Warrior"  {{#if (eq system.class.name "Warrior")}}selected{{/if}}>Warrior</option>
+								<option value="Ranger"   {{#if (eq system.class.name "Ranger")}}selected{{/if}}>Ranger</option>
+								<option value="Warlock"  {{#if (eq system.class.name "Warlock")}}selected{{/if}}>Warlock</option>
+								<option value="Shaman"   {{#if (eq system.class.name "Shaman")}}selected{{/if}}>Shaman</option>
+								<option value="Summoner" {{#if (eq system.class.name "Summoner")}}selected{{/if}}>Summoner</option>
+								<option value="Wytch"    {{#if (eq system.class.name "Wytch")}}selected{{/if}}>Wytch</option>
+							</select>
+						</div>
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Folk</label>
+							<select class="jrpg-char-select jrpg-folk-select" name="system.folk.name" data-dtype="String">
+								<option value="" {{#unless system.folk.name}}selected{{/unless}}>— Select Folk —</option>
+								<option value="Feyfolk"     {{#if (eq system.folk.name "Feyfolk")}}selected{{/if}}>Feyfolk</option>
+								<option value="Remnant"     {{#if (eq system.folk.name "Remnant")}}selected{{/if}}>Remnant</option>
+								<option value="Sunborn"     {{#if (eq system.folk.name "Sunborn")}}selected{{/if}}>Sunborn</option>
+								<option value="Oumen"       {{#if (eq system.folk.name "Oumen")}}selected{{/if}}>Oumen</option>
+								<option value="Halfling"    {{#if (eq system.folk.name "Halfling")}}selected{{/if}}>Halfling</option>
+								<option value="Smallfolk"   {{#if (eq system.folk.name "Smallfolk")}}selected{{/if}}>Smallfolk</option>
+								<option value="Floran"      {{#if (eq system.folk.name "Floran")}}selected{{/if}}>Floran</option>
+								<option value="Descendants" {{#if (eq system.folk.name "Descendants")}}selected{{/if}}>Descendants</option>
+								<option value="Traveler"    {{#if (eq system.folk.name "Traveler")}}selected{{/if}}>Traveler</option>
+								<option value="Colossus"    {{#if (eq system.folk.name "Colossus")}}selected{{/if}}>Colossus</option>
+								<option value="Wildkin"     {{#if (eq system.folk.name "Wildkin")}}selected{{/if}}>Wildkin</option>
+							</select>
+						</div>
+						{{#if folkDisplay.subfolks}}
+						<div class="jrpg-char-field">
+							<label class="jrpg-char-label">Subfolk</label>
+							<select class="jrpg-char-select jrpg-subfolk-select" name="system.folk.subfolk" data-dtype="String">
+								<option value="" {{#unless folkDisplay.currentSubfolk}}selected{{/unless}}>— Select Subfolk —</option>
+								{{#each folkDisplay.subfolks}}
+								<option value="{{this}}" {{#if (eq this ../folkDisplay.currentSubfolk)}}selected{{/if}}>{{this}}</option>
+								{{/each}}
+							</select>
+						</div>
+						{{/if}}
+						{{#if folkDisplay}}
+						<div class="jrpg-folk-summary">
+							<span class="folk-size-weight">Size: {{folkDisplay.size}} · Weight: {{folkDisplay.weight}}</span>
+							{{#each folkDisplay.passives}}
+							<div class="folk-passive">⚑ {{this}}</div>
+							{{/each}}
+						</div>
+						{{/if}}
+					</div>
+
+					<!-- Resources + Stats side by side -->
+					<div class="jrpg-char-res-stats-row">
+
+						<!-- ── Resources (left, compact) ── -->
+						<div class="jrpg-char-col-resources">
+							<div class="jrpg-stat-section-header">
+								<h3 class="jrpg-char-section-title csheet-stats-title">Resources</h3>
+								<span class="jrpg-stat-pool-counter" style="visibility:hidden;" aria-hidden="true">
+									<span class="jrpg-stat-pool-remaining">0</span>
+									<span class="jrpg-stat-pool-sep">/</span>
+									<span class="jrpg-stat-pool-total">0</span>
+									<span class="jrpg-stat-pool-label">&nbsp;pts</span>
+								</span>
+							</div>
+							<div class="csheet-stats-hairline"></div>
+
+							<div class="jrpg-res-compact-row">
+								<span class="jrpg-char-res-label hp-label">HP</span>
+								<div class="jrpg-res-compact-inputs">
+									<input type="number" name="system.health.value" value="{{system.health.value}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
+									<span class="jrpg-char-divider">/</span>
+									<span class="jrpg-res-max-display hp-label" title="Base max HP (class + grit)">{{system.health.max}}</span>
+									<span class="jrpg-res-bonus-sep">+</span>
+									<input type="number" name="system.health.bonus" value="{{system.health.bonus}}" data-dtype="Number"
+										class="jrpg-char-input jrpg-res-bonus-input" placeholder="0" title="Bonus max HP" min="0" />
+									<button type="button" class="jrpg-reset-btn resource-button" data-action="resetHpMax" title="Remove bonus HP">↺</button>
+								</div>
+								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar hp-fill" style="width:{{hpPct}}%"></div></div>
+							</div>
+							<div class="jrpg-char-hp-breakdown">
+							  <span class="jrpg-char-hp-src">Class + Level</span>
+							  <span class="jrpg-char-hp-plus">+</span>
+							  <span class="jrpg-char-hp-src">Grit ×{{gritMilestonesReached}} milestone{{#if (gt gritMilestonesReached 1)}}s{{/if}} (+{{gritHpBonus}})</span>
+							</div>
+
+							<div class="jrpg-res-compact-row">
+								<span class="jrpg-char-res-label mp-label">MP</span>
+								<div class="jrpg-res-compact-inputs">
+									<input type="number" name="system.mana.value" value="{{system.mana.value}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
+									<span class="jrpg-char-divider">/</span>
+									<span class="jrpg-res-max-display mp-label" title="Base max MP (by level)">{{system.mana.max}}</span>
+									<span class="jrpg-res-bonus-sep">+</span>
+									<input type="number" name="system.mana.bonus" value="{{system.mana.bonus}}" data-dtype="Number" class="jrpg-char-input jrpg-res-bonus-input" placeholder="0" title="Bonus max MP" min="0" />
+									<button type="button" class="jrpg-reset-btn resource-button" data-action="resetMpMax" title="Remove bonus MP">↺</button>
+								</div>
+								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar mp-fill" style="width:{{mpPct}}%"></div></div>
+							</div>
+
+							<div class="jrpg-res-compact-row">
+								<span class="jrpg-char-res-label sp-label">STA</span>
+								<div class="jrpg-res-compact-inputs">
+									<input type="number" name="system.stamina.value" value="{{system.stamina.value}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
+									<span class="jrpg-char-divider">/</span>
+									<input type="number" name="system.stamina.max" value="{{system.stamina.max}}" data-dtype="Number" class="jrpg-char-input jrpg-res-compact-input" />
+								</div>
+								<div class="jrpg-char-bar-track"><div class="jrpg-char-bar sp-fill" style="width:{{staPct}}%"></div></div>
+							</div>
+						</div>
+
+						<!-- ── Stats (right, stepper) ── -->
+						<div class="jrpg-char-col-stats">
+							<div class="jrpg-stat-section-header">
+								<h3 class="jrpg-char-section-title csheet-stats-title">Stats</h3>
+								<span class="jrpg-stat-pool-counter">
+									<span class="jrpg-stat-pool-remaining">{{statPointRemaining}}</span>
+									<span class="jrpg-stat-pool-sep">/</span>
+									<span class="jrpg-stat-pool-total">{{statPointTotal}}</span>
+									<span class="jrpg-stat-pool-label">&nbsp;pts</span>
+								</span>
+							</div>
+							<div class="csheet-stats-hairline"></div>
+
+							<div class="jrpg-stat-row">
+								<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Soul.value" data-label="Soul Check">Soul</label>
+								<div class="jrpg-stat-stepper">
+									<button type="button" class="stat-btn stat-btn-down" data-stat="Soul">−</button>
+									<input type="number" name="system.abilities.Soul.value" value="{{system.abilities.Soul.value}}" data-dtype="Number" class="jrpg-char-input jrpg-stat-input" />
+									<button type="button" class="stat-btn stat-btn-up" data-stat="Soul">+</button>
+								</div>
+							</div>
+
+							<div class="jrpg-stat-row">
+								<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Reflex.value" data-label="Reflex Check">Reflex</label>
+								<div class="jrpg-stat-stepper">
+									<button type="button" class="stat-btn stat-btn-down" data-stat="Reflex">−</button>
+									<input type="number" name="system.abilities.Reflex.value" value="{{system.abilities.Reflex.value}}" data-dtype="Number" class="jrpg-char-input jrpg-stat-input" />
+									<button type="button" class="stat-btn stat-btn-up" data-stat="Reflex">+</button>
+								</div>
+							</div>
+
+							<div class="jrpg-stat-row">
+								<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Grit.value" data-label="Grit Check">Grit</label>
+								<div class="jrpg-stat-stepper">
+									<button type="button" class="stat-btn stat-btn-down" data-stat="Grit">−</button>
+									<input type="number" name="system.abilities.Grit.value" value="{{system.abilities.Grit.value}}" data-dtype="Number" class="jrpg-char-input jrpg-stat-input" />
+									<button type="button" class="stat-btn stat-btn-up" data-stat="Grit">+</button>
+								</div>
+							</div>
+
+							<div class="jrpg-stat-row">
+								<label class="jrpg-char-label rollable" data-roll="2d6+@abilities.Will.value" data-label="Will Check">Will</label>
+								<div class="jrpg-stat-stepper">
+									<button type="button" class="stat-btn stat-btn-down" data-stat="Will">−</button>
+									<input type="number" name="system.abilities.Will.value" value="{{system.abilities.Will.value}}" data-dtype="Number" class="jrpg-char-input jrpg-stat-input" />
+									<button type="button" class="stat-btn stat-btn-up" data-stat="Will">+</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+			<div class="jrpg-page" data-page="biography">
+				<div class="jrpg-bio-screen" data-bio-theme="{{immersion.colorScheme}}">
+
+					{{!-- ── Tome realm covers + bookmark tab rails (custom data-target, NOT Foundry tabs) ── --}}
+					<div class="jrpg-bio-realms">
+						<div class="jrpg-bio-realm is-active" data-realm="biography">
+							<div class="jrpg-bio-realm-emblem jrpg-bio-realm-portrait">
+								<img src="{{bioPortrait}}" alt="{{actor.name}}" />
+								{{#if bioIsEditor}}
+								<button type="button" class="jrpg-bio-portrait-pick" data-action="bioPickImage" data-target="system.bio.portrait" title="Choose a biography portrait (separate from sheet art)">✎</button>
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-realm-label">
+								<h3 class="jrpg-bio-realm-title">Biography</h3>
+								<span class="jrpg-bio-realm-sub">Profile · Persona · Story{{#if galleryCanTab}} · Gallery{{/if}}</span>
+							</div>
+						</div>
+						<div class="jrpg-bio-realm" data-realm="journal">
+							<div class="jrpg-bio-realm-emblem jrpg-bio-realm-bookwrap">
+								<div class="jrpg-bio-tomebook"></div>
+								<span class="jrpg-bio-mote"></span><span class="jrpg-bio-mote"></span><span class="jrpg-bio-mote"></span>
+							</div>
+							<div class="jrpg-bio-realm-label">
+								<h3 class="jrpg-bio-realm-title">Journal</h3>
+								<span class="jrpg-bio-realm-sub">{{#if journalCanTab}}Diary{{/if}}{{#if questsCanTab}} · Quests{{/if}}{{#if peopleCanTab}} · People{{/if}}</span>
+							</div>
+						</div>
+						{{#if bioIsEditor}}<span class="jrpg-bio-vis-info" title="Visibility hides sections in the UI. It is reliable against non-owners, but anyone who co-owns this actor can technically inspect raw data. The GM always sees everything.">ⓘ</span>{{/if}}
+					</div>
+					<div class="jrpg-bio-tabrail is-active" data-realm="biography">
+						<button type="button" class="jrpg-bio-nav-btn is-active" data-target="profile"><span>Profile</span></button>
+						<button type="button" class="jrpg-bio-nav-btn" data-target="persona"><span>Persona</span></button>
+						<button type="button" class="jrpg-bio-nav-btn" data-target="story"><span>Story</span></button>
+						{{#if galleryCanTab}}
+						<button type="button" class="jrpg-bio-nav-btn" data-target="gallery"><span>Gallery</span></button>
+						{{/if}}
+					</div>
+					<div class="jrpg-bio-tabrail" data-realm="journal">
+						{{#if journalCanTab}}
+						<button type="button" class="jrpg-bio-nav-btn" data-target="diary"><span>Diary</span></button>
+						{{/if}}
+						{{#if questsCanTab}}
+						<button type="button" class="jrpg-bio-nav-btn" data-target="quests"><span>Quests</span></button>
+						{{/if}}
+						{{#if peopleCanTab}}
+						<button type="button" class="jrpg-bio-nav-btn" data-target="people"><span>People</span></button>
+						{{/if}}
+					</div>
+
+					{{!-- ── PROFILE (identity + appearance + at-a-glance) ── --}}
+					<div class="jrpg-bio-panel is-active" data-section="profile">
+
+						{{#if bioCan.identity}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Identity</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="identity" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.identity "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.identity "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.identity "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.identity "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.identity "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="identity" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								{{/if}}
+							</div>
+
+							<div class="jrpg-bio-glance jrpg-char-field">
+								<label class="jrpg-char-label">At a Glance</label>
+								<input type="text" name="system.bio.identity.atAGlance" value="{{system.bio.identity.atAGlance}}" class="jrpg-char-input jrpg-char-input-wide" placeholder="A short public first-impression blurb" />
+							</div>
+
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Full Name</label>
+								<input type="text" name="system.bio.identity.fullName" value="{{system.bio.identity.fullName}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Nicknames</label>
+								<input type="text" name="system.bio.identity.nicknames" value="{{system.bio.identity.nicknames}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Titles</label>
+								<input type="text" name="system.bio.identity.titles" value="{{system.bio.identity.titles}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Pronouns</label>
+								<input type="text" name="system.bio.identity.pronouns" value="{{system.bio.identity.pronouns}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Age</label>
+								<input type="text" name="system.bio.identity.age" value="{{system.bio.identity.age}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Profession</label>
+								<input type="text" name="system.bio.identity.profession" value="{{system.bio.identity.profession}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Faith</label>
+								<input type="text" name="system.bio.identity.faith" value="{{system.bio.identity.faith}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Faction</label>
+								<input type="text" name="system.bio.identity.faction" value="{{system.bio.identity.faction}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Languages</label>
+								<input type="text" name="system.bio.identity.languages" value="{{system.bio.identity.languages}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+						</div>
+						{{/if}}
+
+						{{#if bioCan.appearance}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Appearance</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="appearance" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.appearance "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.appearance "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.appearance "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.appearance "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.appearance "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="appearance" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								{{/if}}
+							</div>
+
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Height</label>
+								<input type="text" name="system.bio.appearance.height" value="{{system.bio.appearance.height}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Build</label>
+								<input type="text" name="system.bio.appearance.build" value="{{system.bio.appearance.build}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Eyes</label>
+								<input type="text" name="system.bio.appearance.eyes" value="{{system.bio.appearance.eyes}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Hair</label>
+								<input type="text" name="system.bio.appearance.hair" value="{{system.bio.appearance.hair}}" class="jrpg-char-input" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Marks</label>
+								<input type="text" name="system.bio.appearance.marks" value="{{system.bio.appearance.marks}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Features</label>
+								<input type="text" name="system.bio.appearance.notableFeatures" value="{{system.bio.appearance.notableFeatures}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Attire</label>
+								<input type="text" name="system.bio.appearance.attire" value="{{system.bio.appearance.attire}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+							<div class="jrpg-char-field">
+								<label class="jrpg-char-label">Voice</label>
+								<input type="text" name="system.bio.appearance.voiceMannerisms" value="{{system.bio.appearance.voiceMannerisms}}" class="jrpg-char-input jrpg-char-input-wide" />
+							</div>
+
+							<label class="jrpg-bio-editor-label">Description</label>
+							<div class="jrpg-bio-editor">
+								{{editor bioEnriched.description target="system.bio.appearance.description" engine="prosemirror" button=true editable=editable}}
+							</div>
+						</div>
+						{{/if}}
+
+						{{!-- ── IMMERSION KIT (Phase 4B — sigil, theme music, accent scheme) ── --}}
+						{{#if bioCan.identity}}
+						<div class="jrpg-bio-block jrpg-immersion">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Immersion</h3>
+							</div>
+							<div class="jrpg-immersion-grid">
+								<div class="jrpg-immersion-sigil">
+									<label class="jrpg-bio-field-label">Sigil</label>
+									{{#if immersion.sigilImg}}
+									<img src="{{immersion.sigilImg}}" class="jrpg-immersion-sigil-img" alt="Sigil" data-action="bioViewImage" data-src="{{immersion.sigilImg}}" data-caption="Sigil" />
+									{{else}}
+									<div class="jrpg-immersion-sigil-empty">No sigil</div>
+									{{/if}}
+									{{#if bioIsEditor}}
+									<button type="button" class="jrpg-bio-add-btn" data-action="bioPickImage" data-target="system.bio.immersion.sigilImg">Browse…</button>
+									{{/if}}
+								</div>
+								<div class="jrpg-immersion-music">
+									<label class="jrpg-bio-field-label">Theme Music</label>
+									{{#if bioIsEditor}}
+									<input class="jrpg-char-input" name="system.bio.immersion.themeMusicUrl" type="text" value="{{system.bio.immersion.themeMusicUrl}}" placeholder="Audio URL (.mp3, .ogg…)" />
+									{{/if}}
+									{{#if immersion.themeMusicUrl}}
+									<audio controls preload="none" src="{{immersion.themeMusicUrl}}" class="jrpg-immersion-audio"></audio>
+									{{/if}}
+								</div>
+								{{#if bioIsEditor}}
+								<div class="jrpg-immersion-scheme">
+									<label class="jrpg-bio-field-label">Accent Scheme</label>
+									<select class="jrpg-bio-vis-select" name="system.bio.immersion.colorScheme">
+										<option value=""        {{#if (eq immersion.colorScheme "")}}selected{{/if}}>Default</option>
+										<option value="gold"    {{#if (eq immersion.colorScheme "gold")}}selected{{/if}}>Gold</option>
+										<option value="cyan"    {{#if (eq immersion.colorScheme "cyan")}}selected{{/if}}>Cyan</option>
+										<option value="crimson" {{#if (eq immersion.colorScheme "crimson")}}selected{{/if}}>Crimson</option>
+									</select>
+								</div>
+								{{/if}}
+							</div>
+						</div>
+						{{/if}}
+
+					</div>
+
+					{{!-- ── PERSONA (the D&D four + demeanor) ── --}}
+					<div class="jrpg-bio-panel" data-section="persona">
+						{{#if bioCan.personality}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Persona</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="personality" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.personality "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.personality "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.personality "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.personality "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.personality "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="personality" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								{{/if}}
+							</div>
+
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Traits</label>
+								<textarea name="system.bio.personality.traits" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.traits}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Ideals</label>
+								<textarea name="system.bio.personality.ideals" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.ideals}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Bonds</label>
+								<textarea name="system.bio.personality.bonds" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.bonds}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Flaws</label>
+								<textarea name="system.bio.personality.flaws" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.flaws}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Demeanor</label>
+								<textarea name="system.bio.personality.demeanor" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.demeanor}}</textarea>
+							</div>
+
+							<details class="jrpg-bio-more">
+								<summary class="jrpg-bio-more-summary">More</summary>
+								<div class="jrpg-bio-more-body">
+									<div class="jrpg-bio-stack">
+										<label class="jrpg-bio-field-label">Fears</label>
+										<textarea name="system.bio.personality.fears" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.fears}}</textarea>
+									</div>
+									<div class="jrpg-bio-stack">
+										<label class="jrpg-bio-field-label">Quirks</label>
+										<textarea name="system.bio.personality.quirks" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.quirks}}</textarea>
+									</div>
+									<div class="jrpg-bio-stack">
+										<label class="jrpg-bio-field-label">Code</label>
+										<textarea name="system.bio.personality.code" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.code}}</textarea>
+									</div>
+									<div class="jrpg-bio-stack">
+										<label class="jrpg-bio-field-label">Defining Moments</label>
+										<textarea name="system.bio.personality.definingMoments" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.personality.definingMoments}}</textarea>
+									</div>
+								</div>
+							</details>
+						</div>
+						{{/if}}
+
+						{{!-- ── TASTES (Phase 4A) ── --}}
+						{{#if bioCan.tastes}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Tastes</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="tastes" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.tastes "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.tastes "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.tastes "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.tastes "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.tastes "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="tastes" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Likes</label>
+								<textarea name="system.bio.tastes.likes" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.likes}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Dislikes</label>
+								<textarea name="system.bio.tastes.dislikes" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.dislikes}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Savvies</label>
+								<textarea name="system.bio.tastes.savvies" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.savvies}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Ineptitudes</label>
+								<textarea name="system.bio.tastes.ineptitudes" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.ineptitudes}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Hobbies</label>
+								<textarea name="system.bio.tastes.hobbies" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.tastes.hobbies}}</textarea>
+							</div>
+						</div>
+						{{/if}}
+
+						{{!-- ── MOTIVATIONS (Phase 4A — secrets live in the Secrets space below) ── --}}
+						{{#if bioCan.motivations}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Motivations</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="motivations" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.motivations "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.motivations "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.motivations "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.motivations "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.motivations "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="motivations" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Goals</label>
+								<textarea name="system.bio.motivations.goals" class="jrpg-char-input jrpg-bio-textarea" rows="3">{{system.bio.motivations.goals}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Drives</label>
+								<textarea name="system.bio.motivations.drives" class="jrpg-char-input jrpg-bio-textarea" rows="3">{{system.bio.motivations.drives}}</textarea>
+							</div>
+						</div>
+						{{/if}}
+
+						{{!-- ── BELIEFS (Phase 4A) ── --}}
+						{{#if bioCan.beliefs}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Beliefs</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="beliefs" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.beliefs "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.beliefs "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.beliefs "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.beliefs "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.beliefs "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="beliefs" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Culture</label>
+								<textarea name="system.bio.beliefs.culture" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.beliefs.culture}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Traditions</label>
+								<textarea name="system.bio.beliefs.traditions" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.beliefs.traditions}}</textarea>
+							</div>
+							<div class="jrpg-bio-stack">
+								<label class="jrpg-bio-field-label">Superstitions</label>
+								<textarea name="system.bio.beliefs.superstitions" class="jrpg-char-input jrpg-bio-textarea" rows="2">{{system.bio.beliefs.superstitions}}</textarea>
+							</div>
+						</div>
+						{{/if}}
+
+						{{!-- ── SECRETS SPACE (Phase 4A — owner/GM only, hard gate) ── --}}
+						{{#if bioIsEditor}}
+						{{#if bioCan.secrets}}
+						<div class="jrpg-bio-block jrpg-bio-secrets">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Secrets</h3>
+							</div>
+							<div class="jrpg-bio-secrets-note">🔒 Visible only to you and the GM.</div>
+							<div class="jrpg-bio-stack">
+								<textarea name="system.bio.motivations.secrets" class="jrpg-char-input jrpg-bio-textarea" rows="4">{{system.bio.motivations.secrets}}</textarea>
+							</div>
+						</div>
+						{{/if}}
+						{{/if}}
+					</div>
+
+					{{!-- ── STORY (backstory rich text) ── --}}
+					<div class="jrpg-bio-panel" data-section="story">
+						{{#if bioCan.backstory}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Story</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="backstory" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.backstory "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.backstory "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.backstory "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.backstory "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.backstory "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="backstory" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								{{/if}}
+							</div>
+							<div class="jrpg-bio-editor">
+								{{editor bioEnriched.backstory target="system.bio.backstory.text" engine="prosemirror" button=true editable=editable}}
+							</div>
+						</div>
+
+						{{!-- ── TIMELINE (Phase 4B — manual order, free-text dates) ── --}}
+						<div class="jrpg-bio-block jrpg-timeline">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Timeline</h3>
+								{{#if bioIsEditor}}
+								<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="timeline">+ Add Event</button>
+								{{/if}}
+							</div>
+							<div class="jrpg-timeline-list">
+								{{#each timeline}}
+								<div class="jrpg-timeline-row" data-id="{{id}}">
+									<div class="jrpg-timeline-node"></div>
+									{{#if ../bioIsEditor}}
+									<div class="jrpg-timeline-fields">
+										<input class="jrpg-timeline-date jrpg-char-input" data-action="bioEditField" data-list="timeline" data-id="{{id}}" data-field="date" type="text" value="{{date}}" placeholder="e.g. Spring, Year 3" />
+										<input class="jrpg-timeline-evtitle jrpg-char-input" data-action="bioEditField" data-list="timeline" data-id="{{id}}" data-field="title" type="text" value="{{title}}" placeholder="Event" />
+										<textarea class="jrpg-char-input jrpg-bio-textarea" data-action="bioEditField" data-list="timeline" data-id="{{id}}" data-field="text" rows="2" placeholder="What happened?">{{text}}</textarea>
+									</div>
+									<div class="jrpg-timeline-controls">
+										<button type="button" class="jrpg-timeline-move" data-action="bioMoveRow" data-list="timeline" data-id="{{id}}" data-dir="up" title="Move up">▲</button>
+										<button type="button" class="jrpg-timeline-move" data-action="bioMoveRow" data-list="timeline" data-id="{{id}}" data-dir="down" title="Move down">▼</button>
+										<button type="button" class="jrpg-timeline-del" data-action="bioDelRow" data-list="timeline" data-id="{{id}}" title="Delete event">✕</button>
+									</div>
+									{{else}}
+									<div class="jrpg-timeline-view">
+										{{#if date}}<span class="jrpg-timeline-datechip">{{date}}</span>{{/if}}
+										<span class="jrpg-timeline-viewtitle">{{title}}</span>
+										{{#if text}}<div class="jrpg-timeline-viewtext">{{text}}</div>{{/if}}
+									</div>
+									{{/if}}
+								</div>
+								{{else}}
+								<div class="jrpg-diary-empty">No events recorded.{{#if bioIsEditor}} Click “+ Add Event” to start the timeline.{{/if}}</div>
+								{{/each}}
+							</div>
+						</div>
+						{{/if}}
+					</div>
+
+					{{!-- ── GALLERY (Phase 4B — media, artist credit) ── --}}
+					<div class="jrpg-bio-panel" data-section="gallery">
+						{{#if bioCan.gallery}}
+						<div class="jrpg-bio-block">
+							<div class="jrpg-bio-block-header">
+								<h3 class="jrpg-bio-block-title">Gallery</h3>
+								{{#if bioIsEditor}}
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="gallery" title="Who can see this section">
+									<option value="public"  {{#if (eq bioVis.gallery "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.gallery "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.gallery "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.gallery "private")}}selected{{/if}}>Private</option>
+								</select>
+								{{#if isGM}}{{#unless (eq bioVis.gallery "public")}}
+								<button type="button" class="jrpg-bio-reveal" data-action="bioRevealSection" data-section="gallery" title="Reveal to party (sets visibility to Public)">👁 Reveal</button>
+								{{/unless}}{{/if}}
+								<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="gallery">+ Add Image</button>
+								{{/if}}
+							</div>
+							<div class="jrpg-gallery-grid">
+								{{#each galleryImages}}
+								<div class="jrpg-gallery-card" data-id="{{id}}">
+									{{#if img}}
+									<img src="{{img}}" class="jrpg-gallery-img" alt="{{caption}}" data-action="bioViewImage" data-src="{{img}}" data-caption="{{caption}}" loading="lazy" />
+									{{else}}
+									<div class="jrpg-gallery-placeholder">No image</div>
+									{{/if}}
+									{{#if ../bioIsEditor}}
+									<div class="jrpg-gallery-edit">
+										<button type="button" class="jrpg-bio-add-btn" data-action="bioPickImage" data-list="gallery" data-id="{{id}}">Browse…</button>
+										<input class="jrpg-char-input jrpg-gallery-caption" data-action="bioEditField" data-list="gallery" data-id="{{id}}" data-field="caption" type="text" value="{{caption}}" placeholder="Caption" />
+										<input class="jrpg-char-input jrpg-gallery-artist" data-action="bioEditField" data-list="gallery" data-id="{{id}}" data-field="artist" type="text" value="{{artist}}" placeholder="Artist credit" />
+										<div class="jrpg-gallery-controls">
+											<button type="button" class="jrpg-timeline-move" data-action="bioMoveRow" data-list="gallery" data-id="{{id}}" data-dir="up" title="Move up">▲</button>
+											<button type="button" class="jrpg-timeline-move" data-action="bioMoveRow" data-list="gallery" data-id="{{id}}" data-dir="down" title="Move down">▼</button>
+											<button type="button" class="jrpg-timeline-del" data-action="bioDelRow" data-list="gallery" data-id="{{id}}" title="Delete image">✕</button>
+										</div>
+									</div>
+									{{else}}
+									<div class="jrpg-gallery-meta">
+										{{#if caption}}<div class="jrpg-gallery-cap">{{caption}}</div>{{/if}}
+										{{#if artist}}<div class="jrpg-gallery-credit">Art: {{artist}}</div>{{/if}}
+									</div>
+									{{/if}}
+								</div>
+								{{else}}
+								<div class="jrpg-diary-empty">No images yet.{{#if bioIsEditor}} Click “+ Add Image” to begin the gallery.{{/if}}</div>
+								{{/each}}
+							</div>
+						</div>
+						{{/if}}
+					</div>
+
+					{{!-- ── DIARY (journal entries — Phase 2) ── --}}
+					<div class="jrpg-bio-panel" data-section="diary">
+						<div class="jrpg-bio-section-head">
+							<h3 class="jrpg-bio-section-title">Diary</h3>
+							{{#if bioIsEditor}}
+							<label class="jrpg-bio-vis-wrap" title="Default visibility for NEW entries">
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="journal">
+									<option value="public"  {{#if (eq bioVis.journal "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.journal "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.journal "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.journal "private")}}selected{{/if}}>Private</option>
+								</select>
+							</label>
+							<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="journal.entries">+ New Entry</button>
+							{{/if}}
+						</div>
+
+						{{#if bioIsEditor}}
+						<div class="jrpg-diary-filterbar">
+							<input type="search" class="jrpg-diary-search jrpg-char-input" placeholder="Search entries…" />
+							<div class="jrpg-diary-filter-modes">
+								<button type="button" class="jrpg-diary-fmode is-active" data-mode="all">All</button>
+								<button type="button" class="jrpg-diary-fmode" data-mode="ic">In-Character</button>
+								<button type="button" class="jrpg-diary-fmode" data-mode="ooc">Notes</button>
+							</div>
+							{{#if journalTags.length}}
+							<div class="jrpg-diary-tagchips">
+								{{#each journalTags}}<button type="button" class="jrpg-diary-tagchip" data-tag="{{this}}">{{this}}</button>{{/each}}
+							</div>
+							{{/if}}
+						</div>
+						{{/if}}
+
+						<div class="jrpg-diary-list">
+							{{#each journalEntries}}
+							<article class="jrpg-diary-card {{#if pinned}}is-pinned{{/if}} {{#if ic}}is-ic{{else}}is-ooc{{/if}}"
+									 data-id="{{id}}" data-tags="{{#each tags}}{{this}} {{/each}}" data-ic="{{ic}}">
+								<header class="jrpg-diary-card-head">
+									{{#if ../bioIsEditor}}
+										<input class="jrpg-diary-title jrpg-char-input" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="title" type="text" value="{{title}}" placeholder="Untitled" />
+									{{else}}<span class="jrpg-diary-title-ro">{{title}}</span>{{/if}}
+									<span class="jrpg-diary-badge">{{#if ic}}IC{{else}}OOC{{/if}}</span>
+									{{#if ../bioIsEditor}}
+										<button type="button" class="jrpg-diary-pin {{#if pinned}}is-on{{/if}}" data-action="bioToggleField" data-list="journal.entries" data-id="{{id}}" data-field="pinned" title="Pin">★</button>
+										<button type="button" class="jrpg-diary-del" data-action="bioDelRow" data-list="journal.entries" data-id="{{id}}" title="Delete">🗙</button>
+									{{/if}}
+								</header>
+
+								<div class="jrpg-diary-meta">
+									{{#if ../bioIsEditor}}
+										<label class="jrpg-diary-icflag"><input type="checkbox" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="ic" data-dtype="Boolean" {{checked ic}}/> In-character</label>
+										<input class="jrpg-diary-ingame jrpg-char-input" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="inGameDate" type="text" value="{{inGameDate}}" placeholder="In-game date" />
+										<input class="jrpg-diary-mood jrpg-char-input" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="mood" type="text" value="{{mood}}" placeholder="Mood" />
+										<input class="jrpg-diary-tags jrpg-char-input" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="tags" data-dtype="Array" type="text" value="{{#each tags}}{{this}}, {{/each}}" placeholder="tags, comma, sep" />
+										<select class="jrpg-bio-vis-select jrpg-diary-vis" data-action="bioEditField" data-list="journal.entries" data-id="{{id}}" data-field="visibility" title="Who can see this entry">
+											<option value="public"  {{#if (eq visibility "public")}}selected{{/if}}>Public</option>
+											<option value="party"   {{#if (eq visibility "party")}}selected{{/if}}>Party</option>
+											<option value="gm"      {{#if (eq visibility "gm")}}selected{{/if}}>GM</option>
+											<option value="private" {{#if (eq visibility "private")}}selected{{/if}}>Private</option>
+										</select>
+									{{/if}}
+									<span class="jrpg-diary-date">{{_realDateLabel}}{{#if inGameDate}} · {{inGameDate}}{{/if}}{{#if mood}} · {{mood}}{{/if}}</span>
+								</div>
+
+								{{#if ../bioIsEditor}}
+									<div class="jrpg-bio-editor jrpg-diary-editor">
+										{{editor _bodyEnriched target=(concat "system.journal.entries." _idx ".body") engine="prosemirror" button=true editable=../editable}}
+									</div>
+								{{else}}
+									<div class="jrpg-diary-body">{{{_bodyEnriched}}}</div>
+								{{/if}}
+							</article>
+							{{else}}
+							<div class="jrpg-diary-empty">No entries yet.{{#if bioIsEditor}} Click “+ New Entry” to start your journal.{{/if}}</div>
+							{{/each}}
+						</div>
+					</div>
+					{{!-- ── PEOPLE & BONDS (relationships — Phase 3A) ── --}}
+					<div class="jrpg-bio-panel jrpg-people-panel" data-section="people" data-view="bonds">
+						<div class="jrpg-bio-section-head">
+							<h3 class="jrpg-bio-section-title">People &amp; Bonds</h3>
+							{{#if bioIsEditor}}
+							<div class="jrpg-people-viewtoggle">
+								<button type="button" class="jrpg-people-view is-active" data-view="bonds">Bonds</button>
+								<button type="button" class="jrpg-people-view" data-view="dossier">Dossier</button>
+							</div>
+							<label class="jrpg-bio-vis-wrap" title="Default visibility for NEW people">
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="relationships">
+									<option value="public"  {{#if (eq bioVis.relationships "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.relationships "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.relationships "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.relationships "private")}}selected{{/if}}>Private</option>
+								</select>
+							</label>
+							<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="relationships">+ Add Person</button>
+							{{/if}}
+						</div>
+
+						{{#if bioIsEditor}}
+						<div class="jrpg-people-dropzone">Drag an Actor here to link them.</div>
+						{{/if}}
+
+						<div class="jrpg-people-list">
+							{{#each people}}
+							<article class="jrpg-people-card {{#if _linked}}is-linked{{/if}}" data-id="{{id}}" data-attitude="{{attitude}}">
+								<div class="jrpg-people-card-main">
+									<div class="jrpg-people-portrait">
+										{{#if _dispImg}}<img src="{{_dispImg}}" alt="{{_dispName}}" />{{/if}}
+										{{#if _linked}}<span class="jrpg-people-linkmark" title="Linked to an Actor">◈</span>{{/if}}
+									</div>
+									<div class="jrpg-people-headinfo">
+										{{#if ../bioIsEditor}}
+											<input class="jrpg-people-name jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="name" type="text" value="{{name}}" placeholder="{{#if _dispName}}{{_dispName}}{{else}}Name{{/if}}" />
+											<div class="jrpg-people-factrow">
+												<input class="jrpg-people-role jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="role" type="text" value="{{role}}" placeholder="Role" />
+												<input class="jrpg-people-faction jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="faction" type="text" value="{{faction}}" placeholder="Faction" />
+											</div>
+										{{else}}
+											<span class="jrpg-people-name-ro">{{_dispName}}</span>
+											<div class="jrpg-people-factrow-ro">{{role}}{{#if faction}} · {{faction}}{{/if}}</div>
+										{{/if}}
+										<div class="jrpg-people-chiprow">
+											<span class="jrpg-people-attitude jrpg-attitude-{{attitude}}">{{attitude}}</span>
+											{{#if _mentions}}<span class="jrpg-people-mentions" title="Mentions in this character's journal">Mentioned in {{_mentions}}</span>{{/if}}
+											{{#if _linked}}<button type="button" class="jrpg-people-open" data-action="bioOpenActor" data-uuid="{{_actorUuid}}" title="Open linked actor sheet">Open sheet</button>{{/if}}
+										</div>
+									</div>
+									{{#if ../bioIsEditor}}
+									<div class="jrpg-people-cardctl">
+										<select class="jrpg-bio-vis-select jrpg-people-attsel" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="attitude" title="Attitude">
+											<option value="ally"     {{#if (eq attitude "ally")}}selected{{/if}}>Ally</option>
+											<option value="friendly" {{#if (eq attitude "friendly")}}selected{{/if}}>Friendly</option>
+											<option value="neutral"  {{#if (eq attitude "neutral")}}selected{{/if}}>Neutral</option>
+											<option value="wary"     {{#if (eq attitude "wary")}}selected{{/if}}>Wary</option>
+											<option value="hostile"  {{#if (eq attitude "hostile")}}selected{{/if}}>Hostile</option>
+											<option value="unknown"  {{#if (eq attitude "unknown")}}selected{{/if}}>Unknown</option>
+										</select>
+										<select class="jrpg-bio-vis-select jrpg-people-vissel" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="visibility" title="Who can see this person">
+											<option value="public"  {{#if (eq visibility "public")}}selected{{/if}}>Public</option>
+											<option value="party"   {{#if (eq visibility "party")}}selected{{/if}}>Party</option>
+											<option value="gm"      {{#if (eq visibility "gm")}}selected{{/if}}>GM</option>
+											<option value="private" {{#if (eq visibility "private")}}selected{{/if}}>Private</option>
+										</select>
+										<button type="button" class="jrpg-diary-del jrpg-people-del" data-action="bioDelRow" data-list="relationships" data-id="{{id}}" title="Delete">🗙</button>
+									</div>
+									{{/if}}
+								</div>
+
+								<div class="jrpg-people-facts">
+									{{#if ../bioIsEditor}}
+										<label class="jrpg-people-factfield"><span>How Known</span><input class="jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="howKnown" type="text" value="{{howKnown}}" placeholder="How you know them" /></label>
+										<label class="jrpg-people-factfield"><span>First Met</span><input class="jrpg-char-input" data-action="bioEditField" data-list="relationships" data-id="{{id}}" data-field="firstMet" type="text" value="{{firstMet}}" placeholder="When / where" /></label>
+									{{else}}
+										{{#if howKnown}}<div class="jrpg-people-factro"><span>How Known</span> {{howKnown}}</div>{{/if}}
+										{{#if firstMet}}<div class="jrpg-people-factro"><span>First Met</span> {{firstMet}}</div>{{/if}}
+									{{/if}}
+								</div>
+
+								<div class="jrpg-people-notes">
+									{{#if ../bioIsEditor}}
+										<div class="jrpg-bio-editor jrpg-people-editor">
+											{{editor _notesEnriched target=(concat "system.relationships." _idx ".notes") engine="prosemirror" button=true editable=../editable}}
+										</div>
+									{{else}}
+										<div class="jrpg-diary-body">{{{_notesEnriched}}}</div>
+									{{/if}}
+								</div>
+							</article>
+							{{else}}
+							<div class="jrpg-diary-empty">No bonds yet.{{#if bioIsEditor}} Click “+ Add Person” or drag an Actor onto the dropzone.{{/if}}</div>
+							{{/each}}
+						</div>
+					</div>
+					{{!-- ── QUEST LOG (quests — Phase 3B) ── --}}
+					<div class="jrpg-bio-panel jrpg-quest-panel" data-section="quests">
+						<div class="jrpg-bio-section-head">
+							<h3 class="jrpg-bio-section-title">Quest Log</h3>
+							{{#if bioIsEditor}}
+							<div class="jrpg-quest-catfilter">
+								<button type="button" class="jrpg-quest-cat is-active" data-cat="all">All</button>
+								<button type="button" class="jrpg-quest-cat" data-cat="main">Main</button>
+								<button type="button" class="jrpg-quest-cat" data-cat="side">Side</button>
+								<button type="button" class="jrpg-quest-cat" data-cat="personal">Personal</button>
+							</div>
+							<label class="jrpg-bio-vis-wrap" title="Default visibility for NEW quests">
+								<select class="jrpg-bio-vis-select" data-action="bioSetVisibility" data-section="quests">
+									<option value="public"  {{#if (eq bioVis.quests "public")}}selected{{/if}}>Public</option>
+									<option value="party"   {{#if (eq bioVis.quests "party")}}selected{{/if}}>Party</option>
+									<option value="gm"      {{#if (eq bioVis.quests "gm")}}selected{{/if}}>GM</option>
+									<option value="private" {{#if (eq bioVis.quests "private")}}selected{{/if}}>Private</option>
+								</select>
+							</label>
+							<button type="button" class="jrpg-bio-add-btn" data-action="bioAddRow" data-list="quests">+ New Quest</button>
+							{{/if}}
+						</div>
+
+						{{#if quests.length}}
+							{{#each questsByStatus}}
+							{{#if this.length}}
+							<div class="jrpg-quest-group jrpg-quest-group-{{@key}}">
+								<div class="jrpg-quest-group-head">{{@key}}</div>
+								{{#each this}}
+								<article class="jrpg-quest-card jrpg-quest-status-{{status}}" data-id="{{id}}" data-cat="{{category}}" data-status="{{status}}">
+									<header class="jrpg-quest-card-head">
+										{{#if ../../bioIsEditor}}
+											<input class="jrpg-quest-title jrpg-char-input" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="title" type="text" value="{{title}}" placeholder="Untitled Quest" />
+										{{else}}<span class="jrpg-quest-title-ro">{{title}}</span>{{/if}}
+										<span class="jrpg-quest-cat-chip jrpg-quest-cat-{{category}}">{{category}}</span>
+										{{#if (eq status "hidden")}}<span class="jrpg-quest-hidden-badge">Hidden</span>{{/if}}
+										{{#if ../../bioIsEditor}}
+										<div class="jrpg-quest-headctl">
+											<select class="jrpg-bio-vis-select jrpg-quest-statussel" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="status" title="Status">
+												<option value="active"    {{#if (eq status "active")}}selected{{/if}}>Active</option>
+												<option value="completed" {{#if (eq status "completed")}}selected{{/if}}>Completed</option>
+												<option value="failed"    {{#if (eq status "failed")}}selected{{/if}}>Failed</option>
+												<option value="hidden"    {{#if (eq status "hidden")}}selected{{/if}}>Hidden</option>
+											</select>
+											<select class="jrpg-bio-vis-select jrpg-quest-catsel" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="category" title="Category">
+												<option value="main"     {{#if (eq category "main")}}selected{{/if}}>Main</option>
+												<option value="side"     {{#if (eq category "side")}}selected{{/if}}>Side</option>
+												<option value="personal" {{#if (eq category "personal")}}selected{{/if}}>Personal</option>
+											</select>
+											<select class="jrpg-bio-vis-select jrpg-quest-vissel" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="visibility" title="Who can see this quest">
+												<option value="public"  {{#if (eq visibility "public")}}selected{{/if}}>Public</option>
+												<option value="party"   {{#if (eq visibility "party")}}selected{{/if}}>Party</option>
+												<option value="gm"      {{#if (eq visibility "gm")}}selected{{/if}}>GM</option>
+												<option value="private" {{#if (eq visibility "private")}}selected{{/if}}>Private</option>
+											</select>
+											<button type="button" class="jrpg-diary-del jrpg-quest-del" data-action="bioDelRow" data-list="quests" data-id="{{id}}" title="Delete">🗙</button>
+										</div>
+										{{/if}}
+									</header>
+
+									<div class="jrpg-quest-progress" title="{{_done}} of {{_total}} objectives">
+										<div class="jrpg-quest-progress-track">
+											<div class="jrpg-quest-progress-fill" style="width: {{_pct}}%"></div>
+										</div>
+										<span class="jrpg-quest-progress-label">{{_done}}/{{_total}}</span>
+									</div>
+
+									<div class="jrpg-quest-objectives">
+										{{#each objectives}}
+										<div class="jrpg-quest-obj {{#if done}}is-done{{/if}}" data-obj-id="{{id}}">
+											{{#if ../../../bioIsEditor}}
+												<input type="checkbox" class="jrpg-quest-obj-check" data-action="bioObjToggle" data-quest-id="{{../id}}" data-obj-id="{{id}}" {{checked done}} />
+												<input type="text" class="jrpg-quest-obj-text jrpg-char-input" data-action="bioObjEdit" data-quest-id="{{../id}}" data-obj-id="{{id}}" value="{{text}}" placeholder="Objective" />
+												<button type="button" class="jrpg-diary-del jrpg-quest-obj-del" data-action="bioObjDel" data-quest-id="{{../id}}" data-obj-id="{{id}}" title="Remove objective">🗙</button>
+											{{else}}
+												<span class="jrpg-quest-obj-mark">{{#if done}}☑{{else}}☐{{/if}}</span>
+												<span class="jrpg-quest-obj-text-ro">{{text}}</span>
+											{{/if}}
+										</div>
+										{{/each}}
+										{{#if ../../bioIsEditor}}
+										<button type="button" class="jrpg-quest-obj-add" data-action="bioObjAdd" data-quest-id="{{id}}">+ Objective</button>
+										{{/if}}
+									</div>
+
+									<div class="jrpg-quest-links">
+										<div class="jrpg-quest-link">
+											<span class="jrpg-quest-link-label">Giver</span>
+											{{#if _giverName}}
+												<span class="jrpg-quest-link-name">{{_giverName}}</span>
+												<button type="button" class="jrpg-people-open" data-action="bioOpenDoc" data-uuid="{{giverUuid}}" title="Open">Open</button>
+												{{#if ../../bioIsEditor}}<button type="button" class="jrpg-quest-unlink" data-action="bioQuestUnlink" data-quest-id="{{id}}" data-field="giverUuid" title="Unlink">✕</button>{{/if}}
+											{{else if ../../bioIsEditor}}
+												<div class="jrpg-quest-drop" data-quest-id="{{id}}" data-field="giverUuid">Drop an Actor</div>
+											{{else}}
+												<span class="jrpg-quest-link-empty">—</span>
+											{{/if}}
+										</div>
+										<div class="jrpg-quest-link">
+											<span class="jrpg-quest-link-label">Location</span>
+											{{#if _locationName}}
+												<span class="jrpg-quest-link-name">{{_locationName}}</span>
+												<button type="button" class="jrpg-people-open" data-action="bioOpenDoc" data-uuid="{{locationUuid}}" title="Open">Open</button>
+												{{#if ../../bioIsEditor}}<button type="button" class="jrpg-quest-unlink" data-action="bioQuestUnlink" data-quest-id="{{id}}" data-field="locationUuid" title="Unlink">✕</button>{{/if}}
+											{{else if ../../bioIsEditor}}
+												<div class="jrpg-quest-drop" data-quest-id="{{id}}" data-field="locationUuid">Drop a Scene / Journal</div>
+											{{else}}
+												<span class="jrpg-quest-link-empty">—</span>
+											{{/if}}
+										</div>
+									</div>
+
+									<div class="jrpg-quest-rewards">
+										<span class="jrpg-quest-link-label">Rewards</span>
+										{{#if ../../bioIsEditor}}
+											<input type="text" class="jrpg-char-input" data-action="bioEditField" data-list="quests" data-id="{{id}}" data-field="rewards" value="{{rewards}}" placeholder="Loot, XP, favors…" />
+										{{else}}<span class="jrpg-quest-rewards-ro">{{rewards}}</span>{{/if}}
+									</div>
+
+									<div class="jrpg-quest-notes">
+										{{#if ../../bioIsEditor}}
+											<div class="jrpg-bio-editor jrpg-quest-editor">
+												{{editor _notesEnriched target=(concat "system.quests." _idx ".notes") engine="prosemirror" button=true editable=../../editable}}
+											</div>
+										{{else}}
+											<div class="jrpg-diary-body">{{{_notesEnriched}}}</div>
+										{{/if}}
+									</div>
+								</article>
+								{{/each}}
+							</div>
+							{{/if}}
+							{{/each}}
+						{{else}}
+							<div class="jrpg-diary-empty">No quests yet.{{#if bioIsEditor}} Click “+ New Quest” to start your log.{{/if}}</div>
+						{{/if}}
+					</div>
+
+				</div>
+			</div>
+			<div class="jrpg-page" data-page="stats"></div>
+			<div class="jrpg-page" data-page="battle">
+				{{#if (eq system.class.name "Summoner")}}
+				<div class="summoner-gates-row">
+					<button type="button" class="summoner-summon-button" title="The Binding Gates — 2 Stamina (Swift) or sacrifice a Rank 4 component. Spirit abilities cost 1 Stamina, first use free.">
+						<span class="summoner-btn-icon">◈</span> Summon Spirit
+					</button>
+					<button type="button" class="summoner-dismiss-button" title="Send your active Spirit Beasts back through their Gates">
+						<span class="summoner-btn-icon">◇</span> Dismiss Spirits
+					</button>
+					<button type="button" class="summoner-generate-button" title="Create your persistent Spirit Beast actors (one per Gate). Idempotent — only creates missing ones.">
+						<span class="summoner-btn-icon">✦</span> Generate Spirit Beasts
+					</button>
+				</div>
+				{{/if}}
+				{{> "systems/stryder/templates/actor/parts/actor-features.hbs"}}
+			</div>
+			<div class="jrpg-page" data-page="exploration">
+				{{> "systems/stryder/templates/actor/parts/actor-battle.hbs"}}
+			</div>
+			<div class="jrpg-page" data-page="life"></div>
+			<div class="jrpg-page" data-page="inventory">
+				{{> "systems/stryder/templates/actor/parts/actor-items.hbs"}}
+			</div>
+			<div class="jrpg-page" data-page="tempering">
+  <div class="jrpg-tempering-screen">
+
+    <div class="jrpg-tempering-hero">
+      <div class="jrpg-tempering-level-block">
+        <span class="jrpg-temp-level-label">Level</span>
+        <span class="jrpg-temp-level-num">{{system.attributes.level.value}}</span>
+      </div>
+
+      <div class="jrpg-temp-xp-block">
+        <span class="jrpg-temp-xp-label">Experience Points</span>
+        <div class="jrpg-temp-xp-counter">
+          <input type="number" name="system.attributes.xp.value" value="{{system.attributes.xp.value}}" data-dtype="Number" class="jrpg-temp-xp-input" />
+          <span class="jrpg-temp-xp-sublabel">available to spend</span>
+        </div>
+      </div>
+
+      <button type="button" class="jrpg-temp-levelup-btn resource-button" data-action="levelUp">
+        ✦ Level Up
+      </button>
+    </div>
+
+    <div class="jrpg-tempering-nav-grid">
+
+      <div class="jrpg-temp-card-wrap">
+        <button type="button" class="jrpg-temp-nav-btn" data-tempering-page="soul-armament">
+          <span class="jrpg-temp-nav-glyph">⚔</span>
+          <span class="jrpg-temp-nav-title">Soul Armament</span>
+          <span class="jrpg-temp-nav-sub">Customize &amp; Upgrade</span>
+        </button>
+      </div>
+
+      <div class="jrpg-temp-card-wrap">
+        <button type="button" class="jrpg-temp-nav-btn" data-tempering-page="growth">
+          <span class="jrpg-temp-nav-glyph">✦</span>
+          <span class="jrpg-temp-nav-title">Growth</span>
+          <span class="jrpg-temp-nav-sub">Techniques &amp; Class Paths</span>
+          {{#if system.attributes.xp.value}}<span class="jrpg-xp-dot"></span>{{/if}}
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+			</div>
+			<div class="jrpg-page" data-page="soul-armament">
+  <div class="sa-particles-wrap"></div>
+  <div class="sa-screen">
+
+        <!-- Identity row: image left, name/desc/summary right -->
+        <div class="sa-identity">
+          <div class="sa-img-wrap">
+            <img class="sa-portrait" src="{{system.soul_armament.img}}" data-edit="system.soul_armament.img" title="Click to change image" />
+            <span class="sa-img-hint">Click to change</span>
+          </div>
+          <div class="sa-identity-info">
+            <input class="sa-name-input" type="text" name="system.soul_armament.name" value="{{system.soul_armament.name}}" placeholder="Soul Armament Name…" />
+            <textarea class="sa-desc-input" name="system.soul_armament.description" placeholder="Describe your Soul Armament…">{{system.soul_armament.description}}</textarea>
+            <div class="sa-summary">
+              <div class="sa-sum-row"><span class="sa-sum-label">Form</span><span class="sa-sum-val">{{saSumForm}}</span></div>
+              <div class="sa-sum-row"><span class="sa-sum-label">Range</span><span class="sa-sum-val">{{saSumRange}}</span></div>
+              <div class="sa-sum-row"><span class="sa-sum-label">Temper</span><span class="sa-sum-val">{{saSumTemper}}</span></div>
+              <div class="sa-sum-row"><span class="sa-sum-label">Capacity</span><span class="sa-sum-val">{{saSumCapacity}}</span></div>
+            </div>
+            <button type="button" class="sa-display-btn" data-action="displaySoulArmament" title="Post your Soul Armament's image, description, and features to chat"><i class="fas fa-share-square"></i> Display</button>
+          </div>
+        </div>
+
+        <!-- DP tracker -->
+        <div class="sa-dp-section">
+          <span class="sa-dp-label">Design Points</span>
+          <div class="sa-dp-track">
+            <div class="sa-dp-fill {{#if saDPOver}}sa-dp-over{{/if}}" style="width: {{saDPPct}}%"></div>
+          </div>
+          <span class="sa-dp-nums {{#if saDPOver}}sa-dp-over{{/if}}">{{saDPSpent}} / {{saDPMax}}</span>
+        </div>
+
+        <!-- Options grid: 2 columns × 2 rows -->
+        <div class="sa-options-grid">
+
+          <!-- FORM (multi-select) -->
+          <div class="sa-section">
+            <h4 class="sa-section-title">Form <span class="sa-section-note">choose any</span></h4>
+            <div class="sa-option {{#if system.soul_armament.form.one_handed}}sa-selected{{/if}}" data-field="form" data-value="one_handed"
+                 data-sa-tip="No benefit. A simple, versatile grip.">
+              <span class="sa-opt-name">1 Handed</span><span class="sa-opt-cost sa-free">Free</span>
+            </div>
+            <div class="sa-option {{#if system.soul_armament.form.two_handed}}sa-selected{{/if}}" data-field="form" data-value="two_handed"
+                 data-sa-tip="Your base damage increases by 1.">
+              <span class="sa-opt-name">Two Handed</span><span class="sa-opt-cost">1 DP</span>
+            </div>
+            <div class="sa-option {{#if system.soul_armament.form.ingrained}}sa-selected{{/if}}" data-field="form" data-value="ingrained"
+                 data-sa-tip="You can't be disarmed. You learn the Core Abilities of the Aspect of Discipline and can use them while in any other form. Discipline abilities used in a different Aspect use that Aspect's damage stat.">
+              <span class="sa-opt-name">Ingrained</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option {{#if system.soul_armament.form.attached}}sa-selected{{/if}}" data-field="form" data-value="attached"
+                 data-sa-tip="You can't be disarmed. Select one Aspect — you permanently gain that Aspect's Attached Bonus. You may change the chosen Aspect when you visit a Spring of Life.">
+              <span class="sa-opt-name">Attached</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option {{#if system.soul_armament.form.dual_wield}}sa-selected{{/if}}" data-field="form" data-value="dual_wield"
+                 data-sa-tip="Gain access to the Block player action (scales off your attuned Aspect's damage stat). Also gain Twin Attack: on a Focused Attack, deal half damage and instantly make a second attack that also deals half damage at no cost.">
+              <span class="sa-opt-name">Dual Wield</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+          </div>
+
+          <!-- RANGE (single-select) -->
+          <div class="sa-section">
+            <h4 class="sa-section-title">Reach & Range <span class="sa-section-note">choose one</span></h4>
+            <div class="sa-option sa-radio {{#if saRangeIs.range1}}sa-selected{{/if}}" data-field="range" data-value="range1"
+                 data-sa-tip="Melee range only. Good for daggers, swords, and maces.">
+              <span class="sa-opt-name">Range of 1</span><span class="sa-opt-cost sa-free">Free</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saRangeIs.range2}}sa-selected{{/if}}" data-field="range" data-value="range2"
+                 data-sa-tip="Extended melee reach. Good for spears, whips, and lances.">
+              <span class="sa-opt-name">Range of 2</span><span class="sa-opt-cost">1 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saRangeIs.range5}}sa-selected{{/if}}" data-field="range" data-value="range5"
+                 data-sa-tip="Mid-range. Good for short bows and guns.">
+              <span class="sa-opt-name">Range of 5</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saRangeIs.range8}}sa-selected{{/if}}" data-field="range" data-value="range8"
+                 data-sa-tip="Long range. Good for snipers, long bows, and crossbows.">
+              <span class="sa-opt-name">Range of 8</span><span class="sa-opt-cost">3 DP</span>
+            </div>
+          </div>
+
+          <!-- TEMPER (single-select) -->
+          <div class="sa-section">
+            <h4 class="sa-section-title">Temper <span class="sa-section-note">choose one</span></h4>
+            <div class="sa-option sa-radio {{#if saTemperIs.basic}}sa-selected{{/if}}" data-field="temper" data-value="basic"
+                 data-sa-tip="No special effect.">
+              <span class="sa-opt-name">Basic</span><span class="sa-opt-cost sa-free">Free</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saTemperIs.keen}}sa-selected{{/if}}" data-field="temper" data-value="keen"
+                 data-sa-tip="+1 to all Attack Rolls.">
+              <span class="sa-opt-name">Keen</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saTemperIs.heavy}}sa-selected{{/if}}" data-field="temper" data-value="heavy"
+                 data-sa-tip="Choose a Weight Class for your weapon. Deal +1 bonus damage on Focused Attacks at Weight Class 3, +1 more for each Weight Class above that. Penalty: Attack Rolls suffer -1 for each Weight Class your weapon exceeds your Strength stat.">
+              <span class="sa-opt-name">Heavy</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            {{#if saTemperIs.heavy}}
+            <div class="sa-heavy-wc-row">
+              <label class="sa-heavy-wc-label">Weapon Weight Class</label>
+              <select name="system.soul_armament.weaponWeightClass" class="sa-heavy-wc-select">
+                {{#sty-select system.soul_armament.weaponWeightClass}}
+                <option value="3">WC 3 (+1 dmg)</option>
+                <option value="4">WC 4 (+2 dmg)</option>
+                <option value="5">WC 5 (+3 dmg)</option>
+                <option value="6">WC 6 (+4 dmg)</option>
+                <option value="7">WC 7 (+5 dmg)</option>
+                <option value="8">WC 8 (+6 dmg)</option>
+                <option value="9">WC 9 (+7 dmg)</option>
+                <option value="10">WC 10 (+8 dmg)</option>
+                {{/sty-select}}
+              </select>
+            </div>
+            {{/if}}
+          </div>
+
+          <!-- SOUL STONE CAPACITY (single-select) -->
+          <div class="sa-section">
+            <h4 class="sa-section-title">Soul Stone Capacity <span class="sa-section-note">choose one</span></h4>
+            <div class="sa-option sa-radio {{#if saCapIs.slot1}}sa-selected{{/if}}" data-field="capacity" data-value="slot1"
+                 data-sa-tip="Your Soul Armament can hold 1 Soul Stone. Soul Stones upgrade your weapon and grant new powerful effects.">
+              <span class="sa-opt-name">1 Slot</span><span class="sa-opt-cost sa-free">Free</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saCapIs.slot2}}sa-selected{{/if}}" data-field="capacity" data-value="slot2"
+                 data-sa-tip="Your Soul Armament can hold 2 Soul Stones.">
+              <span class="sa-opt-name">2 Slots</span><span class="sa-opt-cost">1 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saCapIs.slot3}}sa-selected{{/if}}" data-field="capacity" data-value="slot3"
+                 data-sa-tip="Your Soul Armament can hold 3 Soul Stones.">
+              <span class="sa-opt-name">3 Slots</span><span class="sa-opt-cost">2 DP</span>
+            </div>
+            <div class="sa-option sa-radio {{#if saCapIs.slot4}}sa-selected{{/if}}" data-field="capacity" data-value="slot4"
+                 data-sa-tip="Your Soul Armament can hold 4 Soul Stones.">
+              <span class="sa-opt-name">4 Slots</span><span class="sa-opt-cost">4 DP</span>
+            </div>
+          </div>
+
+        </div><!-- .sa-options-grid -->
+      </div><!-- .sa-screen -->
+			</div>
+			<div class="jrpg-page" data-page="growth">
+  <div class="jrpg-growth-wrap">
+    <div class="jrpg-growth-exp-bar">
+      <div class="jrpg-growth-exp-gem"></div>
+      <div>
+        <span class="jrpg-growth-exp-label">Experience Points</span>
+        <span class="jrpg-growth-exp-num">{{system.attributes.xp.value}}</span>
+        <span class="jrpg-growth-exp-sub">available to spend</span>
+      </div>
+      <div class="jrpg-growth-class-info">{{system.class.name}} &middot; Level {{system.attributes.level.value}}</div>
+    </div>
+    <div class="jrpg-growth-body">
+      <div class="jrpg-growth-panel" id="jrpg-growth-class-panel">
+        <div class="jrpg-growth-loading">Loading class path&#8230;</div>
+      </div>
+      <div class="jrpg-growth-panel" id="jrpg-growth-buy-panel">
+        <div class="jrpg-growth-loading">Loading abilities&#8230;</div>
+      </div>
+    </div>
+  </div>
+			</div>
+			<div class="jrpg-page" data-page="effects">
+				{{> "systems/stryder/templates/actor/parts/actor-effects.hbs"}}
+			</div>
+		</div>
+	</div>
+
+</form>

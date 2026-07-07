@@ -1,0 +1,63 @@
+<form class="{{cssClass}} sty-cc" autocomplete="off" data-view="browse" data-chosen-id="{{creation.chosenId}}">
+  <div class="sty-cc-bg"></div>
+
+  <header class="sty-cc-header">
+    <ol class="sty-cc-steps">
+      {{#each creation.steps}}
+      <li class="{{#if this.current}}is-current{{/if}} {{#if this.done}}is-done{{/if}}" title="{{this.title}}">{{this.num}}</li>
+      {{/each}}
+    </ol>
+    <h1 class="sty-cc-title">{{creation.step.title}}</h1>
+    <p class="sty-cc-subtitle">{{creation.step.subtitle}}</p>
+  </header>
+
+  {{!-- BROWSE VIEW: carousel of big cards --}}
+  <div class="sty-cc-stage">
+    {{#each creation.cards}}
+    <div class="sty-cc-cardwrap sty-cc-holo"
+         data-card-id="{{this.id}}"
+         data-card-name="{{this.name}}"
+         data-card-img="{{this.img}}"
+         data-card-uuid="{{this.uuid}}"
+         data-card-fit="{{this.fit}}"
+         data-card-pending="{{#if this.pending}}1{{/if}}">
+      <div class="sty-cc-card">
+        <div class="sty-cc-inside"></div>
+        <div class="sty-cc-art {{#if this.contain}}is-contain{{/if}}"><img src="{{this.img}}" alt="{{this.name}}" /></div>
+        <div class="sty-cc-shine"></div>
+        <div class="sty-cc-glare"></div>
+        <div class="sty-cc-cap"><h3>{{this.name}}</h3><p>{{this.tagline}}</p></div>
+      </div>
+      <div class="sty-cc-carddesc">{{{this.description}}}</div>
+      <script type="application/json" class="sty-cc-alloc-src">{{{this.allocJson}}}</script>
+    </div>
+    {{/each}}
+  </div>
+
+  {{!-- REVEAL VIEW: chosen card enlarged + its details --}}
+  <div class="sty-cc-reveal">
+    <div class="sty-cc-reveal-card sty-cc-holo">
+      <div class="sty-cc-card">
+        <div class="sty-cc-inside"></div>
+        <div class="sty-cc-art"><img class="sty-cc-reveal-img" src="" alt="" /></div>
+        <div class="sty-cc-shine"></div>
+        <div class="sty-cc-glare"></div>
+        <div class="sty-cc-cap"><h3 class="sty-cc-reveal-name"></h3><p>{{creation.step.noun}}</p></div>
+      </div>
+    </div>
+    <div class="sty-cc-reveal-info">
+      <div class="sty-cc-reveal-kicker">{{creation.step.title}}</div>
+      <h2 class="sty-cc-reveal-title"></h2>
+      <div class="sty-cc-reveal-desc"></div>
+      <div class="sty-cc-reveal-alloc" style="display:none"></div>
+    </div>
+  </div>
+
+  {{!-- FOOTER: buttons swap with the active view --}}
+  <footer class="sty-cc-footer">
+    <button type="button" class="sty-cc-btn" data-action="back-step" {{#if creation.isFirst}}disabled{{/if}}>Back</button>
+    <span class="sty-cc-hint">Click a card to inspect it</span>
+    <button type="button" class="sty-cc-btn" data-action="back-list">Back</button>
+    <button type="button" class="sty-cc-btn sty-cc-btn-primary" data-action="choose">{{creation.chooseLabel}}</button>
+  </footer>
+</form>

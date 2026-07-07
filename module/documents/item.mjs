@@ -2092,6 +2092,24 @@ export class StryderItem extends Item {
 		  });
 		}
 		else if (item.type === "consumable") {
+		  // ── Box of Bandages — unpacks into single Bandages instead of a normal use ──
+		  const unpackQty = item.getFlag?.('stryder', 'unpackBandages');
+		  if (unpackQty && item.parent) {
+			const { BANDAGE } = await import('../helpers/supply-items.mjs');
+			const copies = Array.from({ length: unpackQty }, () => foundry.utils.duplicate(BANDAGE));
+			await item.parent.createEmbeddedDocuments('Item', copies);
+			const owner = item.parent.name;
+			await item.delete();
+			ChatMessage.create({
+			  speaker: speaker,
+			  rollMode: rollMode,
+			  content: `<div class="chat-message-card"><div class="chat-message-header">`
+				+ `<div class="chat-message-title">Box of Bandages</div></div>`
+				+ `<div class="chat-message-content"><b>${owner}</b> unpacks the box — `
+				+ `<b>${unpackQty} Bandages</b> added to inventory.</div></div>`,
+			});
+			return;
+		  }
 		  ChatMessage.create({
 			speaker: speaker,
 			rollMode: rollMode,

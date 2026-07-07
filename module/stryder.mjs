@@ -122,7 +122,7 @@ Hooks.once('init', async function () {
 	  if (game.user.id !== game.users.activeGM?.id) return;
 
 	  // Check if this is a character whose health.max was updated
-	  if (actor.type === 'character' &&
+	  if ((actor.type === 'character' || actor.type === 'protocharacter') &&
 		  (updateData.system?.health?.max !== undefined ||
 		   updateData.system?.attributes?.mastery !== undefined)) {
 		// Find all lordlings linked to this character
@@ -1340,7 +1340,7 @@ Hooks.once('ready', async function () {
 
   // Migrate existing items to have uses_current field
   if (game.user.isGM) {
-    const actors = game.actors.filter(actor => actor.type === 'character');
+    const actors = game.actors.filter(actor => actor.type === 'character' || actor.type === 'protocharacter');
     for (const actor of actors) {
       const itemsToMigrate = actor.items.filter(item => 
         (item.type === 'skill' || item.type === 'racial') && 
@@ -3339,7 +3339,7 @@ async function createItemMacro(data, slot) {
  */
 Hooks.on('createActor', async (actor, options, userId) => {
   // Only run for the creating user, only for characters
-  if (actor.type !== 'character') return;
+  if (actor.type !== 'character' && actor.type !== 'protocharacter') return;
   if (game.user.id !== userId) return;
 
   const pack = game.packs.get('stryder.stryder-player-actions');

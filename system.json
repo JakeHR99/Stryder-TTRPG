@@ -20,7 +20,7 @@
       "thumbnail": "systems/stryder/assets/stryderfvtt.png"
     }
   ],
-  "version": "0.3.0",
+  "version": "0.4.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
@@ -33,7 +33,10 @@
     "css/stryder-tokens.css",
     "css/stryder.css",
     "css/cooking-minigame.css",
-    "css/elixir-brewing.css"
+    "css/elixir-brewing.css",
+    "css/scavenging-minigame.css",
+    "css/taming-minigame.css",
+    "css/character-creation.css"
   ],
   "languages": [
     {
@@ -55,6 +58,11 @@
   "documentTypes": {
     "Actor": {
       "character": {
+        "htmlFields": [
+          "biography"
+        ]
+      },
+      "protocharacter": {
         "htmlFields": [
           "biography"
         ]
@@ -341,7 +349,7 @@
     },
     {
       "name": "stryder-loot",
-      "label": "Loot",
+      "label": "Components",
       "path": "packs/stryder-loot",
       "type": "Item",
       "ownership": {

@@ -36,7 +36,7 @@ export const preloadHandlebarsTemplates = async function () {
 	'systems/stryder/templates/apps/fishing-minigame.hbs',
 	'systems/stryder/templates/apps/cooking-minigame.hbs',
 	'systems/stryder/templates/apps/elixir-brewing-mgame.hbs',
-	'systems/stryder/templates/apps/challenges-hub.hbs',
-	'systems/stryder/templates/sidebar/challenges-tab.hbs',
+	'systems/stryder/templates/apps/scavenging-minigame.hbs',
+	'systems/stryder/templates/apps/taming-minigame.hbs',
   ]);
 };
