@@ -1,4 +1,4 @@
-<form class="{{cssClass}} sty-cc" autocomplete="off" data-view="browse" data-chosen-id="{{creation.chosenId}}">
+<form class="{{cssClass}} sty-cc" autocomplete="off" data-view="{{#if creation.designer}}designer{{else}}{{#if creation.shop}}shop{{else}}{{#if creation.allot}}allot{{else}}browse{{/if}}{{/if}}{{/if}}" data-chosen-id="{{creation.chosenId}}">
   <div class="sty-cc-bg"></div>
 
   <header class="sty-cc-header">
@@ -11,27 +11,200 @@
     <p class="sty-cc-subtitle">{{creation.step.subtitle}}</p>
   </header>
 
-  {{!-- BROWSE VIEW: carousel of big cards --}}
-  <div class="sty-cc-stage">
+  {{#if creation.designer}}
+  {{!-- DESIGNER VIEW: the Soul Armament forge (revolving 3D sword) --}}
+  <div class="sty-cc-designer">
+    <aside class="sty-cc-forge-panel sty-cc-forge-left">
+      <div class="sty-cc-forge-group" data-pick="form">
+        <h3>Form</h3>
+        <div class="sty-cc-forge-opts">
+          {{#each creation.designer.forms}}
+          <button type="button" class="sty-cc-forge-chip {{#if this.sel}}is-sel{{/if}}" data-id="{{this.id}}" title="{{this.desc}}">{{this.name}}</button>
+          {{/each}}
+        </div>
+      </div>
+      <div class="sty-cc-forge-group" data-pick="reach">
+        <h3>Reach &amp; Range</h3>
+        <div class="sty-cc-forge-opts">
+          {{#each creation.designer.reaches}}
+          <button type="button" class="sty-cc-forge-chip {{#if this.sel}}is-sel{{/if}}" data-id="{{this.id}}">{{this.name}}</button>
+          {{/each}}
+        </div>
+      </div>
+    </aside>
+    <div class="sty-cc-forge">
+      <div class="sty-cc-forge-glow"></div>
+      <canvas class="sty-cc-forge-canvas"></canvas>
+      <div class="sty-cc-forge-flash"></div>
+      <div class="sty-cc-forge-loading">Summoning your armament…</div>
+    </div>
+    <aside class="sty-cc-forge-panel sty-cc-forge-right">
+      <div class="sty-cc-forge-group">
+        <h3>Effects <span class="sty-cc-forge-dp"><span class="sty-cc-forge-dp-n">{{creation.designer.remaining}}</span> DP left</span></h3>
+        <div class="sty-cc-forge-effects" data-dp="{{creation.designer.dp}}">
+          {{#each creation.designer.effects}}
+          <button type="button" class="sty-cc-forge-effect {{#if this.sel}}is-sel{{/if}}" data-id="{{this.id}}" data-cost="{{this.cost}}">
+            <span class="sty-cc-forge-effect-name">{{this.name}}<span class="sty-cc-forge-effect-cost">{{this.cost}} DP</span></span>
+            <span class="sty-cc-forge-effect-desc">{{this.desc}}</span>
+          </button>
+          {{/each}}
+        </div>
+      </div>
+      <div class="sty-cc-forge-group" data-pick="affinity">
+        <h3>Affinity</h3>
+        <div class="sty-cc-forge-opts is-stacked">
+          {{#each creation.designer.affinities}}
+          <button type="button" class="sty-cc-forge-chip {{#if this.wip}}is-wip{{/if}} {{#if this.sel}}is-sel{{/if}}" data-id="{{this.id}}" title="{{this.desc}}">{{this.name}}</button>
+          {{/each}}
+        </div>
+      </div>
+    </aside>
+    <footer class="sty-cc-designer-footer">
+      <button type="button" class="sty-cc-btn" data-action="forge-back">Back</button>
+      <span class="sty-cc-forge-caption">Shape it now — refine it in play.</span>
+      <button type="button" class="sty-cc-btn sty-cc-btn-primary" data-action="forge-confirm">Forge &amp; Continue</button>
+    </footer>
+  </div>
+  {{else}}
+  {{#if creation.shop}}
+  {{!-- SHOP VIEW: Stryder Origin point-buy loadout --}}
+  <div class="sty-cc-shop" data-budget="{{creation.shop.budget}}">
+    <div class="sty-cc-shop-budget">
+      <div class="sty-cc-budget-main">
+        <span class="sty-cc-budget-num">{{creation.shop.remaining}}</span>
+        <span class="sty-cc-budget-label">Origin Points left</span>
+      </div>
+      <div class="sty-cc-budget-bar"><span class="sty-cc-budget-fill" style="width:{{creation.shop.pct}}%"></span></div>
+      <div class="sty-cc-budget-sub"><span class="sty-cc-budget-spent">{{creation.shop.spent}}</span> / {{creation.shop.budget}} spent</div>
+    </div>
+    <div class="sty-cc-shop-cats">
+      {{#each creation.shop.categories}}
+      <section class="sty-cc-shop-cat">
+        <header class="sty-cc-shop-cathead">
+          <span class="sty-cc-shop-catname">{{this.name}}</span>
+          <span class="sty-cc-shop-catrule"></span>
+          <span class="sty-cc-shop-catcost">{{this.costLabel}}{{#if this.max}} &middot; max {{this.max}}{{/if}}</span>
+        </header>
+        {{#if this.blurb}}<p class="sty-cc-shop-catblurb">{{this.blurb}}</p>{{/if}}
+        <div class="sty-cc-shop-items">
+          {{#each this.items}}
+          <div class="sty-cc-shop-item {{#if this.wip}}is-wip{{/if}}"
+               data-item-id="{{this.id}}" data-cost="{{this.cost}}"
+               data-cat="{{this.catId}}" data-cat-max="{{this.catMax}}">
+            <div class="sty-cc-shop-itemmain">
+              <div class="sty-cc-shop-itemname">{{this.name}}<span class="sty-cc-shop-itemcost">{{this.cost}} OP</span></div>
+              <div class="sty-cc-shop-itemdesc">{{this.desc}}</div>
+            </div>
+            <div class="sty-cc-shop-stepper">
+              <button type="button" class="sty-cc-shop-btn" data-d="-1">&minus;</button>
+              <span class="sty-cc-shop-qty">{{this.qty}}</span>
+              <button type="button" class="sty-cc-shop-btn" data-d="1">+</button>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </section>
+      {{/each}}
+    </div>
+  </div>
+  {{else}}
+  {{#if creation.allot}}
+  {{!-- ALLOCATOR VIEW: Stats / Experience / Mastery --}}
+  <div class="sty-cc-allot" data-pool="{{creation.allot.pool}}">
+    <div class="sty-cc-allot-meter">
+      <div class="sty-cc-allot-main">
+        <span class="sty-cc-allot-num">{{creation.allot.remaining}}</span>
+        <span class="sty-cc-allot-label">{{creation.allot.meterLabel}} left</span>
+      </div>
+      <div class="sty-cc-allot-bar"><span class="sty-cc-allot-fill" style="width:{{creation.allot.pct}}%"></span></div>
+      <div class="sty-cc-allot-sub"><span class="sty-cc-allot-spent">{{creation.allot.spent}}</span> / {{creation.allot.pool}} spent{{#if creation.allot.placeholder}} &middot; placeholder pool{{/if}}</div>
+    </div>
+    {{#if creation.allot.hint}}<p class="sty-cc-allot-hint">{{creation.allot.hint}}</p>{{/if}}
+    <div class="sty-cc-allot-groups">
+      {{#each creation.allot.groups}}
+      <section class="sty-cc-allot-group">
+        <header class="sty-cc-allot-head"><span class="sty-cc-allot-gname">{{this.title}}</span><span class="sty-cc-allot-rule"></span></header>
+        <div class="sty-cc-allot-items">
+          {{#each this.items}}
+          <div class="sty-cc-allot-item {{#if this.hasPerks}}has-perks{{/if}}" data-item-id="{{this.id}}" data-cost="{{this.cost}}" data-max="{{this.max}}">
+            <div class="sty-cc-allot-info">
+              <div class="sty-cc-allot-name">{{this.name}}{{#if this.desc}}<span class="sty-cc-allot-desc">{{this.desc}}</span>{{/if}}</div>
+              {{#if this.hasPerks}}
+              <div class="sty-cc-allot-perks">
+                {{#each this.perks}}<span class="sty-cc-allot-perk {{#if this.unlocked}}is-on{{/if}}" data-at="{{this.at}}"><b>{{this.at}}</b> {{this.text}}</span>{{/each}}
+              </div>
+              {{/if}}
+            </div>
+            <div class="sty-cc-allot-stepper">
+              <button type="button" class="sty-cc-allot-btn" data-d="-1">&minus;</button>
+              <span class="sty-cc-allot-val">{{this.value}}</span>
+              <button type="button" class="sty-cc-allot-btn" data-d="1">+</button>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </section>
+      {{/each}}
+    </div>
+  </div>
+  {{else}}
+  {{!-- BROWSE VIEW: carousel (default) or tier bands (ranked steps) --}}
+  <div class="sty-cc-stage {{#if creation.groups}}is-grouped{{/if}}">
+    {{#if creation.groups}}
+    <div class="sty-cc-groups">
+      {{#each creation.groups}}
+      <section class="sty-cc-group">
+        <header class="sty-cc-group-head">
+          <span class="sty-cc-group-stars">{{this.stars}}</span>
+          <span class="sty-cc-group-rule"></span>
+          <span class="sty-cc-group-op">{{this.op}} Origin Points</span>
+        </header>
+        <div class="sty-cc-grid">
+          {{#each this.cards}}
+          <div class="sty-cc-cardwrap sty-cc-holo"
+               data-card-id="{{this.id}}"
+               data-card-name="{{this.name}}"
+               data-card-img="{{this.img}}"
+               data-card-uuid="{{this.uuid}}"
+               data-card-fit="{{this.fit}}"
+               data-card-pending="{{#if this.pending}}1{{/if}}">
+            <div class="sty-cc-card">
+              <div class="sty-cc-inside"></div>
+              <div class="sty-cc-art {{#if this.contain}}is-contain{{/if}}"><img src="{{this.img}}" alt="{{this.name}}" /></div>
+              <div class="sty-cc-shine"></div>
+              <div class="sty-cc-glare"></div>
+              <div class="sty-cc-cap"><h3>{{this.name}}</h3><p class="{{#if this.rank}}is-op{{/if}}">{{this.tagline}}</p></div>
+            </div>
+            <div class="sty-cc-carddesc">{{{this.description}}}</div>
+            <script type="application/json" class="sty-cc-alloc-src">{{{this.allocJson}}}</script>
+          </div>
+          {{/each}}
+        </div>
+      </section>
+      {{/each}}
+    </div>
+    {{else}}
     {{#each creation.cards}}
-    <div class="sty-cc-cardwrap sty-cc-holo"
+    <div class="sty-cc-cardwrap sty-cc-holo {{#if this.variant}}is-{{this.variant}}{{/if}}"
          data-card-id="{{this.id}}"
          data-card-name="{{this.name}}"
          data-card-img="{{this.img}}"
          data-card-uuid="{{this.uuid}}"
          data-card-fit="{{this.fit}}"
+         data-card-variant="{{this.variant}}"
          data-card-pending="{{#if this.pending}}1{{/if}}">
       <div class="sty-cc-card">
         <div class="sty-cc-inside"></div>
         <div class="sty-cc-art {{#if this.contain}}is-contain{{/if}}"><img src="{{this.img}}" alt="{{this.name}}" /></div>
         <div class="sty-cc-shine"></div>
         <div class="sty-cc-glare"></div>
-        <div class="sty-cc-cap"><h3>{{this.name}}</h3><p>{{this.tagline}}</p></div>
+        <div class="sty-cc-cap"><h3>{{this.name}}</h3><p class="{{#if this.rank}}is-op{{/if}}">{{this.tagline}}</p></div>
       </div>
       <div class="sty-cc-carddesc">{{{this.description}}}</div>
       <script type="application/json" class="sty-cc-alloc-src">{{{this.allocJson}}}</script>
     </div>
     {{/each}}
+    {{/if}}
   </div>
 
   {{!-- REVEAL VIEW: chosen card enlarged + its details --}}
@@ -52,12 +225,17 @@
       <div class="sty-cc-reveal-alloc" style="display:none"></div>
     </div>
   </div>
+  {{/if}}
+  {{/if}}
+  {{/if}}
 
-  {{!-- FOOTER: buttons swap with the active view --}}
+  {{!-- FOOTER: buttons swap with the active view (designer has its own) --}}
+  {{#unless creation.designer}}
   <footer class="sty-cc-footer">
     <button type="button" class="sty-cc-btn" data-action="back-step" {{#if creation.isFirst}}disabled{{/if}}>Back</button>
     <span class="sty-cc-hint">Click a card to inspect it</span>
     <button type="button" class="sty-cc-btn" data-action="back-list">Back</button>
     <button type="button" class="sty-cc-btn sty-cc-btn-primary" data-action="choose">{{creation.chooseLabel}}</button>
   </footer>
+  {{/unless}}
 </form>

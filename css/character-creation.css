@@ -443,3 +443,469 @@
   box-shadow: 0 6px 18px -6px var(--cc-cyan);
 }
 .sty-cc-btn-primary:hover:not(:disabled) { filter: brightness(1.08); }
+
+/* ============================================================
+   RANKED / TIER-GROUPED BROWSE (Life Origin step)
+   Grouped bands with a gold tier banner instead of one flat
+   carousel. Gated by .is-grouped so the Folk step is untouched.
+   ============================================================ */
+.sty-cc-stage.is-grouped {
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: none;
+  perspective: none;
+  padding: 6px 6px 22px;
+}
+.sty-cc-groups { display: flex; flex-direction: column; gap: 26px; }
+.sty-cc-group { display: flex; flex-direction: column; gap: 14px; }
+
+/* ---- gold tier banner ---- */
+.sty-cc-group-head { display: flex; align-items: center; gap: 14px; padding: 0 4px; }
+.sty-cc-group-stars {
+  flex: 0 0 auto;
+  font-size: 28px;
+  letter-spacing: 5px;
+  line-height: 1;
+  background: linear-gradient(180deg, #fff3c4 0%, #f4d06a 42%, #c8912f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 9px rgba(232, 198, 107, 0.6));
+}
+.sty-cc-group-rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(232, 198, 107, 0.6), rgba(232, 198, 107, 0));
+}
+.sty-cc-group-op {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #1a1004;
+  padding: 0.36em 0.95em;
+  border-radius: 2em;
+  background: linear-gradient(135deg, #fbe9a2, #d9a441);
+  box-shadow: 0 0 14px -2px rgba(232, 198, 107, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ---- card grid within a tier ---- */
+.sty-cc-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: center;
+  perspective: 1000px;
+}
+.sty-cc-stage.is-grouped .sty-cc-cardwrap {
+  height: 208px;
+  aspect-ratio: 0.718;
+  perspective: 600px;
+}
+
+/* ---- gold star + OP chip on ranked cards ---- */
+.sty-cc-cap p.is-op {
+  color: #12060a;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, #f7e08e, #d9a441);
+  box-shadow: 0 0 12px -2px rgba(232, 198, 107, 0.75), inset 0 0 0 1px rgba(255, 236, 180, 0.5);
+  text-shadow: none;
+}
+
+/* ---- gold meta line in the reveal panel ---- */
+.sty-cc-lo-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cc-muted);
+}
+.sty-cc-lo-stars {
+  font-size: 19px;
+  letter-spacing: 3px;
+  line-height: 1;
+  background: linear-gradient(180deg, #fff3c4, #f4d06a 45%, #c8912f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 7px rgba(232, 198, 107, 0.55));
+}
+.sty-cc-lo-meta strong { color: var(--cc-gold); font-weight: 800; }
+
+/* ============================================================
+   SHOP VIEW — Stryder Origin point-buy (step 3)
+   ============================================================ */
+.sty-cc[data-view="shop"] .sty-cc-reveal,
+.sty-cc[data-view="shop"] [data-action="back-list"],
+.sty-cc[data-view="shop"] .sty-cc-hint { display: none; }
+
+.sty-cc-shop {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  padding: 4px 8px 20px;
+}
+
+/* ---- gold budget meter (sticky) ---- */
+.sty-cc-shop-budget {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(232, 198, 107, 0.35);
+  background: linear-gradient(180deg, rgba(26, 20, 8, 0.94), rgba(8, 11, 22, 0.94));
+  box-shadow: 0 8px 26px -14px rgba(232, 198, 107, 0.7);
+}
+.sty-cc-budget-main { display: flex; align-items: baseline; gap: 10px; }
+.sty-cc-budget-num {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(180deg, #fff3c4, #f4d06a 45%, #c8912f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 11px rgba(232, 198, 107, 0.55));
+}
+.sty-cc-budget-label {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--cc-gold);
+}
+.sty-cc-budget-bar {
+  width: min(440px, 84%);
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.sty-cc-budget-fill {
+  display: block; height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, #f6dd8b, #d9a441);
+  box-shadow: 0 0 10px -1px rgba(232, 198, 107, 0.8);
+  transition: width 0.25s ease;
+}
+.sty-cc-budget-sub {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cc-muted);
+}
+.sty-cc-budget-spent { color: var(--cc-gold); font-weight: 700; }
+
+/* ---- categories ---- */
+.sty-cc-shop-cats { display: flex; flex-direction: column; gap: 22px; }
+.sty-cc-shop-cat { display: flex; flex-direction: column; gap: 10px; }
+.sty-cc-shop-cathead { display: flex; align-items: center; gap: 14px; padding: 0 2px; }
+.sty-cc-shop-catname { font-size: 18px; font-weight: 700; color: var(--cc-ink); letter-spacing: 0.02em; }
+.sty-cc-shop-catrule {
+  flex: 1 1 auto; height: 1px;
+  background: linear-gradient(90deg, rgba(232, 198, 107, 0.5), rgba(232, 198, 107, 0));
+}
+.sty-cc-shop-catcost {
+  flex: 0 0 auto;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #1a1004; padding: 0.32em 0.85em; border-radius: 2em;
+  background: linear-gradient(135deg, #fbe9a2, #d9a441);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.sty-cc-shop-catblurb { margin: 0; font-size: 12.5px; color: var(--cc-muted); font-style: italic; }
+
+/* ---- item rows ---- */
+.sty-cc-shop-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 12px;
+}
+.sty-cc-shop-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 14px; border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.sty-cc-shop-item.is-owned {
+  border-color: rgba(232, 198, 107, 0.6);
+  background: linear-gradient(180deg, rgba(232, 198, 107, 0.1), rgba(255, 255, 255, 0.02));
+  box-shadow: inset 0 0 0 1px rgba(232, 198, 107, 0.22), 0 0 16px -8px rgba(232, 198, 107, 0.7);
+}
+.sty-cc-shop-item.is-wip { opacity: 0.85; }
+.sty-cc-shop-itemmain { min-width: 0; }
+.sty-cc-shop-itemname {
+  font-size: 14px; font-weight: 700; color: var(--cc-ink);
+  display: flex; align-items: center; gap: 8px;
+}
+.sty-cc-shop-itemcost {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.06em; color: var(--cc-gold);
+  padding: 0.12em 0.5em; border-radius: 1em; background: rgba(232, 198, 107, 0.12);
+}
+.sty-cc-shop-itemdesc { margin-top: 4px; font-size: 11.5px; line-height: 1.4; color: var(--cc-muted); }
+.sty-cc-shop-stepper { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; }
+.sty-cc-shop-qty { min-width: 18px; text-align: center; font-weight: 800; font-size: 16px; color: var(--cc-gold); }
+.sty-cc-shop-btn {
+  appearance: none; cursor: pointer; width: 28px; height: 28px;
+  display: grid; place-items: center; line-height: 1;
+  border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05); color: var(--cc-ink); font-size: 17px;
+  transition: all 0.15s ease;
+}
+.sty-cc-shop-btn:hover:not(:disabled) { background: rgba(232, 198, 107, 0.18); border-color: rgba(232, 198, 107, 0.5); }
+.sty-cc-shop-btn:disabled { opacity: 0.3; cursor: default; }
+.sty-cc-shop-itemname { flex-wrap: wrap; }
+.sty-cc-shop-itemcost { white-space: nowrap; }
+
+/* ============================================================
+   SOUL ARMAMENT / ALTER PATH FORK (step 4)
+   Two big variant cards — warm gold forge vs crimson void.
+   ============================================================ */
+.sty-cc-cardwrap.is-armament,
+.sty-cc-cardwrap.is-alter { height: min(66vh, 524px); }
+
+/* variant backing glows behind the (transparent) spirit art */
+.sty-cc-cardwrap.is-armament .sty-cc-inside {
+  background: radial-gradient(120% 92% at 50% 34%, #2c1806 0%, #150c05 62%, #08060f 100%);
+}
+.sty-cc-cardwrap.is-alter .sty-cc-inside {
+  background: radial-gradient(120% 92% at 50% 42%, #1c0812 0%, #0a0207 64%, #040103 100%);
+}
+.sty-cc-cardwrap.is-alter .sty-cc-art img { filter: brightness(0.95) contrast(1.06) saturate(1.05); }
+
+/* name plate voices */
+.sty-cc-cardwrap.is-armament .sty-cc-cap h3 { color: #ffe6b0; text-shadow: 0 0 16px rgba(255, 150, 40, 0.6); }
+.sty-cc-cardwrap.is-alter .sty-cc-cap h3 { color: #ff9db0; text-shadow: 0 0 18px rgba(224, 20, 56, 0.65); }
+.sty-cc-cardwrap.is-armament .sty-cc-cap p,
+.sty-cc-cardwrap.is-alter .sty-cc-cap p {
+  background: transparent; box-shadow: none; text-transform: none;
+  letter-spacing: 0.02em; font-style: italic; font-size: 11.5px;
+}
+.sty-cc-cardwrap.is-armament .sty-cc-cap p { color: #e7cf9f; }
+.sty-cc-cardwrap.is-alter .sty-cc-cap p { color: #e79aa6; }
+
+/* holo aura — recolour the glow halo per variant (browse cardwrap + reveal card) */
+.sty-cc-holo.is-armament::before {
+  background-image:
+    radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),
+      hsla(40, 100%, 82%, var(--card-opacity)) 4%,
+      hsla(32, 95%, 62%, calc(var(--card-opacity) * 0.7)) 30%,
+      hsla(32, 0%, 60%, 0) 100%),
+    radial-gradient(35% 52% at 55% 20%, #ffb35799 0%, #ff7a1800 100%),
+    radial-gradient(100% 100% at 50% 50%, #ffcf8f 1%, #ff7a1800 76%),
+    conic-gradient(from 124deg at 50% 50%, #ffcf6b 0%, #ff8a3d 40%, #ff8a3d 60%, #ffcf6b 100%);
+}
+.sty-cc-holo.is-alter::before {
+  filter: contrast(2) saturate(1.7) blur(30px);
+  background-image:
+    radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),
+      hsla(352, 100%, 74%, var(--card-opacity)) 4%,
+      hsla(350, 85%, 46%, calc(var(--card-opacity) * 0.7)) 28%,
+      hsla(350, 0%, 40%, 0) 100%),
+    radial-gradient(35% 52% at 55% 20%, #ff2d55aa 0%, #7a0b1e00 100%),
+    radial-gradient(100% 100% at 50% 50%, #c0142e 1%, #4a000e00 76%),
+    conic-gradient(from 124deg at 50% 50%, #e01438 0%, #6a0016 40%, #6a0016 60%, #e01438 100%);
+}
+
+/* reveal title + card accent follow the chosen variant */
+.sty-cc[data-reveal-variant="armament"] .sty-cc-reveal-title { color: #ffcf8f; }
+.sty-cc[data-reveal-variant="alter"] .sty-cc-reveal-title { color: #ff8496; }
+.sty-cc[data-reveal-variant="alter"] .sty-cc-reveal-kicker { color: #e0637a; }
+.sty-cc-reveal-card.is-alter .sty-cc-inside { background: radial-gradient(120% 92% at 50% 42%, #1c0812 0%, #0a0207 64%, #040103 100%); }
+.sty-cc-reveal-card.is-armament .sty-cc-inside { background: radial-gradient(120% 92% at 50% 34%, #2c1806 0%, #150c05 62%, #08060f 100%); }
+
+/* reveal copy flavour */
+.sty-cc-arm-lead { font-size: 15px; color: #f2ead7; font-style: italic; }
+.sty-cc-arm-note { color: var(--cc-gold); font-size: 12.5px; letter-spacing: 0.02em; }
+.sty-cc-arm-warn { color: #ff8496; font-size: 12.5px; }
+.sty-cc-arm-paths {
+  list-style: none; margin: 6px 0 10px; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.sty-cc-arm-paths li {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.05em; color: #ffb9c4;
+  padding: 0.3em 0.8em; border-radius: 2em;
+  border: 1px solid rgba(224, 20, 56, 0.5); background: rgba(224, 20, 56, 0.12);
+}
+
+/* ============================================================
+   SOUL ARMAMENT DESIGNER — the forge (revolving 3D sword)
+   ============================================================ */
+.sty-cc-designer {
+  position: relative; z-index: 1;
+  flex: 1 1 auto; min-height: 0;
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr) 300px;
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas: "left forge right" "footer footer footer";
+  gap: 14px;
+  padding: 4px 4px 2px;
+}
+.sty-cc-forge-left  { grid-area: left; }
+.sty-cc-forge-right { grid-area: right; }
+.sty-cc-forge       { grid-area: forge; }
+.sty-cc-designer-footer { grid-area: footer; }
+
+/* side panels */
+.sty-cc-forge-panel { display: flex; flex-direction: column; gap: 18px; overflow-y: auto; align-self: stretch; padding: 2px 4px; }
+.sty-cc-forge-group h3 {
+  margin: 0 0 8px; border: 0; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--cc-cyan);
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+}
+.sty-cc-forge-dp { font-size: 11px; letter-spacing: 0.03em; text-transform: none; color: var(--cc-gold); }
+.sty-cc-forge-dp-n { font-weight: 800; font-size: 14px; }
+.sty-cc-forge-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.sty-cc-forge-opts.is-stacked { flex-direction: column; }
+.sty-cc-forge-chip {
+  appearance: none; cursor: pointer; text-align: left;
+  padding: 0.42em 0.85em; font-size: 12.5px; color: var(--cc-ink);
+  border-radius: 9px; border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.04);
+  transition: all 0.15s ease;
+}
+.sty-cc-forge-chip:hover { background: rgba(255,255,255,0.1); }
+.sty-cc-forge-chip.is-sel {
+  color: #06121a; border-color: transparent; font-weight: 700;
+  background: linear-gradient(135deg, var(--cc-cyan), #7ef0d0);
+  box-shadow: 0 4px 14px -6px var(--cc-cyan);
+}
+.sty-cc-forge-chip.is-wip { opacity: 0.5; cursor: default; }
+
+.sty-cc-forge-effects { display: flex; flex-direction: column; gap: 8px; }
+.sty-cc-forge-effect {
+  appearance: none; cursor: pointer; text-align: left;
+  padding: 8px 10px; border-radius: 10px; color: var(--cc-ink);
+  border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03);
+  display: flex; flex-direction: column; gap: 3px; transition: all 0.15s ease;
+}
+.sty-cc-forge-effect:hover { background: rgba(255,255,255,0.08); }
+.sty-cc-forge-effect.is-sel {
+  border-color: rgba(232,198,107,0.6);
+  background: linear-gradient(180deg, rgba(232,198,107,0.12), rgba(255,255,255,0.02));
+  box-shadow: inset 0 0 0 1px rgba(232,198,107,0.25);
+}
+.sty-cc-forge-effect.is-disabled { opacity: 0.4; cursor: default; }
+.sty-cc-forge-effect-name { font-size: 12.5px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sty-cc-forge-effect-cost { font-size: 10px; font-weight: 800; color: var(--cc-gold); }
+.sty-cc-forge-effect-desc { font-size: 11px; line-height: 1.4; color: var(--cc-muted); }
+
+/* the 3D stage */
+.sty-cc-forge {
+  position: relative; align-self: stretch; min-height: 0;
+  border-radius: 16px; overflow: hidden;
+  background: radial-gradient(58% 52% at 50% 42%, rgba(40,54,92,0.5) 0%, rgba(8,12,24,0.2) 60%, rgba(4,6,12,0) 100%);
+}
+.sty-cc-forge-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sty-cc-forge-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(36% 58% at 50% 46%, rgba(120,180,255,0.18) 0%, rgba(255,180,90,0.09) 42%, transparent 72%);
+  filter: blur(8px);
+}
+.sty-cc-forge-loading {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: var(--cc-muted); font-style: italic; letter-spacing: 0.04em; transition: opacity 0.6s ease;
+}
+.sty-cc-forge.is-ready .sty-cc-forge-loading { opacity: 0; }
+.sty-cc-forge.is-failed .sty-cc-forge-loading::after { content: ' — 3D preview unavailable'; }
+
+.sty-cc-designer-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+.sty-cc-forge-caption { color: var(--cc-muted); font-size: 12px; font-style: italic; }
+
+/* forge swap flash (fires on weapon change) */
+.sty-cc-forge-flash {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 3;
+  mix-blend-mode: screen;
+  background: radial-gradient(42% 56% at 50% 46%, rgba(255,240,205,0.95) 0%, rgba(150,200,255,0.5) 38%, rgba(255,180,90,0.18) 60%, transparent 74%);
+}
+.sty-cc-forge-flash.is-flash { animation: sty-cc-forge-flash 480ms ease-out; }
+@keyframes sty-cc-forge-flash {
+  0%   { opacity: 0; transform: scale(0.7); }
+  16%  { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+
+/* ============================================================
+   POINT ALLOCATOR — Stats / Experience / Mastery (steps 5-7)
+   ============================================================ */
+.sty-cc[data-view="allot"] .sty-cc-reveal,
+.sty-cc[data-view="allot"] [data-action="back-list"],
+.sty-cc[data-view="allot"] .sty-cc-hint { display: none; }
+
+.sty-cc-allot {
+  position: relative; z-index: 1; flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; gap: 14px;
+  overflow-y: auto; padding: 4px 8px 20px;
+}
+.sty-cc-allot-meter {
+  position: sticky; top: 0; z-index: 4;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 12px 18px; border-radius: 14px;
+  border: 1px solid rgba(232, 198, 107, 0.35);
+  background: linear-gradient(180deg, rgba(26, 20, 8, 0.94), rgba(8, 11, 22, 0.94));
+  box-shadow: 0 8px 26px -14px rgba(232, 198, 107, 0.7);
+}
+.sty-cc-allot-main { display: flex; align-items: baseline; gap: 10px; }
+.sty-cc-allot-num {
+  font-size: 40px; font-weight: 800; line-height: 1;
+  background: linear-gradient(180deg, #fff3c4, #f4d06a 45%, #c8912f);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(232, 198, 107, 0.55));
+}
+.sty-cc-allot-label { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cc-gold); }
+.sty-cc-allot-bar { width: min(440px, 84%); height: 7px; border-radius: 4px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.sty-cc-allot-fill { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #f6dd8b, #d9a441); box-shadow: 0 0 10px -1px rgba(232, 198, 107, 0.8); transition: width 0.25s ease; }
+.sty-cc-allot-sub { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cc-muted); }
+.sty-cc-allot-spent { color: var(--cc-gold); font-weight: 700; }
+.sty-cc-allot-hint { margin: 0; text-align: center; font-size: 12.5px; color: var(--cc-muted); font-style: italic; }
+
+.sty-cc-allot-groups { display: flex; flex-direction: column; gap: 20px; }
+.sty-cc-allot-group { display: flex; flex-direction: column; gap: 10px; }
+.sty-cc-allot-head { display: flex; align-items: center; gap: 14px; padding: 0 2px; }
+.sty-cc-allot-gname { font-size: 16px; font-weight: 700; color: var(--cc-ink); letter-spacing: 0.02em; }
+.sty-cc-allot-rule { flex: 1 1 auto; height: 1px; background: linear-gradient(90deg, rgba(232, 198, 107, 0.5), rgba(232, 198, 107, 0)); }
+.sty-cc-allot-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+.sty-cc-allot-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 14px; border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.sty-cc-allot-item.has-perks { align-items: flex-start; }
+.sty-cc-allot-item.is-active {
+  border-color: rgba(232, 198, 107, 0.55);
+  background: linear-gradient(180deg, rgba(232, 198, 107, 0.09), rgba(255, 255, 255, 0.02));
+}
+.sty-cc-allot-info { min-width: 0; }
+.sty-cc-allot-name { font-size: 14px; font-weight: 700; color: var(--cc-ink); display: flex; flex-direction: column; gap: 2px; }
+.sty-cc-allot-desc { font-size: 11px; font-weight: 400; line-height: 1.35; color: var(--cc-muted); }
+.sty-cc-allot-perks { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.sty-cc-allot-perk {
+  font-size: 11px; color: var(--cc-muted); padding: 2px 9px; border-radius: 2em;
+  border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.02); transition: all 0.2s ease;
+}
+.sty-cc-allot-perk b { color: var(--cc-muted); margin-right: 4px; }
+.sty-cc-allot-perk.is-on {
+  color: #1a1004; border-color: transparent; font-weight: 600;
+  background: linear-gradient(135deg, #fbe9a2, #d9a441); box-shadow: 0 0 10px -3px rgba(232, 198, 107, 0.7);
+}
+.sty-cc-allot-perk.is-on b { color: #1a1004; }
+.sty-cc-allot-stepper { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; }
+.sty-cc-allot-val { min-width: 18px; text-align: center; font-weight: 800; font-size: 16px; color: var(--cc-gold); }
+.sty-cc-allot-btn {
+  appearance: none; cursor: pointer; width: 28px; height: 28px;
+  display: grid; place-items: center; line-height: 1;
+  border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05); color: var(--cc-ink); font-size: 17px; transition: all 0.15s ease;
+}
+.sty-cc-allot-btn:hover:not(:disabled) { background: rgba(232, 198, 107, 0.18); border-color: rgba(232, 198, 107, 0.5); }
+.sty-cc-allot-btn:disabled { opacity: 0.3; cursor: default; }
